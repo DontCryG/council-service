@@ -96,14 +96,28 @@ export default function TicketManager() {
       handleExportCsv();
     }
 
+    const newSettings = { ...(ticketsData.settings || {}) };
+    
+    const addDays = (dateString, days) => {
+      if (!dateString) return dateString;
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return dateString;
+      date.setDate(date.getDate() + days);
+      return date.toISOString().split('T')[0];
+    };
+
+    newSettings.roundStartDate = addDays(newSettings.roundStartDate, 7);
+    newSettings.roundEndDate = addDays(newSettings.roundEndDate, 7);
+
     const newData = {
       ...ticketsData,
+      settings: newSettings,
       orders: [],
       history: []
     };
     await saveTicketsToDb(newData);
     setShowConfirmReset(false);
-    showAlert('success', 'ดาวน์โหลดไฟล์ประวัติยอดขาย และรีเซ็ตโควต้าทั้งหมดกลับเป็นศูนย์เรียบร้อยแล้ว');
+    showAlert('success', 'ดาวน์โหลดไฟล์ประวัติยอดขาย รีเซ็ตโควต้า และเลื่อนวันที่รอบใหม่ +7 วันเรียบร้อยแล้ว');
   };
 
   const handleProcessOrder = (id, status) => {
