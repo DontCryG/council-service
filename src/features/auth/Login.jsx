@@ -5,6 +5,7 @@ import { auth, db } from '../../core/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { LockKey, EnvelopeSimple, User, ArrowLeft } from '@phosphor-icons/react';
+import { cn } from '../../utils/cn';
 
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
@@ -85,7 +86,7 @@ export default function Login() {
         กลับหน้าหลัก
       </button>
 
-      <div className="max-w-md w-full bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 p-8 rounded-2xl shadow-2xl relative z-10">
+      <div className={cn("max-w-md w-full bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 p-8 rounded-2xl shadow-2xl relative z-10 animate-fade-in-up", error ? "animate-shake" : "")}>
         <div className="text-center mb-8 flex flex-col items-center">
           <img src="/logo.png" alt="COUNCIL SYSTEM" className="h-28 object-contain drop-shadow-lg mb-4" />
           <h1 className="text-2xl font-bold text-white mb-2">เข้าสู่ระบบ</h1>
@@ -127,9 +128,10 @@ export default function Login() {
 
           <Button 
             type="submit" 
-            className="w-full h-12 text-base mt-2" 
+            className="w-full h-12 text-base mt-2 relative overflow-hidden group" 
             isLoading={loading}
           >
+            <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer" />
             เข้าสู่ระบบ
           </Button>
         </form>

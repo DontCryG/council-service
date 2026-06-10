@@ -23,10 +23,11 @@ export default function Home() {
   const filteredCouncil = filterServices(councilServices);
   const filteredWebsites = filterServices(relatedWebsites);
 
-  const renderServiceCard = (service, isDanger = false, isExternal = false) => (
+  const renderServiceCard = (service, index = 0, isDanger = false, isExternal = false) => (
     <Card 
       key={service.id}
-      className={`cursor-pointer transition-all hover:-translate-y-1 hover:shadow-2xl ${isDanger ? 'hover:border-red-500/50 hover:shadow-red-900/20' : 'hover:border-blue-500/50 hover:shadow-blue-900/20'}`}
+      style={{ animationDelay: `${index * 100}ms` }}
+      className={`cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl animate-fade-in-up opacity-0 [animation-fill-mode:forwards] ${isDanger ? 'hover:border-red-500/50 hover:shadow-[0_0_20px_rgba(239,68,68,0.3)]' : 'hover:border-blue-500/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)]'}`}
       onClick={() => {
         if (service.id === 'council_manage' && user?.role !== 'admin') {
           showAlert('error', 'ไม่มีสิทธิ์เข้าถึง: เฉพาะระดับ Admin เท่านั้น');
@@ -39,7 +40,7 @@ export default function Home() {
         }
       }}
     >
-      <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${isDanger ? 'bg-red-500/10 text-red-500' : 'bg-slate-700/50 text-blue-400'}`}>
+      <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 group-hover:rotate-3 ${isDanger ? 'bg-red-500/10 text-red-500' : 'bg-slate-700/50 text-blue-400'}`}>
         <i className={`ph-duotone ${service.icon} text-2xl`}></i>
       </div>
       <h3 className="text-lg font-bold text-white mb-2">{service.title}</h3>
@@ -87,7 +88,7 @@ export default function Home() {
             <h2 className="text-2xl font-bold text-white">บริการประชาชน</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {filteredPublic.map(s => renderServiceCard(s))}
+            {filteredPublic.map((s, i) => renderServiceCard(s, i))}
           </div>
         </section>
       )}
@@ -100,7 +101,7 @@ export default function Home() {
             <h2 className="text-2xl font-bold text-white">ระบบจัดการสำหรับสภา</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {filteredCouncil.map(s => renderServiceCard(s, true))}
+            {filteredCouncil.map((s, i) => renderServiceCard(s, i, true))}
           </div>
         </section>
       )}
@@ -113,7 +114,7 @@ export default function Home() {
             <h2 className="text-2xl font-bold text-white">เว็บไซต์ที่เกี่ยวข้อง</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {filteredWebsites.map(s => renderServiceCard(s, false, true))}
+            {filteredWebsites.map((s, i) => renderServiceCard(s, i, false, true))}
           </div>
         </section>
       )}

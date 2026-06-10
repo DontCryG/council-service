@@ -12,11 +12,11 @@ const Button = forwardRef(({
 }, ref) => {
   
   const variants = {
-    primary: 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 shadow-md hover:shadow-lg shadow-blue-900/20 border border-blue-500/50',
-    secondary: 'bg-slate-700 text-white hover:bg-slate-600 active:bg-slate-800',
-    outline: 'border-2 border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white active:bg-slate-900',
-    danger: 'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 shadow-md hover:shadow-lg shadow-red-900/20 border border-red-500/50',
-    ghost: 'text-slate-300 hover:bg-slate-800 hover:text-white',
+    primary: 'bg-blue-600 text-white hover:bg-blue-500 active:bg-blue-700 hover:-translate-y-0.5 active:translate-y-0 shadow-lg hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] border border-blue-500/50 relative overflow-hidden group',
+    secondary: 'bg-slate-800 text-white hover:bg-slate-700 active:bg-slate-900 hover:-translate-y-0.5 active:translate-y-0 shadow-lg border border-slate-600',
+    outline: 'border-2 border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white active:bg-slate-900 hover:-translate-y-0.5 active:translate-y-0',
+    danger: 'bg-red-600 text-white hover:bg-red-500 active:bg-red-700 hover:-translate-y-0.5 active:translate-y-0 shadow-lg hover:shadow-[0_0_20px_rgba(239,68,68,0.5)] border border-red-500/50',
+    ghost: 'text-slate-300 hover:bg-slate-800 hover:text-white active:scale-95',
   };
 
   const sizes = {

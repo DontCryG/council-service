@@ -60,25 +60,25 @@ export default function Sidebar({ className }) {
           if (visibleItems.length === 0) return null;
 
           return (
-            <div key={idx} className="mb-6">
+            <div key={idx} className="mb-6 animate-fade-in-up opacity-0" style={{ animationDelay: `${idx * 100}ms` }}>
               <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-3">
                 {category.title}
               </div>
               <ul className="space-y-1">
-                {visibleItems.map((item) => {
+                {visibleItems.map((item, itemIdx) => {
                   const Icon = item.icon;
                   return (
-                    <li key={item.path}>
+                    <li key={item.path} className="animate-fade-in-up opacity-0" style={{ animationDelay: `${(idx * 100) + (itemIdx * 50) + 100}ms` }}>
                       <NavLink
                         to={item.path}
                         className={({ isActive }) => cn(
-                          "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                          "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 group",
                           isActive 
-                            ? "bg-blue-600/10 text-blue-500" 
+                            ? "bg-blue-600/15 text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.15)] border border-blue-500/20" 
                             : "text-slate-400 hover:bg-slate-800/50 hover:text-white"
                         )}
                       >
-                        <Icon size={20} weight="duotone" />
+                        <Icon size={20} weight="duotone" className="group-hover:scale-110 group-hover:-translate-y-0.5 transition-all duration-300" />
                         {item.label}
                       </NavLink>
                     </li>
