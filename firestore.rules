@@ -1,0 +1,23 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Duty History: Anyone logged in can read, only admin can write
+    match /dutyHistory/{docId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.token.role == 'admin';
+    }
+
+    // Council Members: Anyone logged in can read, only admin can write
+    match /councilMembers/{docId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.token.role == 'admin';
+    }
+    
+    // Add other collections here...
+  }
+}

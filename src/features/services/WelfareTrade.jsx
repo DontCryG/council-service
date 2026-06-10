@@ -4,6 +4,7 @@ import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { sendWebhook } from '../../core/api';
+import { buildWelfareTradeWebhook } from '../../services/discordFormatters';
 import { toBlob } from 'html-to-image';
 
 import { Card } from '../../components/ui/Card';
@@ -98,27 +99,9 @@ export default function WelfareTrade() {
       
       const fd = new FormData();
       fd.append('file', blob, 'trade.png');
-      fd.append('payload_json', JSON.stringify({
-        content: `**[แลกเปลี่ยนสวัสดิการ]** แก๊ง: ${formData.orgName} | ประเภท: ${formData.tradeType}`,
-        embeds: [{
-          title: "🔄 WELFARE TRADE RECEIPT",
-          color: 0x8b5cf6, // Violet
-          fields: [
-            { name: "🏰 แก๊ง/แฟมิลี่", value: `${formData.orgName} (${formData.orgType})`, inline: true },
-            { name: "📦 ประเภทสวัสดิการ", value: formData.tradeType === 'VEHICLE' ? 'ยานพาหนะ' : 'อาวุธ', inline: true },
-            { name: "📤 ชื่อผู้ให้ (เก่า)", value: formData.oldOwner, inline: true },
-            { name: "📥 ชื่อผู้รับ (ใหม่)", value: formData.newOwner, inline: true },
-            { name: "🛡️ สภาที่รับเรื่อง", value: councilMembers.find(c => c.id === formData.councilStaffId)?.name || '-', inline: true },
-            { name: "💰 เรทราคา", value: getTotalPrice(), inline: true },
-            { name: "📋 รายการของ", value: items.map(i => `${i.name} ${i.detail ? `(${i.detail})` : ''}`).join('\n'), inline: false },
-          ],
-          image: {
-            url: "attachment://trade.png"
-          },
-          footer: { text: "Council Secretary System" },
-          timestamp: new Date().toISOString()
-        }]
-      }));
+      const councilName = councilMembers.find(c => c.id === formData.councilStaffId)?.name;
+      const payload = buildWelfareTradeWebhook(formData, items, getTotalPrice(), councilName);
+      fd.append('payload_json', JSON.stringify(payload));
 
       await sendWebhook('welfare_trade', fd);
       showAlert('success', 'ส่งข้อมูลแลกเปลี่ยนเรียบร้อยแล้ว!');

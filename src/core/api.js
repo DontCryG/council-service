@@ -1,5 +1,12 @@
 const API_BASE_URL = '/api';
 
+/**
+ * Sends a payload to the Discord webhook via the Cloudflare proxy.
+ * @param {string} type - The webhook type (e.g., 'welfare_trade', 'general')
+ * @param {FormData|Object} formData - The payload to send (FormData for files, Object for JSON)
+ * @returns {Promise<boolean>} True if successful
+ * @throws {Error} If the request fails
+ */
 export const sendWebhook = async (type, formData) => {
   const isFormData = formData instanceof FormData;
   

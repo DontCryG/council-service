@@ -1,3 +1,8 @@
+import { PRICING } from '../config/constants';
+
+/**
+ * Public facing services available for all users.
+ */
 export const publicServices = [
     { id: 'register_org', title: 'ลงทะเบียนองค์กรใหม่', desc: 'ลงทะเบียนเพื่อสร้าง Gang หรือ Family อย่างเป็นทางการ', icon: 'ph-buildings' },
     { id: 'ps1', title: 'ระบบให้บริการทั่วไป', desc: 'บริการยื่นคำร้องทั่วไปสำหรับประชาชน', icon: 'ph-users' },
@@ -8,6 +13,9 @@ export const publicServices = [
     { id: 'cs5', title: 'STORY CALENDAR', desc: 'ประวัติและปฏิทินเดินสตอรี่ของการจองทั้งหมด', icon: 'ph-calendar-check' },
 ];
 
+/**
+ * Services restricted to council members (logged in users).
+ */
 export const councilServices = [
     { id: 'council_manage', title: 'ระบบจัดการรายชื่อ', desc: 'จัดการข้อมูลของสมาชิกสภา เพื่อนำไปใช้คำนวณการเข้าร่วมและอื่นๆ', icon: 'ph-user-gear' },
     { id: 'cs6', title: 'ระบบเข้าเวรสภา', desc: 'จัดการการเข้าเวร ทำงาน ของสมาชิกสภา เพื่อนำไปคิดคะแนนการทำงาน', icon: 'ph-clock' },
@@ -15,17 +23,23 @@ export const councilServices = [
     { id: 'cs4', title: 'ระบบจัดการ GANG/FAMILY', desc: 'จัดการข้อมูลส่วนกลาง หรือการยุบ Gang/Family ในประเทศ', icon: 'ph-address-book' },
 ];
 
+/**
+ * Related external websites.
+ */
 export const relatedWebsites = [
     { id: 'rw1', title: 'กฎหน่วยงานสภา', desc: 'อ่านกฎกติกาและกฎหมายบ้านเมือง', icon: 'ph-book-open', url: 'https://sites.google.com/view/wiptown/council?authuser=0' }
 ];
 
+/**
+ * Transaction pricing models used in EditOrg.
+ */
 export const transactions = [
-    { id: 1, name: 'เปลี่ยนชื่อแก๊ง / แฟมิลี่ (100,000 / คน)', type: 'per_head', price: 100000 },
-    { id: 2, name: 'โอนย้ายแก๊ง / แฟมิลี่ - ปกติ (100,000 / คน)', type: 'per_head', price: 100000 },
-    { id: 3, name: 'โอนย้ายแก๊ง / แฟมิลี่ - โดนเตะ (250,000 / คน)', type: 'per_head', price: 250000 },
-    { id: 4, name: 'โอนย้ายแก๊ง / แฟมิลี่ - ผิดกฎประเทศ (300,000 / ครั้ง)', type: 'flat', price: 300000 },
-    { id: 5, name: 'ยุบ Gang / Family (1,000,000)', type: 'flat', price: 1000000 },
-    { id: 6, name: 'เปลี่ยนแก๊งทำผิดกฎ (FREE)', type: 'flat', price: 0 }
+    { id: 1, name: `เปลี่ยนชื่อแก๊ง / แฟมิลี่ (${PRICING.ORG_RENAME_PER_HEAD.toLocaleString()} / คน)`, type: 'per_head', price: PRICING.ORG_RENAME_PER_HEAD },
+    { id: 2, name: `โอนย้ายแก๊ง / แฟมิลี่ - ปกติ (${PRICING.ORG_TRANSFER_NORMAL.toLocaleString()} / คน)`, type: 'per_head', price: PRICING.ORG_TRANSFER_NORMAL },
+    { id: 3, name: `โอนย้ายแก๊ง / แฟมิลี่ - โดนเตะ (${PRICING.ORG_TRANSFER_KICKED.toLocaleString()} / คน)`, type: 'per_head', price: PRICING.ORG_TRANSFER_KICKED },
+    { id: 4, name: `โอนย้ายแก๊ง / แฟมิลี่ - ผิดกฎประเทศ (${PRICING.ORG_TRANSFER_RULEBREAK.toLocaleString()} / ครั้ง)`, type: 'flat', price: PRICING.ORG_TRANSFER_RULEBREAK },
+    { id: 5, name: `ยุบ Gang / Family (${PRICING.ORG_DISBAND.toLocaleString()})`, type: 'flat', price: PRICING.ORG_DISBAND },
+    { id: 6, name: 'เปลี่ยนแก๊งทำผิดกฎ (FREE)', type: 'flat', price: PRICING.ORG_TRANSFER_FREE }
 ];
 
 export const councilList = [
