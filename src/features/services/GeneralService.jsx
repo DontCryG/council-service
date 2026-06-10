@@ -177,7 +177,7 @@ export default function GeneralService() {
               required
               value={formData.groupName}
               onChange={e => {
-                const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.[\]]/g, '').toUpperCase();
+                const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.]/g, '').toUpperCase();
                 setFormData({...formData, groupName: val});
               }}
             />

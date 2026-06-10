@@ -168,7 +168,7 @@ export default function WelfareTrade() {
               required
               value={formData.orgName}
               onChange={e => {
-                const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.[\]]/g, '').toUpperCase();
+                const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.]/g, '').toUpperCase();
                 setFormData({...formData, orgName: val});
               }}
             />

@@ -161,7 +161,7 @@ export default function RegisterOrg() {
                   required
                   value={formData.name}
                   onChange={e => {
-                    const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.[\]]/g, '').toUpperCase();
+                    const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.]/g, '').toUpperCase();
                     setFormData({...formData, name: val});
                   }}
                 />
@@ -169,7 +169,7 @@ export default function RegisterOrg() {
                   label="ตัวย่อ (Alias)" 
                   value={formData.alias}
                   onChange={e => {
-                    const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.[\]]/g, '').toUpperCase();
+                    const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.]/g, '').toUpperCase();
                     setFormData({...formData, alias: val});
                   }}
                 />
