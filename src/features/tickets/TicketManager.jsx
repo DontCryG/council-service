@@ -49,18 +49,11 @@ export default function TicketManager() {
 
         if (!isInitialLoad.current && currentOrders.length > prevOrdersCount.current) {
           try {
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            const ctx = new AudioContext();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(880, ctx.currentTime);
-            gain.gain.setValueAtTime(0.1, ctx.currentTime);
-            osc.start();
-            osc.stop(ctx.currentTime + 0.2);
-          } catch(e) {}
+            const audio = new Audio('/alert_sound.mp3');
+            audio.play();
+          } catch(e) {
+            console.error("Audio play failed:", e);
+          }
           showAlert('info', '🛎️ มีออเดอร์ขอซื้อตั๋วเข้ามาใหม่!');
         }
 
