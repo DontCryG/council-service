@@ -1,10 +1,10 @@
 import { useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, collection, query, where, onSnapshot, Timestamp } from 'firebase/firestore';
 import { auth, db } from './core/firebase';
 import { useAppStore } from './store';
-import { CheckCircle, XCircle, Info, X } from '@phosphor-icons/react';
+import { CheckCircle, XCircle, Info, X, BellRinging } from '@phosphor-icons/react';
 
 // Layouts
 import MainLayout from './components/layout/MainLayout';
@@ -33,6 +33,7 @@ function GlobalAlert() {
 
   const isError = alert.type === 'error';
   const isSuccess = alert.type === 'success';
+  const isInfo = alert.type === 'info';
 
   return (
     <div className="fixed top-4 right-4 z-[9999] animate-in fade-in slide-in-from-top-4">
@@ -43,7 +44,8 @@ function GlobalAlert() {
       }`}>
         {isError && <XCircle size={24} weight="fill" />}
         {isSuccess && <CheckCircle size={24} weight="fill" />}
-        {!isError && !isSuccess && <Info size={24} weight="fill" />}
+        {isInfo && <BellRinging size={24} weight="duotone" className="text-blue-400 animate-pulse" />}
+        {!isError && !isSuccess && !isInfo && <Info size={24} weight="fill" />}
         <p className="font-medium text-sm">{alert.message}</p>
         <button onClick={hideAlert} className="ml-2 opacity-70 hover:opacity-100 transition-opacity">
           <X size={16} weight="bold" />
@@ -51,6 +53,48 @@ function GlobalAlert() {
       </div>
     </div>
   );
+}
+
+function LiveNotifications() {
+  const { user, showAlert } = useAppStore();
+
+  useEffect(() => {
+    // Only listen for admins
+    if (!user || user.role !== 'admin') return;
+
+    // Set listener for documents created AFTER this component mounts
+    const startTime = Timestamp.now();
+    const q = query(
+      collection(db, 'transaction_logs'),
+      where('createdAt', '>', startTime)
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === 'added') {
+          const log = change.doc.data();
+          // Don't notify if the admin themselves just triggered it
+          if (log.createdBy?.uid === user.uid) return;
+
+          let msg = '';
+          switch (log.type) {
+            case 'welfare': msg = `🚨 แก๊ง ${log.data.orgName || ''} ยื่นเบิกสวัสดิการใหม่!`; break;
+            case 'welfare_trade': msg = `🔄 แก๊ง ${log.data.orgName || ''} แจ้งขอแลกเปลี่ยน!`; break;
+            case 'edit_org': msg = `📝 แก๊ง ${log.data.orgName || ''} ขอแก้ไขข้อมูลองค์กร!`; break;
+            case 'register_org': msg = `🆕 มีการลงทะเบียนแก๊งใหม่: ${log.data.name || ''}`; break;
+            case 'general_service': msg = `⚙️ บริการทั่วไป: ${log.data.groupName || ''} ส่งคำขอเข้ามา!`; break;
+            default: msg = `🔔 มีรายการใหม่เข้าสู่ระบบ!`;
+          }
+
+          showAlert('info', msg);
+        }
+      });
+    });
+
+    return () => unsubscribe();
+  }, [user, showAlert]);
+
+  return null;
 }
 
 function ProtectedRoute({ children }) {
@@ -138,6 +182,7 @@ function App() {
   return (
     <Router>
       <GlobalAlert />
+      <LiveNotifications />
       <Suspense fallback={
         <div className="min-h-screen flex items-center justify-center bg-slate-950">
           <div className="w-12 h-12 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
