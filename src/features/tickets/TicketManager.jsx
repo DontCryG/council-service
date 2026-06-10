@@ -91,10 +91,6 @@ export default function TicketManager() {
   };
 
   const handleResetRound = async () => {
-    // Auto-export history before clearing
-    if (ticketsData.history.length > 0) {
-      handleExportCsv();
-    }
 
     const newSettings = { ...(ticketsData.settings || {}) };
     
@@ -117,7 +113,7 @@ export default function TicketManager() {
     };
     await saveTicketsToDb(newData);
     setShowConfirmReset(false);
-    showAlert('success', 'ดาวน์โหลดไฟล์ประวัติยอดขาย รีเซ็ตโควต้า และเลื่อนวันที่รอบใหม่ +7 วันเรียบร้อยแล้ว');
+    showAlert('success', 'รีเซ็ตโควต้า และเลื่อนวันที่รอบใหม่ +7 วันเรียบร้อยแล้ว');
   };
 
   const handleProcessOrder = (id, status) => {
