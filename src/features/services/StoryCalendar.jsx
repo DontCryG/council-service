@@ -67,7 +67,7 @@ export default function StoryCalendar() {
       setEditingId(null);
       setFormData({ 
         date: dateStr || selectedDateForView || new Date().toISOString().split('T')[0], 
-        time: '', team1: '', team2: '', type: '', location: '', fights: '', radio: '', bet: '', medic: '', style: '', score: '', description: '', staff: '', note: '' 
+        time: '', team1: '', team2: '', type: '', location: '', fights: '', radio: '', bet: '', medic: '', style: '', score: '', description: '', staff: user?.displayName || user?.email?.split('@')[0] || '', note: '' 
       });
     }
     setModalView('EVENT_FORM');
@@ -576,9 +576,9 @@ export default function StoryCalendar() {
                     <input 
                       type="text"
                       placeholder="ชื่อสภา"
-                      className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-amber-500 font-medium"
+                      className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-400 font-medium cursor-not-allowed"
                       value={formData.staff}
-                      onChange={e => setFormData({...formData, staff: e.target.value})}
+                      readOnly
                     />
                   </div>
                   <div className="flex flex-col gap-1.5">
