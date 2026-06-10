@@ -129,16 +129,23 @@ export default function StoryCalendar() {
     return `${days[date.getDay()]}ที่ ${date.getDate()} ${monthNames[date.getMonth()]} ${date.getFullYear() + 543}`;
   };
 
-  const todayStr = new Date().toISOString().split('T')[0];
-  const upcomingEvents = events
-    .filter(e => e.date >= todayStr)
-    .sort((a, b) => {
-      if (a.date === b.date) {
-        return (a.time || '00:00').localeCompare(b.time || '00:00');
-      }
-      return a.date.localeCompare(b.date);
-    })
-    .slice(0, 5); // Show next 5 events
+    const now = new Date();
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const currentTimeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+    const upcomingEvents = events
+      .filter(e => {
+        if (e.date < todayStr) return false;
+        if (e.date === todayStr && (e.time || '00:00') < currentTimeStr) return false;
+        return true;
+      })
+      .sort((a, b) => {
+        if (a.date === b.date) {
+          return (a.time || '00:00').localeCompare(b.time || '00:00');
+        }
+        return a.date.localeCompare(b.date);
+      })
+      .slice(0, 5); // Show next 5 events
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
