@@ -94,9 +94,12 @@ export default function EditOrg() {
                 formData.bulkChange ? "✅ แก้ไขเหมาๆ" : "",
                 formData.addAccessory ? `✅ เพิ่มประดับ (${formData.accessoryCount} ชิ้น)` : ""
             ].filter(Boolean).join('\n') || "ไม่มี", inline: false },
-            { name: "รายละเอียดเพิ่มเติม", value: formData.extraDetails || "-", inline: false },
-            { name: "สภาที่รับเรื่อง", value: councilMembers.find(c => c.id === formData.councilStaffId)?.name || '-', inline: true },
+            { name: "รายละเอียดเพิ่มเติมที่ต้องการแก้", value: formData.extraDetails || "-", inline: false },
+            { name: "เจ้าหน้าที่สภาผู้รับเรื่อง", value: councilMembers.find(c => c.id === formData.councilStaffId)?.name || '-', inline: true },
           ],
+          image: {
+            url: "attachment://edit_org.png"
+          },
           footer: { text: "Council Secretary System" },
           timestamp: new Date().toISOString()
         }]
