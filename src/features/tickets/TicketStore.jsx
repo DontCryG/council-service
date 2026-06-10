@@ -79,7 +79,7 @@ export default function TicketStore() {
   }
 
   const remainingQuota = Math.max(0, maxQuota - usedQuota);
-  const amountToBuy = parseInt(formData.amount) || 0;
+  const amountToBuy = parseInt(String(formData.amount).replace(/,/g, '')) || 0;
   const totalPrice = amountToBuy * currentRate;
   
   const isValidAmount = amountToBuy > 0 && amountToBuy <= remainingQuota;
@@ -280,13 +280,15 @@ export default function TicketStore() {
           <div className="pt-4 border-t border-slate-800">
             <Input 
               label={`จำนวน Ticket ที่ต้องการเบิก (เรท ${currentRate} ต่อ 1 Ticket)`}
-              type="number"
-              min="1"
-              max={remainingQuota}
+              type="text"
               disabled={!selectedGroup || remainingQuota <= 0}
               placeholder={remainingQuota <= 0 ? "โควต้าเต็มแล้ว" : "ระบุจำนวน Ticket"}
               value={formData.amount}
-              onChange={e => setFormData({...formData, amount: e.target.value})}
+              onChange={e => {
+                const numStr = e.target.value.replace(/\D/g, '');
+                const formatted = numStr ? Number(numStr).toLocaleString('en-US') : '';
+                setFormData({...formData, amount: formatted});
+              }}
               required
             />
             {amountToBuy > remainingQuota && (
