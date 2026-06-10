@@ -82,8 +82,9 @@ export default function EditOrg() {
       fd.append('payload_json', JSON.stringify({
         content: `**[แจ้งแก้ไขข้อมูลองค์กร]** ชื่อ: ${formData.orgName} | โดย: ${formData.requester}`,
         embeds: [{
-          title: "✏️ ORGANIZATION EDIT REQUEST",
+          title: "🔄 ORGANIZATION EDIT REQUEST",
           color: 0xec4899, // Pink
+          thumbnail: formData.logoUrl ? { url: formData.logoUrl } : undefined,
           fields: [
             { name: "🏰 แก๊ง/แฟมิลี่", value: `${formData.orgName} (${formData.orgType})`, inline: true },
             { name: "👤 ผู้แจ้ง", value: formData.requester, inline: true },
