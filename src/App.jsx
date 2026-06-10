@@ -1,7 +1,8 @@
 import { useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from './core/firebase';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from './core/firebase';
 import { useAppStore } from './store';
 import { CheckCircle, XCircle, Info, X } from '@phosphor-icons/react';
 
@@ -75,8 +76,21 @@ function App() {
   const { setUser, isAuthLoaded } = useAppStore();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
+        try {
+          const docRef = doc(db, 'app_state', 'council_members');
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            const members = docSnap.data().members || [];
+            const member = members.find(m => m.email === firebaseUser.email);
+            if (member && member.username) {
+              firebaseUser.councilUsername = member.username;
+            }
+          }
+        } catch (e) {
+          console.error("Error fetching council user:", e);
+        }
         setUser(firebaseUser);
       } else {
         const localUserStr = localStorage.getItem('council_user');
