@@ -95,7 +95,11 @@ function App() {
     // Global block for non-numeric characters in number inputs
     const handleKeyDown = (e) => {
       if (e.target.tagName === 'INPUT' && e.target.type === 'number') {
-        if (['e', 'E', '+', '-'].includes(e.key)) {
+        const isDigit = /^\d$/.test(e.key);
+        const isControl = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Delete', 'Enter', 'Escape'].includes(e.key);
+        const isAction = e.ctrlKey || e.metaKey;
+        
+        if (!isDigit && !isControl && !isAction) {
           e.preventDefault();
         }
       }

@@ -204,7 +204,7 @@ export default function RegisterOrg() {
                 {coLeaders.map(item => (
                   <div key={item.id} className="flex gap-2">
                     <Input placeholder="ชื่อ" className="flex-1" value={item.name} onChange={e => handleArrayChange(setCoLeaders, coLeaders, item.id, 'name', e.target.value)} />
-                    <Input placeholder="เบอร์โทร" className="w-1/3" value={item.phone} onChange={e => handleArrayChange(setCoLeaders, coLeaders, item.id, 'phone', e.target.value)} />
+                    <Input type="number" placeholder="เบอร์โทรศัพท์" className="w-1/3" value={item.phone} onChange={e => handleArrayChange(setCoLeaders, coLeaders, item.id, 'phone', e.target.value)} />
                     <Button type="button" variant="danger" size="icon" onClick={() => handleArrayRemove(setCoLeaders, coLeaders, item.id)}><Trash size={16}/></Button>
                   </div>
                 ))}
@@ -220,7 +220,7 @@ export default function RegisterOrg() {
                 {members.map(item => (
                   <div key={item.id} className="flex gap-2">
                     <Input placeholder="ชื่อ" className="flex-1" value={item.name} onChange={e => handleArrayChange(setMembers, members, item.id, 'name', e.target.value)} />
-                    <Input placeholder="เบอร์โทร" className="w-1/3" value={item.phone} onChange={e => handleArrayChange(setMembers, members, item.id, 'phone', e.target.value)} />
+                    <Input type="number" placeholder="เบอร์โทรศัพท์" className="w-1/3" value={item.phone} onChange={e => handleArrayChange(setMembers, members, item.id, 'phone', e.target.value)} />
                     <Button type="button" variant="danger" size="icon" onClick={() => handleArrayRemove(setMembers, members, item.id)}><Trash size={16}/></Button>
                   </div>
                 ))}

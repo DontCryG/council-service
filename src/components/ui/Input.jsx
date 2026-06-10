@@ -19,8 +19,13 @@ const Input = forwardRef(({ className, label, error, ...props }, ref) => {
           className
         )}
         onKeyDown={(e) => {
-          if (props.type === 'number' && ['e', 'E', '+', '-'].includes(e.key)) {
-            e.preventDefault();
+          if (props.type === 'number') {
+            const isDigit = /^\d$/.test(e.key);
+            const isControl = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Delete', 'Enter', 'Escape'].includes(e.key);
+            const isAction = e.ctrlKey || e.metaKey;
+            if (!isDigit && !isControl && !isAction) {
+              e.preventDefault();
+            }
           }
           if (props.onKeyDown) props.onKeyDown(e);
         }}
