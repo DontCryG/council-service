@@ -169,19 +169,11 @@ export default function RegisterOrg() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="text-sm font-medium text-slate-300 ml-1 block mb-1">สีประจำแก๊ง</label>
-                  <div className="flex gap-2 h-11">
-                    <input 
-                      type="color" 
-                      className="h-full w-12 bg-slate-900 border border-slate-700 rounded cursor-pointer p-1"
-                      value={formData.color}
-                      onChange={e => setFormData({...formData, color: e.target.value})}
-                    />
-                    <Input 
-                      className="flex-1"
-                      value={formData.color}
-                      onChange={e => setFormData({...formData, color: e.target.value})}
-                    />
-                  </div>
+                  <Input 
+                    placeholder="#000000"
+                    value={formData.color}
+                    onChange={e => setFormData({...formData, color: e.target.value})}
+                  />
                 </div>
                 <Input 
                   label="Link โลโก้ (ถ้ามี)" 
@@ -260,7 +252,7 @@ export default function RegisterOrg() {
               {/* Header */}
               <div className="flex items-center justify-between border-b-2 border-slate-800 pb-4 mb-6">
                 <div>
-                  <h2 className="text-3xl font-black uppercase tracking-tighter" style={{ color: formData.color || '#000' }}>
+                  <h2 className="text-3xl font-black uppercase tracking-tighter" style={{ color: '#000' }}>
                     {formData.name || 'ORGANIZATION'}
                   </h2>
                   <p className="text-slate-500 font-bold tracking-widest">{formData.orgType} REGISTRATION</p>
