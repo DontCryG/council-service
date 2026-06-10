@@ -24,17 +24,26 @@ export default function StoryCalendar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalView, setModalView] = useState('DAY_VIEW'); // 'DAY_VIEW' | 'EVENT_FORM'
   const [selectedDateForView, setSelectedDateForView] = useState(null);
+  const [showEventModal, setShowEventModal] = useState(false);
+  const [selectedDay, setSelectedDay] = useState(null);
+  const [editingEvent, setEditingEvent] = useState(null);
+  
+  const [realTime, setRealTime] = useState(new Date());
+
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
     date: '', time: '', team1: '', team2: '', type: 'Gang', location: '', fights: '', radio: '', bet: '', medic: '', style: '', score: '', description: '', staff: '', note: ''
   });
 
   useEffect(() => {
-    const unsub = onSnapshot(doc(db, 'app_state', 'calendar'), (docSnap) => {
+    const timer = setInterval(() => setRealTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const unsub = onSnapshot(doc(db, 'app_state', 'stories'), (docSnap) => {
       if (docSnap.exists()) {
         setEvents(docSnap.data().events || []);
-      } else {
-        setEvents([]);
       }
       setLoading(false);
     });
@@ -149,21 +158,30 @@ export default function StoryCalendar() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-            <CalendarCheck className="text-amber-500" />
-            STORY CALENDAR
-          </h1>
-          <p className="text-slate-400 mt-1">ปฏิทินเดินสตอรี่และวอร์ประจำเดือน</p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+              <CalendarCheck className="text-amber-500" />
+              STORY CALENDAR
+            </h1>
+            <p className="text-slate-400 mt-1">ปฏิทินเดินสตอรี่และวอร์ประจำเดือน</p>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <div className="flex items-center gap-2.5 bg-slate-900/80 px-4 py-2.5 rounded-xl border border-slate-700/50 shadow-inner">
+              <Clock size={20} weight="bold" className="text-amber-500" />
+              <span className="text-white font-black text-xl tracking-wider font-mono">
+                {realTime.toLocaleTimeString('en-GB')}
+              </span>
+              <span className="text-slate-400 font-bold text-sm">BKK</span>
+            </div>
+            {user && (
+              <Button onClick={() => handleOpenForm(null)} className="w-full sm:w-auto">
+                <Plus size={20} weight="bold" /> เพิ่มกิจกรรม (Admin)
+              </Button>
+            )}
+          </div>
         </div>
-        
-        {user && (
-          <Button onClick={() => handleOpenForm(null)} className="sm:w-auto w-full">
-            <Plus size={20} weight="bold" /> เพิ่มกิจกรรม (Admin)
-          </Button>
-        )}
-      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Main Calendar */}
