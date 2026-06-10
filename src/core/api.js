@@ -20,7 +20,7 @@ export const saveTransactionLog = async (type, data, user = null) => {
     await addDoc(collection(db, 'transaction_logs'), logData);
   } catch (err) {
     console.error("Failed to save transaction log:", err);
-    // Don't throw to prevent breaking the main flow
+    alert('Save Log Error: ' + err.message);
   }
 };
 
@@ -39,6 +39,7 @@ export const getTransactionLogs = async () => {
     }));
   } catch (err) {
     console.error("Failed to get transaction logs:", err);
+    alert('Fetch Log Error: ' + err.message);
     return [];
   }
 };
