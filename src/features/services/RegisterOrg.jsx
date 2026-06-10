@@ -76,38 +76,33 @@ export default function RegisterOrg() {
       
       const fd = new FormData();
       fd.append('file', blob, 'register.png');
-      const fee = 200000;
-      const tax = fee * 0.25;
-      const remaining = fee - tax;
+      const typeDisplay = formData.orgType === 'GANG' ? 'แก๊ง' : 'แฟม';
       const councilName = councilMembers.find(c => c.id === formData.councilStaffId)?.name || '-';
 
-      const coLeaderText = coLeaders.length > 0 ? `**รองหัวหน้า:** ${coLeaders.map(c => c.name).join(', ')}` : '';
-      const memberText = members.length > 0 ? `**สมาชิก:**\n${members.map(m => m.name).join('\n')}` : '';
+      const coLeaderText = coLeaders.length > 0 ? `รองหัวหน้า: ${coLeaders.map(c => c.name).join(', ')}` : '';
+      const memberText = members.length > 0 ? `สมาชิก:\n${members.map(m => m.name).join('\n')}` : '';
       const membersFullText = [
-        `**หัวหน้า:** ${formData.leader}`,
+        `หัวหน้า: ${formData.leader}`,
         coLeaderText,
         memberText
       ].filter(Boolean).join('\n');
 
       fd.append('payload_json', JSON.stringify({
-        content: `📢 **แจ้งเตือน: ลงทะเบียน ${formData.orgType} ใหม่**`,
         embeds: [{
-          color: 0x2b2d31,
+          title: "Council Service Log",
+          description: "Organization registration submitted",
+          color: 0xf59e0b,
           fields: [
-            { name: "ชื่อสังกัด (ตัวย่อ)", value: `${formData.name || '-'} (${formData.alias || '-'})`, inline: true },
-            { name: "สีประจำสังกัด", value: formData.color || '-', inline: true },
-            { name: "เจ้าหน้าที่สภาผู้รับเรื่อง", value: councilName, inline: true },
-            { name: `👥 รายชื่อสมาชิก (รวม: ${members.length + coLeaders.length + 1} คน)`, value: membersFullText || '-', inline: false },
-            { name: "────────────────────\nรายละเอียดการเงิน", value: "\u200B", inline: false },
-            { name: "ค่าธรรมเนียม", value: `$${fee.toLocaleString()}`, inline: true },
-            { name: "หักภาษี (-25%)", value: `-$${tax.toLocaleString()}`, inline: true },
-            { name: "ยอดคงเหลือเข้าสภา", value: `$${remaining.toLocaleString()}`, inline: true }
+            { name: "Type", value: typeDisplay, inline: true },
+            { name: "Group", value: `${formData.name || '-'} (${formData.alias || '-'})`, inline: true },
+            { name: "Requester", value: formData.leader || '-', inline: false },
+            { name: "Transaction", value: "ลงทะเบียนองค์กรใหม่", inline: false },
+            { name: "Members", value: `\`\`\`\n${membersFullText || '-'}\n\`\`\``, inline: false },
+            { name: "Council", value: councilName, inline: false }
           ],
           image: {
             url: "attachment://register.png"
-          },
-          footer: { text: "Council System • แนบใบเสร็จรับเงินอย่างเป็นทางการแล้ว" },
-          timestamp: new Date().toISOString()
+          }
         }]
       }));
 
@@ -337,12 +332,6 @@ export default function RegisterOrg() {
                     {members.map(m => <li key={m.id}>{m.name} {m.phone && <span className="text-xs text-slate-500">({m.phone})</span>}</li>)}
                   </ul>
                 </div>
-              </div>
-
-              {/* Fee Section */}
-              <div className="mt-2 mb-8 bg-amber-50 border border-amber-200 rounded-lg p-4 flex justify-between items-center">
-                <span className="font-bold text-amber-800 uppercase tracking-wider">Registration Fee</span>
-                <span className="text-2xl font-black text-amber-600 tracking-tighter">$200,000</span>
               </div>
 
               {/* Signatures */}
