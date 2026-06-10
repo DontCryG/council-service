@@ -24,7 +24,7 @@ export default function WelfareTrade() {
     oldOwner: '',
     newOwner: '',
     councilStaffId: '',
-    pricingType: '1.5M' // 1.5M, 1M, 500K
+    pricingType: '300,000'
   });
   
   const [items, setItems] = useState([{ id: 1, name: '', detail: '' }]);
@@ -135,14 +135,14 @@ export default function WelfareTrade() {
               <button
                 type="button"
                 className={`flex-1 py-2 rounded-md font-bold transition-colors ${formData.tradeType === 'VEHICLE' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}
-                onClick={() => setFormData({...formData, tradeType: 'VEHICLE'})}
+                onClick={() => setFormData({...formData, tradeType: 'VEHICLE', pricingType: '300,000'})}
               >
                 โอนย้ายรถ (VEHICLE)
               </button>
               <button
                 type="button"
                 className={`flex-1 py-2 rounded-md font-bold transition-colors ${formData.tradeType === 'WEAPON' ? 'bg-red-600 text-white' : 'text-slate-400 hover:text-white'}`}
-                onClick={() => setFormData({...formData, tradeType: 'WEAPON'})}
+                onClick={() => setFormData({...formData, tradeType: 'WEAPON', pricingType: 'ออกปกติ (1.5M / ชิ้น)'})}
               >
                 โอนย้ายอาวุธ (WEAPON)
               </button>
@@ -254,10 +254,14 @@ export default function WelfareTrade() {
                   value={formData.pricingType}
                   onChange={e => setFormData({...formData, pricingType: e.target.value})}
                 >
-                  <option value="1.5M">1.5M (รถสวัสดิการ)</option>
-                  <option value="1M">1M (รถกาชา)</option>
-                  <option value="500K">500,000 (อาวุธ)</option>
-                  <option value="FREE">ฟรี (กรณีพิเศษ)</option>
+                  {formData.tradeType === 'VEHICLE' ? (
+                    <option value="300,000">300,000</option>
+                  ) : (
+                    <>
+                      <option value="ออกปกติ (1.5M / ชิ้น)">ออกปกติ (1.5M / ชิ้น)</option>
+                      <option value="ออกลอย (2.0M / ชิ้น)">ออกลอย (2.0M / ชิ้น)</option>
+                    </>
+                  )}
                 </select>
               </div>
             </div>
