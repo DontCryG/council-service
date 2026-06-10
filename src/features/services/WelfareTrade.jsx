@@ -98,6 +98,9 @@ export default function WelfareTrade() {
             { name: "💰 เรทราคา", value: formData.pricingType, inline: true },
             { name: "📋 รายการของ", value: items.map(i => `${i.name} ${i.detail ? `(${i.detail})` : ''}`).join('\n'), inline: false },
           ],
+          image: {
+            url: "attachment://trade.png"
+          },
           footer: { text: "Council Secretary System" },
           timestamp: new Date().toISOString()
         }]

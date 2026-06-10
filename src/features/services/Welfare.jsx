@@ -66,8 +66,11 @@ export default function Welfare() {
             { name: "👤 ผู้เบิก", value: formData.requester, inline: false },
             { name: "🚗 ยานพาหนะ", value: vehicles.length > 0 ? vehicles.map(v => `${v.model} (${v.plate})`).join('\n') : 'ไม่มี', inline: false },
             { name: "⚔️ อาวุธ", value: formData.hasWeapon ? 'มีอาวุธ' : 'ไม่มี', inline: true },
-            { name: "📦 อื่นๆ", value: formData.otherWelfare || '-', inline: true },
+            { name: "📝 หมายเหตุ", value: formData.otherWelfare || '-', inline: true },
           ],
+          image: {
+            url: "attachment://welfare.png"
+          },
           footer: { text: "Council Secretary System" },
           timestamp: new Date().toISOString()
         }]
