@@ -94,7 +94,7 @@ export default function RegisterOrg() {
           color: 0xf59e0b,
           fields: [
             { name: "Type", value: typeDisplay, inline: true },
-            { name: "Group", value: `${formData.name || '-'} (${formData.alias || '-'})`, inline: true },
+            { name: "Group", value: formData.alias ? `[${formData.alias}] ${formData.name || '-'}` : (formData.name || '-'), inline: true },
             { name: "Requester", value: formData.leader || '-', inline: false },
             { name: "Transaction", value: "ลงทะเบียนองค์กรใหม่", inline: false },
             { name: "Members", value: `\`\`\`\n${membersFullText || '-'}\n\`\`\``, inline: false },
