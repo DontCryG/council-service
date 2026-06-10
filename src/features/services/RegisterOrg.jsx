@@ -113,7 +113,8 @@ export default function RegisterOrg() {
         name: formData.name,
         alias: formData.alias,
         color: formData.color,
-        members: members.map(m => m.value),
+        coLeaders: coLeaders.map(c => c.name),
+        members: members.map(m => m.name),
         councilStaffId: formData.councilStaffId
       }, user);
       showAlert('success', 'ลงทะเบียนแก๊ง/แฟมิลี่เรียบร้อยแล้ว!');
