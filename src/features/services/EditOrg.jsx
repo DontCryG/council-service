@@ -116,7 +116,6 @@ export default function EditOrg() {
         orgName: formData.orgName,
         orgType: formData.orgType,
         requester: formData.requester,
-        totalPrice: getTotalPrice(),
         councilStaffId: formData.councilStaffId,
         changeInfo: formData.changeInfo,
         editTexture: formData.editTexture,
