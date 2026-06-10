@@ -520,10 +520,14 @@ export default function StoryCalendar() {
                       <Coins size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-amber-500" />
                       <input 
                         type="text"
-                        placeholder="เช่น 50,000 Cash"
+                        placeholder="เช่น 50,000"
                         className="w-full bg-slate-900 border border-slate-700 rounded-lg pl-10 pr-4 py-2.5 text-white focus:outline-none focus:border-amber-500 font-medium"
                         value={formData.bet}
-                        onChange={e => setFormData({...formData, bet: e.target.value})}
+                        onChange={e => {
+                          const numStr = e.target.value.replace(/\D/g, '');
+                          const formatted = numStr ? Number(numStr).toLocaleString('en-US') : '';
+                          setFormData({...formData, bet: formatted});
+                        }}
                       />
                     </div>
                   </div>
