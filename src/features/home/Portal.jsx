@@ -108,7 +108,7 @@ export default function Portal() {
             <a href="#" className="hover:text-white hover:scale-110 transition-all duration-300"><Globe size={22} weight="duotone" /></a>
             <a href="#" className="hover:text-blue-500 hover:scale-110 transition-all duration-300"><FacebookLogo size={22} weight="duotone" /></a>
           </div>
-          <p className="text-[10px] md:text-xs text-slate-600 tracking-wider">สงวนลิขสิทธิ์ &copy; 2567 สำนักงานสภาเมือง</p>
+          <p className="text-[10px] md:text-xs text-slate-600 tracking-wider">สงวนลิขสิทธิ์ &copy; {new Date().getFullYear() + 543} สำนักงานสภาเมือง</p>
         </div>
         <div>
           <button 

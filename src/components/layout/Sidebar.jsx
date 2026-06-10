@@ -107,7 +107,7 @@ export default function Sidebar({ className }) {
       
       <div className="p-4 border-t border-slate-800">
         <div className="text-xs text-center text-slate-500 tracking-widest font-mono">
-          &copy; 2026 THE COUNCIL OFFICE
+          &copy; {new Date().getFullYear()} THE COUNCIL OFFICE
         </div>
       </div>
     </aside>
