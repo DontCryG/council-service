@@ -35,7 +35,7 @@ export default function Header() {
             <User size={18} weight="bold" />
           </div>
           <span className="text-sm font-medium text-slate-300">
-            {user ? user.email : 'Guest'}
+            {user ? (user.email ? user.email.split('@')[0] : (user.displayName || 'User')) : 'Guest'}
           </span>
         </div>
         
