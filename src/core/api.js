@@ -39,8 +39,21 @@ export const getTransactionLogs = async () => {
     }));
   } catch (err) {
     console.error("Failed to get transaction logs:", err);
-    alert('Fetch Log Error: ' + err.message);
     return [];
+  }
+};
+
+/**
+ * Deletes a transaction log from Firestore
+ * @param {string} logId - The ID of the log to delete
+ */
+export const deleteTransactionLog = async (logId) => {
+  const { doc, deleteDoc } = await import('firebase/firestore');
+  try {
+    await deleteDoc(doc(db, 'transaction_logs', logId));
+  } catch (err) {
+    console.error("Failed to delete transaction log:", err);
+    throw err;
   }
 };
 /**

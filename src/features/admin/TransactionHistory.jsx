@@ -1,22 +1,44 @@
 import { useState, useEffect } from 'react';
-import { getTransactionLogs } from '../../core/api';
+import { getTransactionLogs, deleteTransactionLog } from '../../core/api';
 import { Card } from '../../components/ui/Card';
-import { Clock, Database, Buildings, UserCircle, Receipt } from '@phosphor-icons/react';
+import Modal from '../../components/ui/Modal';
+import ConfirmationModal from '../../components/ui/ConfirmationModal';
+import { Clock, Database, Buildings, UserCircle, Receipt, Trash, Eye } from '@phosphor-icons/react';
 
 export default function TransactionHistory() {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('ALL');
+  
+  const [selectedLog, setSelectedLog] = useState(null);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  
+  const [logToDelete, setLogToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    const fetchLogs = async () => {
-      setLoading(true);
-      const data = await getTransactionLogs();
-      setLogs(data);
-      setLoading(false);
-    };
     fetchLogs();
   }, []);
+
+  const fetchLogs = async () => {
+    setLoading(true);
+    const data = await getTransactionLogs();
+    setLogs(data);
+    setLoading(false);
+  };
+
+  const handleDelete = async () => {
+    if (!logToDelete) return;
+    setIsDeleting(true);
+    try {
+      await deleteTransactionLog(logToDelete);
+      setLogs(logs.filter(l => l.id !== logToDelete));
+      setLogToDelete(null);
+    } catch (err) {
+      alert('Failed to delete log');
+    }
+    setIsDeleting(false);
+  };
 
   const getTypeLabel = (type) => {
     switch (type) {
@@ -31,12 +53,12 @@ export default function TransactionHistory() {
 
   const getSummaryText = (log) => {
     switch (log.type) {
-      case 'edit_org': return `${log.data.orgType}: ${log.data.orgName} (ผู้แจ้ง: ${log.data.requester})`;
-      case 'welfare': return `${log.data.orgType}: ${log.data.orgName} (ผู้เบิก: ${log.data.requester})`;
-      case 'welfare_trade': return `${log.data.orgType}: ${log.data.orgName} (${log.data.tradeType})`;
-      case 'general_service': return `${log.data.groupName || '-'} (ผู้ขอ: ${log.data.requester})`;
-      case 'register_org': return `[${log.data.alias}] ${log.data.name} (${log.data.orgType})`;
-      default: return JSON.stringify(log.data);
+      case 'edit_org': return `${log.data.orgType || ''} ${log.data.orgName || ''} (ผู้แจ้ง: ${log.data.requester || '-'})`;
+      case 'welfare': return `${log.data.orgType || ''} ${log.data.orgName || ''} (ผู้เบิก: ${log.data.requester || '-'})`;
+      case 'welfare_trade': return `${log.data.orgType || ''} ${log.data.orgName || ''} (${log.data.tradeType || '-'})`;
+      case 'general_service': return `${log.data.groupName || '-'} (ผู้แจ้ง: ${log.data.requester || '-'})`;
+      case 'register_org': return `[${log.data.alias || '-'}] ${log.data.name || ''} (${log.data.orgType || ''})`;
+      default: return 'Custom Action';
     }
   };
 
@@ -53,7 +75,7 @@ export default function TransactionHistory() {
       </div>
 
       <Card>
-        <div className="mb-6 flex gap-2 overflow-x-auto pb-2">
+        <div className="mb-6 flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
           {['ALL', 'register_org', 'edit_org', 'welfare', 'welfare_trade', 'general_service'].map(t => (
             <button
               key={t}
@@ -73,15 +95,15 @@ export default function TransactionHistory() {
           </div>
         ) : filteredLogs.length === 0 ? (
           <div className="text-center py-20 text-slate-500 border-2 border-dashed border-slate-700 rounded-xl">
-            ไม่มีประวัติการทำรายการในระบบ
+            ไม่มีประวัติการทำรายการในหมวดหมู่นี้
           </div>
         ) : (
           <div className="space-y-3">
             {filteredLogs.map(log => {
               const typeInfo = getTypeLabel(log.type);
               return (
-                <div key={log.id} className="bg-slate-800/50 p-4 rounded-xl border border-slate-700 flex flex-col md:flex-row gap-4 justify-between md:items-center hover:bg-slate-800 transition-colors">
-                  <div className="space-y-1">
+                <div key={log.id} className="bg-slate-800/50 p-4 rounded-xl border border-slate-700 flex flex-col md:flex-row gap-4 justify-between md:items-center hover:bg-slate-800 transition-colors group">
+                  <div className="space-y-1 flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <span className={`px-2.5 py-1 rounded-md text-xs font-bold ${typeInfo.bg} ${typeInfo.color}`}>
                         {typeInfo.label}
@@ -96,18 +118,86 @@ export default function TransactionHistory() {
                     </div>
                   </div>
                   
-                  {log.createdBy && (
-                    <div className="text-right text-sm text-slate-400 flex items-center gap-2 bg-slate-900/50 px-3 py-1.5 rounded-lg w-max md:w-auto self-start md:self-auto">
-                      <UserCircle size={18} className="text-amber-500" />
-                      <span>{log.createdBy.email}</span>
-                    </div>
-                  )}
+                  <div className="flex items-center gap-3 self-end md:self-auto">
+                    {log.createdBy && (
+                      <div className="text-sm text-slate-400 flex items-center gap-1.5 bg-slate-900/50 px-3 py-1.5 rounded-lg hidden md:flex">
+                        <UserCircle size={16} className="text-amber-500" />
+                        <span>{log.createdBy.email}</span>
+                      </div>
+                    )}
+                    
+                    <button
+                      onClick={() => {
+                        setSelectedLog(log);
+                        setIsDetailsModalOpen(true);
+                      }}
+                      className="p-2 bg-slate-700 hover:bg-blue-600 text-slate-300 hover:text-white rounded-lg transition-colors flex items-center gap-2 text-sm"
+                      title="ดูรายละเอียด"
+                    >
+                      <Eye size={18} />
+                      <span className="md:hidden">ดูรายละเอียด</span>
+                    </button>
+                    
+                    <button
+                      onClick={() => setLogToDelete(log.id)}
+                      className="p-2 bg-slate-700 hover:bg-red-500 text-slate-300 hover:text-white rounded-lg transition-colors flex items-center gap-2 text-sm"
+                      title="ลบประวัติ"
+                    >
+                      <Trash size={18} />
+                      <span className="md:hidden">ลบ</span>
+                    </button>
+                  </div>
                 </div>
               );
             })}
           </div>
         )}
       </Card>
+      
+      {/* Details Modal */}
+      <Modal
+        isOpen={isDetailsModalOpen}
+        onClose={() => setIsDetailsModalOpen(false)}
+        title="รายละเอียดการทำรายการ"
+      >
+        {selectedLog && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className={`px-3 py-1 rounded-md text-sm font-bold ${getTypeLabel(selectedLog.type).bg} ${getTypeLabel(selectedLog.type).color} w-max`}>
+                {getTypeLabel(selectedLog.type).label}
+              </div>
+              <div className="text-slate-400 text-sm">
+                {selectedLog.createdAt.toLocaleString('th-TH')}
+              </div>
+            </div>
+            
+            <div className="bg-slate-900 rounded-xl p-4 border border-slate-700 overflow-auto max-h-[60vh] scrollbar-thin scrollbar-thumb-slate-700">
+              <pre className="text-slate-300 text-xs font-mono whitespace-pre-wrap">
+                {JSON.stringify(selectedLog.data, null, 2)}
+              </pre>
+            </div>
+            
+            {selectedLog.createdBy && (
+              <div className="flex items-center gap-2 text-slate-400 text-sm bg-slate-800/50 p-3 rounded-lg border border-slate-700">
+                <UserCircle size={20} className="text-amber-500" />
+                <span>บันทึกโดย: {selectedLog.createdBy.email}</span>
+              </div>
+            )}
+          </div>
+        )}
+      </Modal>
+
+      {/* Delete Confirmation */}
+      <ConfirmationModal
+        isOpen={!!logToDelete}
+        onClose={() => setLogToDelete(null)}
+        onConfirm={handleDelete}
+        title="ลบประวัติการทำรายการ"
+        message="คุณแน่ใจหรือไม่ที่จะลบประวัติรายการนี้? การกระทำนี้ไม่สามารถย้อนกลับได้"
+        confirmText="ลบข้อมูล"
+        confirmStyle="danger"
+        isLoading={isDeleting}
+      />
     </div>
   );
 }
