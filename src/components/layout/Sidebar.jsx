@@ -19,7 +19,7 @@ export default function Sidebar({ className }) {
     {
       title: 'บริการทั่วไป',
       items: [
-        { path: '/', label: 'หน้าแรก', icon: House, isPublic: true },
+        { path: '/home', label: 'หน้าแรก', icon: House, isPublic: true },
         { path: '/ps1', label: 'คำร้องทั่วไป', icon: FileText, isPublic: true },
         { path: '/ps5', label: 'เบิกทิคเก็ต', icon: Ticket, isPublic: true },
         { path: '/cs5', label: 'ตารางเดินสตอรี่', icon: Calendar, isPublic: true },

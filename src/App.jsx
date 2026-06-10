@@ -10,6 +10,7 @@ import { CheckCircle, XCircle, Info, X, BellRinging } from '@phosphor-icons/reac
 import MainLayout from './components/layout/MainLayout';
 
 // Lazy load pages for ultimate performance
+const Portal = lazy(() => import('./features/home/Portal'));
 const Home = lazy(() => import('./features/home/Home'));
 const Login = lazy(() => import('./features/auth/Login'));
 const NotFound = lazy(() => import('./features/error/NotFound'));
@@ -190,11 +191,12 @@ function App() {
       }>
         <Routes>
           {/* Public Routes */}
+          <Route path="/" element={<Portal />} />
           <Route path="/login" element={<Login />} />
           
           {/* Protected Routes (Wrapped in MainLayout) */}
-          <Route path="/" element={<MainLayout />}>
-            <Route index element={<Home />} />
+          <Route element={<MainLayout />}>
+            <Route path="home" element={<Home />} />
             
             {/* Council Only Routes */}
             <Route path="/council_manage" element={<AdminRoute><CouncilManage /></AdminRoute>} />

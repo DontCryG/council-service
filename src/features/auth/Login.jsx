@@ -20,7 +20,7 @@ export default function Login() {
 
   // If already logged in, redirect to home
   if (isAuthLoaded && user) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/home" replace />;
   }
 
   const handleLogin = async (e) => {
@@ -49,14 +49,14 @@ export default function Login() {
           };
           localStorage.setItem('council_user', JSON.stringify(localUser));
           setUser(localUser);
-          navigate('/');
+          navigate('/home');
           return;
         }
       }
 
       // 2. Fallback to Firebase Email/Password
       await signInWithEmailAndPassword(auth, email, password);
-      navigate('/');
+      navigate('/home');
     } catch (err) {
       console.error(err);
       if (err.code === 'auth/invalid-credential') {
