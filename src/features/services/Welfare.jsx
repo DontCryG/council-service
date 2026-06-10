@@ -17,8 +17,6 @@ export default function Welfare() {
     orgType: 'GANG',
     orgName: '',
     requester: '',
-    hasCarWelfare: false,
-    hasMansionWelfare: false,
     hasWeaponWelfare: false,
     otherWelfare: ''
   });
@@ -65,8 +63,6 @@ export default function Welfare() {
             { name: "📋 ประเภท", value: formData.orgType, inline: true },
             { name: "🏷️ ชื่อ", value: formData.orgName, inline: true },
             { name: "👤 ผู้เบิก", value: formData.requester, inline: false },
-            { name: "🚗 สวัสดิการรถ", value: formData.hasCarWelfare ? '✅ รับสวัสดิการรถ 1 คัน (ฟรี)' : '❌ ไม่รับ', inline: true },
-            { name: "🏠 สวัสดิการคฤหาสน์", value: formData.hasMansionWelfare ? '✅ รับสวัสดิการคฤหาสน์ 1 หลัง (ฟรี)' : '❌ ไม่รับ', inline: true },
             { name: "⚔️ สวัสดิการอาวุธ", value: formData.hasWeaponWelfare ? '✅ รับสวัสดิการอาวุธไม้พูล' : '❌ ไม่รับ', inline: true },
             { name: "🚗 ยานพาหนะ", value: vehicles.length > 0 ? vehicles.map(v => `${v.model} (${v.plate})`).join('\n') : 'ไม่มี', inline: false },
             { name: "📦 อื่นๆ", value: formData.otherWelfare || '-', inline: true },
@@ -85,8 +81,6 @@ export default function Welfare() {
         orgName: formData.orgName,
         requester: formData.requester,
         vehicles: vehicles,
-        hasCarWelfare: formData.hasCarWelfare,
-        hasMansionWelfare: formData.hasMansionWelfare,
         hasWeaponWelfare: formData.hasWeaponWelfare,
         otherWelfare: formData.otherWelfare
       }, user);
@@ -184,26 +178,6 @@ export default function Welfare() {
                 <input 
                   type="checkbox" 
                   className="w-5 h-5 rounded border-slate-600 bg-slate-900 text-blue-600 focus:ring-blue-500 focus:ring-offset-slate-900"
-                  checked={formData.hasCarWelfare}
-                  onChange={e => setFormData({...formData, hasCarWelfare: e.target.checked})}
-                />
-                <span className="font-medium text-white flex items-center gap-2"><Car className="text-emerald-500"/> สวัสดิการรถ 1 คัน (ฟรี)</span>
-              </label>
-
-              <label className="flex items-center gap-3 cursor-pointer p-3 border border-slate-700 rounded-lg hover:bg-slate-800 transition-colors">
-                <input 
-                  type="checkbox" 
-                  className="w-5 h-5 rounded border-slate-600 bg-slate-900 text-blue-600 focus:ring-blue-500 focus:ring-offset-slate-900"
-                  checked={formData.hasMansionWelfare}
-                  onChange={e => setFormData({...formData, hasMansionWelfare: e.target.checked})}
-                />
-                <span className="font-medium text-white flex items-center gap-2"><Buildings className="text-indigo-500"/> สวัสดิการคฤหาสน์ 1 หลัง (ฟรี)</span>
-              </label>
-
-              <label className="flex items-center gap-3 cursor-pointer p-3 border border-slate-700 rounded-lg hover:bg-slate-800 transition-colors">
-                <input 
-                  type="checkbox" 
-                  className="w-5 h-5 rounded border-slate-600 bg-slate-900 text-blue-600 focus:ring-blue-500 focus:ring-offset-slate-900"
                   checked={formData.hasWeaponWelfare}
                   onChange={e => setFormData({...formData, hasWeaponWelfare: e.target.checked})}
                 />
@@ -255,20 +229,6 @@ export default function Welfare() {
                     </div>
                   ))}
                 </div>
-              </div>
-
-              <div className="flex justify-between items-center py-3 border-b border-slate-800/50">
-                <span className="text-slate-400">สวัสดิการรถ</span>
-                <span className={`font-bold ${formData.hasCarWelfare ? 'text-emerald-400' : 'text-slate-600'}`}>
-                  {formData.hasCarWelfare ? '✅ รับสวัสดิการรถ 1 คัน' : '❌ ไม่รับ'}
-                </span>
-              </div>
-
-              <div className="flex justify-between items-center py-3 border-b border-slate-800/50">
-                <span className="text-slate-400">สวัสดิการคฤหาสน์</span>
-                <span className={`font-bold ${formData.hasMansionWelfare ? 'text-emerald-400' : 'text-slate-600'}`}>
-                  {formData.hasMansionWelfare ? '✅ รับสวัสดิการคฤหาสน์ 1 หลัง' : '❌ ไม่รับ'}
-                </span>
               </div>
 
               <div className="flex justify-between items-center py-3 border-b border-slate-800/50">
