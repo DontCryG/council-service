@@ -139,7 +139,7 @@ export default function WelfareTrade() {
         <ArrowsLeftRight size={32} weight="duotone" className="text-violet-500" />
         <div>
           <h1 className="text-2xl font-bold text-white">ระบบเทรดสวัสดิการ</h1>
-          <p className="text-slate-400">แบบฟอร์มบันทึกการโอนสิทธิ์ยานพาหนะ / อาวุธ ขององค์กร</p>
+          <p className="text-slate-400">บริการแลกเปลี่ยนและจัดการสวัสดิการขององค์กร</p>
         </div>
       </div>
 
