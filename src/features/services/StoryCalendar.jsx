@@ -437,7 +437,10 @@ export default function StoryCalendar() {
                       required
                       className="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-center font-bold text-white focus:outline-none focus:border-amber-500"
                       value={formData.team1}
-                      onChange={e => setFormData({...formData, team1: e.target.value})}
+                      onChange={e => {
+                        const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.]/g, '').toUpperCase();
+                        setFormData({...formData, team1: val});
+                      }}
                     />
                     <div className="bg-slate-950 text-amber-500 font-black px-3 py-2 rounded-lg text-sm border border-slate-800 shadow-sm">VS</div>
                     <input 
@@ -445,7 +448,10 @@ export default function StoryCalendar() {
                       placeholder="Team B"
                       className="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-center font-bold text-white focus:outline-none focus:border-amber-500"
                       value={formData.team2}
-                      onChange={e => setFormData({...formData, team2: e.target.value})}
+                      onChange={e => {
+                        const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.]/g, '').toUpperCase();
+                        setFormData({...formData, team2: val});
+                      }}
                     />
                   </div>
                 </div>

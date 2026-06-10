@@ -155,12 +155,18 @@ export default function RegisterOrg() {
                   label="ชื่อแก๊ง / แฟมิลี่เต็ม" 
                   required
                   value={formData.name}
-                  onChange={e => setFormData({...formData, name: e.target.value})}
+                  onChange={e => {
+                    const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.]/g, '').toUpperCase();
+                    setFormData({...formData, name: val});
+                  }}
                 />
                 <Input 
                   label="ตัวย่อ (Alias)" 
                   value={formData.alias}
-                  onChange={e => setFormData({...formData, alias: e.target.value})}
+                  onChange={e => {
+                    const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.]/g, '').toUpperCase();
+                    setFormData({...formData, alias: val});
+                  }}
                 />
               </div>
 

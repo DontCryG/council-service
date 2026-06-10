@@ -155,7 +155,10 @@ export default function EditOrg() {
                 label="ชื่อแก๊ง / แฟมิลี่" 
                 required
                 value={formData.orgName}
-                onChange={e => setFormData({...formData, orgName: e.target.value})}
+                onChange={e => {
+                  const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.]/g, '').toUpperCase();
+                  setFormData({...formData, orgName: val});
+                }}
               />
               <Input 
                 label="ผู้แจ้ง (ชื่อในเกม)" 

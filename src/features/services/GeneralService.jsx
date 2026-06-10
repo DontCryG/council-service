@@ -176,7 +176,10 @@ export default function GeneralService() {
               placeholder="ระบุชื่อ..." 
               required
               value={formData.groupName}
-              onChange={e => setFormData({...formData, groupName: e.target.value})}
+              onChange={e => {
+                const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.]/g, '').toUpperCase();
+                setFormData({...formData, groupName: val});
+              }}
             />
 
             <Input 
