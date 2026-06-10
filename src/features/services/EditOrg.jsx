@@ -326,9 +326,8 @@ export default function EditOrg() {
                 <h2 className="text-3xl font-black uppercase tracking-tighter" style={{ color: '#000', lineHeight: '1.1' }}>
                   {formData.orgName || 'ORGANIZATION'}
                 </h2>
-                <div className="text-slate-500 font-bold tracking-widest text-sm mt-1">
-                  <span>{formData.orgType} </span>
-                  <span>MODIFICATION</span>
+                <div className="text-slate-500 font-bold tracking-wider text-sm mt-1 whitespace-nowrap w-max">
+                  <span>{formData.orgType} MODIFICATION</span>
                 </div>
               </div>
               {(formData.changeInfo || formData.bulkChange) && formData.logoUrl && (
