@@ -125,12 +125,12 @@ export default function GeneralService() {
         councilMemberId: formData.councilMemberId,
         members: members.map(m => m.value)
       }, user);
-      showAlert('success', 'ส่งข้อมูลลง Discord เรียบร้อยแล้ว!');
+      showAlert('success', 'ส่งข้อมูลลงระบบส่วนกลางเรียบร้อยแล้ว!');
       navigate('/');
       
     } catch (err) {
       console.error(err);
-      showAlert('error', 'เกิดข้อผิดพลาดในการส่ง Discord');
+      showAlert('error', 'เกิดข้อผิดพลาดในการส่งเข้าสู่ระบบส่วนกลาง');
     } finally {
       setIsSubmitting(false);
     }
@@ -249,7 +249,7 @@ export default function GeneralService() {
             </div>
 
             <Button type="submit" className="w-full" size="lg" isLoading={isSubmitting}>
-              <PaperPlaneTilt size={20} weight="bold" /> ส่งใบเสร็จไปยัง Discord
+              <PaperPlaneTilt size={20} weight="bold" /> ส่งใบเสร็จไปยังระบบส่วนกลาง
             </Button>
           </form>
         </Card>

@@ -282,7 +282,7 @@ export default function WelfareTrade() {
             </div>
 
             <Button type="submit" className="w-full" size="lg" isLoading={isSubmitting}>
-              <PaperPlaneTilt size={20} weight="bold" /> ส่งหลักฐานเข้า Discord
+              <PaperPlaneTilt size={20} weight="bold" /> ส่งข้อมูลการแลกไปยังระบบส่วนกลาง
             </Button>
           </form>
         </Card>
