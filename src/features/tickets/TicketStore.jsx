@@ -145,7 +145,7 @@ export default function TicketStore() {
         <Ticket size={32} weight="duotone" className="text-amber-500" />
         <div>
           <h1 className="text-2xl font-bold text-white">ระบบแลก TICKET</h1>
-          <p className="text-slate-400">สั่งซื้อหรือแลกเปลี่ยนตั๋วพิเศษสำหรับสวัสดิการ</p>
+          <p className="text-slate-400">ส่งคำขอซื้อ Ticket สำหรับซื้อของสวัสดิการสภา</p>
         </div>
       </div>
 
