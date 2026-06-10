@@ -86,7 +86,6 @@ export default function EditOrg() {
       const fd = new FormData();
       fd.append('file', blob, 'edit_org.png');
       fd.append('payload_json', JSON.stringify({
-        content: `**[แจ้งแก้ไขข้อมูลองค์กร]** ชื่อ: ${formData.orgName} | โดย: ${formData.requester}`,
         embeds: [{
           title: "🔄 ORGANIZATION EDIT REQUEST",
           color: 0xec4899, // Pink

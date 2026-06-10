@@ -56,7 +56,6 @@ export default function Welfare() {
       const fd = new FormData();
       fd.append('file', blob, 'welfare.png');
       fd.append('payload_json', JSON.stringify({
-        content: `**[เบิกสวัสดิการ]** แก๊ง: ${formData.orgName} | ประเภท: ${formData.orgType}`,
         embeds: [{
           title: "🎁 WELFARE REQUEST RECEIPT",
           color: 0x10b981,

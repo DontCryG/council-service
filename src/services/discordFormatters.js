@@ -13,7 +13,6 @@
  */
 export const buildWelfareTradeWebhook = (formData, items, totalPrice, councilName) => {
   return {
-    content: `**[แลกเปลี่ยนสวัสดิการ]** แก๊ง: ${formData.orgName} | ประเภท: ${formData.tradeType}`,
     embeds: [{
       title: "🔄 WELFARE TRADE RECEIPT",
       color: 0x8b5cf6, // Violet
