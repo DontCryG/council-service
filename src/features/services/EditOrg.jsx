@@ -321,15 +321,17 @@ export default function EditOrg() {
           <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3 ml-1">Live Document</h3>
           
           <div ref={captureRef} className="bg-slate-100 rounded-xl p-8 border border-slate-300 shadow-2xl relative overflow-hidden" style={{ color: '#1e293b' }}>
-            <div className="flex items-center justify-between border-b-2 border-slate-800 pb-4 mb-6">
-              <div>
-                <h2 className="text-3xl font-black uppercase tracking-tighter" style={{ color: '#000' }}>
+            <div className="flex items-center justify-between border-b-2 border-slate-800 pb-4 mb-6 gap-4">
+              <div className="flex-1 min-w-0">
+                <h2 className="text-3xl font-black uppercase tracking-tighter truncate" style={{ color: '#000' }}>
                   {formData.orgName || 'ORGANIZATION'}
                 </h2>
-                <p className="text-slate-500 font-bold tracking-widest">{formData.orgType} MODIFICATION</p>
+                <p className="text-slate-500 font-bold tracking-widest text-sm mt-1 whitespace-nowrap truncate">
+                  {formData.orgType} MODIFICATION
+                </p>
               </div>
               {(formData.changeInfo || formData.bulkChange) && formData.logoUrl && (
-                <img src={formData.logoUrl} alt="Logo" className="w-20 h-20 object-contain drop-shadow-md rounded" crossOrigin="anonymous"/>
+                <img src={formData.logoUrl} alt="Logo" className="w-20 h-20 object-contain drop-shadow-md rounded shrink-0" crossOrigin="anonymous"/>
               )}
             </div>
 
