@@ -1,5 +1,5 @@
 export const publicServices = [
-    { id: 'register_org', title: 'ระบบรับรองแก๊ง/แฟมิลี่', desc: 'ลงทะเบียนเพื่อสร้าง Gang หรือ Family อย่างเป็นทางการ', icon: 'ph-buildings' },
+    { id: 'register_org', title: 'ลงทะเบียนองค์กรใหม่', desc: 'ลงทะเบียนเพื่อสร้าง Gang หรือ Family อย่างเป็นทางการ', icon: 'ph-buildings' },
     { id: 'ps1', title: 'ระบบสวัสดิการอาวุธ', desc: 'รับสิทธิ์เบิกสวัสดิการอาวุธ', icon: 'ph-users' },
     { id: 'welfare', title: 'ระบบเบิกสวัสดิการ', desc: 'ทำเรื่องขอเบิกสวัสดิการแก๊ง/แฟมิลี่ประจำสัปดาห์', icon: 'ph-gift' },
     { id: 'welfare_trade', title: 'ระบบแลกสวัสดิการ', desc: 'สวัสดิการที่ได้สามารถนำมาแลกเปลี่ยนเป็นของอื่นๆได้', icon: 'ph-arrows-left-right' },
