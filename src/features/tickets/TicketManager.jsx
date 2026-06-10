@@ -405,48 +405,57 @@ export default function TicketManager() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                   {ticketsData.salesHistory.map(record => (
-                    <Card key={record.id} className="p-0 overflow-hidden bg-white border-none shadow-md relative group transition-all hover:-translate-y-1">
-                      <div className="absolute top-0 right-0 bottom-0 w-3 bg-[#D4A336]"></div>
+                    <Card key={record.id} className="p-0 overflow-hidden bg-slate-900 border border-slate-800 shadow-xl relative group transition-all hover:-translate-y-1 hover:shadow-amber-500/5">
+                      <div className="absolute top-0 right-0 bottom-0 w-2 bg-gradient-to-b from-amber-400 to-amber-600"></div>
                       <div className="p-6 pr-8">
                         <div className="flex justify-between items-center mb-6">
                           <div className="flex items-center gap-3">
-                            <span className="bg-[#fcf5e3] text-[#D4A336] text-[10px] font-bold px-3 py-1 rounded-full whitespace-nowrap">รอบวันที่</span>
-                            <div className="text-lg font-black text-slate-800 flex items-center gap-2">
+                            <span className="bg-amber-500/10 text-amber-500 text-[10px] font-bold px-3 py-1 rounded-full whitespace-nowrap border border-amber-500/20">รอบวันที่</span>
+                            <div className="text-lg font-black text-white flex items-center gap-2">
                               <span>{record.roundStartDate}</span>
-                              <span className="text-slate-300 font-light">|</span>
+                              <span className="text-slate-600 font-light">|</span>
                               <span>{record.roundEndDate}</span>
                             </div>
                           </div>
                           <button 
                             onClick={() => handleDeleteSalesHistory(record.id)}
-                            className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-xl border border-slate-100 text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                            className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-xl border border-slate-800 bg-slate-900/50 text-slate-500 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-all"
                           >
                             <Trash size={18} />
                           </button>
                         </div>
 
-                        <div className="bg-[#f8f9fa] rounded-2xl p-5 mb-6">
-                          <div className="grid grid-cols-2 gap-4">
+                        <div className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-5 mb-6 backdrop-blur-sm relative overflow-hidden">
+                          <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
+                          <div className="grid grid-cols-2 gap-4 relative z-10">
                             <div>
-                              <div className="text-slate-500 font-bold mb-1.5 text-xs uppercase tracking-wide">TICKET รวม</div>
-                              <div className="text-2xl font-black text-[#D4A336]">{parseInt(record.totalTickets).toLocaleString()}</div>
+                              <div className="text-slate-400 font-bold mb-1.5 text-xs uppercase tracking-wide">TICKET รวม</div>
+                              <div className="text-2xl font-black text-amber-400 flex items-center gap-2">
+                                <Ticket size={20} weight="fill" className="text-amber-500/40 hidden sm:block" />
+                                {parseInt(record.totalTickets).toLocaleString()}
+                              </div>
                             </div>
                             <div>
-                              <div className="text-slate-500 font-bold mb-1.5 text-xs uppercase tracking-wide">ยอดเงินรวม (CASH)</div>
-                              <div className="text-2xl font-black text-slate-800">{parseInt(record.totalCash).toLocaleString()}</div>
+                              <div className="text-slate-400 font-bold mb-1.5 text-xs uppercase tracking-wide">ยอดเงินรวม (CASH)</div>
+                              <div className="text-2xl font-black text-emerald-400 flex items-center gap-2">
+                                <span className="text-emerald-500/40 hidden sm:block">$</span>
+                                {parseInt(record.totalCash).toLocaleString()}
+                              </div>
                             </div>
                           </div>
-                          <div className="mt-4 pt-4 border-t border-slate-200/60 flex items-center gap-2 text-xs text-slate-500 font-medium">
-                            <CheckCircle size={16} className="text-[#10a365]" weight="regular" />
-                            จากคำสั่งซื้อที่อนุมัติจำนวน: <span className="font-bold text-slate-800">{record.approvedCount}</span> รายการ
+                          <div className="mt-4 pt-4 border-t border-slate-700/50 flex items-center gap-2 text-xs text-slate-400 font-medium relative z-10">
+                            <CheckCircle size={16} className="text-emerald-500" weight="fill" />
+                            จากคำสั่งซื้อที่อนุมัติจำนวน: <span className="font-bold text-white bg-slate-900 border border-slate-700 px-2 py-0.5 rounded shadow-inner">{record.approvedCount}</span> รายการ
                           </div>
                         </div>
 
-                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center text-xs font-medium gap-2">
-                          <div className="text-slate-500">
-                            ปิดรอบโดย: <span className="text-slate-800 font-black">{record.closedBy}</span>
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center text-xs font-medium gap-3">
+                          <div className="text-slate-500 flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 rounded-full bg-slate-600"></div>
+                            ปิดรอบโดย: <span className="text-white font-bold">{record.closedBy}</span>
                           </div>
-                          <div className="text-slate-400">
+                          <div className="text-slate-500 bg-slate-950/50 px-3 py-1.5 rounded-lg border border-slate-800/80 flex items-center gap-2">
+                            <Clock size={14} className="text-slate-600" />
                             {new Date(record.closedAt).toLocaleString('th-TH')}
                           </div>
                         </div>
