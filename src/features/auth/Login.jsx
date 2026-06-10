@@ -80,7 +80,7 @@ export default function Login() {
             <LockKey size={32} weight="duotone" />
           </div>
           <h1 className="text-2xl font-bold text-white mb-2">เข้าสู่ระบบ</h1>
-          <p className="text-slate-400 text-sm">เข้าสู่ระบบจัดการข้อมูลสภา COUNCIL V2</p>
+          <p className="text-slate-400 text-sm">เข้าสู่ระบบจัดการข้อมูลสภา COUNCIL SYSTEM</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-5">
