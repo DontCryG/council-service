@@ -28,8 +28,8 @@ export default function TicketManager() {
       rateFamily: 1,
       quotaGang: 10000000,
       quotaFamily: 3000000,
-      roundStartDate: '2026-05-31',
-      roundEndDate: '2026-06-07'
+      roundStartDate: '2026-06-08',
+      roundEndDate: '2026-06-14'
     }
   });
 
@@ -46,7 +46,7 @@ export default function TicketManager() {
           settings: d.settings || { 
             rateGang: 1, rateFamily: 1, 
             quotaGang: 10000000, quotaFamily: 3000000, 
-            roundStartDate: '2026-05-31', roundEndDate: '2026-06-07' 
+            roundStartDate: '2026-06-08', roundEndDate: '2026-06-14' 
           }
         });
       }
