@@ -7,7 +7,7 @@ import { toBlob } from 'html-to-image';
 import { Card } from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
-import { PaperPlaneTilt, Plus, Trash, Gift, Car, Shield } from '@phosphor-icons/react';
+import { PaperPlaneTilt, Plus, Trash, Gift, Car, Shield, Buildings } from '@phosphor-icons/react';
 
 export default function Welfare() {
   const navigate = useNavigate();
@@ -17,7 +17,9 @@ export default function Welfare() {
     orgType: 'GANG',
     orgName: '',
     requester: '',
-    hasWeapon: false,
+    hasCarWelfare: false,
+    hasMansionWelfare: false,
+    hasWeaponWelfare: false,
     otherWelfare: ''
   });
   const [vehicles, setVehicles] = useState([{ id: 1, model: '', plate: '' }]);
@@ -60,12 +62,14 @@ export default function Welfare() {
           title: "🎁 WELFARE REQUEST RECEIPT",
           color: 0x10b981,
           fields: [
-            { name: "👥 ประเภท", value: formData.orgType, inline: true },
-            { name: "🏰 ชื่อ", value: formData.orgName, inline: true },
+            { name: "📋 ประเภท", value: formData.orgType, inline: true },
+            { name: "🏷️ ชื่อ", value: formData.orgName, inline: true },
             { name: "👤 ผู้เบิก", value: formData.requester, inline: false },
+            { name: "🚗 สวัสดิการรถ", value: formData.hasCarWelfare ? '✅ รับสวัสดิการรถ 1 คัน (ฟรี)' : '❌ ไม่รับ', inline: true },
+            { name: "🏠 สวัสดิการคฤหาสน์", value: formData.hasMansionWelfare ? '✅ รับสวัสดิการคฤหาสน์ 1 หลัง (ฟรี)' : '❌ ไม่รับ', inline: true },
+            { name: "⚔️ สวัสดิการอาวุธ", value: formData.hasWeaponWelfare ? '✅ รับสวัสดิการอาวุธไม้พูล' : '❌ ไม่รับ', inline: true },
             { name: "🚗 ยานพาหนะ", value: vehicles.length > 0 ? vehicles.map(v => `${v.model} (${v.plate})`).join('\n') : 'ไม่มี', inline: false },
-            { name: "⚔️ อาวุธ", value: formData.hasWeapon ? 'มีอาวุธ' : 'ไม่มี', inline: true },
-            { name: "📝 หมายเหตุ", value: formData.otherWelfare || '-', inline: true },
+            { name: "📦 อื่นๆ", value: formData.otherWelfare || '-', inline: true },
           ],
           image: {
             url: "attachment://welfare.png"
@@ -81,7 +85,9 @@ export default function Welfare() {
         orgName: formData.orgName,
         requester: formData.requester,
         vehicles: vehicles,
-        hasWeapon: formData.hasWeapon,
+        hasCarWelfare: formData.hasCarWelfare,
+        hasMansionWelfare: formData.hasMansionWelfare,
+        hasWeaponWelfare: formData.hasWeaponWelfare,
         otherWelfare: formData.otherWelfare
       }, user);
       showAlert('success', 'ส่งแบบฟอร์มสวัสดิการเรียบร้อยแล้ว!');
@@ -178,10 +184,30 @@ export default function Welfare() {
                 <input 
                   type="checkbox" 
                   className="w-5 h-5 rounded border-slate-600 bg-slate-900 text-blue-600 focus:ring-blue-500 focus:ring-offset-slate-900"
-                  checked={formData.hasWeapon}
-                  onChange={e => setFormData({...formData, hasWeapon: e.target.checked})}
+                  checked={formData.hasCarWelfare}
+                  onChange={e => setFormData({...formData, hasCarWelfare: e.target.checked})}
                 />
-                <span className="font-medium text-white flex items-center gap-2"><Shield className="text-amber-500"/> รับสวัสดิการอาวุธ</span>
+                <span className="font-medium text-white flex items-center gap-2"><Car className="text-emerald-500"/> สวัสดิการรถ 1 คัน (ฟรี)</span>
+              </label>
+
+              <label className="flex items-center gap-3 cursor-pointer p-3 border border-slate-700 rounded-lg hover:bg-slate-800 transition-colors">
+                <input 
+                  type="checkbox" 
+                  className="w-5 h-5 rounded border-slate-600 bg-slate-900 text-blue-600 focus:ring-blue-500 focus:ring-offset-slate-900"
+                  checked={formData.hasMansionWelfare}
+                  onChange={e => setFormData({...formData, hasMansionWelfare: e.target.checked})}
+                />
+                <span className="font-medium text-white flex items-center gap-2"><Buildings className="text-indigo-500"/> สวัสดิการคฤหาสน์ 1 หลัง (ฟรี)</span>
+              </label>
+
+              <label className="flex items-center gap-3 cursor-pointer p-3 border border-slate-700 rounded-lg hover:bg-slate-800 transition-colors">
+                <input 
+                  type="checkbox" 
+                  className="w-5 h-5 rounded border-slate-600 bg-slate-900 text-blue-600 focus:ring-blue-500 focus:ring-offset-slate-900"
+                  checked={formData.hasWeaponWelfare}
+                  onChange={e => setFormData({...formData, hasWeaponWelfare: e.target.checked})}
+                />
+                <span className="font-medium text-white flex items-center gap-2"><Shield className="text-amber-500"/> สวัสดิการอาวุธไม้พูล</span>
               </label>
 
               <Input 
@@ -232,9 +258,23 @@ export default function Welfare() {
               </div>
 
               <div className="flex justify-between items-center py-3 border-b border-slate-800/50">
-                <span className="text-slate-400">อาวุธ</span>
-                <span className={`font-bold ${formData.hasWeapon ? 'text-emerald-400' : 'text-red-400'}`}>
-                  {formData.hasWeapon ? '✅ รับสวัสดิการอาวุธ' : '❌ ไม่รับอาวุธ'}
+                <span className="text-slate-400">สวัสดิการรถ</span>
+                <span className={`font-bold ${formData.hasCarWelfare ? 'text-emerald-400' : 'text-slate-600'}`}>
+                  {formData.hasCarWelfare ? '✅ รับสวัสดิการรถ 1 คัน' : '❌ ไม่รับ'}
+                </span>
+              </div>
+
+              <div className="flex justify-between items-center py-3 border-b border-slate-800/50">
+                <span className="text-slate-400">สวัสดิการคฤหาสน์</span>
+                <span className={`font-bold ${formData.hasMansionWelfare ? 'text-emerald-400' : 'text-slate-600'}`}>
+                  {formData.hasMansionWelfare ? '✅ รับสวัสดิการคฤหาสน์ 1 หลัง' : '❌ ไม่รับ'}
+                </span>
+              </div>
+
+              <div className="flex justify-between items-center py-3 border-b border-slate-800/50">
+                <span className="text-slate-400">สวัสดิการอาวุธ</span>
+                <span className={`font-bold ${formData.hasWeaponWelfare ? 'text-emerald-400' : 'text-slate-600'}`}>
+                  {formData.hasWeaponWelfare ? '✅ รับสวัสดิการอาวุธไม้พูล' : '❌ ไม่รับ'}
                 </span>
               </div>
 
