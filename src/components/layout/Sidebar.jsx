@@ -44,11 +44,11 @@ export default function Sidebar({ className }) {
 
   return (
     <aside className={cn("w-64 bg-slate-900 border-r border-slate-800 flex flex-col", className)}>
-      <div className="p-6 border-b border-slate-800 flex items-center justify-center">
-        <h1 className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500">
-          COUNCIL<span className="text-white">V2</span>
-        </h1>
-      </div>
+        <div className="p-6 border-b border-slate-800 flex items-center justify-center">
+          <h1 className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500">
+            COUNCIL <span className="text-white">SYSTEM</span>
+          </h1>
+        </div>
       
       <nav className="flex-1 p-4 overflow-y-auto">
         {MENU_CATEGORIES.map((category, idx) => {
