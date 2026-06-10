@@ -4,7 +4,7 @@ import { useAppStore } from '../../store';
 import { auth, db } from '../../core/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
-import { LockKey, EnvelopeSimple, User } from '@phosphor-icons/react';
+import { LockKey, EnvelopeSimple, User, ArrowLeft } from '@phosphor-icons/react';
 
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
@@ -74,6 +74,17 @@ export default function Login() {
       {/* Background Decor */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
       
+      {/* Back to Home Button */}
+      <button 
+        onClick={() => navigate('/')}
+        className="absolute top-6 left-6 text-slate-400 hover:text-white flex items-center gap-2 transition-colors font-medium z-20 bg-slate-900/50 p-2 pr-4 rounded-full backdrop-blur-md border border-slate-700/50"
+      >
+        <div className="bg-slate-800 p-1.5 rounded-full">
+          <ArrowLeft size={16} weight="bold" />
+        </div>
+        กลับหน้าหลัก
+      </button>
+
       <div className="max-w-md w-full bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 p-8 rounded-2xl shadow-2xl relative z-10">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-600/10 text-blue-500 mb-4">
