@@ -16,7 +16,7 @@ export const councilServices = [
 ];
 
 export const relatedWebsites = [
-    { id: 'rw1', title: 'กฎสภา', desc: 'อ่านกฎกติกาและกฎหมายบ้านเมือง', icon: 'ph-book-open', url: 'https://sites.google.com/view/wiptown/council?authuser=0' }
+    { id: 'rw1', title: 'กฎหน่วยงานสภา', desc: 'อ่านกฎกติกาและกฎหมายบ้านเมือง', icon: 'ph-book-open', url: 'https://sites.google.com/view/wiptown/council?authuser=0' }
 ];
 
 export const transactions = [
