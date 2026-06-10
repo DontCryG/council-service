@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { db } from '../../core/firebase';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { useAppStore } from '../../store';
-import { Ticket, Clock, CheckCircle, XCircle, Gear, MagnifyingGlass, FileText, Download, ShieldChevron, House, CalendarBlank, WarningCircle, FloppyDisk, ArrowCounterClockwise, Trash, ChartBar } from '@phosphor-icons/react';
+import { Ticket, Clock, CheckCircle, XCircle, Gear, MagnifyingGlass, FileText, Download, ShieldChevron, House, CalendarBlank, WarningCircle, FloppyDisk, ArrowCounterClockwise, Trash, ChartBar, SpeakerHigh } from '@phosphor-icons/react';
 
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
@@ -226,6 +226,16 @@ export default function TicketManager() {
     document.body.removeChild(link);
   };
 
+  const playTestSound = () => {
+    try {
+      const audio = new Audio('/alert_sound.mp3');
+      audio.play().catch(e => console.error("Audio play failed:", e));
+      showAlert('success', 'ทดสอบเสียงแจ้งเตือนสำเร็จ!');
+    } catch(e) {
+      console.error(e);
+    }
+  };
+
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -233,6 +243,16 @@ export default function TicketManager() {
           <h1 className="text-2xl font-bold text-white flex items-center gap-2">
             <Ticket className="text-amber-500" />
             ระบบจัดการ Ticket
+            <button 
+              onClick={playTestSound}
+              className="ml-2 p-1.5 rounded-full bg-slate-800 text-slate-400 hover:text-amber-400 hover:bg-slate-700 transition-colors group relative"
+              title="ทดสอบเสียงแจ้งเตือน (คลิกเพื่อปลดล็อคเสียงให้เบราว์เซอร์)"
+            >
+              <SpeakerHigh size={20} />
+              <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none transition-opacity">
+                ทดสอบเสียง / เปิดเสียง
+              </span>
+            </button>
           </h1>
           <p className="text-slate-400 mt-1">จัดการคำขอซื้อทิคเก็ต โควต้า และตั้งค่าเรทราคา</p>
         </div>
