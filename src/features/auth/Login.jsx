@@ -87,9 +87,9 @@ export default function Login() {
           <div className="relative">
             <User size={20} className="absolute left-3 top-9 text-slate-400" />
             <Input 
-              label="EMAIL (สำหรับล็อคอิน)"
+              label="Email"
               type="text"
-              placeholder="admin@council.com"
+              placeholder="youremail@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="pl-10"
@@ -100,7 +100,7 @@ export default function Login() {
           <div className="relative">
             <LockKey size={20} className="absolute left-3 top-9 text-slate-400" />
             <Input 
-              label="รหัสผ่าน"
+              label="Password"
               type="password"
               placeholder="••••••••"
               value={password}
