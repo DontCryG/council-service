@@ -144,9 +144,9 @@ export default function GroupManager() {
         <div>
           <h1 className="text-2xl font-bold text-white flex items-center gap-2">
             <Buildings className="text-blue-500" />
-            ระบบจัดการแก๊ง / แฟม
+            ระบบจัดการรายชื่อองค์กร
           </h1>
-          <p className="text-slate-400 mt-1">ทะเบียนฐานข้อมูลส่วนกลางของเมือง</p>
+          <p className="text-slate-400 mt-1">จัดการฐานข้อมูลองค์กร และสถานะ Gang/Family ในเมือง</p>
         </div>
         
         <Button onClick={() => handleOpenModal()} className="sm:w-auto w-full">
