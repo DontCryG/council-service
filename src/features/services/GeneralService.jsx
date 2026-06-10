@@ -143,7 +143,7 @@ export default function GeneralService() {
         <FileText size={32} weight="duotone" className="text-blue-500" />
         <div>
           <h1 className="text-2xl font-bold text-white">แบบฟอร์มเบิกจ่าย / ธุรกรรมทั่วไป</h1>
-          <p className="text-slate-400">กรอกข้อมูลเพื่อสร้างใบเสร็จและส่งเข้าสู่ Discord สภา</p>
+          <p className="text-slate-400">กรอกข้อมูลเพื่อสร้างใบเสร็จ</p>
         </div>
       </div>
 
