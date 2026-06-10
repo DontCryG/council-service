@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { sendWebhook } from '../../core/api';
-import html2canvas from 'html2canvas';
+import { toBlob } from 'html-to-image';
 
 import { Card } from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
@@ -46,8 +46,12 @@ export default function Welfare() {
     setIsSubmitting(true);
     
     try {
-      const canvas = await html2canvas(captureRef.current, { scale: 2, backgroundColor: '#0f172a' });
-      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+      const blob = await toBlob(captureRef.current, { 
+        pixelRatio: 2, 
+        backgroundColor: '#0f172a',
+        cacheBust: true
+      });
+      if (!blob) throw new Error("Failed to generate image");
       
       const fd = new FormData();
       fd.append('file', blob, 'welfare.png');

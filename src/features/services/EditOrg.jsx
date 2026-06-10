@@ -4,7 +4,7 @@ import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { sendWebhook } from '../../core/api';
-import { toPng } from 'html-to-image';
+import { toBlob } from 'html-to-image';
 
 import { Card } from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
@@ -65,13 +65,12 @@ export default function EditOrg() {
     setIsSubmitting(true);
     
     try {
-      const dataUrl = await toPng(captureRef.current, { 
+      const blob = await toBlob(captureRef.current, { 
         pixelRatio: 2, 
         backgroundColor: '#f1f5f9',
         cacheBust: true 
       });
-      const res = await fetch(dataUrl);
-      const blob = await res.blob();
+      if (!blob) throw new Error("Failed to generate image");
       
       const fd = new FormData();
       fd.append('file', blob, 'edit_org.png');
