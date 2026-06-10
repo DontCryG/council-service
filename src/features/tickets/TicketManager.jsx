@@ -107,7 +107,10 @@ export default function TicketManager() {
     const approvedOrders = ticketsData.history.filter(h => h.status === 'APPROVED');
     const totalTickets = approvedOrders.reduce((sum, h) => sum + (parseInt(h.amount) || 0), 0);
     const totalCash = approvedOrders.reduce((sum, h) => sum + (parseInt(h.totalPrice) || 0), 0);
-    const closedBy = user?.username || user?.email || user?.displayName || 'Admin';
+    let closedBy = user?.username || user?.email || user?.displayName || 'Admin';
+    if (closedBy && closedBy.includes('@')) {
+      closedBy = closedBy.split('@')[0];
+    }
 
     const newSaleRecord = {
       id: 'sale_' + Date.now(),
