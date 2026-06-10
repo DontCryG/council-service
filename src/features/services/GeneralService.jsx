@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+﻿import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
@@ -68,12 +68,12 @@ export default function GeneralService() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.transactionId || !formData.groupName || !formData.requester || !formData.councilMemberId) {
-      showAlert('error', 'กรุณากรอกข้อมูลให้ครบถ้วน');
+      showAlert('error', 'à¸à¸£à¸¸à¸“à¸²à¸à¸£à¸­à¸à¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¹ƒà¸«à¹‰à¸„à¸£à¸šà¸–à¹‰à¸§à¸™');
       return;
     }
 
     if (members.some(m => !m.value.trim())) {
-      showAlert('error', 'กรุณากรอกชื่อสมาชิกให้ครบถ้วน');
+      showAlert('error', 'à¸à¸£à¸¸à¸“à¸²à¸à¸£à¸­à¸à¸Šà¸·à¹ˆà¸­à¸ªà¸¡à¸²à¸Šà¸´à¸à¹ƒà¸«à¹‰à¸„à¸£à¸šà¸–à¹‰à¸§à¸™');
       return;
     }
 
@@ -92,7 +92,7 @@ export default function GeneralService() {
       const fd = new FormData();
       fd.append('file', blob, 'receipt.png');
       
-      const typeDisplay = formData.groupType === 'GANG' ? 'แก๊ง' : 'แฟม';
+      const typeDisplay = formData.groupType === 'GANG' ? 'à¹à¸à¹Šà¸‡' : 'à¹à¸Ÿà¸¡';
       const membersText = members.map(m => m.value).join('\n');
       const councilName = councilMembers.find(c => c.id === formData.councilMemberId)?.name || '-';
       
@@ -125,12 +125,12 @@ export default function GeneralService() {
         councilMemberId: formData.councilMemberId,
         members: members.map(m => m.value)
       }, user);
-      showAlert('success', 'ส่งข้อมูลลงระบบส่วนกลางเรียบร้อยแล้ว!');
-      navigate('/');
+      showAlert('success', 'à¸ªà¹ˆà¸‡à¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸¥à¸‡à¸£à¸°à¸šà¸šà¸ªà¹ˆà¸§à¸™à¸à¸¥à¸²à¸‡à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§!');
+      navigate('/home');
       
     } catch (err) {
       console.error(err);
-      showAlert('error', 'เกิดข้อผิดพลาดในการส่งเข้าสู่ระบบส่วนกลาง');
+      showAlert('error', 'à¹€à¸à¸´à¸”à¸‚à¹‰à¸­à¸œà¸´à¸”à¸žà¸¥à¸²à¸”à¹ƒà¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸‚à¹‰à¸²à¸ªà¸¹à¹ˆà¸£à¸°à¸šà¸šà¸ªà¹ˆà¸§à¸™à¸à¸¥à¸²à¸‡');
     } finally {
       setIsSubmitting(false);
     }
@@ -142,8 +142,8 @@ export default function GeneralService() {
       <div className="flex items-center gap-3">
         <FileText size={32} weight="duotone" className="text-blue-500" />
         <div>
-          <h1 className="text-2xl font-bold text-white">แบบฟอร์มเบิกจ่าย / ธุรกรรมทั่วไป</h1>
-          <p className="text-slate-400">กรอกข้อมูลเพื่อสร้างใบเสร็จ</p>
+          <h1 className="text-2xl font-bold text-white">à¹à¸šà¸šà¸Ÿà¸­à¸£à¹Œà¸¡à¹€à¸šà¸´à¸à¸ˆà¹ˆà¸²à¸¢ / à¸˜à¸¸à¸£à¸à¸£à¸£à¸¡à¸—à¸±à¹ˆà¸§à¹„à¸›</h1>
+          <p className="text-slate-400">à¸à¸£à¸­à¸à¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¹€à¸žà¸·à¹ˆà¸­à¸ªà¸£à¹‰à¸²à¸‡à¹ƒà¸šà¹€à¸ªà¸£à¹‡à¸ˆ</p>
         </div>
       </div>
 
@@ -152,14 +152,14 @@ export default function GeneralService() {
         <Card>
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-slate-300 ml-1">ประเภทธุรกรรม</label>
+              <label className="text-sm font-medium text-slate-300 ml-1">à¸›à¸£à¸°à¹€à¸ à¸—à¸˜à¸¸à¸£à¸à¸£à¸£à¸¡</label>
               <select 
                 className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition-colors"
                 value={formData.transactionId}
                 onChange={e => setFormData({...formData, transactionId: e.target.value})}
                 required
               >
-                <option value="" disabled>-- เลือกประเภทธุรกรรม --</option>
+                <option value="" disabled>-- à¹€à¸¥à¸·à¸­à¸à¸›à¸£à¸°à¹€à¸ à¸—à¸˜à¸¸à¸£à¸à¸£à¸£à¸¡ --</option>
                 {transactions.map(t => (
                   <option key={t.id} value={t.id}>{t.name}</option>
                 ))}
@@ -184,8 +184,8 @@ export default function GeneralService() {
             </div>
 
             <Input 
-              label={`ชื่อ ${formData.groupType}`} 
-              placeholder="ระบุชื่อ..." 
+              label={`à¸Šà¸·à¹ˆà¸­ ${formData.groupType}`} 
+              placeholder="à¸£à¸°à¸šà¸¸à¸Šà¸·à¹ˆà¸­..." 
               required
               value={formData.groupName}
               onChange={e => {
@@ -195,8 +195,8 @@ export default function GeneralService() {
             />
 
             <Input 
-              label="ผู้ติดต่อ (ชื่อในเกม)" 
-              placeholder="ระบุชื่อผู้ติดต่อ..." 
+              label="à¸œà¸¹à¹‰à¸•à¸´à¸”à¸•à¹ˆà¸­ (à¸Šà¸·à¹ˆà¸­à¹ƒà¸™à¹€à¸à¸¡)" 
+              placeholder="à¸£à¸°à¸šà¸¸à¸Šà¸·à¹ˆà¸­à¸œà¸¹à¹‰à¸•à¸´à¸”à¸•à¹ˆà¸­..." 
               required
               value={formData.requester}
               onChange={e => setFormData({...formData, requester: e.target.value})}
@@ -204,9 +204,9 @@ export default function GeneralService() {
 
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <label className="text-sm font-medium text-slate-300 ml-1">รายชื่อสมาชิกที่ทำธุรกรรม</label>
+                <label className="text-sm font-medium text-slate-300 ml-1">à¸£à¸²à¸¢à¸Šà¸·à¹ˆà¸­à¸ªà¸¡à¸²à¸Šà¸´à¸à¸—à¸µà¹ˆà¸—à¸³à¸˜à¸¸à¸£à¸à¸£à¸£à¸¡</label>
                 <Button type="button" variant="ghost" size="sm" onClick={handleAddMember} className="text-blue-400 hover:text-blue-300">
-                  <Plus size={16} /> เพิ่มสมาชิก
+                  <Plus size={16} /> à¹€à¸žà¸´à¹ˆà¸¡à¸ªà¸¡à¸²à¸Šà¸´à¸
                 </Button>
               </div>
               
@@ -214,7 +214,7 @@ export default function GeneralService() {
                 {members.map((m, idx) => (
                   <div key={m.id} className="flex items-center gap-2">
                     <Input 
-                      placeholder={`ชื่อสมาชิกคนที่ ${idx + 1}`}
+                      placeholder={`à¸Šà¸·à¹ˆà¸­à¸ªà¸¡à¸²à¸Šà¸´à¸à¸„à¸™à¸—à¸µà¹ˆ ${idx + 1}`}
                       value={m.value}
                       onChange={(e) => handleMemberChange(m.id, e.target.value)}
                       required
@@ -234,14 +234,14 @@ export default function GeneralService() {
             </div>
 
             <div className="space-y-1.5 pt-4 border-t border-slate-800">
-              <label className="text-sm font-medium text-slate-300 ml-1">สภาผู้ทำรายการ</label>
+              <label className="text-sm font-medium text-slate-300 ml-1">à¸ªà¸ à¸²à¸œà¸¹à¹‰à¸—à¸³à¸£à¸²à¸¢à¸à¸²à¸£</label>
               <select 
                 className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition-colors"
                 value={formData.councilMemberId}
                 onChange={e => setFormData({...formData, councilMemberId: e.target.value})}
                 required
               >
-                <option value="" disabled>-- เลือกชื่อสภา --</option>
+                <option value="" disabled>-- à¹€à¸¥à¸·à¸­à¸à¸Šà¸·à¹ˆà¸­à¸ªà¸ à¸² --</option>
                 {councilMembers.map(c => (
                   <option key={c.id} value={c.id}>{c.name}</option>
                 ))}
@@ -249,14 +249,14 @@ export default function GeneralService() {
             </div>
 
             <Button type="submit" className="w-full" size="lg" isLoading={isSubmitting}>
-              <PaperPlaneTilt size={20} weight="bold" /> ส่งใบเสร็จไปยังระบบส่วนกลาง
+              <PaperPlaneTilt size={20} weight="bold" /> à¸ªà¹ˆà¸‡à¹ƒà¸šà¹€à¸ªà¸£à¹‡à¸ˆà¹„à¸›à¸¢à¸±à¸‡à¸£à¸°à¸šà¸šà¸ªà¹ˆà¸§à¸™à¸à¸¥à¸²à¸‡
             </Button>
           </form>
         </Card>
 
         {/* Receipt Preview Side */}
         <div className="sticky top-24">
-          <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3 ml-1">Live Preview (ภาพที่จะถูกส่ง)</h3>
+          <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3 ml-1">Live Preview (à¸ à¸²à¸žà¸—à¸µà¹ˆà¸ˆà¸°à¸–à¸¹à¸à¸ªà¹ˆà¸‡)</h3>
           
           <div ref={captureRef} className="bg-slate-900 rounded-xl p-8 border-2 border-slate-800 shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
@@ -268,11 +268,11 @@ export default function GeneralService() {
 
             <div className="space-y-4 relative z-10">
               <div className="flex justify-between items-center py-3 border-b border-slate-800/50">
-                <span className="text-slate-400">รายการธุรกรรม</span>
+                <span className="text-slate-400">à¸£à¸²à¸¢à¸à¸²à¸£à¸˜à¸¸à¸£à¸à¸£à¸£à¸¡</span>
                 <span className="font-bold text-white text-right max-w-[200px]">{selectedTransaction?.name || '-'}</span>
               </div>
               <div className="flex justify-between items-center py-3 border-b border-slate-800/50">
-                <span className="text-slate-400">กลุ่ม ({formData.groupType?.trim()})</span>
+                <span className="text-slate-400">à¸à¸¥à¸¸à¹ˆà¸¡ ({formData.groupType?.trim()})</span>
                 <span className="font-bold text-blue-400 flex items-center">
                   <span className={`text-[10px] px-2 py-0.5 rounded mr-2 ${formData.groupType === 'FAMILY' ? 'bg-indigo-500/20 text-indigo-400' : 'bg-blue-500/20 text-blue-400'}`}>
                     {formData.groupType?.trim()}
@@ -281,12 +281,12 @@ export default function GeneralService() {
                 </span>
               </div>
               <div className="flex justify-between items-center py-3 border-b border-slate-800/50">
-                <span className="text-slate-400">ผู้ติดต่อ</span>
+                <span className="text-slate-400">à¸œà¸¹à¹‰à¸•à¸´à¸”à¸•à¹ˆà¸­</span>
                 <span className="font-medium text-white">{formData.requester || '-'}</span>
               </div>
               
               <div className="py-3 border-b border-slate-800/50">
-                <span className="text-slate-400 block mb-2">รายชื่อสมาชิก ({members.length} คน)</span>
+                <span className="text-slate-400 block mb-2">à¸£à¸²à¸¢à¸Šà¸·à¹ˆà¸­à¸ªà¸¡à¸²à¸Šà¸´à¸ ({members.length} à¸„à¸™)</span>
                 <div className="bg-slate-950 rounded-lg p-3 max-h-[120px] overflow-y-auto custom-scrollbar">
                   {members.map((m, i) => (
                     <div key={i} className="text-sm text-slate-300 flex items-center gap-2 mb-1">
@@ -297,7 +297,7 @@ export default function GeneralService() {
               </div>
 
               <div className="flex justify-between items-center py-3 border-b border-slate-800/50">
-                <span className="text-slate-400 whitespace-nowrap">ผู้ทำรายการ (สภา)</span>
+                <span className="text-slate-400 whitespace-nowrap">à¸œà¸¹à¹‰à¸—à¸³à¸£à¸²à¸¢à¸à¸²à¸£ (à¸ªà¸ à¸²)</span>
                 <span className="font-medium text-amber-500 whitespace-nowrap text-right pl-4">
                   {councilMembers.find(c => c.id === formData.councilMemberId)?.name || '-'}
                 </span>

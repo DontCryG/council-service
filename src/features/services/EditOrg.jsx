@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+﻿import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
@@ -70,7 +70,7 @@ export default function EditOrg() {
         changeInfo: false,
         editTexture: false
       }));
-      showAlert('info', 'ระบบเลือกเหมาเปลี่ยนข้อมูลให้อัตโนมัติ');
+      showAlert('info', 'à¸£à¸°à¸šà¸šà¹€à¸¥à¸·à¸­à¸à¹€à¸«à¸¡à¸²à¹€à¸›à¸¥à¸µà¹ˆà¸¢à¸™à¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¹ƒà¸«à¹‰à¸­à¸±à¸•à¹‚à¸™à¸¡à¸±à¸•à¸´');
     } else if (formData.bulkChange && (formData.changeInfo || formData.editTexture)) {
       setFormData(prev => ({
         ...prev,
@@ -83,12 +83,12 @@ export default function EditOrg() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.orgName || !formData.requester || !formData.councilStaffId) {
-      showAlert('error', 'กรุณากรอกข้อมูลสำคัญให้ครบถ้วน');
+      showAlert('error', 'à¸à¸£à¸¸à¸“à¸²à¸à¸£à¸­à¸à¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸ªà¸³à¸„à¸±à¸à¹ƒà¸«à¹‰à¸„à¸£à¸šà¸–à¹‰à¸§à¸™');
       return;
     }
 
     if (formData.logoUrl && !/^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)(\?.*)?$/i.test(formData.logoUrl) && !formData.logoUrl.includes('discordapp.')) {
-      showAlert('error', 'ช่อง Link โลโก้ กรุณาใส่ลิงก์รูปภาพที่ถูกต้อง (ต้องลงท้ายด้วย .png, .jpg ฯลฯ หรือเป็นรูปลิงก์จากระบบส่วนกลาง)');
+      showAlert('error', 'à¸Šà¹ˆà¸­à¸‡ Link à¹‚à¸¥à¹‚à¸à¹‰ à¸à¸£à¸¸à¸“à¸²à¹ƒà¸ªà¹ˆà¸¥à¸´à¸‡à¸à¹Œà¸£à¸¹à¸›à¸ à¸²à¸žà¸—à¸µà¹ˆà¸–à¸¹à¸à¸•à¹‰à¸­à¸‡ (à¸•à¹‰à¸­à¸‡à¸¥à¸‡à¸—à¹‰à¸²à¸¢à¸”à¹‰à¸§à¸¢ .png, .jpg à¸¯à¸¥à¸¯ à¸«à¸£à¸·à¸­à¹€à¸›à¹‡à¸™à¸£à¸¹à¸›à¸¥à¸´à¸‡à¸à¹Œà¸ˆà¸²à¸à¸£à¸°à¸šà¸šà¸ªà¹ˆà¸§à¸™à¸à¸¥à¸²à¸‡)');
       return;
     }
 
@@ -110,21 +110,21 @@ export default function EditOrg() {
       fd.append('file', blob, 'edit_org.png');
       fd.append('payload_json', JSON.stringify({
         embeds: [{
-          title: "🔄 ORGANIZATION EDIT REQUEST",
+          title: "ðŸ”„ ORGANIZATION EDIT REQUEST",
           color: 0xec4899, // Pink
           thumbnail: formData.logoUrl ? { url: formData.logoUrl } : undefined,
           fields: [
-            { name: "🏰 แก๊ง/แฟมิลี่", value: `${formData.orgName} (${formData.orgType})`, inline: true },
-            { name: "👤 ผู้แจ้ง", value: formData.requester, inline: true },
-            { name: "รายการที่แก้ไข", value: [
-                formData.changeInfo ? "✅ เปลี่ยนข้อมูล Gang" : "",
-                formData.editTexture ? `✅ แก้ไข Texture เสื้อผ้า (${formData.textureCount} ชุด)` : "",
-                formData.addCloth ? `✅ ลงชุดเพิ่ม (${formData.clothCount} ชุด)` : "",
-                formData.bulkChange ? "✅ เหมาเปลี่ยนข้อมูล Gang" : "",
-                formData.addAccessory ? `✅ ลง Accessories Adons เสริม` : ""
-            ].filter(Boolean).join('\n') || "ไม่มี", inline: false },
-            { name: "รายละเอียดเพิ่มเติมที่ต้องการแก้", value: formData.extraDetails || "-", inline: false },
-            { name: "เจ้าหน้าที่สภาผู้รับเรื่อง", value: councilMembers.find(c => c.id === formData.councilStaffId)?.name || '-', inline: true },
+            { name: "ðŸ° à¹à¸à¹Šà¸‡/à¹à¸Ÿà¸¡à¸´à¸¥à¸µà¹ˆ", value: `${formData.orgName} (${formData.orgType})`, inline: true },
+            { name: "ðŸ‘¤ à¸œà¸¹à¹‰à¹à¸ˆà¹‰à¸‡", value: formData.requester, inline: true },
+            { name: "à¸£à¸²à¸¢à¸à¸²à¸£à¸—à¸µà¹ˆà¹à¸à¹‰à¹„à¸‚", value: [
+                formData.changeInfo ? "âœ… à¹€à¸›à¸¥à¸µà¹ˆà¸¢à¸™à¸‚à¹‰à¸­à¸¡à¸¹à¸¥ Gang" : "",
+                formData.editTexture ? `âœ… à¹à¸à¹‰à¹„à¸‚ Texture à¹€à¸ªà¸·à¹‰à¸­à¸œà¹‰à¸² (${formData.textureCount} à¸Šà¸¸à¸”)` : "",
+                formData.addCloth ? `âœ… à¸¥à¸‡à¸Šà¸¸à¸”à¹€à¸žà¸´à¹ˆà¸¡ (${formData.clothCount} à¸Šà¸¸à¸”)` : "",
+                formData.bulkChange ? "âœ… à¹€à¸«à¸¡à¸²à¹€à¸›à¸¥à¸µà¹ˆà¸¢à¸™à¸‚à¹‰à¸­à¸¡à¸¹à¸¥ Gang" : "",
+                formData.addAccessory ? `âœ… à¸¥à¸‡ Accessories Adons à¹€à¸ªà¸£à¸´à¸¡` : ""
+            ].filter(Boolean).join('\n') || "à¹„à¸¡à¹ˆà¸¡à¸µ", inline: false },
+            { name: "à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¹€à¸žà¸´à¹ˆà¸¡à¹€à¸•à¸´à¸¡à¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¸à¸²à¸£à¹à¸à¹‰", value: formData.extraDetails || "-", inline: false },
+            { name: "à¹€à¸ˆà¹‰à¸²à¸«à¸™à¹‰à¸²à¸—à¸µà¹ˆà¸ªà¸ à¸²à¸œà¸¹à¹‰à¸£à¸±à¸šà¹€à¸£à¸·à¹ˆà¸­à¸‡", value: councilMembers.find(c => c.id === formData.councilStaffId)?.name || '-', inline: true },
           ],
           image: {
             url: "attachment://edit_org.png"
@@ -146,13 +146,13 @@ export default function EditOrg() {
         bulkChange: formData.bulkChange,
         addAccessory: formData.addAccessory
       }, user);
-      showAlert('success', 'ส่งข้อมูลแจ้งแก้ไขเรียบร้อยแล้ว!');
+      showAlert('success', 'à¸ªà¹ˆà¸‡à¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¹à¸ˆà¹‰à¸‡à¹à¸à¹‰à¹„à¸‚à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§!');
       setShowConfirm(false);
-      navigate('/');
+      navigate('/home');
       
     } catch (err) {
       console.error(err);
-      showAlert('error', `เกิดข้อผิดพลาด: ${err.message || 'ไม่สามารถส่งข้อมูลได้'}`);
+      showAlert('error', `à¹€à¸à¸´à¸”à¸‚à¹‰à¸­à¸œà¸´à¸”à¸žà¸¥à¸²à¸”: ${err.message || 'à¹„à¸¡à¹ˆà¸ªà¸²à¸¡à¸²à¸£à¸–à¸ªà¹ˆà¸‡à¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¹„à¸”à¹‰'}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -173,8 +173,8 @@ export default function EditOrg() {
       <div className="flex items-center gap-3">
         <PencilSimple size={32} weight="duotone" className="text-pink-500" />
         <div>
-          <h1 className="text-2xl font-bold text-white">แจ้งแก้ไขข้อมูลองค์กร</h1>
-          <p className="text-slate-400">แบบฟอร์มแจ้งเปลี่ยนชื่อ สี โลโก้ หรือชุดประจำ Gang/Family</p>
+          <h1 className="text-2xl font-bold text-white">à¹à¸ˆà¹‰à¸‡à¹à¸à¹‰à¹„à¸‚à¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸­à¸‡à¸„à¹Œà¸à¸£</h1>
+          <p className="text-slate-400">à¹à¸šà¸šà¸Ÿà¸­à¸£à¹Œà¸¡à¹à¸ˆà¹‰à¸‡à¹€à¸›à¸¥à¸µà¹ˆà¸¢à¸™à¸Šà¸·à¹ˆà¸­ à¸ªà¸µ à¹‚à¸¥à¹‚à¸à¹‰ à¸«à¸£à¸·à¸­à¸Šà¸¸à¸”à¸›à¸£à¸°à¸ˆà¸³ Gang/Family</p>
         </div>
       </div>
 
@@ -201,7 +201,7 @@ export default function EditOrg() {
 
             <div className="grid grid-cols-2 gap-4">
               <Input 
-                label="ชื่อแก๊ง / แฟมิลี่" 
+                label="à¸Šà¸·à¹ˆà¸­à¹à¸à¹Šà¸‡ / à¹à¸Ÿà¸¡à¸´à¸¥à¸µà¹ˆ" 
                 required
                 value={formData.orgName}
                 onChange={e => {
@@ -210,7 +210,7 @@ export default function EditOrg() {
                 }}
               />
               <Input 
-                label="ผู้แจ้ง (ชื่อในเกม)" 
+                label="à¸œà¸¹à¹‰à¹à¸ˆà¹‰à¸‡ (à¸Šà¸·à¹ˆà¸­à¹ƒà¸™à¹€à¸à¸¡)" 
                 required
                 value={formData.requester}
                 onChange={e => setFormData({...formData, requester: e.target.value})}
@@ -218,41 +218,41 @@ export default function EditOrg() {
             </div>
 
             <div className="pt-4 border-t border-slate-800 space-y-4">
-              <label className="text-sm font-medium text-slate-300 ml-1">เลือกรายการที่ต้องการทำ (สามารถเลือกได้หลายข้อ)</label>
+              <label className="text-sm font-medium text-slate-300 ml-1">à¹€à¸¥à¸·à¸­à¸à¸£à¸²à¸¢à¸à¸²à¸£à¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¸à¸²à¸£à¸—à¸³ (à¸ªà¸²à¸¡à¸²à¸£à¸–à¹€à¸¥à¸·à¸­à¸à¹„à¸”à¹‰à¸«à¸¥à¸²à¸¢à¸‚à¹‰à¸­)</label>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <label className={`flex items-center gap-3 cursor-pointer p-3 border rounded-lg transition-all ${formData.changeInfo ? 'border-pink-500 bg-pink-500/10' : 'border-slate-700 hover:bg-slate-800'}`}>
                   <input type="checkbox" className="hidden" checked={formData.changeInfo} onChange={e => setFormData({...formData, changeInfo: e.target.checked})} />
                   <Buildings size={20} className={formData.changeInfo ? 'text-pink-500' : 'text-slate-400'} />
-                  <span className={`font-medium ${formData.changeInfo ? 'text-white' : 'text-slate-300'}`}>เปลี่ยนข้อมูล Gang (500,000 $)</span>
+                  <span className={`font-medium ${formData.changeInfo ? 'text-white' : 'text-slate-300'}`}>à¹€à¸›à¸¥à¸µà¹ˆà¸¢à¸™à¸‚à¹‰à¸­à¸¡à¸¹à¸¥ Gang (500,000 $)</span>
                   {formData.changeInfo && <CheckCircle size={16} weight="fill" className="text-pink-500 ml-auto" />}
                 </label>
 
                 <label className={`flex items-center gap-3 cursor-pointer p-3 border rounded-lg transition-all ${formData.editTexture ? 'border-pink-500 bg-pink-500/10' : 'border-slate-700 hover:bg-slate-800'}`}>
                   <input type="checkbox" className="hidden" checked={formData.editTexture} onChange={e => setFormData({...formData, editTexture: e.target.checked})} />
                   <Palette size={20} className={formData.editTexture ? 'text-pink-500' : 'text-slate-400'} />
-                  <span className={`font-medium ${formData.editTexture ? 'text-white' : 'text-slate-300'}`}>แก้ไข Texture เสื้อผ้า (500,000 $ / ชุด)</span>
+                  <span className={`font-medium ${formData.editTexture ? 'text-white' : 'text-slate-300'}`}>à¹à¸à¹‰à¹„à¸‚ Texture à¹€à¸ªà¸·à¹‰à¸­à¸œà¹‰à¸² (500,000 $ / à¸Šà¸¸à¸”)</span>
                   {formData.editTexture && <CheckCircle size={16} weight="fill" className="text-pink-500 ml-auto" />}
                 </label>
 
                 <label className={`flex items-center gap-3 cursor-pointer p-3 border rounded-lg transition-all ${formData.addCloth ? 'border-pink-500 bg-pink-500/10' : 'border-slate-700 hover:bg-slate-800'}`}>
                   <input type="checkbox" className="hidden" checked={formData.addCloth} onChange={e => setFormData({...formData, addCloth: e.target.checked})} />
                   <TShirt size={20} className={formData.addCloth ? 'text-pink-500' : 'text-slate-400'} />
-                  <span className={`font-medium ${formData.addCloth ? 'text-white' : 'text-slate-300'}`}>ลงชุดเพิ่ม (500,000 $ / ชุด)</span>
+                  <span className={`font-medium ${formData.addCloth ? 'text-white' : 'text-slate-300'}`}>à¸¥à¸‡à¸Šà¸¸à¸”à¹€à¸žà¸´à¹ˆà¸¡ (500,000 $ / à¸Šà¸¸à¸”)</span>
                   {formData.addCloth && <CheckCircle size={16} weight="fill" className="text-pink-500 ml-auto" />}
                 </label>
 
                 <label className={`flex items-center gap-3 cursor-pointer p-3 border rounded-lg transition-all ${formData.bulkChange ? 'border-pink-500 bg-pink-500/10' : 'border-slate-700 hover:bg-slate-800'}`}>
                   <input type="checkbox" className="hidden" checked={formData.bulkChange} onChange={e => setFormData({...formData, bulkChange: e.target.checked})} />
                   <Buildings size={20} className={formData.bulkChange ? 'text-pink-500' : 'text-slate-400'} />
-                  <span className={`font-medium ${formData.bulkChange ? 'text-white' : 'text-slate-300'}`}>เหมาเปลี่ยนข้อมูล Gang (1,500,000 $)</span>
+                  <span className={`font-medium ${formData.bulkChange ? 'text-white' : 'text-slate-300'}`}>à¹€à¸«à¸¡à¸²à¹€à¸›à¸¥à¸µà¹ˆà¸¢à¸™à¸‚à¹‰à¸­à¸¡à¸¹à¸¥ Gang (1,500,000 $)</span>
                   {formData.bulkChange && <CheckCircle size={16} weight="fill" className="text-pink-500 ml-auto" />}
                 </label>
 
                 <label className={`flex items-center gap-3 cursor-pointer p-3 border rounded-lg transition-all sm:col-span-2 ${formData.addAccessory ? 'border-pink-500 bg-pink-500/10' : 'border-slate-700 hover:bg-slate-800'}`}>
                   <input type="checkbox" className="hidden" checked={formData.addAccessory} onChange={e => setFormData({...formData, addAccessory: e.target.checked})} />
                   <TShirt size={20} className={formData.addAccessory ? 'text-pink-500' : 'text-slate-400'} />
-                  <span className={`font-medium ${formData.addAccessory ? 'text-white' : 'text-slate-300'}`}>ลง Accessories Adons เสริม (1,000,000 $)</span>
+                  <span className={`font-medium ${formData.addAccessory ? 'text-white' : 'text-slate-300'}`}>à¸¥à¸‡ Accessories Adons à¹€à¸ªà¸£à¸´à¸¡ (1,000,000 $)</span>
                   {formData.addAccessory && <CheckCircle size={16} weight="fill" className="text-pink-500 ml-auto" />}
                 </label>
               </div>
@@ -265,7 +265,7 @@ export default function EditOrg() {
                   <Input 
                     type="number" 
                     min="1" 
-                    label="จำนวนเทกเจอร์ที่แก้" 
+                    label="à¸ˆà¸³à¸™à¸§à¸™à¹€à¸—à¸à¹€à¸ˆà¸­à¸£à¹Œà¸—à¸µà¹ˆà¹à¸à¹‰" 
                     value={formData.textureCount}
                     onChange={e => setFormData({...formData, textureCount: parseInt(e.target.value) || 1})}
                   />
@@ -274,7 +274,7 @@ export default function EditOrg() {
                   <Input 
                     type="number" 
                     min="1" 
-                    label="จำนวนชุดที่เพิ่ม" 
+                    label="à¸ˆà¸³à¸™à¸§à¸™à¸Šà¸¸à¸”à¸—à¸µà¹ˆà¹€à¸žà¸´à¹ˆà¸¡" 
                     value={formData.clothCount}
                     onChange={e => setFormData({...formData, clothCount: parseInt(e.target.value) || 1})}
                   />
@@ -282,14 +282,14 @@ export default function EditOrg() {
                 {(formData.changeInfo || formData.bulkChange) && (
                   <>
                     <Input 
-                      label="Logo Link ใหม่" 
-                      placeholder="ใส่ URL รูปโลโก้"
+                      label="Logo Link à¹ƒà¸«à¸¡à¹ˆ" 
+                      placeholder="à¹ƒà¸ªà¹ˆ URL à¸£à¸¹à¸›à¹‚à¸¥à¹‚à¸à¹‰"
                       value={formData.logoUrl}
                       onChange={e => setFormData({...formData, logoUrl: e.target.value})}
-                      error={formData.logoUrl && !/^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)(\?.*)?$/i.test(formData.logoUrl) && !formData.logoUrl.includes('discordapp.') ? 'ลิงก์รูปภาพไม่ถูกต้อง' : ''}
+                      error={formData.logoUrl && !/^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)(\?.*)?$/i.test(formData.logoUrl) && !formData.logoUrl.includes('discordapp.') ? 'à¸¥à¸´à¸‡à¸à¹Œà¸£à¸¹à¸›à¸ à¸²à¸žà¹„à¸¡à¹ˆà¸–à¸¹à¸à¸•à¹‰à¸­à¸‡' : ''}
                     />
                     <div className="col-span-2">
-                      <label className="text-sm font-medium text-slate-300 ml-1 block mb-1">สีประจำแก๊ง (ใหม่)</label>
+                      <label className="text-sm font-medium text-slate-300 ml-1 block mb-1">à¸ªà¸µà¸›à¸£à¸°à¸ˆà¸³à¹à¸à¹Šà¸‡ (à¹ƒà¸«à¸¡à¹ˆ)</label>
                       <div className="flex gap-2 h-11">
                         <div 
                           className="h-full w-12 border border-slate-700 rounded shadow-inner"
@@ -313,20 +313,20 @@ export default function EditOrg() {
 
             <div className="pt-4 border-t border-slate-800 space-y-4">
               <Input 
-                label="รายละเอียดเพิ่มเติม (ช่องทางติดต่อ / หมายเหตุ)" 
+                label="à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¹€à¸žà¸´à¹ˆà¸¡à¹€à¸•à¸´à¸¡ (à¸Šà¹ˆà¸­à¸‡à¸—à¸²à¸‡à¸•à¸´à¸”à¸•à¹ˆà¸­ / à¸«à¸¡à¸²à¸¢à¹€à¸«à¸•à¸¸)" 
                 value={formData.extraDetails}
                 onChange={e => setFormData({...formData, extraDetails: e.target.value})}
               />
 
               <div className="space-y-1.5">
-                <label className="text-sm font-medium text-slate-300 ml-1">สภาผู้รับเรื่อง</label>
+                <label className="text-sm font-medium text-slate-300 ml-1">à¸ªà¸ à¸²à¸œà¸¹à¹‰à¸£à¸±à¸šà¹€à¸£à¸·à¹ˆà¸­à¸‡</label>
                 <select 
                   className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition-colors"
                   value={formData.councilStaffId}
                   onChange={e => setFormData({...formData, councilStaffId: e.target.value})}
                   required
                 >
-                  <option value="" disabled>-- เลือกชื่อสภา --</option>
+                  <option value="" disabled>-- à¹€à¸¥à¸·à¸­à¸à¸Šà¸·à¹ˆà¸­à¸ªà¸ à¸² --</option>
                   {councilMembers.map(c => (
                     <option key={c.id} value={c.id}>{c.name}</option>
                   ))}
@@ -335,7 +335,7 @@ export default function EditOrg() {
             </div>
 
             <Button type="submit" className="w-full" size="lg" isLoading={isSubmitting}>
-              <PaperPlaneTilt size={20} weight="bold" /> ยืนยันการส่งคำร้อง
+              <PaperPlaneTilt size={20} weight="bold" /> à¸¢à¸·à¸™à¸¢à¸±à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¸„à¸³à¸£à¹‰à¸­à¸‡
             </Button>
           </form>
         </Card>
@@ -378,11 +378,11 @@ export default function EditOrg() {
             <div className="mb-8">
               <div className="text-sm font-bold border-b border-slate-300 pb-1 mb-2">Requested Changes</div>
               <ul className="text-sm space-y-2 list-none pl-0 text-slate-700 font-medium">
-                {formData.changeInfo && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ เปลี่ยนข้อมูล Gang</span> <span>$500,000</span></li>}
-                {formData.editTexture && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ แก้ไข Texture เสื้อผ้า ({formData.textureCount} ชุด)</span> <span>${(500000 * Math.max(1, formData.textureCount)).toLocaleString()}</span></li>}
-                {formData.addCloth && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ ลงชุดเพิ่ม ({formData.clothCount} ชุด)</span> <span>${(500000 * Math.max(1, formData.clothCount)).toLocaleString()}</span></li>}
-                {formData.bulkChange && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ เหมาเปลี่ยนข้อมูล Gang</span> <span>$1,500,000</span></li>}
-                {formData.addAccessory && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ ลง Accessories Adons เสริม</span> <span>$1,000,000</span></li>}
+                {formData.changeInfo && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">âœ… à¹€à¸›à¸¥à¸µà¹ˆà¸¢à¸™à¸‚à¹‰à¸­à¸¡à¸¹à¸¥ Gang</span> <span>$500,000</span></li>}
+                {formData.editTexture && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">âœ… à¹à¸à¹‰à¹„à¸‚ Texture à¹€à¸ªà¸·à¹‰à¸­à¸œà¹‰à¸² ({formData.textureCount} à¸Šà¸¸à¸”)</span> <span>${(500000 * Math.max(1, formData.textureCount)).toLocaleString()}</span></li>}
+                {formData.addCloth && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">âœ… à¸¥à¸‡à¸Šà¸¸à¸”à¹€à¸žà¸´à¹ˆà¸¡ ({formData.clothCount} à¸Šà¸¸à¸”)</span> <span>${(500000 * Math.max(1, formData.clothCount)).toLocaleString()}</span></li>}
+                {formData.bulkChange && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">âœ… à¹€à¸«à¸¡à¸²à¹€à¸›à¸¥à¸µà¹ˆà¸¢à¸™à¸‚à¹‰à¸­à¸¡à¸¹à¸¥ Gang</span> <span>$1,500,000</span></li>}
+                {formData.addAccessory && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">âœ… à¸¥à¸‡ Accessories Adons à¹€à¸ªà¸£à¸´à¸¡</span> <span>$1,000,000</span></li>}
                 {!formData.changeInfo && !formData.editTexture && !formData.addCloth && !formData.bulkChange && !formData.addAccessory && (
                   <li className="text-slate-400 italic">No changes selected</li>
                 )}
@@ -418,8 +418,8 @@ export default function EditOrg() {
         isOpen={showConfirm}
         onClose={() => setShowConfirm(false)}
         onConfirm={handleConfirmSubmit}
-        title="ยืนยันส่งข้อมูลแก้ไของค์กร?"
-        message={`คุณต้องการยืนยันการส่งข้อมูลของแก๊ง ${formData.orgName} ใช่หรือไม่? โปรดตรวจสอบรายละเอียดให้แน่ใจ`}
+        title="à¸¢à¸·à¸™à¸¢à¸±à¸™à¸ªà¹ˆà¸‡à¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¹à¸à¹‰à¹„à¸‚à¸­à¸‡à¸„à¹Œà¸à¸£?"
+        message={`à¸„à¸¸à¸“à¸•à¹‰à¸­à¸‡à¸à¸²à¸£à¸¢à¸·à¸™à¸¢à¸±à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸‚à¸­à¸‡à¹à¸à¹Šà¸‡ ${formData.orgName} à¹ƒà¸Šà¹ˆà¸«à¸£à¸·à¸­à¹„à¸¡à¹ˆ? à¹‚à¸›à¸£à¸”à¸•à¸£à¸§à¸ˆà¸ªà¸­à¸šà¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¹ƒà¸«à¹‰à¹à¸™à¹ˆà¹ƒà¸ˆ`}
         isLoading={isSubmitting}
       />
     </div>

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+﻿import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { sendWebhook, saveTransactionLog } from '../../core/api';
@@ -39,7 +39,7 @@ export default function Welfare() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.orgName || !formData.requester) {
-      showAlert('error', 'กรุณากรอกข้อมูลให้ครบถ้วน');
+      showAlert('error', 'à¸à¸£à¸¸à¸“à¸²à¸à¸£à¸­à¸à¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¹ƒà¸«à¹‰à¸„à¸£à¸šà¸–à¹‰à¸§à¸™');
       return;
     }
 
@@ -57,15 +57,15 @@ export default function Welfare() {
       fd.append('file', blob, 'welfare.png');
       fd.append('payload_json', JSON.stringify({
         embeds: [{
-          title: "🎁 WELFARE REQUEST RECEIPT",
+          title: "ðŸŽ WELFARE REQUEST RECEIPT",
           color: 0x10b981,
           fields: [
-            { name: "📋 ประเภท", value: formData.orgType, inline: true },
-            { name: "🏷️ ชื่อ", value: formData.orgName, inline: true },
-            { name: "👤 ผู้เบิก", value: formData.requester, inline: false },
-            { name: "⚔️ สวัสดิการอาวุธ", value: formData.hasWeaponWelfare ? '✅ รับสวัสดิการอาวุธไม้พูล' : '❌ ไม่รับ', inline: true },
-            { name: "🚗 ยานพาหนะ", value: vehicles.length > 0 ? vehicles.map(v => `${v.model} (${v.plate})`).join('\n') : 'ไม่มี', inline: false },
-            { name: "📦 อื่นๆ", value: formData.otherWelfare || '-', inline: true },
+            { name: "ðŸ“‹ à¸›à¸£à¸°à¹€à¸ à¸—", value: formData.orgType, inline: true },
+            { name: "ðŸ·ï¸ à¸Šà¸·à¹ˆà¸­", value: formData.orgName, inline: true },
+            { name: "ðŸ‘¤ à¸œà¸¹à¹‰à¹€à¸šà¸´à¸", value: formData.requester, inline: false },
+            { name: "âš”ï¸ à¸ªà¸§à¸±à¸ªà¸”à¸´à¸à¸²à¸£à¸­à¸²à¸§à¸¸à¸˜", value: formData.hasWeaponWelfare ? 'âœ… à¸£à¸±à¸šà¸ªà¸§à¸±à¸ªà¸”à¸´à¸à¸²à¸£à¸­à¸²à¸§à¸¸à¸˜à¹„à¸¡à¹‰à¸žà¸¹à¸¥' : 'âŒ à¹„à¸¡à¹ˆà¸£à¸±à¸š', inline: true },
+            { name: "ðŸš— à¸¢à¸²à¸™à¸žà¸²à¸«à¸™à¸°", value: vehicles.length > 0 ? vehicles.map(v => `${v.model} (${v.plate})`).join('\n') : 'à¹„à¸¡à¹ˆà¸¡à¸µ', inline: false },
+            { name: "ðŸ“¦ à¸­à¸·à¹ˆà¸™à¹†", value: formData.otherWelfare || '-', inline: true },
           ],
           image: {
             url: "attachment://welfare.png"
@@ -84,12 +84,12 @@ export default function Welfare() {
         hasWeaponWelfare: formData.hasWeaponWelfare,
         otherWelfare: formData.otherWelfare
       }, user);
-      showAlert('success', 'ส่งแบบฟอร์มสวัสดิการเรียบร้อยแล้ว!');
-      navigate('/');
+      showAlert('success', 'à¸ªà¹ˆà¸‡à¹à¸šà¸šà¸Ÿà¸­à¸£à¹Œà¸¡à¸ªà¸§à¸±à¸ªà¸”à¸´à¸à¸²à¸£à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§!');
+      navigate('/home');
       
     } catch (err) {
       console.error(err);
-      showAlert('error', 'เกิดข้อผิดพลาดในการส่งข้อมูล');
+      showAlert('error', 'à¹€à¸à¸´à¸”à¸‚à¹‰à¸­à¸œà¸´à¸”à¸žà¸¥à¸²à¸”à¹ƒà¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¸‚à¹‰à¸­à¸¡à¸¹à¸¥');
     } finally {
       setIsSubmitting(false);
     }
@@ -100,8 +100,8 @@ export default function Welfare() {
       <div className="flex items-center gap-3">
         <Gift size={32} weight="duotone" className="text-emerald-500" />
         <div>
-          <h1 className="text-2xl font-bold text-white">ระบบเบิกสวัสดิการ Gang / Family</h1>
-          <p className="text-slate-400">ฟอร์มขอเบิกสวัสดิการสำหรับ GANG / FAMILY</p>
+          <h1 className="text-2xl font-bold text-white">à¸£à¸°à¸šà¸šà¹€à¸šà¸´à¸à¸ªà¸§à¸±à¸ªà¸”à¸´à¸à¸²à¸£ Gang / Family</h1>
+          <p className="text-slate-400">à¸Ÿà¸­à¸£à¹Œà¸¡à¸‚à¸­à¹€à¸šà¸´à¸à¸ªà¸§à¸±à¸ªà¸”à¸´à¸à¸²à¸£à¸ªà¸³à¸«à¸£à¸±à¸š GANG / FAMILY</p>
         </div>
       </div>
 
@@ -126,8 +126,8 @@ export default function Welfare() {
             </div>
 
             <Input 
-              label={`ชื่อ ${formData.orgType}`} 
-              placeholder="ระบุชื่อ..." 
+              label={`à¸Šà¸·à¹ˆà¸­ ${formData.orgType}`} 
+              placeholder="à¸£à¸°à¸šà¸¸à¸Šà¸·à¹ˆà¸­..." 
               required
               value={formData.orgName}
               onChange={e => {
@@ -137,8 +137,8 @@ export default function Welfare() {
             />
 
             <Input 
-              label="ผู้เบิกสวัสดิการ" 
-              placeholder="ชื่อในเกม..." 
+              label="à¸œà¸¹à¹‰à¹€à¸šà¸´à¸à¸ªà¸§à¸±à¸ªà¸”à¸´à¸à¸²à¸£" 
+              placeholder="à¸Šà¸·à¹ˆà¸­à¹ƒà¸™à¹€à¸à¸¡..." 
               required
               value={formData.requester}
               onChange={e => setFormData({...formData, requester: e.target.value})}
@@ -146,9 +146,9 @@ export default function Welfare() {
 
             <div className="space-y-3 pt-4 border-t border-slate-800">
               <div className="flex items-center justify-between">
-                <label className="text-sm font-medium text-slate-300 ml-1">สวัสดิการพาหนะ</label>
+                <label className="text-sm font-medium text-slate-300 ml-1">à¸ªà¸§à¸±à¸ªà¸”à¸´à¸à¸²à¸£à¸žà¸²à¸«à¸™à¸°</label>
                 <Button type="button" variant="ghost" size="sm" onClick={handleAddVehicle} className="text-emerald-400 hover:text-emerald-300">
-                  <Plus size={16} /> เพิ่มรถ
+                  <Plus size={16} /> à¹€à¸žà¸´à¹ˆà¸¡à¸£à¸–
                 </Button>
               </div>
               
@@ -156,12 +156,12 @@ export default function Welfare() {
                 <div key={v.id} className="flex items-start gap-2 bg-slate-800/50 p-3 rounded-lg border border-slate-700/50">
                   <div className="flex-1 space-y-2">
                     <Input 
-                      placeholder="ชื่อรถ / รุ่นรถ"
+                      placeholder="à¸Šà¸·à¹ˆà¸­à¸£à¸– / à¸£à¸¸à¹ˆà¸™à¸£à¸–"
                       value={v.model}
                       onChange={(e) => handleVehicleChange(v.id, 'model', e.target.value)}
                     />
                     <Input 
-                      placeholder="ป้ายทะเบียน"
+                      placeholder="à¸›à¹‰à¸²à¸¢à¸—à¸°à¹€à¸šà¸µà¸¢à¸™"
                       value={v.plate}
                       onChange={(e) => handleVehicleChange(v.id, 'plate', e.target.value)}
                     />
@@ -181,19 +181,19 @@ export default function Welfare() {
                   checked={formData.hasWeaponWelfare}
                   onChange={e => setFormData({...formData, hasWeaponWelfare: e.target.checked})}
                 />
-                <span className="font-medium text-white flex items-center gap-2"><Shield className="text-amber-500"/> สวัสดิการอาวุธไม้พูล</span>
+                <span className="font-medium text-white flex items-center gap-2"><Shield className="text-amber-500"/> à¸ªà¸§à¸±à¸ªà¸”à¸´à¸à¸²à¸£à¸­à¸²à¸§à¸¸à¸˜à¹„à¸¡à¹‰à¸žà¸¹à¸¥</span>
               </label>
 
               <Input 
-                label="สวัสดิการอื่นๆ (ถ้ามี)" 
-                placeholder="เช่น กล่องต่างๆ..." 
+                label="à¸ªà¸§à¸±à¸ªà¸”à¸´à¸à¸²à¸£à¸­à¸·à¹ˆà¸™à¹† (à¸–à¹‰à¸²à¸¡à¸µ)" 
+                placeholder="à¹€à¸Šà¹ˆà¸™ à¸à¸¥à¹ˆà¸­à¸‡à¸•à¹ˆà¸²à¸‡à¹†..." 
                 value={formData.otherWelfare}
                 onChange={e => setFormData({...formData, otherWelfare: e.target.value})}
               />
             </div>
 
             <Button type="submit" className="w-full" size="lg" isLoading={isSubmitting}>
-              <PaperPlaneTilt size={20} weight="bold" /> ยืนยันการเบิกสวัสดิการ
+              <PaperPlaneTilt size={20} weight="bold" /> à¸¢à¸·à¸™à¸¢à¸±à¸™à¸à¸²à¸£à¹€à¸šà¸´à¸à¸ªà¸§à¸±à¸ªà¸”à¸´à¸à¸²à¸£
             </Button>
           </form>
         </Card>
@@ -211,16 +211,16 @@ export default function Welfare() {
 
             <div className="space-y-4 relative z-10">
               <div className="flex justify-between items-center py-3 border-b border-slate-800/50">
-                <span className="text-slate-400">ชื่อ</span>
+                <span className="text-slate-400">à¸Šà¸·à¹ˆà¸­</span>
                 <span className="font-bold text-white text-xl">{formData.orgName || '-'}</span>
               </div>
               <div className="flex justify-between items-center py-3 border-b border-slate-800/50">
-                <span className="text-slate-400">ผู้เบิก</span>
+                <span className="text-slate-400">à¸œà¸¹à¹‰à¹€à¸šà¸´à¸</span>
                 <span className="font-medium text-white">{formData.requester || '-'}</span>
               </div>
               
               <div className="py-3 border-b border-slate-800/50">
-                <span className="text-slate-400 block mb-2">ยานพาหนะ ({vehicles.length})</span>
+                <span className="text-slate-400 block mb-2">à¸¢à¸²à¸™à¸žà¸²à¸«à¸™à¸° ({vehicles.length})</span>
                 <div className="space-y-1">
                   {vehicles.map((v, i) => (
                     <div key={i} className="text-sm text-slate-300 flex justify-between bg-slate-950 p-2 rounded">
@@ -232,15 +232,15 @@ export default function Welfare() {
               </div>
 
               <div className="flex justify-between items-center py-3 border-b border-slate-800/50">
-                <span className="text-slate-400">สวัสดิการอาวุธ</span>
+                <span className="text-slate-400">à¸ªà¸§à¸±à¸ªà¸”à¸´à¸à¸²à¸£à¸­à¸²à¸§à¸¸à¸˜</span>
                 <span className={`font-bold ${formData.hasWeaponWelfare ? 'text-emerald-400' : 'text-slate-600'}`}>
-                  {formData.hasWeaponWelfare ? '✅ รับสวัสดิการอาวุธไม้พูล' : '❌ ไม่รับ'}
+                  {formData.hasWeaponWelfare ? 'âœ… à¸£à¸±à¸šà¸ªà¸§à¸±à¸ªà¸”à¸´à¸à¸²à¸£à¸­à¸²à¸§à¸¸à¸˜à¹„à¸¡à¹‰à¸žà¸¹à¸¥' : 'âŒ à¹„à¸¡à¹ˆà¸£à¸±à¸š'}
                 </span>
               </div>
 
               {formData.otherWelfare && (
                 <div className="py-3 border-b border-slate-800/50">
-                  <span className="text-slate-400 block mb-1">อื่นๆ</span>
+                  <span className="text-slate-400 block mb-1">à¸­à¸·à¹ˆà¸™à¹†</span>
                   <span className="text-white">{formData.otherWelfare}</span>
                 </div>
               )}
