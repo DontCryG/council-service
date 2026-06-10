@@ -153,29 +153,30 @@ export default function GeneralService() {
               </select>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="col-span-1 space-y-1.5">
-                <label className="text-sm font-medium text-slate-300 ml-1">ประเภทกลุ่ม</label>
-                <select 
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition-colors"
-                  value={formData.groupType}
-                  onChange={e => setFormData({...formData, groupType: e.target.value})}
-                  required
-                >
-                  <option value="GANG">Gang (แก๊ง)</option>
-                  <option value="FAMILY">Family (ครอบครัว)</option>
-                </select>
-              </div>
-              <div className="col-span-1 sm:col-span-2">
-                <Input 
-                  label="ชื่อกลุ่ม" 
-                  placeholder="ระบุชื่อ..." 
-                  required
-                  value={formData.groupName}
-                  onChange={e => setFormData({...formData, groupName: e.target.value})}
-                />
-              </div>
+            <div className="flex gap-4 p-1 bg-slate-900 border border-slate-700 rounded-lg">
+              <button
+                type="button"
+                className={`flex-1 py-2 rounded-md font-bold transition-colors ${formData.groupType === 'GANG' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}
+                onClick={() => setFormData({...formData, groupType: 'GANG'})}
+              >
+                GANG
+              </button>
+              <button
+                type="button"
+                className={`flex-1 py-2 rounded-md font-bold transition-colors ${formData.groupType === 'FAMILY' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'}`}
+                onClick={() => setFormData({...formData, groupType: 'FAMILY'})}
+              >
+                FAMILY
+              </button>
             </div>
+
+            <Input 
+              label={`ชื่อ ${formData.groupType}`} 
+              placeholder="ระบุชื่อ..." 
+              required
+              value={formData.groupName}
+              onChange={e => setFormData({...formData, groupName: e.target.value})}
+            />
 
             <Input 
               label="ผู้ติดต่อ (ชื่อในเกม)" 
