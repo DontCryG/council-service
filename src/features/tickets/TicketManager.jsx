@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { db } from '../../core/firebase';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { useAppStore } from '../../store';
-import { Ticket, Clock, CheckCircle, XCircle, Gear, MagnifyingGlass, FileText, Download, ShieldChevron, House, CalendarBlank, WarningCircle, FloppyDisk, ArrowCounterClockwise } from '@phosphor-icons/react';
+import { Ticket, Clock, CheckCircle, XCircle, Gear, MagnifyingGlass, FileText, Download, ShieldChevron, House, CalendarBlank, WarningCircle, FloppyDisk, ArrowCounterClockwise, Trash, ChartBar } from '@phosphor-icons/react';
 
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
@@ -10,7 +10,7 @@ import { Card } from '../../components/ui/Card';
 import Modal from '../../components/ui/Modal';
 
 export default function TicketManager() {
-  const { showAlert } = useAppStore();
+  const { showAlert, user } = useAppStore();
   const [activeTab, setActiveTab] = useState('orders'); // orders, history, settings, quota
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('ALL'); // ALL, PENDING, APPROVED, REJECTED
@@ -23,6 +23,7 @@ export default function TicketManager() {
   const [ticketsData, setTicketsData] = useState({
     orders: [],
     history: [],
+    salesHistory: [],
     settings: {
       rateGang: 1,
       rateFamily: 1,
@@ -43,6 +44,7 @@ export default function TicketManager() {
         setTicketsData({
           orders: d.orders || [],
           history: d.history || [],
+          salesHistory: d.salesHistory || [],
           settings: d.settings || { 
             rateGang: 1, rateFamily: 1, 
             quotaGang: 10000000, quotaFamily: 3000000, 
@@ -102,6 +104,22 @@ export default function TicketManager() {
       return date.toISOString().split('T')[0];
     };
 
+    const approvedOrders = ticketsData.history.filter(h => h.status === 'APPROVED');
+    const totalTickets = approvedOrders.reduce((sum, h) => sum + (parseInt(h.amount) || 0), 0);
+    const totalCash = approvedOrders.reduce((sum, h) => sum + (parseInt(h.totalPrice) || 0), 0);
+    const closedBy = user?.username || user?.name || 'Admin';
+
+    const newSaleRecord = {
+      id: 'sale_' + Date.now(),
+      roundStartDate: newSettings.roundStartDate || '',
+      roundEndDate: newSettings.roundEndDate || '',
+      totalTickets,
+      totalCash,
+      approvedCount: approvedOrders.length,
+      closedBy,
+      closedAt: new Date().getTime()
+    };
+
     newSettings.roundStartDate = addDays(newSettings.roundStartDate, 7);
     newSettings.roundEndDate = addDays(newSettings.roundEndDate, 7);
 
@@ -109,11 +127,22 @@ export default function TicketManager() {
       ...ticketsData,
       settings: newSettings,
       orders: [],
-      history: []
+      history: [],
+      salesHistory: [newSaleRecord, ...(ticketsData.salesHistory || [])]
     };
     await saveTicketsToDb(newData);
     setShowConfirmReset(false);
-    showAlert('success', 'รีเซ็ตโควต้า และเลื่อนวันที่รอบใหม่ +7 วันเรียบร้อยแล้ว');
+    showAlert('success', 'ปิดรอบการขาย โควต้าแก๊งกลับเป็นศูนย์ และเลื่อนวันที่รอบใหม่เรียบร้อยแล้ว');
+  };
+
+  const handleDeleteSalesHistory = (id) => {
+    if (!window.confirm('คุณต้องการลบประวัติยอดขายนี้ใช่หรือไม่?')) return;
+    const newData = {
+      ...ticketsData,
+      salesHistory: (ticketsData.salesHistory || []).filter(s => s.id !== id)
+    };
+    saveTicketsToDb(newData);
+    showAlert('success', 'ลบประวัติยอดขายเรียบร้อยแล้ว');
   };
 
   const handleProcessOrder = (id, status) => {
@@ -190,6 +219,7 @@ export default function TicketManager() {
         {[
           { id: 'orders', label: 'คำขอรออนุมัติ', icon: Clock },
           { id: 'history', label: 'ประวัติการทำรายการ', icon: FileText },
+          { id: 'salesHistory', label: 'ประวัติยอดขาย', icon: ChartBar },
           { id: 'quota', label: 'โควต้าแก๊ง/แฟม', icon: Ticket },
           { id: 'settings', label: 'ตั้งค่าระบบ', icon: Gear }
         ].map(tab => (
@@ -364,6 +394,67 @@ export default function TicketManager() {
                   </table>
                 </div>
               </Card>
+            </div>
+          )}
+
+          {/* SALES HISTORY TAB */}
+          {activeTab === 'salesHistory' && (
+            <div className="space-y-4">
+              {(!ticketsData.salesHistory || ticketsData.salesHistory.length === 0) ? (
+                <Card className="py-20 text-center text-slate-500 border-dashed border-slate-700">ไม่มีประวัติยอดขาย (ต้องทำการปิดรอบการขายก่อน)</Card>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                  {ticketsData.salesHistory.map(record => (
+                    <Card key={record.id} className="p-0 overflow-hidden bg-white border-none shadow-md relative group transition-all hover:-translate-y-1">
+                      <div className="absolute top-0 right-0 bottom-0 w-3 bg-[#D4A336]"></div>
+                      <div className="p-6 pr-8">
+                        <div className="flex justify-between items-center mb-6">
+                          <div className="flex items-center gap-3">
+                            <span className="bg-[#fcf5e3] text-[#D4A336] text-[10px] font-bold px-3 py-1 rounded-full whitespace-nowrap">รอบวันที่</span>
+                            <div className="text-lg font-black text-slate-800 flex items-center gap-2">
+                              <span>{record.roundStartDate}</span>
+                              <span className="text-slate-300 font-light">|</span>
+                              <span>{record.roundEndDate}</span>
+                            </div>
+                          </div>
+                          <button 
+                            onClick={() => handleDeleteSalesHistory(record.id)}
+                            className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-xl border border-slate-100 text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                          >
+                            <Trash size={18} />
+                          </button>
+                        </div>
+
+                        <div className="bg-[#f8f9fa] rounded-2xl p-5 mb-6">
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <div className="text-slate-500 font-bold mb-1.5 text-xs uppercase tracking-wide">TICKET รวม</div>
+                              <div className="text-2xl font-black text-[#D4A336]">{parseInt(record.totalTickets).toLocaleString()}</div>
+                            </div>
+                            <div>
+                              <div className="text-slate-500 font-bold mb-1.5 text-xs uppercase tracking-wide">ยอดเงินรวม (CASH)</div>
+                              <div className="text-2xl font-black text-slate-800">{parseInt(record.totalCash).toLocaleString()}</div>
+                            </div>
+                          </div>
+                          <div className="mt-4 pt-4 border-t border-slate-200/60 flex items-center gap-2 text-xs text-slate-500 font-medium">
+                            <CheckCircle size={16} className="text-[#10a365]" weight="regular" />
+                            จากคำสั่งซื้อที่อนุมัติจำนวน: <span className="font-bold text-slate-800">{record.approvedCount}</span> รายการ
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center text-xs font-medium gap-2">
+                          <div className="text-slate-500">
+                            ปิดรอบโดย: <span className="text-slate-800 font-black">{record.closedBy}</span>
+                          </div>
+                          <div className="text-slate-400">
+                            {new Date(record.closedAt).toLocaleString('th-TH')}
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
