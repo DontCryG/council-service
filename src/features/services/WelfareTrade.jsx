@@ -60,6 +60,20 @@ export default function WelfareTrade() {
     setItems(items.map(i => i.id === id ? { ...i, [field]: val } : i));
   };
 
+  const getTotalPrice = () => {
+    const count = items.length;
+    if (formData.tradeType === 'VEHICLE') {
+      return (300000 * count).toLocaleString();
+    } else {
+      if (formData.pricingType.includes('1.5M')) {
+        return `${(1.5 * count).toFixed(1).replace('.0', '')}M`;
+      } else if (formData.pricingType.includes('2.0M')) {
+        return `${(2.0 * count).toFixed(1).replace('.0', '')}M`;
+      }
+    }
+    return formData.pricingType;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.orgName || !formData.oldOwner || !formData.newOwner || !formData.councilStaffId) {
@@ -95,7 +109,7 @@ export default function WelfareTrade() {
             { name: "📤 ชื่อผู้ให้ (เก่า)", value: formData.oldOwner, inline: true },
             { name: "📥 ชื่อผู้รับ (ใหม่)", value: formData.newOwner, inline: true },
             { name: "🛡️ สภาที่รับเรื่อง", value: councilMembers.find(c => c.id === formData.councilStaffId)?.name || '-', inline: true },
-            { name: "💰 เรทราคา", value: formData.pricingType, inline: true },
+            { name: "💰 เรทราคา", value: getTotalPrice(), inline: true },
             { name: "📋 รายการของ", value: items.map(i => `${i.name} ${i.detail ? `(${i.detail})` : ''}`).join('\n'), inline: false },
           ],
           image: {
@@ -324,7 +338,7 @@ export default function WelfareTrade() {
                 </div>
                 <div className="text-right">
                   <span className="text-slate-500 text-xs block mb-1 uppercase tracking-wider">ค่าธรรมเนียม</span>
-                  <span className="text-white font-black">{formData.pricingType}</span>
+                  <span className="text-white font-black">{getTotalPrice()}</span>
                 </div>
               </div>
             </div>
