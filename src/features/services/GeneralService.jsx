@@ -118,7 +118,7 @@ export default function GeneralService() {
       // 3. Send Webhook
       await sendWebhook('general', fd);
       await saveTransactionLog('general_service', {
-        orgType: formData.orgType,
+        orgType: formData.groupType,
         groupName: formData.groupName,
         requester: formData.requester,
         transactionId: formData.transactionId,
