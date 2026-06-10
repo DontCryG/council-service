@@ -1,7 +1,39 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Globe, FacebookLogo } from '@phosphor-icons/react';
+import { doc, onSnapshot, setDoc } from 'firebase/firestore';
+import { db } from '../../core/firebase';
+import Modal from '../../components/ui/Modal';
 
 export default function Portal() {
+  const [isClosed, setIsClosed] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    const unsub = onSnapshot(doc(db, "system", "status"), (docSnap) => {
+      if (docSnap.exists()) {
+        setIsClosed(docSnap.data().isClosed || false);
+      }
+    });
+    return () => unsub();
+  }, []);
+
+  const handleToggleSystem = async () => {
+    if (password === 'wiptownadmin') {
+      try {
+        const sysRef = doc(db, "system", "status");
+        await setDoc(sysRef, { isClosed: !isClosed }, { merge: true });
+        setShowModal(false);
+        setPassword('');
+      } catch (e) {
+        console.error(e);
+      }
+    } else {
+      alert('รหัสผ่านไม่ถูกต้อง');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-950 text-white flex flex-col relative overflow-hidden font-sans selection:bg-emerald-500/30">
       
@@ -43,19 +75,28 @@ export default function Portal() {
               PORTAL
             </h1>
             
-            <Link 
-              to="/home" 
-              className="group relative inline-flex items-center gap-3 bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-xl font-bold text-sm tracking-widest transition-all duration-300 border border-white/20 hover:border-white/40 hover:shadow-[0_0_30px_rgba(255,255,255,0.15)] hover:-translate-y-1 overflow-hidden"
-            >
-              {/* Shine effect */}
-              <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12"></div>
-              
-              <span className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)]"></span>
-              </span>
-              LOGIN เข้าสู่ระบบสภา
-            </Link>
+            {isClosed ? (
+              <div className="group relative inline-flex items-center gap-3 bg-red-500/10 text-red-500 px-8 py-4 rounded-xl font-bold text-sm tracking-widest transition-all duration-300 border border-red-500/20 shadow-[0_0_30px_rgba(239,68,68,0.15)] overflow-hidden cursor-not-allowed">
+                <span className="relative flex h-3 w-3">
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)]"></span>
+                </span>
+                ระบบปิดให้บริการ (นอกเวลาทำการ)
+              </div>
+            ) : (
+              <Link 
+                to="/home" 
+                className="group relative inline-flex items-center gap-3 bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-xl font-bold text-sm tracking-widest transition-all duration-300 border border-white/20 hover:border-white/40 hover:shadow-[0_0_30px_rgba(255,255,255,0.15)] hover:-translate-y-1 overflow-hidden"
+              >
+                {/* Shine effect */}
+                <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12"></div>
+                
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)]"></span>
+                </span>
+                LOGIN เข้าสู่ระบบสภา
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -70,9 +111,39 @@ export default function Portal() {
           <p className="text-[10px] md:text-xs text-slate-600 tracking-wider">สงวนลิขสิทธิ์ &copy; 2567 สำนักงานเลขานุการสภา</p>
         </div>
         <div>
-          <p className="text-[10px] md:text-xs text-slate-700 font-mono tracking-widest">VERSION 17.0</p>
+          <button 
+            onClick={() => setShowModal(true)} 
+            className="text-[10px] md:text-xs text-slate-700 hover:text-slate-400 font-mono tracking-widest transition-colors focus:outline-none"
+          >
+            VERSION 17.0
+          </button>
         </div>
       </div>
+
+      {/* Admin Toggle Modal */}
+      <Modal isOpen={showModal} onClose={() => { setShowModal(false); setPassword(''); }} title="System Access Control">
+        <div className="p-6">
+          <p className="text-slate-400 text-sm mb-4">
+            กรุณาใส่รหัสผ่านผู้ดูแลระบบเพื่อ {isClosed ? 'เปิด' : 'ปิด'} ให้บริการสภา
+          </p>
+          <input 
+            type="password" 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleToggleSystem()}
+            className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3 text-white mb-6 focus:border-emerald-500 transition-colors outline-none"
+            placeholder="Admin Password..."
+            autoFocus
+          />
+          <button 
+            onClick={handleToggleSystem}
+            className={`w-full font-medium py-3 rounded-lg transition-colors shadow-lg ${isClosed ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-900/20' : 'bg-red-600 hover:bg-red-700 text-white shadow-red-900/20'}`}
+          >
+            {isClosed ? 'ยืนยันเปิดระบบ (Open System)' : 'ยืนยันปิดระบบ (Close System)'}
+          </button>
+        </div>
+      </Modal>
+
     </div>
   );
 }
