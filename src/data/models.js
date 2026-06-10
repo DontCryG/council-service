@@ -7,7 +7,7 @@ export const publicServices = [
     { id: 'register_org', title: 'ลงทะเบียนองค์กรใหม่', desc: 'ลงทะเบียนเพื่อสร้าง Gang หรือ Family อย่างเป็นทางการ', icon: 'ph-buildings' },
     { id: 'ps1', title: 'ระบบให้บริการทั่วไป', desc: 'บริการยื่นคำร้องทั่วไปสำหรับประชาชน', icon: 'ph-users' },
     { id: 'welfare', title: 'ระบบเบิกสวัสดิการ', desc: 'ทำเรื่องขอเบิกสวัสดิการแก๊ง/แฟมิลี่ประจำสัปดาห์', icon: 'ph-gift' },
-    { id: 'welfare_trade', title: 'ระบบแลกสวัสดิการ', desc: 'สวัสดิการที่ได้สามารถนำมาแลกเปลี่ยนเป็นของอื่นๆได้', icon: 'ph-arrows-left-right' },
+    { id: 'welfare_trade', title: 'ระบบเทรดสวัสดิการ', desc: 'สวัสดิการที่ได้สามารถนำมาแลกเปลี่ยนเป็นของอื่นๆได้', icon: 'ph-arrows-left-right' },
     { id: 'ps5', title: 'ระบบเบิก TICKET', desc: 'สำหรับประชาชนเพื่อนำไปซื้อของที่ไม่มีขายในประเทศ', icon: 'ph-ticket' },
     { id: 'edit_org', title: 'แก้ไขข้อมูลองค์กร', desc: 'แก้ไขข้อมูลการย้ายหรือตั้งชื่อแก๊ง', icon: 'ph-pencil-simple' },
     { id: 'cs5', title: 'STORY CALENDAR', desc: 'ประวัติและปฏิทินเดินสตอรี่ของการจองทั้งหมด', icon: 'ph-calendar-check' },

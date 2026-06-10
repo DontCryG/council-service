@@ -138,8 +138,8 @@ export default function WelfareTrade() {
       <div className="flex items-center gap-3">
         <ArrowsLeftRight size={32} weight="duotone" className="text-violet-500" />
         <div>
-          <h1 className="text-2xl font-bold text-white">ระบบแลกเปลี่ยนสวัสดิการ</h1>
-          <p className="text-slate-400">แบบฟอร์มบันทึกการโอนย้ายยานพาหนะ / อาวุธ ขององค์กร</p>
+          <h1 className="text-2xl font-bold text-white">ระบบเทรดสวัสดิการ</h1>
+          <p className="text-slate-400">แบบฟอร์มบันทึกการโอนสิทธิ์ยานพาหนะ / อาวุธ ขององค์กร</p>
         </div>
       </div>
 
