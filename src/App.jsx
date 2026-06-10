@@ -91,7 +91,21 @@ function App() {
         }
       }
     });
-    return () => unsubscribe();
+    
+    // Global block for non-numeric characters in number inputs
+    const handleKeyDown = (e) => {
+      if (e.target.tagName === 'INPUT' && e.target.type === 'number') {
+        if (['e', 'E', '+', '-'].includes(e.key)) {
+          e.preventDefault();
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    
+    return () => {
+      unsubscribe();
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [setUser]);
 
   if (!isAuthLoaded) {

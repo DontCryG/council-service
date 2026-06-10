@@ -18,6 +18,12 @@ const Input = forwardRef(({ className, label, error, ...props }, ref) => {
           error && 'border-red-500 focus:border-red-500 focus:ring-red-500',
           className
         )}
+        onKeyDown={(e) => {
+          if (props.type === 'number' && ['e', 'E', '+', '-'].includes(e.key)) {
+            e.preventDefault();
+          }
+          if (props.onKeyDown) props.onKeyDown(e);
+        }}
         {...props}
       />
       {error && (
