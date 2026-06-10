@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
-import { sendWebhook } from '../../core/api';
+import { sendWebhook, saveTransactionLog } from '../../core/api';
 import { toBlob } from 'html-to-image';
 
 import { Card } from '../../components/ui/Card';
@@ -11,7 +11,7 @@ import { PaperPlaneTilt, Plus, Trash, Gift, Car, Shield } from '@phosphor-icons/
 
 export default function Welfare() {
   const navigate = useNavigate();
-  const { showAlert } = useAppStore();
+  const { showAlert, user } = useAppStore();
   
   const [formData, setFormData] = useState({
     orgType: 'GANG',
@@ -76,6 +76,14 @@ export default function Welfare() {
       }));
 
       await sendWebhook('welfare', fd);
+      await saveTransactionLog('welfare', {
+        orgType: formData.orgType,
+        orgName: formData.orgName,
+        requester: formData.requester,
+        vehicles: vehicles,
+        hasWeapon: formData.hasWeapon,
+        otherWelfare: formData.otherWelfare
+      }, user);
       showAlert('success', 'ส่งแบบฟอร์มสวัสดิการเรียบร้อยแล้ว!');
       navigate('/');
       

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
-import { sendWebhook } from '../../core/api';
+import { sendWebhook, saveTransactionLog } from '../../core/api';
 import { buildWelfareTradeWebhook } from '../../services/discordFormatters';
 import { toBlob } from 'html-to-image';
 
@@ -15,7 +15,7 @@ import { PaperPlaneTilt, Plus, Trash, ArrowsLeftRight, Car, Crosshair } from '@p
 
 export default function WelfareTrade() {
   const navigate = useNavigate();
-  const { showAlert } = useAppStore();
+  const { showAlert, user } = useAppStore();
   
   const [councilMembers, setCouncilMembers] = useState([]);
   
@@ -111,7 +111,17 @@ export default function WelfareTrade() {
       fd.append('payload_json', JSON.stringify(payload));
 
       await sendWebhook('welfare_trade', fd);
-      showAlert('success', 'ส่งข้อมูลแลกเปลี่ยนเรียบร้อยแล้ว!');
+      await saveTransactionLog('welfare_trade', {
+        orgName: formData.orgName,
+        orgType: formData.orgType,
+        tradeType: formData.tradeType,
+        oldOwner: formData.oldOwner,
+        newOwner: formData.newOwner,
+        items: items,
+        totalPrice: getTotalPrice(),
+        councilStaffId: formData.councilStaffId
+      }, user);
+      showAlert('success', 'ส่งข้อมูลแลกเปลี่ยนสวัสดิการเรียบร้อยแล้ว!');
       setShowConfirm(false);
       navigate('/');
       

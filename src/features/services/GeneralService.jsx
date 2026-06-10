@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
-import { sendWebhook } from '../../core/api';
+import { sendWebhook, saveTransactionLog } from '../../core/api';
 import { transactions } from '../../data/models';
 import { toBlob } from 'html-to-image';
 
@@ -14,7 +14,7 @@ import { PaperPlaneTilt, Plus, Trash, FileText, UserCircle } from '@phosphor-ico
 
 export default function GeneralService() {
   const navigate = useNavigate();
-  const { showAlert } = useAppStore();
+  const { showAlert, user } = useAppStore();
   
   const [councilMembers, setCouncilMembers] = useState([]);
   const [formData, setFormData] = useState({
@@ -117,7 +117,15 @@ export default function GeneralService() {
 
       // 3. Send Webhook
       await sendWebhook('general', fd);
-      showAlert('success', 'ส่งใบเสร็จไปยัง Discord เรียบร้อยแล้ว!');
+      await saveTransactionLog('general_service', {
+        orgType: formData.orgType,
+        groupName: formData.groupName,
+        requester: formData.requester,
+        transactionId: formData.transactionId,
+        councilMemberId: formData.councilMemberId,
+        members: members.map(m => m.value)
+      }, user);
+      showAlert('success', 'ส่งข้อมูลลง Discord เรียบร้อยแล้ว!');
       navigate('/');
       
     } catch (err) {

@@ -25,6 +25,7 @@ const TicketStore = lazy(() => import('./features/tickets/TicketStore'));
 const StoryCalendar = lazy(() => import('./features/services/StoryCalendar'));
 const DutySystem = lazy(() => import('./features/council/DutySystem'));
 const AdminDutyHistory = lazy(() => import('./features/council/AdminDutyHistory'));
+const TransactionHistory = lazy(() => import('./features/admin/TransactionHistory'));
 
 function GlobalAlert() {
   const { alert, hideAlert } = useAppStore();
@@ -153,6 +154,7 @@ function App() {
             {/* Council Only Routes */}
             <Route path="/council_manage" element={<AdminRoute><CouncilManage /></AdminRoute>} />
             <Route path="/admin/duty_history" element={<AdminRoute><AdminDutyHistory /></AdminRoute>} />
+            <Route path="/admin/transactions" element={<AdminRoute><TransactionHistory /></AdminRoute>} />
             <Route path="cs4" element={<ProtectedRoute><GroupManager /></ProtectedRoute>} />
             <Route path="cs3" element={<ProtectedRoute><TicketManager /></ProtectedRoute>} />
 

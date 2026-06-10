@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
-import { sendWebhook } from '../../core/api';
+import { sendWebhook, saveTransactionLog } from '../../core/api';
 import { toBlob } from 'html-to-image';
 
 import { Card } from '../../components/ui/Card';
@@ -14,7 +14,7 @@ import { PaperPlaneTilt, Buildings, PencilSimple, Palette, TShirt, CheckCircle }
 
 export default function EditOrg() {
   const navigate = useNavigate();
-  const { showAlert } = useAppStore();
+  const { showAlert, user } = useAppStore();
   
   const [councilMembers, setCouncilMembers] = useState([]);
   
@@ -112,6 +112,18 @@ export default function EditOrg() {
       }));
 
       await sendWebhook('edit_org', fd);
+      await saveTransactionLog('edit_org', {
+        orgName: formData.orgName,
+        orgType: formData.orgType,
+        requester: formData.requester,
+        totalPrice: getTotalPrice(),
+        councilStaffId: formData.councilStaffId,
+        changeInfo: formData.changeInfo,
+        editTexture: formData.editTexture,
+        addCloth: formData.addCloth,
+        bulkChange: formData.bulkChange,
+        addAccessory: formData.addAccessory
+      }, user);
       showAlert('success', 'ส่งข้อมูลแจ้งแก้ไขเรียบร้อยแล้ว!');
       setShowConfirm(false);
       navigate('/');

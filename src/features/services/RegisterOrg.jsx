@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
-import { sendWebhook } from '../../core/api';
+import { sendWebhook, saveTransactionLog } from '../../core/api';
 import { toBlob } from 'html-to-image';
 
 import { Card } from '../../components/ui/Card';
@@ -13,7 +13,7 @@ import { PaperPlaneTilt, Plus, Trash, Buildings } from '@phosphor-icons/react';
 
 export default function RegisterOrg() {
   const navigate = useNavigate();
-  const { showAlert } = useAppStore();
+  const { showAlert, user } = useAppStore();
   
   const [councilMembers, setCouncilMembers] = useState([]);
   const [step, setStep] = useState(1);
@@ -108,7 +108,15 @@ export default function RegisterOrg() {
       }));
 
       await sendWebhook('register_org', fd);
-      showAlert('success', 'ลงทะเบียนองค์กรเรียบร้อยแล้ว!');
+      await saveTransactionLog('register_org', {
+        orgType: formData.orgType,
+        name: formData.name,
+        alias: formData.alias,
+        color: formData.color,
+        members: members.map(m => m.value),
+        councilStaffId: formData.councilStaffId
+      }, user);
+      showAlert('success', 'ลงทะเบียนแก๊ง/แฟมิลี่เรียบร้อยแล้ว!');
       navigate('/');
       
     } catch (err) {
