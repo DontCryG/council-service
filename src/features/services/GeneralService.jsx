@@ -282,15 +282,15 @@ export default function GeneralService() {
               </div>
 
               <div className="flex justify-between items-center py-3 border-b border-slate-800/50">
-                <span className="text-slate-400">ผู้ทำรายการ (สภา)</span>
-                <span className="font-medium text-amber-500">
+                <span className="text-slate-400 whitespace-nowrap">ผู้ทำรายการ (สภา)</span>
+                <span className="font-medium text-amber-500 whitespace-nowrap text-right pl-4">
                   {councilMembers.find(c => c.id === formData.councilMemberId)?.name || '-'}
                 </span>
               </div>
 
               <div className="mt-6 pt-4 border-t-2 border-dashed border-slate-700 flex justify-between items-end">
-                <span className="text-slate-400 uppercase tracking-wider text-sm font-bold">Total Amount</span>
-                <span className="text-4xl font-black text-emerald-400 tracking-tight">
+                <span className="text-slate-400 uppercase tracking-wider text-sm font-bold whitespace-nowrap">Total Amount</span>
+                <span className="text-4xl font-black text-emerald-400 tracking-tight whitespace-nowrap">
                   ${totalAmount.toLocaleString()}
                 </span>
               </div>
