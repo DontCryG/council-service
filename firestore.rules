@@ -6,6 +6,11 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    // System Settings (Open/Close portal)
+    match /system/{docId} {
+      allow read, write: if true;
+    }
+
     // Duty History: Anyone logged in can read, only admin can write
     match /dutyHistory/{docId} {
       allow read: if request.auth != null;

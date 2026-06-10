@@ -51,9 +51,9 @@ export default function Portal() {
       {/* Top Right */}
       <div className="absolute top-8 right-8 md:right-12 text-right z-10 animate-in fade-in slide-in-from-top-8 duration-1000">
         <h2 className="text-lg md:text-xl font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400">
-          สำนักงานเลขานุการสภา
+          สำนักงานสภาเมือง
         </h2>
-        <p className="text-[10px] md:text-xs text-slate-500 tracking-[0.3em] uppercase mt-1">The Council Secretary Office</p>
+        <p className="text-[10px] md:text-xs text-slate-500 tracking-[0.3em] uppercase mt-1">THE COUNCIL OFFICE</p>
       </div>
 
       {/* Center Content */}
@@ -108,7 +108,7 @@ export default function Portal() {
             <a href="#" className="hover:text-white hover:scale-110 transition-all duration-300"><Globe size={22} weight="duotone" /></a>
             <a href="#" className="hover:text-blue-500 hover:scale-110 transition-all duration-300"><FacebookLogo size={22} weight="duotone" /></a>
           </div>
-          <p className="text-[10px] md:text-xs text-slate-600 tracking-wider">สงวนลิขสิทธิ์ &copy; 2567 สำนักงานเลขานุการสภา</p>
+          <p className="text-[10px] md:text-xs text-slate-600 tracking-wider">สงวนลิขสิทธิ์ &copy; 2567 สำนักงานสภาเมือง</p>
         </div>
         <div>
           <button 
