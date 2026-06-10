@@ -101,8 +101,8 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
             {/* Header */}
             <div className="flex justify-between items-end border-b-2 border-slate-800 pb-3 mb-4">
               <div className="bg-[#1e2433] text-white px-6 py-3 rounded">
-                <h1 className="text-lg font-bold">สำนักงานเลขานุการสภา</h1>
-                <p className="text-xs text-slate-300">The Council Secretary Office</p>
+                <h1 className="text-lg font-bold">สำนักงานสภาเมือง</h1>
+                <p className="text-xs text-slate-300">THE COUNCIL OFFICE</p>
               </div>
               <div className="text-right">
                 <h2 className="text-3xl font-black text-[#d4a373] leading-none mb-1">PAYSLIP</h2>
