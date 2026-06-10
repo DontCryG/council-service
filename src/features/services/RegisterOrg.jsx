@@ -95,6 +95,7 @@ export default function RegisterOrg() {
           fields: [
             { name: "Type", value: typeDisplay, inline: true },
             { name: "Group", value: formData.alias ? `[${formData.alias}] ${formData.name || '-'}` : (formData.name || '-'), inline: true },
+            { name: "Theme Color", value: formData.color || '-', inline: true },
             { name: "Transaction", value: "ลงทะเบียนองค์กรใหม่", inline: false },
             { name: "Members", value: `\`\`\`\n${membersFullText || '-'}\n\`\`\``, inline: false },
             { name: "Council", value: councilName, inline: false }
