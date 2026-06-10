@@ -342,11 +342,11 @@ export default function EditOrg() {
             <div className="mb-8">
               <div className="text-sm font-bold border-b border-slate-300 pb-1 mb-2">Requested Changes</div>
               <ul className="text-sm space-y-2 list-none pl-0 text-slate-700 font-medium">
-                {formData.changeInfo && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span>✅ เปลี่ยนชื่อ/ข้อมูล</span> <span>$50,000</span></li>}
-                {formData.editTexture && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span>✅ แก้ไขเทกเจอร์ ({formData.textureCount} ชิ้น)</span> <span>${(10000 * Math.max(1, formData.textureCount)).toLocaleString()}</span></li>}
-                {formData.addCloth && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span>✅ เพิ่มชุดใหม่ ({formData.clothCount} ชิ้น)</span> <span>${(50000 * Math.max(1, formData.clothCount)).toLocaleString()}</span></li>}
-                {formData.addAccessory && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span>✅ เพิ่มประดับ ({formData.accessoryCount} ชิ้น)</span> <span>${(30000 * Math.max(1, formData.accessoryCount)).toLocaleString()}</span></li>}
-                {formData.bulkChange && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span>✅ โปรเหมา</span> <span>$150,000</span></li>}
+                {formData.changeInfo && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ เปลี่ยนชื่อ/ข้อมูล</span> <span>$50,000</span></li>}
+                {formData.editTexture && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ แก้ไขเทกเจอร์ ({formData.textureCount} ชิ้น)</span> <span>${(10000 * Math.max(1, formData.textureCount)).toLocaleString()}</span></li>}
+                {formData.addCloth && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ เพิ่มชุดใหม่ ({formData.clothCount} ชิ้น)</span> <span>${(50000 * Math.max(1, formData.clothCount)).toLocaleString()}</span></li>}
+                {formData.addAccessory && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ เพิ่มประดับ ({formData.accessoryCount} ชิ้น)</span> <span>${(30000 * Math.max(1, formData.accessoryCount)).toLocaleString()}</span></li>}
+                {formData.bulkChange && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ โปรเหมา</span> <span>$150,000</span></li>}
                 {!formData.changeInfo && !formData.editTexture && !formData.addCloth && !formData.bulkChange && !formData.addAccessory && (
                   <li className="text-slate-400 italic">No changes selected</li>
                 )}
