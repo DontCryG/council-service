@@ -75,7 +75,9 @@ export default function WelfareTrade() {
     return formData.pricingType;
   };
 
-  const handleSubmit = async (e) => {
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.orgName || !formData.oldOwner || !formData.newOwner || !formData.councilStaffId) {
       showAlert('error', 'กรุณากรอกข้อมูลให้ครบถ้วน');
@@ -87,6 +89,10 @@ export default function WelfareTrade() {
       return;
     }
 
+    setShowConfirm(true);
+  };
+
+  const handleConfirmSubmit = async () => {
     setIsSubmitting(true);
     
     try {
@@ -105,6 +111,7 @@ export default function WelfareTrade() {
 
       await sendWebhook('welfare_trade', fd);
       showAlert('success', 'ส่งข้อมูลแลกเปลี่ยนเรียบร้อยแล้ว!');
+      setShowConfirm(false);
       navigate('/');
       
     } catch (err) {
@@ -324,10 +331,20 @@ export default function WelfareTrade() {
                   <span className="text-white font-black">{getTotalPrice()}</span>
                 </div>
               </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      
+      <ConfirmationModal 
+        isOpen={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={handleConfirmSubmit}
+        title="ยืนยันส่งข้อมูลแลกเปลี่ยนสวัสดิการ?"
+        message={`คุณต้องการยืนยันการส่งข้อมูลของแก๊ง ${formData.orgName} ใช่หรือไม่? โปรดตรวจสอบรูปภาพตัวอย่างให้แน่ใจ`}
+        isLoading={isSubmitting}
+      />
     </div>
   );
 }

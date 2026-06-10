@@ -9,6 +9,7 @@ import { toBlob } from 'html-to-image';
 import { Card } from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
+import ConfirmationModal from '../../components/ui/ConfirmationModal';
 import { PaperPlaneTilt, Buildings, PencilSimple, Palette, TShirt, CheckCircle } from '@phosphor-icons/react';
 
 export default function EditOrg() {
@@ -39,6 +40,7 @@ export default function EditOrg() {
   });
   
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const captureRef = useRef(null);
 
   useEffect(() => {
@@ -67,6 +69,10 @@ export default function EditOrg() {
       return;
     }
 
+    setShowConfirm(true);
+  };
+
+  const handleConfirmSubmit = async () => {
     setIsSubmitting(true);
     
     try {
@@ -108,6 +114,7 @@ export default function EditOrg() {
 
       await sendWebhook('edit_org', fd);
       showAlert('success', 'ส่งข้อมูลแจ้งแก้ไขเรียบร้อยแล้ว!');
+      setShowConfirm(false);
       navigate('/');
       
     } catch (err) {
@@ -378,6 +385,15 @@ export default function EditOrg() {
           </div>
         </div>
       </div>
+      
+      <ConfirmationModal 
+        isOpen={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={handleConfirmSubmit}
+        title="ยืนยันส่งข้อมูลแก้ไของค์กร?"
+        message={`คุณต้องการยืนยันการส่งข้อมูลของแก๊ง ${formData.orgName} ใช่หรือไม่? โปรดตรวจสอบรายละเอียดให้แน่ใจ`}
+        isLoading={isSubmitting}
+      />
     </div>
   );
 }
