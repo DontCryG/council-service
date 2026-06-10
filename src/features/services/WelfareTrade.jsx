@@ -167,7 +167,10 @@ export default function WelfareTrade() {
               placeholder="ระบุชื่อ..." 
               required
               value={formData.orgName}
-              onChange={e => setFormData({...formData, orgName: e.target.value})}
+              onChange={e => {
+                const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.]/g, '').toUpperCase();
+                setFormData({...formData, orgName: val});
+              }}
             />
 
             <div className="grid grid-cols-2 gap-4">
