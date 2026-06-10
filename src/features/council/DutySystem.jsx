@@ -814,21 +814,39 @@ export default function DutySystem() {
                 <button
                   type="button"
                   disabled={!resignForm.confirmed}
-                  onClick={() => {
+                  onClick={async () => {
                     if (!resignForm.memberId || !resignForm.lastDay || !resignForm.reason) {
                       showAlert('error', 'กรุณากรอกข้อมูลให้ครบถ้วน'); return;
                     }
+                    const memberName = councilMembers.find(m => m.id === resignForm.memberId)?.name || 'Unknown';
                     const resignations = [...(dutyData.resignations || [])];
                     resignations.unshift({
                       id: 'res_' + Date.now(),
                       memberId: resignForm.memberId,
-                      memberName: councilMembers.find(m => m.id === resignForm.memberId)?.name || 'Unknown',
+                      memberName: memberName,
                       lastDay: resignForm.lastDay,
                       reason: resignForm.reason,
                       status: 'pending',
                       submittedAt: Date.now()
                     });
                     saveToDb({ ...dutyData, resignations });
+
+                    try {
+                      await sendWebhook('duty_leave', {
+                        embeds: [{
+                          title: "🚨 แจ้งลาออก (Resignation)",
+                          color: 0xef4444,
+                          fields: [
+                            { name: "👤 สมาชิก", value: memberName, inline: true },
+                            { name: "📅 วันทำงานวันสุดท้าย", value: resignForm.lastDay, inline: true },
+                            { name: "💬 เหตุผล", value: resignForm.reason, inline: false }
+                          ],
+                          footer: { text: "Council Duty System" },
+                          timestamp: new Date().toISOString()
+                        }]
+                      });
+                    } catch(e) { console.error("Webhook error:", e); }
+
                     setResignForm({ memberId: '', lastDay: '', reason: '', confirmed: false });
                     showAlert('success', 'ยื่นเรื่องลาออกเรียบร้อยแล้ว กรุณารออนุมัติจากสภา');
                   }}
