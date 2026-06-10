@@ -5,7 +5,7 @@ import { SignOut, User, List } from '@phosphor-icons/react';
 import Button from '../ui/Button';
 
 export default function Header() {
-  const { user, toggleSidebar } = useAppStore();
+  const { user, councilUsername, toggleSidebar } = useAppStore();
 
   const handleLogout = async () => {
     try {
@@ -35,7 +35,7 @@ export default function Header() {
             <User size={18} weight="bold" />
           </div>
           <span className="text-sm font-medium text-slate-300">
-            {user ? (user.councilUsername || (user.email?.includes('@') ? user.email.split('@')[0] : user.email) || user.displayName || 'User') : 'Guest'}
+            {user ? (councilUsername || user.councilUsername || (user.email?.includes('@') ? user.email.split('@')[0] : user.email) || user.displayName || 'User') : 'Guest'}
           </span>
         </div>
         

@@ -73,7 +73,7 @@ function AdminRoute({ children }) {
 }
 
 function App() {
-  const { setUser, isAuthLoaded } = useAppStore();
+  const { setUser, setCouncilUsername, isAuthLoaded } = useAppStore();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -85,7 +85,7 @@ function App() {
             const members = docSnap.data().members || [];
             const member = members.find(m => m.username === firebaseUser.email);
             if (member && member.name) {
-              firebaseUser.councilUsername = member.name;
+              setCouncilUsername(member.name);
             }
           }
         } catch (e) {

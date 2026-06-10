@@ -107,7 +107,9 @@ export default function TicketManager() {
     const approvedOrders = ticketsData.history.filter(h => h.status === 'APPROVED');
     const totalTickets = approvedOrders.reduce((sum, h) => sum + (parseInt(h.amount) || 0), 0);
     const totalCash = approvedOrders.reduce((sum, h) => sum + (parseInt(h.totalPrice) || 0), 0);
-    let closedBy = user?.councilUsername || user?.username || user?.email || user?.displayName || 'Admin';
+    const storeState = useAppStore.getState();
+    const currentCouncilUsername = storeState.councilUsername;
+    let closedBy = currentCouncilUsername || user?.councilUsername || user?.username || user?.email || user?.displayName || 'Admin';
     if (closedBy && closedBy.includes('@')) {
       closedBy = closedBy.split('@')[0];
     }

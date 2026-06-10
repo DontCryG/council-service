@@ -3,8 +3,10 @@ import { create } from 'zustand';
 export const useAppStore = create((set) => ({
   // User Auth State
   user: null,
+  councilUsername: null,
   isAuthLoaded: false,
   setUser: (user) => set({ user, isAuthLoaded: true }),
+  setCouncilUsername: (name) => set({ councilUsername: name }),
   
   // App Global State
   isLoading: false,
