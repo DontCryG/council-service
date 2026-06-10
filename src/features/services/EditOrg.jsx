@@ -67,7 +67,7 @@ export default function EditOrg() {
     try {
       const dataUrl = await toPng(captureRef.current, { 
         pixelRatio: 2, 
-        backgroundColor: '#0f172a',
+        backgroundColor: '#f1f5f9',
         cacheBust: true 
       });
       const res = await fetch(dataUrl);

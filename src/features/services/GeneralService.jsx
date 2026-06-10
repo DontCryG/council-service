@@ -80,10 +80,9 @@ export default function GeneralService() {
     setIsSubmitting(true);
     
     try {
-      // 1. Generate Image from DOM
       const canvas = await html2canvas(captureRef.current, {
         scale: 2,
-        backgroundColor: '#0f172a' // Slate 950
+        backgroundColor: '#f1f5f9'
       });
       
       const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
