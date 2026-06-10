@@ -29,7 +29,7 @@ export default function Sidebar({ className }) {
       title: 'สำหรับเจ้าหน้าที่สภา',
       items: [
         { path: '/cs6', label: 'ระบบเข้าเวรสภา', icon: ClockClockwise, isPublic: false },
-        { path: '/cs4', label: 'จัดการแก๊ง/แฟม', icon: UsersThree, isPublic: false },
+        { path: '/cs4', label: 'ระบบจัดการ GANG/FAMILY', icon: UsersThree, isPublic: false },
         { path: '/cs3', label: 'จัดการทิคเก็ต', icon: Ticket, isPublic: false },
       ]
     },
