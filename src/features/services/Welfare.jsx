@@ -101,7 +101,7 @@ export default function Welfare() {
         <Gift size={32} weight="duotone" className="text-emerald-500" />
         <div>
           <h1 className="text-2xl font-bold text-white">ระบบเบิกสวัสดิการ Gang / Family</h1>
-          <p className="text-slate-400">ลงทะเบียนขอรับสวัสดิการจากสภา</p>
+          <p className="text-slate-400">ฟอร์มขอเบิกสวัสดิการสำหรับ GANG / FAMILY</p>
         </div>
       </div>
 
