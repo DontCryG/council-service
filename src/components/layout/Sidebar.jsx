@@ -45,9 +45,7 @@ export default function Sidebar({ className }) {
   return (
     <aside className={cn("w-64 bg-slate-900 border-r border-slate-800 flex flex-col", className)}>
         <div className="p-6 border-b border-slate-800 flex items-center justify-center">
-          <h1 className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500">
-            COUNCIL <span className="text-white">SYSTEM</span>
-          </h1>
+          <img src="/logo.png" alt="COUNCIL SYSTEM" className="h-20 object-contain drop-shadow-md" />
         </div>
       
       <nav className="flex-1 p-4 overflow-y-auto">
