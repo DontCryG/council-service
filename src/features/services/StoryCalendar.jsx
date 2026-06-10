@@ -438,7 +438,7 @@ export default function StoryCalendar() {
                       className="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-center font-bold text-white focus:outline-none focus:border-amber-500"
                       value={formData.team1}
                       onChange={e => {
-                        const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.]/g, '').toUpperCase();
+                        const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.[\]]/g, '').toUpperCase();
                         setFormData({...formData, team1: val});
                       }}
                     />
@@ -449,7 +449,7 @@ export default function StoryCalendar() {
                       className="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-center font-bold text-white focus:outline-none focus:border-amber-500"
                       value={formData.team2}
                       onChange={e => {
-                        const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.]/g, '').toUpperCase();
+                        const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.[\]]/g, '').toUpperCase();
                         setFormData({...formData, team2: val});
                       }}
                     />
