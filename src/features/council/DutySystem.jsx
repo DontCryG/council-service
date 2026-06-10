@@ -197,17 +197,50 @@ export default function DutySystem() {
     showAlert('success', 'บันทึกเข้าเวรเรียบร้อยแล้ว');
   };
 
-  const handleBreakToggle = () => {
+  const handleBreakToggle = async () => {
     if (!selectedMemberId) { showAlert('error', 'กรุณาเลือกชื่อสมาชิกก่อน'); return; }
     const session = dutyData.activeSessions?.[selectedMemberId];
     if (!session) { showAlert('error', 'สมาชิกคนนี้ยังไม่ได้เข้าเวร'); return; }
+    
     let updatedSession;
+    const nowTs = Date.now();
+    const memberName = councilMembers.find(m => m.id === selectedMemberId)?.name || 'Unknown';
+
     if (session.status === 'working') {
-      updatedSession = { ...session, status: 'break', breakStart: Date.now() };
+      updatedSession = { ...session, status: 'break', breakStart: nowTs };
+      try {
+        await sendWebhook('duty_in', {
+          embeds: [{
+            title: "☕ พักเบรค (Break)",
+            color: 0xf59e0b,
+            fields: [
+              { name: "👤 สมาชิก", value: memberName, inline: true },
+              { name: "⏰ เวลาเริ่มพัก", value: formatTime(nowTs) + ' น.', inline: true }
+            ],
+            footer: { text: "Council Duty System" },
+            timestamp: new Date(nowTs).toISOString()
+          }]
+        });
+      } catch(e) { console.error("Webhook error:", e); }
       showAlert('success', 'พักเบรคแล้ว เวลาพักจะไม่นับรวมชั่วโมงงาน');
     } else {
-      const breakMinutes = (Date.now() - session.breakStart) / 60000;
+      const breakMinutes = (nowTs - session.breakStart) / 60000;
       updatedSession = { ...session, status: 'working', breakStart: null, totalBreakMinutes: (session.totalBreakMinutes || 0) + breakMinutes };
+      try {
+        await sendWebhook('duty_in', {
+          embeds: [{
+            title: "▶️ กลับมาปฏิบัติหน้าที่ (Resume)",
+            color: 0x3b82f6,
+            fields: [
+              { name: "👤 สมาชิก", value: memberName, inline: true },
+              { name: "⏰ เวลากลับมา", value: formatTime(nowTs) + ' น.', inline: true },
+              { name: "⏳ พักไปทั้งสิ้น", value: formatDuration(breakMinutes), inline: true }
+            ],
+            footer: { text: "Council Duty System" },
+            timestamp: new Date(nowTs).toISOString()
+          }]
+        });
+      } catch(e) { console.error("Webhook error:", e); }
       showAlert('success', 'ทำงานต่อแล้ว');
     }
     const newActive = { ...dutyData.activeSessions, [selectedMemberId]: updatedSession };
@@ -246,7 +279,7 @@ export default function DutySystem() {
     saveToDb({ ...dutyData, activeSessions: newActive, sessions: newSessions });
 
     try {
-      await sendWebhook('duty_out', {
+      await sendWebhook('duty_in', {
         embeds: [{
           title: "🔴 ออกจากหน้าที่ (Clock Out)",
           color: 0xef4444,
