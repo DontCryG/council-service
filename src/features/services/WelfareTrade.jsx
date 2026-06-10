@@ -10,6 +10,7 @@ import { toBlob } from 'html-to-image';
 import { Card } from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
+import ConfirmationModal from '../../components/ui/ConfirmationModal';
 import { PaperPlaneTilt, Plus, Trash, ArrowsLeftRight, Car, Crosshair } from '@phosphor-icons/react';
 
 export default function WelfareTrade() {
@@ -330,7 +331,6 @@ export default function WelfareTrade() {
                   <span className="text-slate-500 text-xs block mb-1 uppercase tracking-wider">ค่าธรรมเนียม</span>
                   <span className="text-white font-black">{getTotalPrice()}</span>
                 </div>
-              </div>
               </div>
             </div>
           </div>
