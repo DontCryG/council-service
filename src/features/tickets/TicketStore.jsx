@@ -144,8 +144,8 @@ export default function TicketStore() {
       <div className="flex items-center gap-3">
         <Ticket size={32} weight="duotone" className="text-amber-500" />
         <div>
-          <h1 className="text-2xl font-bold text-white">ระบบเบิก Ticket</h1>
-          <p className="text-slate-400">ส่งคำขอซื้อ Ticket (เงินแดง) ประจำสัปดาห์</p>
+          <h1 className="text-2xl font-bold text-white">ระบบแลก TICKET</h1>
+          <p className="text-slate-400">สั่งซื้อหรือแลกเปลี่ยนตั๋วพิเศษสำหรับสวัสดิการ</p>
         </div>
       </div>
 

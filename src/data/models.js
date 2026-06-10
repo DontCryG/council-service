@@ -8,7 +8,7 @@ export const publicServices = [
     { id: 'ps1', title: 'ระบบให้บริการทั่วไป', desc: 'บริการยื่นคำร้องทั่วไปสำหรับประชาชน', icon: 'ph-users' },
     { id: 'welfare', title: 'ระบบเบิกสวัสดิการ', desc: 'ลงทะเบียนขอรับสวัสดิการจากสภา', icon: 'ph-gift' },
     { id: 'welfare_trade', title: 'ระบบเทรดสวัสดิการ', desc: 'บริการแลกเปลี่ยนและจัดการสวัสดิการขององค์กร', icon: 'ph-arrows-left-right' },
-    { id: 'ps5', title: 'ระบบเบิก TICKET', desc: 'สำหรับประชาชนเพื่อนำไปซื้อของที่ไม่มีขายในประเทศ', icon: 'ph-ticket' },
+    { id: 'ps5', title: 'ระบบแลก TICKET', desc: 'สั่งซื้อหรือแลกเปลี่ยนตั๋วพิเศษสำหรับสวัสดิการ', icon: 'ph-ticket' },
     { id: 'edit_org', title: 'แก้ไขข้อมูลองค์กร', desc: 'แก้ไขข้อมูลการย้ายหรือตั้งชื่อแก๊ง', icon: 'ph-pencil-simple' },
     { id: 'cs5', title: 'STORY CALENDAR', desc: 'ประวัติและปฏิทินเดินสตอรี่ของการจองทั้งหมด', icon: 'ph-calendar-check' },
 ];
