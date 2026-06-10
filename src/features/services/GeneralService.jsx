@@ -256,10 +256,10 @@ export default function GeneralService() {
                 <span className="font-bold text-white text-right max-w-[200px]">{selectedTransaction?.name || '-'}</span>
               </div>
               <div className="flex justify-between items-center py-3 border-b border-slate-800/50">
-                <span className="text-slate-400">กลุ่ม ({formData.groupType})</span>
-                <span className="font-bold text-blue-400">
-                  <span className={`text-[10px] px-2 py-0.5 rounded mr-2 ${formData.groupType === 'FAMILY' ? 'bg-blue-500/10 text-blue-400' : 'bg-red-500/10 text-red-400'}`}>
-                    {formData.groupType}
+                <span className="text-slate-400">กลุ่ม ({formData.groupType?.trim()})</span>
+                <span className="font-bold text-blue-400 flex items-center">
+                  <span className={`text-[10px] px-2 py-0.5 rounded mr-2 ${formData.groupType === 'FAMILY' ? 'bg-indigo-500/20 text-indigo-400' : 'bg-blue-500/20 text-blue-400'}`}>
+                    {formData.groupType?.trim()}
                   </span>
                   {formData.groupName || '-'}
                 </span>

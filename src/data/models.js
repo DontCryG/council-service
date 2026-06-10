@@ -20,11 +20,11 @@ export const relatedWebsites = [
 ];
 
 export const transactions = [
-    { id: 1, name: 'เปลี่ยนชื่อแก๊ง/แฟมิลี่ (100,000 / คน)', type: 'per_head', price: 100000 },
-    { id: 2, name: 'โอนย้ายแก๊ง/แฟมิลี่ - ปกติ (100,000 / คน)', type: 'per_head', price: 100000 },
-    { id: 3, name: 'โอนย้ายแก๊ง/แฟมิลี่ - โดนเตะ (250,000 / คน)', type: 'per_head', price: 250000 },
-    { id: 4, name: 'โอนย้ายแก๊ง/แฟมิลี่ - ผิดกฎประเทศ (300,000 / ครั้ง)', type: 'flat', price: 300000 },
-    { id: 5, name: 'ยุบ Gang/Family (1,000,000)', type: 'flat', price: 1000000 },
+    { id: 1, name: 'เปลี่ยนชื่อแก๊ง / แฟมิลี่ (100,000 / คน)', type: 'per_head', price: 100000 },
+    { id: 2, name: 'โอนย้ายแก๊ง / แฟมิลี่ - ปกติ (100,000 / คน)', type: 'per_head', price: 100000 },
+    { id: 3, name: 'โอนย้ายแก๊ง / แฟมิลี่ - โดนเตะ (250,000 / คน)', type: 'per_head', price: 250000 },
+    { id: 4, name: 'โอนย้ายแก๊ง / แฟมิลี่ - ผิดกฎประเทศ (300,000 / ครั้ง)', type: 'flat', price: 300000 },
+    { id: 5, name: 'ยุบ Gang / Family (1,000,000)', type: 'flat', price: 1000000 },
     { id: 6, name: 'เปลี่ยนแก๊งทำผิดกฎ (FREE)', type: 'flat', price: 0 }
 ];
 
