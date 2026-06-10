@@ -83,9 +83,9 @@ function App() {
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
             const members = docSnap.data().members || [];
-            const member = members.find(m => m.email === firebaseUser.email);
-            if (member && member.username) {
-              firebaseUser.councilUsername = member.username;
+            const member = members.find(m => m.username === firebaseUser.email);
+            if (member && member.name) {
+              firebaseUser.councilUsername = member.name;
             }
           }
         } catch (e) {
