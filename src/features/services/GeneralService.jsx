@@ -5,7 +5,7 @@ import { db } from '../../core/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { sendWebhook } from '../../core/api';
 import { transactions } from '../../data/models';
-import html2canvas from 'html2canvas';
+import { toBlob } from 'html-to-image';
 
 import { Card } from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
@@ -80,12 +80,13 @@ export default function GeneralService() {
     setIsSubmitting(true);
     
     try {
-      const canvas = await html2canvas(captureRef.current, {
-        scale: 2,
-        backgroundColor: '#0f172a'
+      const blob = await toBlob(captureRef.current, {
+        pixelRatio: 2,
+        backgroundColor: '#0f172a',
+        cacheBust: true
       });
       
-      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+      if (!blob) throw new Error("Failed to generate image");
       
       // 2. Prepare FormData
       const fd = new FormData();
