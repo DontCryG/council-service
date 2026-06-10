@@ -19,6 +19,7 @@ export default function TicketManager() {
   const [tempSettings, setTempSettings] = useState(null);
   
   const [showConfirmReset, setShowConfirmReset] = useState(false);
+  const [deleteSalesId, setDeleteSalesId] = useState(null);
   
   const [ticketsData, setTicketsData] = useState({
     orders: [],
@@ -141,7 +142,6 @@ export default function TicketManager() {
   };
 
   const handleDeleteSalesHistory = (id) => {
-    if (!window.confirm('คุณต้องการลบประวัติยอดขายนี้ใช่หรือไม่?')) return;
     const newData = {
       ...ticketsData,
       salesHistory: (ticketsData.salesHistory || []).filter(s => s.id !== id)
@@ -423,7 +423,7 @@ export default function TicketManager() {
                             </div>
                           </div>
                           <button 
-                            onClick={() => handleDeleteSalesHistory(record.id)}
+                            onClick={() => setDeleteSalesId(record.id)}
                             className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-xl border border-slate-800 bg-slate-900/50 text-slate-500 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-all"
                           >
                             <Trash size={18} />
@@ -756,6 +756,39 @@ export default function TicketManager() {
               onClick={handleResetRound}
             >
               ยืนยันการรีเซ็ต
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Confirm Delete Sales History Modal */}
+      <Modal
+        isOpen={!!deleteSalesId}
+        onClose={() => setDeleteSalesId(null)}
+        title="ยืนยันการลบประวัติยอดขาย"
+      >
+        <div className="space-y-6">
+          <p className="text-slate-300">
+            คุณต้องการลบประวัติยอดขายนี้ใช่หรือไม่? <br/>
+            <span className="text-sm text-slate-500">การกระทำนี้ไม่สามารถย้อนกลับได้</span>
+          </p>
+          <div className="flex gap-3 pt-2">
+            <Button 
+              variant="ghost" 
+              className="flex-1"
+              onClick={() => setDeleteSalesId(null)}
+            >
+              ยกเลิก
+            </Button>
+            <Button 
+              variant="danger" 
+              className="flex-1 bg-red-600 hover:bg-red-500 text-white shadow-red-900/20"
+              onClick={() => {
+                handleDeleteSalesHistory(deleteSalesId);
+                setDeleteSalesId(null);
+              }}
+            >
+              ลบข้อมูล
             </Button>
           </div>
         </div>
