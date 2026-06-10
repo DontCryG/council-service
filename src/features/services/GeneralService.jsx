@@ -108,7 +108,10 @@ export default function GeneralService() {
             { name: "Transaction", value: selectedTransaction?.name || '-', inline: false },
             { name: "Members", value: `\`\`\`\n${membersText || '-'}\n\`\`\``, inline: false },
             { name: "Council", value: councilName, inline: false }
-          ]
+          ],
+          image: {
+            url: "attachment://receipt.png"
+          }
         }]
       }));
 
