@@ -57,6 +57,29 @@ export default function EditOrg() {
     return () => unsub();
   }, []);
 
+  // Auto-switch to bulk change
+  useEffect(() => {
+    let baseCost = 0;
+    if (formData.changeInfo) baseCost += 500000;
+    if (formData.editTexture) baseCost += (500000 * Math.max(1, formData.textureCount));
+
+    if (baseCost >= 1500000 && !formData.bulkChange) {
+      setFormData(prev => ({
+        ...prev,
+        bulkChange: true,
+        changeInfo: false,
+        editTexture: false
+      }));
+      showAlert('info', 'ระบบเลือกเหมาเปลี่ยนข้อมูลให้อัตโนมัติ');
+    } else if (formData.bulkChange && (formData.changeInfo || formData.editTexture)) {
+      setFormData(prev => ({
+        ...prev,
+        changeInfo: false,
+        editTexture: false
+      }));
+    }
+  }, [formData.changeInfo, formData.editTexture, formData.textureCount, formData.bulkChange, showAlert]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.orgName || !formData.requester || !formData.councilStaffId) {
