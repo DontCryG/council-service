@@ -92,6 +92,7 @@ export default function RegisterOrg() {
           title: "Council Service Log",
           description: "Organization registration submitted",
           color: 0xf59e0b,
+          thumbnail: formData.logo ? { url: formData.logo } : undefined,
           fields: [
             { name: "Type", value: typeDisplay, inline: true },
             { name: "Group", value: formData.alias ? `[${formData.alias}] ${formData.name || '-'}` : (formData.name || '-'), inline: true },
