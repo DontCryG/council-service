@@ -106,8 +106,8 @@ export default function Welfare() {
       <div className="flex items-center gap-3">
         <Gift size={32} weight="duotone" className="text-emerald-500" />
         <div>
-          <h1 className="text-2xl font-bold text-white">เบิกสวัสดิการรายสัปดาห์</h1>
-          <p className="text-slate-400">แบบฟอร์มบันทึกการเบิกสวัสดิการ Gang / Family</p>
+          <h1 className="text-2xl font-bold text-white">ระบบเบิกสวัสดิการ Gang / Family</h1>
+          <p className="text-slate-400">ฟอร์มขอเบิกสวัสดิการรายสัปดาห์สำหรับแก๊งและแฟมิลี่</p>
         </div>
       </div>
 
