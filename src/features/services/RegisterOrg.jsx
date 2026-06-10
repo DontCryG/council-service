@@ -335,6 +335,12 @@ export default function RegisterOrg() {
                 </div>
               </div>
 
+              {/* Fee Section */}
+              <div className="mt-2 mb-8 bg-amber-50 border border-amber-200 rounded-lg p-4 flex justify-between items-center">
+                <span className="font-bold text-amber-800 uppercase tracking-wider">Registration Fee</span>
+                <span className="text-2xl font-black text-amber-600 tracking-tighter">$200,000</span>
+              </div>
+
               {/* Signatures */}
               <div className="flex justify-between items-end pt-8 mt-4 border-t-2 border-slate-300">
                 <div className="text-center w-40">
