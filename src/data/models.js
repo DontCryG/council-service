@@ -35,12 +35,13 @@ export const relatedWebsites = [
  * Transaction pricing models used in EditOrg.
  */
 export const transactions = [
-    { id: 1, name: `เปลี่ยนชื่อแก๊ง / แฟมิลี่ (${PRICING.ORG_RENAME_PER_HEAD.toLocaleString()} / คน)`, type: 'per_head', price: PRICING.ORG_RENAME_PER_HEAD },
-    { id: 2, name: `โอนย้ายแก๊ง / แฟมิลี่ - ปกติ (${PRICING.ORG_TRANSFER_NORMAL.toLocaleString()} / คน)`, type: 'per_head', price: PRICING.ORG_TRANSFER_NORMAL },
-    { id: 3, name: `โอนย้ายแก๊ง / แฟมิลี่ - โดนเตะ (${PRICING.ORG_TRANSFER_KICKED.toLocaleString()} / คน)`, type: 'per_head', price: PRICING.ORG_TRANSFER_KICKED },
-    { id: 4, name: `โอนย้ายแก๊ง / แฟมิลี่ - ผิดกฎประเทศ (${PRICING.ORG_TRANSFER_RULEBREAK.toLocaleString()} / ครั้ง)`, type: 'flat', price: PRICING.ORG_TRANSFER_RULEBREAK },
-    { id: 5, name: `ยุบ Gang / Family (${PRICING.ORG_DISBAND.toLocaleString()})`, type: 'flat', price: PRICING.ORG_DISBAND },
-    { id: 6, name: 'เปลี่ยนแก๊งทำผิดกฎ (FREE)', type: 'flat', price: PRICING.ORG_TRANSFER_FREE }
+    { id: 1, name: `เพิ่มรายชื่อสมาชิก (${PRICING.ORG_ADD_MEMBER.toLocaleString()} /คน)`, type: 'per_head', price: PRICING.ORG_ADD_MEMBER },
+    { id: 2, name: `ถอนรายชื่อสมาชิก - ปกติ (${PRICING.ORG_REMOVE_MEMBER_NORMAL.toLocaleString()} /คน)`, type: 'per_head', price: PRICING.ORG_REMOVE_MEMBER_NORMAL },
+    { id: 3, name: `ถอนรายชื่อสมาชิก - ถอนลอย (${PRICING.ORG_REMOVE_MEMBER_FLOATING.toLocaleString()} /คน)`, type: 'per_head', price: PRICING.ORG_REMOVE_MEMBER_FLOATING },
+    { id: 4, name: `ถอนรายชื่อสมาชิก - ยืนยันตนเอง (${PRICING.ORG_REMOVE_MEMBER_SELF.toLocaleString()} /ครั้ง)`, type: 'flat', price: PRICING.ORG_REMOVE_MEMBER_SELF },
+    { id: 5, name: `ยุบแก๊ง/ครอบครัว (${PRICING.ORG_DISBAND.toLocaleString()})`, type: 'flat', price: PRICING.ORG_DISBAND },
+    { id: 6, name: `บริการเพิ่ม SLOT แก๊งเป็น 25 คน (${PRICING.ORG_ADD_SLOT.toLocaleString()})`, type: 'flat', price: PRICING.ORG_ADD_SLOT },
+    { id: 7, name: 'แก้ไขตำแหน่ง (FREE)', type: 'flat', price: PRICING.ORG_EDIT_POSITION }
 ];
 
 export const councilList = [
