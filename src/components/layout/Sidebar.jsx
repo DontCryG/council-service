@@ -15,18 +15,31 @@ import {
 export default function Sidebar({ className }) {
   const { user } = useAppStore();
 
-  const MENU_ITEMS = [
-    { path: '/', label: 'หน้าแรก', icon: House, isPublic: true },
-    { path: '/ps1', label: 'คำร้องทั่วไป', icon: FileText, isPublic: true },
-    { path: '/ps5', label: 'เบิกทิคเก็ต', icon: Ticket, isPublic: true },
-    { path: '/cs5', label: 'ตารางเดินสตอรี่', icon: Calendar, isPublic: true },
-    
-    // Council Only
-    { path: '/council_manage', label: 'จัดการสภา', icon: ShieldCheck, isPublic: false, adminOnly: true },
-    { path: '/admin/duty_history', label: 'ประวัติรวม (Admin)', icon: ClockClockwise, isPublic: false, adminOnly: true },
-    { path: '/cs4', label: 'จัดการแก๊ง/แฟม', icon: UsersThree, isPublic: false },
-    { path: '/cs3', label: 'จัดการทิคเก็ต', icon: Ticket, isPublic: false },
-    { path: '/cs6', label: 'ระบบเข้าเวรสภา', icon: ClockClockwise, isPublic: false },
+  const MENU_CATEGORIES = [
+    {
+      title: 'บริการทั่วไป',
+      items: [
+        { path: '/', label: 'หน้าแรก', icon: House, isPublic: true },
+        { path: '/ps1', label: 'คำร้องทั่วไป', icon: FileText, isPublic: true },
+        { path: '/ps5', label: 'เบิกทิคเก็ต', icon: Ticket, isPublic: true },
+        { path: '/cs5', label: 'ตารางเดินสตอรี่', icon: Calendar, isPublic: true },
+      ]
+    },
+    {
+      title: 'สำหรับเจ้าหน้าที่สภา',
+      items: [
+        { path: '/cs6', label: 'ระบบเข้าเวรสภา', icon: ClockClockwise, isPublic: false },
+        { path: '/cs4', label: 'จัดการแก๊ง/แฟม', icon: UsersThree, isPublic: false },
+        { path: '/cs3', label: 'จัดการทิคเก็ต', icon: Ticket, isPublic: false },
+      ]
+    },
+    {
+      title: 'จัดการระบบ (Admin)',
+      items: [
+        { path: '/council_manage', label: 'จัดการสภา', icon: ShieldCheck, isPublic: false, adminOnly: true },
+        { path: '/admin/duty_history', label: 'ประวัติรวม (Admin)', icon: ClockClockwise, isPublic: false, adminOnly: true },
+      ]
+    }
   ];
 
   return (
@@ -38,35 +51,47 @@ export default function Sidebar({ className }) {
       </div>
       
       <nav className="flex-1 p-4 overflow-y-auto">
-        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4 px-3">
-          เมนูหลัก
-        </div>
-        <ul className="space-y-1">
-          {MENU_ITEMS.filter(item => {
+        {MENU_CATEGORIES.map((category, idx) => {
+          const visibleItems = category.items.filter(item => {
             if (item.isPublic) return true;
             if (!user) return false;
             if (item.adminOnly && user.role !== 'admin') return false;
             return true;
-          }).map((item) => {
-            const Icon = item.icon;
-            return (
-              <li key={item.path}>
-                <NavLink
-                  to={item.path}
-                  className={({ isActive }) => cn(
-                    "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
-                    isActive 
-                      ? "bg-blue-600/10 text-blue-500" 
-                      : "text-slate-400 hover:bg-slate-800/50 hover:text-white"
-                  )}
-                >
-                  <Icon size={20} weight="duotone" />
-                  {item.label}
-                </NavLink>
-              </li>
-            );
-          })}
-          
+          });
+
+          if (visibleItems.length === 0) return null;
+
+          return (
+            <div key={idx} className="mb-6">
+              <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-3">
+                {category.title}
+              </div>
+              <ul className="space-y-1">
+                {visibleItems.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <li key={item.path}>
+                      <NavLink
+                        to={item.path}
+                        className={({ isActive }) => cn(
+                          "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                          isActive 
+                            ? "bg-blue-600/10 text-blue-500" 
+                            : "text-slate-400 hover:bg-slate-800/50 hover:text-white"
+                        )}
+                      >
+                        <Icon size={20} weight="duotone" />
+                        {item.label}
+                      </NavLink>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          );
+        })}
+        
+        <ul className="space-y-1">
           {/* Login Button for Guests */}
           {!user && (
             <li className="pt-4 mt-4 border-t border-slate-800">
