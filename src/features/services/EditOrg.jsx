@@ -94,11 +94,11 @@ export default function EditOrg() {
             { name: "🏰 แก๊ง/แฟมิลี่", value: `${formData.orgName} (${formData.orgType})`, inline: true },
             { name: "👤 ผู้แจ้ง", value: formData.requester, inline: true },
             { name: "รายการที่แก้ไข", value: [
-                formData.changeInfo ? "✅ เปลี่ยนชื่อ/ข้อมูล" : "",
-                formData.editTexture ? `✅ แก้ไขเทกเจอร์ (${formData.textureCount} ชิ้น)` : "",
-                formData.addCloth ? `✅ เพิ่มชุด (${formData.clothCount} ชิ้น)` : "",
-                formData.bulkChange ? "✅ แก้ไขเหมาๆ" : "",
-                formData.addAccessory ? `✅ เพิ่มประดับ (${formData.accessoryCount} ชิ้น)` : ""
+                formData.changeInfo ? "✅ เปลี่ยนข้อมูล Gang" : "",
+                formData.editTexture ? `✅ แก้ไข Texture เสื้อผ้า (${formData.textureCount} ชุด)` : "",
+                formData.addCloth ? `✅ ลงชุดเพิ่ม (${formData.clothCount} ชุด)` : "",
+                formData.bulkChange ? "✅ เหมาเปลี่ยนข้อมูล Gang" : "",
+                formData.addAccessory ? `✅ ลง Accessories Adons เสริม` : ""
             ].filter(Boolean).join('\n') || "ไม่มี", inline: false },
             { name: "รายละเอียดเพิ่มเติมที่ต้องการแก้", value: formData.extraDetails || "-", inline: false },
             { name: "เจ้าหน้าที่สภาผู้รับเรื่อง", value: councilMembers.find(c => c.id === formData.councilStaffId)?.name || '-', inline: true },
@@ -137,11 +137,11 @@ export default function EditOrg() {
 
   const calculateTotal = () => {
     let total = 0;
-    if (formData.changeInfo) total += 50000;
-    if (formData.editTexture) total += (10000 * Math.max(1, formData.textureCount));
-    if (formData.addCloth) total += (50000 * Math.max(1, formData.clothCount));
-    if (formData.bulkChange) total += 150000;
-    if (formData.addAccessory) total += (30000 * Math.max(1, formData.accessoryCount));
+    if (formData.changeInfo) total += 500000;
+    if (formData.editTexture) total += (500000 * Math.max(1, formData.textureCount));
+    if (formData.addCloth) total += (500000 * Math.max(1, formData.clothCount));
+    if (formData.bulkChange) total += 1500000;
+    if (formData.addAccessory) total += 1000000;
     return total;
   };
 
@@ -201,36 +201,36 @@ export default function EditOrg() {
                 <label className={`flex items-center gap-3 cursor-pointer p-3 border rounded-lg transition-all ${formData.changeInfo ? 'border-pink-500 bg-pink-500/10' : 'border-slate-700 hover:bg-slate-800'}`}>
                   <input type="checkbox" className="hidden" checked={formData.changeInfo} onChange={e => setFormData({...formData, changeInfo: e.target.checked})} />
                   <Buildings size={20} className={formData.changeInfo ? 'text-pink-500' : 'text-slate-400'} />
-                  <span className={`font-medium ${formData.changeInfo ? 'text-white' : 'text-slate-300'}`}>เปลี่ยนชื่อแก๊ง ($50,000)</span>
+                  <span className={`font-medium ${formData.changeInfo ? 'text-white' : 'text-slate-300'}`}>เปลี่ยนข้อมูล Gang (500,000 $)</span>
                   {formData.changeInfo && <CheckCircle size={16} weight="fill" className="text-pink-500 ml-auto" />}
                 </label>
 
                 <label className={`flex items-center gap-3 cursor-pointer p-3 border rounded-lg transition-all ${formData.editTexture ? 'border-pink-500 bg-pink-500/10' : 'border-slate-700 hover:bg-slate-800'}`}>
                   <input type="checkbox" className="hidden" checked={formData.editTexture} onChange={e => setFormData({...formData, editTexture: e.target.checked})} />
                   <Palette size={20} className={formData.editTexture ? 'text-pink-500' : 'text-slate-400'} />
-                  <span className={`font-medium ${formData.editTexture ? 'text-white' : 'text-slate-300'}`}>แก้เทกเจอร์ ($10,000/ชิ้น)</span>
+                  <span className={`font-medium ${formData.editTexture ? 'text-white' : 'text-slate-300'}`}>แก้ไข Texture เสื้อผ้า (500,000 $ / ชุด)</span>
                   {formData.editTexture && <CheckCircle size={16} weight="fill" className="text-pink-500 ml-auto" />}
                 </label>
 
                 <label className={`flex items-center gap-3 cursor-pointer p-3 border rounded-lg transition-all ${formData.addCloth ? 'border-pink-500 bg-pink-500/10' : 'border-slate-700 hover:bg-slate-800'}`}>
                   <input type="checkbox" className="hidden" checked={formData.addCloth} onChange={e => setFormData({...formData, addCloth: e.target.checked})} />
                   <TShirt size={20} className={formData.addCloth ? 'text-pink-500' : 'text-slate-400'} />
-                  <span className={`font-medium ${formData.addCloth ? 'text-white' : 'text-slate-300'}`}>เพิ่มชุดใหม่ ($50,000)</span>
+                  <span className={`font-medium ${formData.addCloth ? 'text-white' : 'text-slate-300'}`}>ลงชุดเพิ่ม (500,000 $ / ชุด)</span>
                   {formData.addCloth && <CheckCircle size={16} weight="fill" className="text-pink-500 ml-auto" />}
                 </label>
 
-                <label className={`flex items-center gap-3 cursor-pointer p-3 border rounded-lg transition-all ${formData.addAccessory ? 'border-pink-500 bg-pink-500/10' : 'border-slate-700 hover:bg-slate-800'}`}>
-                  <input type="checkbox" className="hidden" checked={formData.addAccessory} onChange={e => setFormData({...formData, addAccessory: e.target.checked})} />
-                  <TShirt size={20} className={formData.addAccessory ? 'text-pink-500' : 'text-slate-400'} />
-                  <span className={`font-medium ${formData.addAccessory ? 'text-white' : 'text-slate-300'}`}>เพิ่มประดับ ($30,000)</span>
-                  {formData.addAccessory && <CheckCircle size={16} weight="fill" className="text-pink-500 ml-auto" />}
-                </label>
-
-                <label className={`flex items-center gap-3 cursor-pointer p-3 border rounded-lg transition-all sm:col-span-2 ${formData.bulkChange ? 'border-pink-500 bg-pink-500/10' : 'border-slate-700 hover:bg-slate-800'}`}>
+                <label className={`flex items-center gap-3 cursor-pointer p-3 border rounded-lg transition-all ${formData.bulkChange ? 'border-pink-500 bg-pink-500/10' : 'border-slate-700 hover:bg-slate-800'}`}>
                   <input type="checkbox" className="hidden" checked={formData.bulkChange} onChange={e => setFormData({...formData, bulkChange: e.target.checked})} />
                   <Buildings size={20} className={formData.bulkChange ? 'text-pink-500' : 'text-slate-400'} />
-                  <span className={`font-medium ${formData.bulkChange ? 'text-white' : 'text-slate-300'}`}>โปรเหมา (เปลี่ยนชื่อ+โลโก้+ชุด) ($150,000)</span>
+                  <span className={`font-medium ${formData.bulkChange ? 'text-white' : 'text-slate-300'}`}>เหมาเปลี่ยนข้อมูล Gang (1,500,000 $)</span>
                   {formData.bulkChange && <CheckCircle size={16} weight="fill" className="text-pink-500 ml-auto" />}
+                </label>
+
+                <label className={`flex items-center gap-3 cursor-pointer p-3 border rounded-lg transition-all sm:col-span-2 ${formData.addAccessory ? 'border-pink-500 bg-pink-500/10' : 'border-slate-700 hover:bg-slate-800'}`}>
+                  <input type="checkbox" className="hidden" checked={formData.addAccessory} onChange={e => setFormData({...formData, addAccessory: e.target.checked})} />
+                  <TShirt size={20} className={formData.addAccessory ? 'text-pink-500' : 'text-slate-400'} />
+                  <span className={`font-medium ${formData.addAccessory ? 'text-white' : 'text-slate-300'}`}>ลง Accessories Adons เสริม (1,000,000 $)</span>
+                  {formData.addAccessory && <CheckCircle size={16} weight="fill" className="text-pink-500 ml-auto" />}
                 </label>
               </div>
             </div>
@@ -254,15 +254,6 @@ export default function EditOrg() {
                     label="จำนวนชุดที่เพิ่ม" 
                     value={formData.clothCount}
                     onChange={e => setFormData({...formData, clothCount: parseInt(e.target.value) || 1})}
-                  />
-                )}
-                {formData.addAccessory && (
-                  <Input 
-                    type="number" 
-                    min="1" 
-                    label="จำนวนประดับที่เพิ่ม" 
-                    value={formData.accessoryCount}
-                    onChange={e => setFormData({...formData, accessoryCount: parseInt(e.target.value) || 1})}
                   />
                 )}
                 {(formData.changeInfo || formData.bulkChange) && (
@@ -364,11 +355,11 @@ export default function EditOrg() {
             <div className="mb-8">
               <div className="text-sm font-bold border-b border-slate-300 pb-1 mb-2">Requested Changes</div>
               <ul className="text-sm space-y-2 list-none pl-0 text-slate-700 font-medium">
-                {formData.changeInfo && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ เปลี่ยนชื่อ/ข้อมูล</span> <span>$50,000</span></li>}
-                {formData.editTexture && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ แก้ไขเทกเจอร์ ({formData.textureCount} ชิ้น)</span> <span>${(10000 * Math.max(1, formData.textureCount)).toLocaleString()}</span></li>}
-                {formData.addCloth && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ เพิ่มชุดใหม่ ({formData.clothCount} ชิ้น)</span> <span>${(50000 * Math.max(1, formData.clothCount)).toLocaleString()}</span></li>}
-                {formData.addAccessory && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ เพิ่มประดับ ({formData.accessoryCount} ชิ้น)</span> <span>${(30000 * Math.max(1, formData.accessoryCount)).toLocaleString()}</span></li>}
-                {formData.bulkChange && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ โปรเหมา</span> <span>$150,000</span></li>}
+                {formData.changeInfo && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ เปลี่ยนข้อมูล Gang</span> <span>$500,000</span></li>}
+                {formData.editTexture && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ แก้ไข Texture เสื้อผ้า ({formData.textureCount} ชุด)</span> <span>${(500000 * Math.max(1, formData.textureCount)).toLocaleString()}</span></li>}
+                {formData.addCloth && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ ลงชุดเพิ่ม ({formData.clothCount} ชุด)</span> <span>${(500000 * Math.max(1, formData.clothCount)).toLocaleString()}</span></li>}
+                {formData.bulkChange && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ เหมาเปลี่ยนข้อมูล Gang</span> <span>$1,500,000</span></li>}
+                {formData.addAccessory && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ ลง Accessories Adons เสริม</span> <span>$1,000,000</span></li>}
                 {!formData.changeInfo && !formData.editTexture && !formData.addCloth && !formData.bulkChange && !formData.addAccessory && (
                   <li className="text-slate-400 italic">No changes selected</li>
                 )}
