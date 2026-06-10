@@ -176,7 +176,10 @@ export default function RegisterOrg() {
                       className="flex-1"
                       placeholder="#000000"
                       value={formData.color}
-                      onChange={e => setFormData({...formData, color: e.target.value})}
+                      onChange={e => {
+                        const val = e.target.value.replace(/[^A-Za-z0-9#]/g, '');
+                        setFormData({...formData, color: val});
+                      }}
                     />
                   </div>
                 </div>

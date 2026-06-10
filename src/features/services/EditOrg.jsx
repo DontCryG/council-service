@@ -255,7 +255,10 @@ export default function EditOrg() {
                           className="flex-1"
                           placeholder="#000000"
                           value={formData.hexColor}
-                          onChange={e => setFormData({...formData, hexColor: e.target.value})}
+                          onChange={e => {
+                            const val = e.target.value.replace(/[^A-Za-z0-9#]/g, '');
+                            setFormData({...formData, hexColor: val});
+                          }}
                         />
                       </div>
                     </div>
