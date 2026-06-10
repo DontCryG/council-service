@@ -106,8 +106,8 @@ export default function Sidebar({ className }) {
       </nav>
       
       <div className="p-4 border-t border-slate-800">
-        <div className="text-xs text-center text-slate-500">
-          © 2026 Council Service
+        <div className="text-xs text-center text-slate-500 tracking-widest font-mono">
+          &copy; 2026 THE COUNCIL OFFICE
         </div>
       </div>
     </aside>
