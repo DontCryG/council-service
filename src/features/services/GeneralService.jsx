@@ -92,22 +92,23 @@ export default function GeneralService() {
       const fd = new FormData();
       fd.append('file', blob, 'receipt.png');
       
-      const groupDisplay = `[${formData.groupType}] ${formData.groupName}`;
+      const typeDisplay = formData.groupType === 'GANG' ? 'แก๊ง' : 'แฟม';
+      const membersText = members.map(m => m.value).join('\n');
+      const councilName = councilMembers.find(c => c.id === formData.councilMemberId)?.name || '-';
       
       fd.append('payload_json', JSON.stringify({
-        content: `**[ใบเสร็จรับเงิน]** รายการ: ${selectedTransaction.name} | แก๊ง: ${groupDisplay} | โดย: ${formData.requester}`,
         embeds: [{
-          title: "🧾 COUNCIL SERVICE RECEIPT",
-          color: 0x3b82f6,
+          title: "Council Service Log",
+          description: "Service request submitted",
+          color: 0xf59e0b,
           fields: [
-            { name: "📋 รายการ", value: selectedTransaction.name, inline: false },
-            { name: "👥 กลุ่ม", value: groupDisplay, inline: true },
-            { name: "👤 ผู้ติดต่อ", value: formData.requester, inline: true },
-            { name: "💰 จำนวนเงินสุทธิ", value: `$${totalAmount.toLocaleString()}`, inline: false },
-            { name: "🛡️ ผู้ทำรายการ (สภา)", value: councilMembers.find(c => c.id === formData.councilMemberId)?.name || '-', inline: false }
-          ],
-          footer: { text: "Council Secretary System" },
-          timestamp: new Date().toISOString()
+            { name: "Type", value: typeDisplay, inline: true },
+            { name: "Group", value: formData.groupName || '-', inline: true },
+            { name: "Requester", value: formData.requester || '-', inline: false },
+            { name: "Transaction", value: selectedTransaction?.name || '-', inline: false },
+            { name: "Members", value: `\`\`\`\n${membersText || '-'}\n\`\`\``, inline: false },
+            { name: "Council", value: councilName, inline: false }
+          ]
         }]
       }));
 
