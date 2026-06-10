@@ -115,7 +115,7 @@ export default function Portal() {
             onClick={() => setShowModal(true)} 
             className="text-[10px] md:text-xs text-slate-700 hover:text-slate-400 font-mono tracking-widest transition-colors focus:outline-none"
           >
-            VERSION 17.0
+            COUNCIL OS v2.0
           </button>
         </div>
       </div>
