@@ -79,10 +79,10 @@ export default function RegisterOrg() {
       const typeDisplay = formData.orgType === 'GANG' ? 'แก๊ง' : 'แฟม';
       const councilName = councilMembers.find(c => c.id === formData.councilStaffId)?.name || '-';
 
-      const coLeaderText = coLeaders.length > 0 ? `รองหัวหน้า: ${coLeaders.map(c => c.name).join(', ')}` : '';
-      const memberText = members.length > 0 ? `สมาชิก:\n${members.map(m => m.name).join('\n')}` : '';
+      const coLeaderText = coLeaders.length > 0 ? `**รองหัวหน้า:** ${coLeaders.map(c => c.name).join(', ')}` : '';
+      const memberText = members.length > 0 ? `**สมาชิก:**\n${members.map(m => m.name).join('\n')}` : '';
       const membersFullText = [
-        `หัวหน้า: ${formData.leader}`,
+        `**หัวหน้า:** ${formData.leader}`,
         coLeaderText,
         memberText
       ].filter(Boolean).join('\n');
@@ -98,7 +98,7 @@ export default function RegisterOrg() {
             { name: "Group", value: formData.alias ? `[${formData.alias}] ${formData.name || '-'}` : (formData.name || '-'), inline: true },
             { name: "Theme Color", value: formData.color || '-', inline: true },
             { name: "Transaction", value: "ลงทะเบียนองค์กรใหม่", inline: false },
-            { name: "Members", value: `\`\`\`\n${membersFullText || '-'}\n\`\`\``, inline: false },
+            { name: "Members", value: membersFullText || '-', inline: false },
             { name: "Council", value: councilName, inline: false }
           ],
           image: {
