@@ -62,6 +62,11 @@ export default function EditOrg() {
       return;
     }
 
+    if (formData.logoUrl && !/^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)(\?.*)?$/i.test(formData.logoUrl) && !formData.logoUrl.includes('discordapp.')) {
+      showAlert('error', 'ช่อง Link โลโก้ กรุณาใส่ลิงก์รูปภาพที่ถูกต้อง (ต้องลงท้ายด้วย .png, .jpg ฯลฯ หรือเป็นรูปลิงก์ Discord)');
+      return;
+    }
+
     setIsSubmitting(true);
     
     try {
@@ -246,6 +251,7 @@ export default function EditOrg() {
                       placeholder="ใส่ URL รูปโลโก้"
                       value={formData.logoUrl}
                       onChange={e => setFormData({...formData, logoUrl: e.target.value})}
+                      error={formData.logoUrl && !/^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)(\?.*)?$/i.test(formData.logoUrl) && !formData.logoUrl.includes('discordapp.') ? 'ลิงก์รูปภาพไม่ถูกต้อง' : ''}
                     />
                     <div className="col-span-2">
                       <label className="text-sm font-medium text-slate-300 ml-1 block mb-1">สีประจำแก๊ง (ใหม่)</label>

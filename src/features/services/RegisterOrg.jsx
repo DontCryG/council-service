@@ -59,6 +59,11 @@ export default function RegisterOrg() {
       return;
     }
 
+    if (formData.logo && !/^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)(\?.*)?$/i.test(formData.logo) && !formData.logo.includes('discordapp.')) {
+      showAlert('error', 'ช่อง Link โลโก้ กรุณาใส่ลิงก์รูปภาพที่ถูกต้อง (ต้องลงท้ายด้วย .png, .jpg ฯลฯ หรือเป็นรูปลิงก์ Discord)');
+      return;
+    }
+
     setIsSubmitting(true);
     
     try {
@@ -193,6 +198,7 @@ export default function RegisterOrg() {
                   label="Link โลโก้ (ถ้ามี)" 
                   value={formData.logo}
                   onChange={e => setFormData({...formData, logo: e.target.value})}
+                  error={formData.logo && !/^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)(\?.*)?$/i.test(formData.logo) && !formData.logo.includes('discordapp.') ? 'ลิงก์รูปภาพไม่ถูกต้อง' : ''}
                 />
               </div>
 
