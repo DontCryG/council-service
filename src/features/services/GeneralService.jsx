@@ -82,7 +82,7 @@ export default function GeneralService() {
     try {
       const canvas = await html2canvas(captureRef.current, {
         scale: 2,
-        backgroundColor: '#f1f5f9'
+        backgroundColor: '#0f172a'
       });
       
       const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
