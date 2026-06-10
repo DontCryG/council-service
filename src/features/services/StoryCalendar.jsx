@@ -74,8 +74,10 @@ export default function StoryCalendar() {
       setFormData({ ...evt });
     } else {
       setEditingId(null);
+      const d = new Date();
+      const localToday = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
       setFormData({ 
-        date: dateStr || selectedDateForView || new Date().toISOString().split('T')[0], 
+        date: dateStr || selectedDateForView || localToday, 
         time: '', team1: '', team2: '', type: '', location: '', fights: '', radio: '', bet: '', medic: '', style: '', score: '', description: '', staff: user?.displayName || user?.email?.split('@')[0] || '', note: '' 
       });
     }
@@ -208,7 +210,7 @@ export default function StoryCalendar() {
             
             const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
             const dayEvents = events.filter(e => e.date === dateStr);
-            const isToday = new Date().toISOString().split('T')[0] === dateStr;
+            const isToday = todayStr === dateStr;
 
             return (
               <div 
