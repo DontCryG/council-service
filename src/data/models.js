@@ -28,7 +28,7 @@ export const councilServices = [
  * Related external websites.
  */
 export const relatedWebsites = [
-    { id: 'rw1', title: 'กฎหน่วยงานสภา', desc: 'อ่านกฎกติกาและกฎหมายบ้านเมือง', icon: 'ph-book-open', url: 'https://sites.google.com/view/wiptown/council?authuser=0' }
+    { id: 'rw1', title: 'กฎหน่วยงานสภา WIP TOWN', desc: 'อ่านกฎกติกาและกฎของสภา WIP TOWN', icon: 'ph-book-open', url: 'https://sites.google.com/view/wiptown/council?authuser=0' }
 ];
 
 /**
