@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { db } from '../../core/firebase';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { useAppStore } from '../../store';
@@ -38,12 +38,37 @@ export default function TicketManager() {
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const prevOrdersCount = useRef(0);
+  const isInitialLoad = useRef(true);
+
   useEffect(() => {
     const unsubTickets = onSnapshot(doc(db, 'app_state', 'tickets'), (docSnap) => {
       if (docSnap.exists()) {
         const d = docSnap.data();
+        const currentOrders = d.orders || [];
+
+        if (!isInitialLoad.current && currentOrders.length > prevOrdersCount.current) {
+          try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            const ctx = new AudioContext();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(880, ctx.currentTime);
+            gain.gain.setValueAtTime(0.1, ctx.currentTime);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.2);
+          } catch(e) {}
+          showAlert('info', '🛎️ มีออเดอร์ขอซื้อตั๋วเข้ามาใหม่!');
+        }
+
+        prevOrdersCount.current = currentOrders.length;
+        isInitialLoad.current = false;
+
         setTicketsData({
-          orders: d.orders || [],
+          orders: currentOrders,
           history: d.history || [],
           salesHistory: d.salesHistory || [],
           settings: d.settings || { 
