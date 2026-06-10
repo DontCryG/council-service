@@ -8,6 +8,7 @@ import {
 } from '@phosphor-icons/react';
 import { Card } from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
+import { sendWebhook } from '../../core/api';
 
 const monthNamesShort = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
 
@@ -166,14 +167,33 @@ export default function DutySystem() {
     }
   };
 
-  const handleCheckIn = () => {
+  const handleCheckIn = async () => {
     if (!selectedMemberId) { showAlert('error', 'กรุณาเลือกชื่อสมาชิกก่อน'); return; }
     if (dutyData.activeSessions?.[selectedMemberId]) { showAlert('error', 'สมาชิกคนนี้กำลังเข้าเวรอยู่แล้ว'); return; }
+    
+    const nowTs = Date.now();
     const newActive = {
       ...dutyData.activeSessions,
-      [selectedMemberId]: { checkIn: Date.now(), status: 'working', breakStart: null, totalBreakMinutes: 0 }
+      [selectedMemberId]: { checkIn: nowTs, status: 'working', breakStart: null, totalBreakMinutes: 0 }
     };
     saveToDb({ ...dutyData, activeSessions: newActive });
+    
+    const memberName = councilMembers.find(m => m.id === selectedMemberId)?.name || 'Unknown';
+    try {
+      await sendWebhook('duty_in', {
+        embeds: [{
+          title: "🟢 เข้าปฏิบัติหน้าที่ (Clock In)",
+          color: 0x10b981,
+          fields: [
+            { name: "👤 สมาชิก", value: memberName, inline: true },
+            { name: "⏰ เวลาเข้า", value: formatTime(nowTs) + ' น.', inline: true }
+          ],
+          footer: { text: "Council Duty System" },
+          timestamp: new Date(nowTs).toISOString()
+        }]
+      });
+    } catch(e) { console.error("Webhook error:", e); }
+
     showAlert('success', 'บันทึกเข้าเวรเรียบร้อยแล้ว');
   };
 
@@ -194,7 +214,7 @@ export default function DutySystem() {
     saveToDb({ ...dutyData, activeSessions: newActive });
   };
 
-  const handleCheckOut = () => {
+  const handleCheckOut = async () => {
     if (!selectedMemberId) { showAlert('error', 'กรุณาเลือกชื่อสมาชิกก่อน'); return; }
     const session = dutyData.activeSessions?.[selectedMemberId];
     if (!session) { showAlert('error', 'สมาชิกคนนี้ยังไม่ได้เข้าเวร'); return; }
@@ -207,11 +227,11 @@ export default function DutySystem() {
     const rawMinutes = (checkOut - session.checkIn) / 60000;
     const netMinutes = Math.max(0, Math.round(rawMinutes - totalBreak));
 
-    const member = councilMembers.find(m => m.id === selectedMemberId);
+    const memberName = councilMembers.find(m => m.id === selectedMemberId)?.name || 'Unknown';
     const newSession = {
       id: 'duty_' + session.checkIn,
       memberId: selectedMemberId,
-      memberName: member?.name || 'Unknown',
+      memberName: memberName,
       checkIn: session.checkIn,
       checkOut,
       netMinutes,
@@ -224,6 +244,25 @@ export default function DutySystem() {
     delete newActive[selectedMemberId];
     const newSessions = [newSession, ...(dutyData.sessions || [])];
     saveToDb({ ...dutyData, activeSessions: newActive, sessions: newSessions });
+
+    try {
+      await sendWebhook('duty_out', {
+        embeds: [{
+          title: "🔴 ออกจากหน้าที่ (Clock Out)",
+          color: 0xef4444,
+          fields: [
+            { name: "👤 สมาชิก", value: memberName, inline: true },
+            { name: "⏰ เวลาเข้า", value: formatTime(session.checkIn) + ' น.', inline: true },
+            { name: "⏰ เวลาออก", value: formatTime(checkOut) + ' น.', inline: true },
+            { name: "⏳ เวลาสุทธิ", value: formatDuration(netMinutes), inline: true },
+            { name: "☕ เวลาพักรวม", value: formatDuration(Math.round(totalBreak)), inline: true }
+          ],
+          footer: { text: "Council Duty System" },
+          timestamp: new Date(checkOut).toISOString()
+        }]
+      });
+    } catch(e) { console.error("Webhook error:", e); }
+
     showAlert('success', `ออกเวรเรียบร้อย — เวลาสุทธิ ${formatDuration(netMinutes)}`);
   };
 
@@ -584,15 +623,16 @@ export default function DutySystem() {
 
                 <button
                   type="button"
-                  onClick={() => {
+                  onClick={async () => {
                     if (!leaveForm.memberId || !leaveForm.dateFrom || !leaveForm.dateTo || !leaveForm.reason) {
                       showAlert('error', 'กรุณากรอกข้อมูลให้ครบถ้วน'); return;
                     }
+                    const memberName = councilMembers.find(m => m.id === leaveForm.memberId)?.name || 'Unknown';
                     const leaves = [...(dutyData.leaves || [])];
                     leaves.unshift({
                       id: 'lv_' + Date.now(),
                       memberId: leaveForm.memberId,
-                      memberName: councilMembers.find(m => m.id === leaveForm.memberId)?.name || 'Unknown',
+                      memberName: memberName,
                       type: leaveForm.type,
                       dateFrom: leaveForm.dateFrom,
                       dateTo: leaveForm.dateTo,
@@ -601,6 +641,25 @@ export default function DutySystem() {
                       submittedAt: Date.now()
                     });
                     saveToDb({ ...dutyData, leaves });
+                    
+                    try {
+                      await sendWebhook('duty_leave', {
+                        embeds: [{
+                          title: "📝 แจ้งลางาน (Leave Request)",
+                          color: 0x3b82f6,
+                          fields: [
+                            { name: "👤 สมาชิก", value: memberName, inline: true },
+                            { name: "📋 ประเภท", value: leaveForm.type, inline: true },
+                            { name: "📅 ตั้งแต่วันที่", value: leaveForm.dateFrom, inline: true },
+                            { name: "📅 ถึงวันที่", value: leaveForm.dateTo, inline: true },
+                            { name: "💬 เหตุผล", value: leaveForm.reason, inline: false }
+                          ],
+                          footer: { text: "Council Duty System" },
+                          timestamp: new Date().toISOString()
+                        }]
+                      });
+                    } catch(e) { console.error("Webhook error:", e); }
+
                     setLeaveForm({ memberId: '', type: 'ลากิจ (Personal)', dateFrom: '', dateTo: '', reason: '' });
                     showAlert('success', 'ส่งใบลาเรียบร้อยแล้ว รอผู้มีอำนาจอนุมัติ');
                   }}
