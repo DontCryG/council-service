@@ -16,12 +16,20 @@ import {
 import { collection, query, orderBy, onSnapshot, deleteDoc, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../core/firebase';
 import { useAppStore } from '../../store';
+import ConfirmationModal from '../../components/ui/ConfirmationModal';
 
 export default function CouncilLoanHub() {
   const navigate = useNavigate();
   const { showAlert } = useAppStore();
   const [contracts, setContracts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: null,
+    isLoading: false
+  });
 
   useEffect(() => {
     const q = query(collection(db, 'loan_contracts'), orderBy('createdAt', 'desc'));
@@ -33,31 +41,51 @@ export default function CouncilLoanHub() {
     return () => unsubscribe();
   }, []);
 
-  const handleDeleteContract = async (contractId, id) => {
-    if (window.confirm(`คุณแน่ใจหรือไม่ว่าต้องการลบสัญญากู้ยืม ${contractId} ?\nการกระทำนี้ไม่สามารถกู้คืนได้`)) {
-      try {
-        await deleteDoc(doc(db, 'loan_contracts', id));
-        showAlert('success', 'ลบสัญญาสำเร็จ');
-      } catch (err) {
-        console.error(err);
-        showAlert('error', 'เกิดข้อผิดพลาดในการลบสัญญา');
-      }
-    }
+  const closeConfirmModal = () => {
+    setConfirmModal(prev => ({ ...prev, isOpen: false }));
   };
 
-  const handleCouncilSign = async (contractId, id) => {
-    if (window.confirm(`คุณต้องการลงนามอนุมัติสัญญากู้ยืม ${contractId} ใช่หรือไม่?\nสถานะจะเปลี่ยนเป็น "กำลังผ่อนชำระ"`)) {
-      try {
-        await updateDoc(doc(db, 'loan_contracts', id), {
-          status: 'active',
-          councilSignedAt: serverTimestamp()
-        });
-        showAlert('success', 'ลงนามอนุมัติสัญญาสำเร็จ');
-      } catch (err) {
-        console.error(err);
-        showAlert('error', 'เกิดข้อผิดพลาดในการอนุมัติสัญญา');
+  const handleDeleteContract = (contractId, id) => {
+    setConfirmModal({
+      isOpen: true,
+      title: 'ยืนยันการลบสัญญา',
+      message: `คุณแน่ใจหรือไม่ว่าต้องการลบสัญญากู้ยืม ${contractId} ?\nการกระทำนี้ไม่สามารถกู้คืนได้`,
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, isLoading: true }));
+        try {
+          await deleteDoc(doc(db, 'loan_contracts', id));
+          showAlert('success', 'ลบสัญญาสำเร็จ');
+        } catch (err) {
+          console.error(err);
+          showAlert('error', 'เกิดข้อผิดพลาดในการลบสัญญา');
+        } finally {
+          closeConfirmModal();
+        }
       }
-    }
+    });
+  };
+
+  const handleCouncilSign = (contractId, id) => {
+    setConfirmModal({
+      isOpen: true,
+      title: 'ยืนยันการอนุมัติ',
+      message: `คุณต้องการลงนามอนุมัติสัญญากู้ยืม ${contractId} ใช่หรือไม่?\nสถานะจะเปลี่ยนเป็น "กำลังผ่อนชำระ"`,
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, isLoading: true }));
+        try {
+          await updateDoc(doc(db, 'loan_contracts', id), {
+            status: 'active',
+            councilSignedAt: serverTimestamp()
+          });
+          showAlert('success', 'ลงนามอนุมัติสัญญาสำเร็จ');
+        } catch (err) {
+          console.error(err);
+          showAlert('error', 'เกิดข้อผิดพลาดในการอนุมัติสัญญา');
+        } finally {
+          closeConfirmModal();
+        }
+      }
+    });
   };
 
   const totalContracts = contracts.length;
@@ -346,6 +374,15 @@ export default function CouncilLoanHub() {
 
         </div>
       </div>
+
+      <ConfirmationModal 
+        isOpen={confirmModal.isOpen}
+        onClose={closeConfirmModal}
+        onConfirm={confirmModal.onConfirm}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        isLoading={confirmModal.isLoading}
+      />
     </div>
   );
 }
