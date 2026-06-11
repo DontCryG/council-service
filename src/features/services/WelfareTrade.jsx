@@ -11,13 +11,14 @@ import { Card } from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import ConfirmationModal from '../../components/ui/ConfirmationModal';
-import { PaperPlaneTilt, Plus, Trash, ArrowsLeftRight, Car, Crosshair } from '@phosphor-icons/react';
+import { PaperPlaneTilt, Plus, Trash, ArrowsLeftRight, Car, Crosshair, ArrowLeft } from '@phosphor-icons/react';
 
 export default function WelfareTrade() {
   const navigate = useNavigate();
   const { showAlert, user } = useAppStore();
   
   const [councilMembers, setCouncilMembers] = useState([]);
+  const [step, setStep] = useState(1);
   
   const [formData, setFormData] = useState({
     tradeType: 'VEHICLE', // VEHICLE | WEAPON
@@ -134,34 +135,50 @@ export default function WelfareTrade() {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex items-center gap-3">
-        <ArrowsLeftRight size={32} weight="duotone" className="text-violet-500" />
-        <div>
-          <h1 className="text-2xl font-bold text-white">ระบบเทรดสวัสดิการ</h1>
-          <p className="text-slate-400">บริการแลกเปลี่ยนและจัดการสวัสดิการขององค์กร</p>
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-7xl mx-auto py-6">
+      <div className="flex items-start justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <ArrowsLeftRight size={32} weight="duotone" className="text-violet-500" />
+          <div>
+            <h1 className="text-2xl font-bold text-white mb-1">ระบบเทรดสวัสดิการ</h1>
+            <p className="text-slate-400">บริการแลกเปลี่ยนและจัดการสวัสดิการขององค์กร</p>
+          </div>
         </div>
+        <Button type="button" variant="ghost" onClick={() => step === 2 ? setStep(1) : navigate(-1)} className="text-slate-400 hover:text-white px-2">
+          <ArrowLeft size={20} className="mr-2" /> ย้อนกลับ
+        </Button>
       </div>
 
+      {step === 1 ? (
+        <div className="max-w-4xl mx-auto w-full mt-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <button
+              type="button"
+              onClick={() => { setFormData({...formData, tradeType: 'VEHICLE', pricingType: '300,000'}); setStep(2); }}
+              className="bg-slate-900 border border-slate-800 rounded-[24px] p-12 flex flex-col items-center justify-center gap-6 hover:border-blue-500/50 hover:bg-slate-800/50 transition-all group"
+            >
+              <div className="w-24 h-24 rounded-full bg-blue-900/20 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-black/20">
+                <Car size={40} weight="fill" className="text-blue-500" />
+              </div>
+              <h2 className="text-2xl font-black text-white tracking-widest">โอนย้ายรถ (VEHICLE)</h2>
+            </button>
+            
+            <button
+              type="button"
+              onClick={() => { setFormData({...formData, tradeType: 'WEAPON', pricingType: 'ออกปกติ (1.5M / ชิ้น)'}); setStep(2); }}
+              className="bg-slate-900 border border-slate-800 rounded-[24px] p-12 flex flex-col items-center justify-center gap-6 hover:border-red-500/50 hover:bg-slate-800/50 transition-all group"
+            >
+              <div className="w-24 h-24 rounded-full bg-red-900/20 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-black/20">
+                <Crosshair size={40} weight="fill" className="text-red-500" />
+              </div>
+              <h2 className="text-2xl font-black text-white tracking-widest">โอนย้ายอาวุธ (WEAPON)</h2>
+            </button>
+          </div>
+        </div>
+      ) : (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
         <Card>
           <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="flex gap-4 p-1 bg-slate-900 border border-slate-700 rounded-lg">
-              <button
-                type="button"
-                className={`flex-1 py-2 rounded-md font-bold transition-colors ${formData.tradeType === 'VEHICLE' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}
-                onClick={() => setFormData({...formData, tradeType: 'VEHICLE', pricingType: '300,000'})}
-              >
-                โอนย้ายรถ (VEHICLE)
-              </button>
-              <button
-                type="button"
-                className={`flex-1 py-2 rounded-md font-bold transition-colors ${formData.tradeType === 'WEAPON' ? 'bg-red-600 text-white' : 'text-slate-400 hover:text-white'}`}
-                onClick={() => setFormData({...formData, tradeType: 'WEAPON', pricingType: 'ออกปกติ (1.5M / ชิ้น)'})}
-              >
-                โอนย้ายอาวุธ (WEAPON)
-              </button>
-            </div>
 
             <div className="flex gap-4 p-1 bg-slate-900 border border-slate-700 rounded-lg">
               <button
@@ -346,6 +363,7 @@ export default function WelfareTrade() {
           </div>
         </div>
       </div>
+      )}
       
       <ConfirmationModal 
         isOpen={showConfirm}
