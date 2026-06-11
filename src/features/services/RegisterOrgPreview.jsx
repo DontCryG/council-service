@@ -186,11 +186,17 @@ export default function RegisterOrgPreview() {
           </div>
         </div>
 
-        <div className="mt-8 pt-4 border-t border-slate-800 flex justify-between items-center relative z-10">
-          <span className="text-slate-400 text-sm">เจ้าหน้าที่ผู้รับเรื่อง (สภา)</span>
-          <span className="font-bold text-amber-500">
-            {councilMembers.find(c => c.id === formData.councilStaffId)?.name || '-'}
-          </span>
+        <div className="pt-6 border-t border-slate-800 space-y-4 mt-8 relative z-10">
+          <div className="flex justify-between items-center">
+            <span className="text-slate-400 font-medium">ค่าธรรมเนียมลงทะเบียน</span>
+            <span className="text-2xl font-black text-white">200,000 <span className="text-sm text-slate-500 font-medium">THB</span></span>
+          </div>
+          <div className="flex justify-between items-center pt-4 border-t border-slate-800/50">
+            <span className="text-slate-500 font-medium text-sm">เจ้าหน้าที่ผู้รับเรื่อง (สภา)</span>
+            <span className="font-bold text-amber-500">
+              {councilMembers.find(c => c.id === formData.councilStaffId)?.name || '-'}
+            </span>
+          </div>
         </div>
       </div>
 
