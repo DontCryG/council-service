@@ -93,27 +93,28 @@ export default function WelfarePreview() {
         <div className="w-[100px]"></div> {/* spacer for centering */}
       </div>
 
-      <div ref={captureRef} className="bg-slate-900 rounded-xl p-8 sm:p-12 border-2 border-slate-800 shadow-2xl relative overflow-hidden text-slate-200 min-h-[600px] mb-8">
-        {/* Background Effects */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none"></div>
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -ml-32 -mb-32 pointer-events-none"></div>
-        
-        {/* Watermark Logo */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] pointer-events-none">
-          <img src="/logo.png" alt="watermark" className="w-[80%] h-[80%] object-contain grayscale" />
-        </div>
-
-        {/* Header */}
-        <div className="flex justify-between items-start mb-10 relative z-10 border-b border-slate-800 pb-8">
-          <div className="flex items-center gap-6">
-            <div className="w-20 h-20 bg-slate-950 rounded-2xl border border-slate-800 p-3 shadow-lg">
-              <img src="/logo.png" alt="Council Logo" className="w-full h-full object-contain" />
-            </div>
-            <div>
-              <h2 className="text-3xl font-black text-white tracking-wider">WELFARE <span className="text-amber-500">AGREEMENT</span></h2>
-              <p className="text-sm font-bold text-slate-500 tracking-widest mt-1">COUNCIL ALLOCATION DEPARTMENT</p>
-            </div>
+      <div className="overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div ref={captureRef} className="w-[800px] shrink-0 bg-slate-900 rounded-xl p-8 sm:p-12 border-2 border-slate-800 shadow-2xl relative overflow-hidden text-slate-200 min-h-[600px] mb-8">
+          {/* Background Effects */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none"></div>
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -ml-32 -mb-32 pointer-events-none"></div>
+          
+          {/* Watermark Logo */}
+          <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] pointer-events-none">
+            <img src="/logo.png" alt="watermark" className="w-[80%] h-[80%] object-contain grayscale" />
           </div>
+
+          {/* Header */}
+          <div className="flex justify-between items-start mb-10 relative z-10 border-b border-slate-800 pb-8">
+            <div className="flex items-center gap-6">
+              <div className="w-20 h-20 bg-slate-950 rounded-2xl border border-slate-800 p-3 shadow-lg shrink-0">
+                <img src="/logo.png" alt="Council Logo" className="w-full h-full object-contain" />
+              </div>
+              <div>
+                <h2 className="text-3xl font-black text-white tracking-wider whitespace-nowrap">WELFARE <span className="text-amber-500">AGREEMENT</span></h2>
+                <p className="text-sm font-bold text-slate-500 tracking-widest mt-1 whitespace-nowrap">COUNCIL ALLOCATION DEPARTMENT</p>
+              </div>
+            </div>
           <div className="text-right">
             <div className="inline-block bg-amber-500/10 border border-amber-500/20 rounded-lg px-4 py-2">
               <p className="text-[10px] text-amber-500/70 font-bold tracking-widest uppercase mb-1">Agreement Reference</p>
