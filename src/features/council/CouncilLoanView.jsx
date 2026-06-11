@@ -314,7 +314,6 @@ export default function CouncilLoanView() {
           </div>
         </div>
       </div>
-      </div>
 
       {/* Council Signing Area */}
       {contract.status === 'pending_council_signature' && (
