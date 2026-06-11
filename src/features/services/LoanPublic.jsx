@@ -112,15 +112,20 @@ export default function LoanPublic() {
     try {
       const contractRef = doc(db, 'loan_contracts', contract.id);
       
-      // In a real app, you might save the canvas data URL to storage
-      // const signatureDataUrl = canvasRef.current.toDataURL();
+      const signatureDataUrl = canvasRef.current.toDataURL();
       
       await updateDoc(contractRef, {
         status: 'pending_council_signature',
-        borrowerSignedAt: serverTimestamp()
+        borrowerSignedAt: serverTimestamp(),
+        borrowerSignature: signatureDataUrl
       });
       
-      setContract({ ...contract, status: 'pending_council_signature', borrowerSignedAt: new Date() });
+      setContract({ 
+        ...contract, 
+        status: 'pending_council_signature', 
+        borrowerSignedAt: new Date(),
+        borrowerSignature: signatureDataUrl
+      });
       showAlert('success', 'เซ็นรับทราบสัญญากู้ยืมสำเร็จ');
     } catch (err) {
       console.error(err);
