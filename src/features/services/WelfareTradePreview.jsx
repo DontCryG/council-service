@@ -20,6 +20,7 @@ export default function WelfareTradePreview() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const captureRef = useRef(null);
+  const [refNumber] = useState(() => `CS-TRADE-${Math.floor(1000 + Math.random() * 9000)}`);
 
   const { formData, items } = location.state || {};
 
@@ -73,10 +74,17 @@ export default function WelfareTradePreview() {
       fd.append('file', blob, 'trade.png');
       const councilName = councilMembers.find(c => c.id === formData.councilStaffId)?.name;
       const payload = buildWelfareTradeWebhook(formData, items, getTotalPrice(), councilName);
+      
+      // Attempt to inject refNumber into discord webhook footer if possible
+      if (payload?.embeds?.[0]?.footer) {
+        payload.embeds[0].footer.text = `Ref: ${refNumber} | ${payload.embeds[0].footer.text}`;
+      }
+
       fd.append('payload_json', JSON.stringify(payload));
 
       await sendWebhook('welfare_trade', fd);
       await saveTransactionLog('welfare_trade', {
+        refNumber: refNumber,
         orgName: formData.orgName,
         orgType: formData.orgType,
         tradeType: formData.tradeType,
@@ -84,7 +92,8 @@ export default function WelfareTradePreview() {
         newOwner: formData.newOwner,
         items: items,
         totalPrice: getTotalPrice(),
-        councilStaffId: formData.councilStaffId
+        councilStaffId: formData.councilStaffId,
+        councilStaffName: councilName || '-'
       }, user);
       showAlert('success', 'ส่งข้อมูลแลกเปลี่ยนสวัสดิการเรียบร้อยแล้ว!');
       setShowConfirm(false);

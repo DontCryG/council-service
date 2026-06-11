@@ -18,6 +18,7 @@ export default function EditOrgPreview() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const captureRef = useRef(null);
+  const [refNumber] = useState(() => `CS-EDIT-${Math.floor(1000 + Math.random() * 9000)}`);
 
   const { formData } = location.state || {};
 
@@ -86,17 +87,19 @@ export default function EditOrgPreview() {
           image: {
             url: "attachment://edit_org.png"
           },
-          footer: { text: "Council Secretary System" },
+          footer: { text: `Ref: ${refNumber} | Council Secretary System` },
           timestamp: new Date().toISOString()
         }]
       }));
 
       await sendWebhook('edit_org', fd);
       await saveTransactionLog('edit_org', {
+        refNumber: refNumber,
         orgName: formData.orgName,
         orgType: formData.orgType,
         requester: formData.requester,
         councilStaffId: formData.councilStaffId,
+        councilStaffName: councilMembers.find(c => c.id === formData.councilStaffId)?.name || '-',
         changeInfo: formData.changeInfo,
         editTexture: formData.editTexture,
         addCloth: formData.addCloth,

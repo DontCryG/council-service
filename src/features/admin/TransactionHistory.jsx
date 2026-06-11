@@ -301,6 +301,99 @@ export default function TransactionHistory() {
                 </div>
                 <div className="px-5 py-3 text-slate-500 text-xs">ระบบบริการทั่วไปสภาส่วนกลาง • {selectedLog.createdAt.toLocaleString('th-TH')}</div>
               </div>
+            ) : selectedLog.type === 'edit_org' ? (
+              <div className="bg-slate-900 rounded-xl border border-slate-700 overflow-hidden">
+                <div className="bg-amber-900/30 border-b border-amber-700/40 px-5 py-4">
+                  <div className="flex items-center gap-2 text-amber-500 font-bold text-base mb-1">
+                    <span>🔄</span> แก้ไขข้อมูลองค์กร
+                  </div>
+                  <div className="text-slate-400 text-xs">
+                    เลขที่อ้างอิง: <span className="text-slate-200 font-mono font-bold">{selectedLog.data.refNumber || `CS-${selectedLog.id?.slice(0,8).toUpperCase() || 'N/A'}`}</span>
+                  </div>
+                </div>
+                <div className="px-5 py-4 grid grid-cols-2 gap-4 border-b border-slate-700/60">
+                  <div>
+                    <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">🏢 สังกัด</div>
+                    <div className="text-white font-bold">{selectedLog.data.orgName || '-'}</div>
+                    <div className="text-slate-400 text-xs mt-0.5">{selectedLog.data.orgType || ''}</div>
+                  </div>
+                  <div>
+                    <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">✍️ ผู้แจ้ง</div>
+                    <div className="text-white font-bold">{selectedLog.data.requester || '-'}</div>
+                  </div>
+                </div>
+                <div className="px-5 py-4 border-b border-slate-700/60">
+                  <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-3 flex items-center gap-1">🛠️ รายการแก้ไข</div>
+                  <div className="space-y-1.5">
+                    {selectedLog.data.changeInfo && <div className="bg-slate-800 rounded-lg px-3 py-2 text-slate-200 text-sm font-medium">✅ เปลี่ยนข้อมูล Gang</div>}
+                    {selectedLog.data.editTexture && <div className="bg-slate-800 rounded-lg px-3 py-2 text-slate-200 text-sm font-medium">✅ แก้ไข Texture เสื้อผ้า</div>}
+                    {selectedLog.data.addCloth && <div className="bg-slate-800 rounded-lg px-3 py-2 text-slate-200 text-sm font-medium">✅ ลงชุดเพิ่ม</div>}
+                    {selectedLog.data.bulkChange && <div className="bg-slate-800 rounded-lg px-3 py-2 text-slate-200 text-sm font-medium">✅ เหมาเปลี่ยนข้อมูล Gang</div>}
+                    {selectedLog.data.addAccessory && <div className="bg-slate-800 rounded-lg px-3 py-2 text-slate-200 text-sm font-medium">✅ ลง Accessories Adons เสริม</div>}
+                    {!selectedLog.data.changeInfo && !selectedLog.data.editTexture && !selectedLog.data.addCloth && !selectedLog.data.bulkChange && !selectedLog.data.addAccessory && (
+                      <div className="text-slate-500 italic text-sm">- ไม่มีรายการ -</div>
+                    )}
+                  </div>
+                </div>
+                <div className="px-5 py-4 border-b border-slate-700/60 flex justify-between items-center">
+                  <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider flex items-center gap-1">👨‍💼 เจ้าหน้าที่สภา</div>
+                  <div className="text-amber-500 font-bold">{selectedLog.data.councilStaffName || '-'}</div>
+                </div>
+                <div className="px-5 py-3 text-slate-500 text-xs">ระบบแจ้งแก้ไของค์กรสภาส่วนกลาง • {selectedLog.createdAt.toLocaleString('th-TH')}</div>
+              </div>
+            ) : selectedLog.type === 'welfare_trade' ? (
+              <div className="bg-slate-900 rounded-xl border border-slate-700 overflow-hidden">
+                <div className="bg-violet-900/30 border-b border-violet-700/40 px-5 py-4">
+                  <div className="flex items-center gap-2 text-violet-400 font-bold text-base mb-1">
+                    <span>🔁</span> แลกเปลี่ยนสวัสดิการ
+                  </div>
+                  <div className="text-slate-400 text-xs">
+                    เลขที่อ้างอิง: <span className="text-slate-200 font-mono font-bold">{selectedLog.data.refNumber || `CS-${selectedLog.id?.slice(0,8).toUpperCase() || 'N/A'}`}</span>
+                  </div>
+                </div>
+                <div className="px-5 py-4 grid grid-cols-2 gap-4 border-b border-slate-700/60">
+                  <div className="space-y-4">
+                    <div>
+                      <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">🏢 สังกัด</div>
+                      <div className="text-white font-bold">{selectedLog.data.orgName || '-'}</div>
+                      <div className="text-slate-400 text-xs mt-0.5">{selectedLog.data.orgType || ''}</div>
+                    </div>
+                    <div>
+                      <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">🏷️ ประเภทสวัสดิการ</div>
+                      <div className="text-violet-400 font-bold">{selectedLog.data.tradeType || '-'}</div>
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">📤 ผู้โอน (เก่า)</div>
+                      <div className="text-red-400 font-bold">{selectedLog.data.oldOwner || '-'}</div>
+                    </div>
+                    <div>
+                      <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">📥 ผู้รับ (ใหม่)</div>
+                      <div className="text-emerald-400 font-bold">{selectedLog.data.newOwner || '-'}</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="px-5 py-4 border-b border-slate-700/60">
+                  <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-3 flex items-center gap-1">🎁 รายการ ({selectedLog.data.items?.length || 0})</div>
+                  <div className="space-y-2 max-h-40 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 pr-2">
+                    {(selectedLog.data.items || []).map((item, i) => (
+                      <div key={i} className="flex justify-between items-center bg-slate-800 rounded-lg p-2.5">
+                        <span className="text-slate-200 text-sm font-bold">{item.name || '-'}</span>
+                        <span className="text-slate-400 text-xs font-mono">{item.detail || '-'}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="px-5 py-4 border-b border-slate-700/60 flex justify-between items-center">
+                  <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider flex items-center gap-1">👨‍💼 เจ้าหน้าที่สภา</div>
+                  <div className="text-amber-500 font-bold">{selectedLog.data.councilStaffName || '-'}</div>
+                </div>
+                <div className="px-5 py-3 text-slate-500 text-xs flex justify-between">
+                  <span>ระบบตรวจสอบสวัสดิการสภาส่วนกลาง • {selectedLog.createdAt.toLocaleString('th-TH')}</span>
+                  <span className="font-bold text-slate-400">รวม: {selectedLog.data.totalPrice || '-'}</span>
+                </div>
+              </div>
             ) : (
               /* Default: raw JSON for other types */
               <div className="bg-slate-900 rounded-xl p-4 border border-slate-700 overflow-auto max-h-[60vh] scrollbar-thin scrollbar-thumb-slate-700">
