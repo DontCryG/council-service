@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
@@ -87,11 +87,11 @@ export default function TicketStore() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.groupName || !formData.requester || !formData.councilStaffId) {
-      showAlert('error', 'à¸à¸£à¸¸à¸“à¸²à¸à¸£à¸­à¸à¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¹ƒà¸«à¹‰à¸„à¸£à¸šà¸–à¹‰à¸§à¸™');
+      showAlert('error', 'กรุณากรอกข้อมูลให้ครบถ้วน');
       return;
     }
     if (!isValidAmount) {
-      showAlert('error', 'à¸ˆà¸³à¸™à¸§à¸™ Ticket à¹„à¸¡à¹ˆà¸–à¸¹à¸à¸•à¹‰à¸­à¸‡ à¸«à¸£à¸·à¸­à¹€à¸à¸´à¸™à¹‚à¸„à¸§à¸•à¹‰à¸²');
+      showAlert('error', 'จำนวน Ticket ไม่ถูกต้อง หรือเกินโควต้า');
       return;
     }
 
@@ -125,18 +125,18 @@ export default function TicketStore() {
 
       await setDoc(doc(db, 'app_state', 'tickets'), currentState);
       
-      showAlert('success', 'à¸ªà¹ˆà¸‡à¸„à¸³à¸‚à¸­à¸‹à¸·à¹‰à¸­ Ticket à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§! (à¸£à¸­à¸ªà¸ à¸²à¸­à¸™à¸¸à¸¡à¸±à¸•à¸´)');
+      showAlert('success', 'ส่งคำขอซื้อ Ticket เรียบร้อยแล้ว! (รอสภาอนุมัติ)');
       navigate('/home');
     } catch (err) {
       console.error(err);
-      showAlert('error', 'à¹€à¸à¸´à¸”à¸‚à¹‰à¸­à¸œà¸´à¸”à¸žà¸¥à¸²à¸”à¹ƒà¸™à¸à¸²à¸£à¸—à¸³à¸£à¸²à¸¢à¸à¸²à¸£');
+      showAlert('error', 'เกิดข้อผิดพลาดในการทำรายการ');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   if (loading) {
-    return <div className="py-20 text-center text-slate-500">à¸à¸³à¸¥à¸±à¸‡à¹‚à¸«à¸¥à¸”à¸£à¸°à¸šà¸š Ticket...</div>;
+    return <div className="py-20 text-center text-slate-500">กำลังโหลดระบบ Ticket...</div>;
   }
 
   return (
@@ -144,8 +144,8 @@ export default function TicketStore() {
       <div className="flex items-center gap-3">
         <Ticket size={32} weight="duotone" className="text-amber-500" />
         <div>
-          <h1 className="text-2xl font-bold text-white">à¸£à¸°à¸šà¸šà¹à¸¥à¸ TICKET</h1>
-          <p className="text-slate-400">à¸ªà¹ˆà¸‡à¸„à¸³à¸‚à¸­à¸‹à¸·à¹‰à¸­ Ticket à¸ªà¸³à¸«à¸£à¸±à¸šà¸‹à¸·à¹‰à¸­à¸‚à¸­à¸‡à¸ªà¸§à¸±à¸ªà¸”à¸´à¸à¸²à¸£à¸ªà¸ à¸²</p>
+          <h1 className="text-2xl font-bold text-white">ระบบแลก TICKET</h1>
+          <p className="text-slate-400">ส่งคำขอซื้อ Ticket สำหรับซื้อของสวัสดิการสภา</p>
         </div>
       </div>
 
@@ -182,19 +182,19 @@ export default function TicketStore() {
               setSearchQuery('');
             }}
           >
-            <ArrowLeft size={18} /> à¸¢à¹‰à¸­à¸™à¸à¸¥à¸±à¸š
+            <ArrowLeft size={18} /> ย้อนกลับ
           </Button>
           
           <Card>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-1.5 relative" ref={dropdownRef}>
-                <label className="text-sm font-medium text-slate-300 ml-1">à¹à¸à¹Šà¸‡ / à¹à¸Ÿà¸¡à¸´à¸¥à¸µà¹ˆ à¸‚à¸­à¸‡à¸„à¸¸à¸“ ({selectedType})</label>
+                <label className="text-sm font-medium text-slate-300 ml-1">แก๊ง / แฟมิลี่ ของคุณ ({selectedType})</label>
                 <div 
                   className={`w-full bg-slate-900 border ${isDropdownOpen ? 'border-blue-500' : 'border-slate-700'} rounded-lg px-4 py-2.5 text-white cursor-pointer flex justify-between items-center transition-colors`}
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 >
                   <span className={formData.groupName ? 'text-white' : 'text-slate-400'}>
-                    {formData.groupName || '-- à¹€à¸¥à¸·à¸­à¸à¹à¸à¹Šà¸‡/à¹à¸Ÿà¸¡à¸´à¸¥à¸µà¹ˆ --'}
+                    {formData.groupName || '-- เลือกแก๊ง/แฟมิลี่ --'}
                   </span>
                   <svg className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
                 </div>
@@ -204,7 +204,7 @@ export default function TicketStore() {
                     <div className="p-2 border-b border-slate-700">
                       <input 
                         type="text" 
-                        placeholder="à¸žà¸´à¸¡à¸žà¹Œà¸„à¹‰à¸™à¸«à¸²à¸Šà¸·à¹ˆà¸­..." 
+                        placeholder="พิมพ์ค้นหาชื่อ..." 
                         className="w-full bg-slate-900 border border-slate-600 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
@@ -214,7 +214,7 @@ export default function TicketStore() {
                     </div>
                     <div className="max-h-60 overflow-y-auto custom-scrollbar">
                       {groups.filter(g => g.type === selectedType && g.name.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 ? (
-                        <div className="px-4 py-3 text-sm text-slate-400 text-center">à¹„à¸¡à¹ˆà¸žà¸šà¸£à¸²à¸¢à¸Šà¸·à¹ˆà¸­à¸—à¸µà¹ˆà¸„à¹‰à¸™à¸«à¸²</div>
+                        <div className="px-4 py-3 text-sm text-slate-400 text-center">ไม่พบรายชื่อที่ค้นหา</div>
                       ) : (
                         groups.filter(g => g.type === selectedType && g.name.toLowerCase().includes(searchQuery.toLowerCase())).map(g => (
                           <div 
@@ -238,15 +238,15 @@ export default function TicketStore() {
           {selectedGroup && (
             <div className="bg-slate-900/50 border border-slate-800 p-4 rounded-xl grid grid-cols-3 gap-4 text-center">
               <div>
-                <div className="text-xs text-slate-500 uppercase font-bold mb-1">à¹‚à¸„à¸§à¸•à¹‰à¸²à¸ªà¸¹à¸‡à¸ªà¸¸à¸” ({ticketsState?.settings?.roundStartDate} - {ticketsState?.settings?.roundEndDate})</div>
+                <div className="text-xs text-slate-500 uppercase font-bold mb-1">โควต้าสูงสุด ({ticketsState?.settings?.roundStartDate} - {ticketsState?.settings?.roundEndDate})</div>
                 <div className="font-mono text-lg text-slate-300">{parseInt(maxQuota).toLocaleString()}</div>
               </div>
               <div>
-                <div className="text-xs text-slate-500 uppercase font-bold mb-1">à¹ƒà¸Šà¹‰à¹„à¸›à¹à¸¥à¹‰à¸§</div>
+                <div className="text-xs text-slate-500 uppercase font-bold mb-1">ใช้ไปแล้ว</div>
                 <div className="font-mono text-lg text-amber-500">{parseInt(usedQuota).toLocaleString()}</div>
               </div>
               <div>
-                <div className="text-xs text-slate-500 uppercase font-bold mb-1">à¸„à¸‡à¹€à¸«à¸¥à¸·à¸­</div>
+                <div className="text-xs text-slate-500 uppercase font-bold mb-1">คงเหลือ</div>
                 <div className="font-mono text-lg font-bold text-emerald-500">{parseInt(remainingQuota).toLocaleString()}</div>
               </div>
             </div>
@@ -254,22 +254,22 @@ export default function TicketStore() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input 
-              label="à¸œà¸¹à¹‰à¸•à¸´à¸”à¸•à¹ˆà¸­ (à¸Šà¸·à¹ˆà¸­à¹ƒà¸™à¹€à¸à¸¡)" 
-              placeholder="à¸£à¸°à¸šà¸¸à¸Šà¸·à¹ˆà¸­à¸œà¸¹à¹‰à¹€à¸šà¸´à¸..." 
+              label="ผู้ติดต่อ (ชื่อในเกม)" 
+              placeholder="ระบุชื่อผู้เบิก..." 
               required
               value={formData.requester}
               onChange={e => setFormData({...formData, requester: e.target.value})}
             />
             
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-slate-300 ml-1">à¸ªà¸ à¸²à¸œà¸¹à¹‰à¸—à¸³à¸£à¸²à¸¢à¸à¸²à¸£</label>
+              <label className="text-sm font-medium text-slate-300 ml-1">สภาผู้ทำรายการ</label>
               <select 
                 className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition-colors"
                 value={formData.councilStaffId}
                 onChange={e => setFormData({...formData, councilStaffId: e.target.value})}
                 required
               >
-                <option value="" disabled>-- à¹€à¸¥à¸·à¸­à¸à¸Šà¸·à¹ˆà¸­à¸ªà¸ à¸² --</option>
+                <option value="" disabled>-- เลือกชื่อสภา --</option>
                 {councilMembers.map(c => (
                   <option key={c.id} value={c.id}>{c.name}</option>
                 ))}
@@ -279,10 +279,10 @@ export default function TicketStore() {
 
           <div className="pt-4 border-t border-slate-800">
             <Input 
-              label={`à¸ˆà¸³à¸™à¸§à¸™ Ticket à¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¸à¸²à¸£à¹€à¸šà¸´à¸ (à¹€à¸£à¸— ${currentRate} à¸•à¹ˆà¸­ 1 Ticket)`}
+              label={`จำนวน Ticket ที่ต้องการเบิก (เรท ${currentRate} ต่อ 1 Ticket)`}
               type="text"
               disabled={!selectedGroup || remainingQuota <= 0}
-              placeholder={remainingQuota <= 0 ? "à¹‚à¸„à¸§à¸•à¹‰à¸²à¹€à¸•à¹‡à¸¡à¹à¸¥à¹‰à¸§" : "à¸£à¸°à¸šà¸¸à¸ˆà¸³à¸™à¸§à¸™ Ticket"}
+              placeholder={remainingQuota <= 0 ? "โควต้าเต็มแล้ว" : "ระบุจำนวน Ticket"}
               value={formData.amount}
               onChange={e => {
                 const numStr = e.target.value.replace(/\D/g, '');
@@ -293,7 +293,7 @@ export default function TicketStore() {
             />
             {amountToBuy > remainingQuota && (
               <p className="text-red-400 text-sm mt-2 flex items-center gap-1">
-                <WarningCircle /> à¸£à¸°à¸šà¸¸à¸ˆà¸³à¸™à¸§à¸™à¹€à¸à¸´à¸™à¹‚à¸„à¸§à¸•à¹‰à¸²à¸„à¸‡à¹€à¸«à¸¥à¸·à¸­
+                <WarningCircle /> ระบุจำนวนเกินโควต้าคงเหลือ
               </p>
             )}
           </div>
@@ -301,7 +301,7 @@ export default function TicketStore() {
           <div className="bg-slate-950 border border-slate-800 p-6 rounded-xl flex items-center justify-between mt-4">
             <div>
               <p className="text-slate-400 text-sm font-bold uppercase tracking-wider">Total Amount to Pay</p>
-              <p className="text-xs text-slate-500 mt-1">à¸¢à¸­à¸”à¹€à¸‡à¸´à¸™à¹à¸”à¸‡à¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¸ˆà¹ˆà¸²à¸¢à¸ªà¸ à¸²</p>
+              <p className="text-xs text-slate-500 mt-1">ยอดเงินแดงที่ต้องจ่ายสภา</p>
             </div>
             <div className="text-4xl font-black text-red-500 tracking-tighter">
               ${totalPrice.toLocaleString()}
@@ -315,7 +315,7 @@ export default function TicketStore() {
               isLoading={isSubmitting}
               disabled={!isValidAmount || isSubmitting}
             >
-              <ShoppingCart size={20} weight="fill" /> à¸ªà¹ˆà¸‡à¸„à¸³à¸‚à¸­à¹€à¸šà¸´à¸ Ticket
+              <ShoppingCart size={20} weight="fill" /> ส่งคำขอเบิก Ticket
             </Button>
           </form>
         </Card>

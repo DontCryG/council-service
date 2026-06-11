@@ -1,4 +1,4 @@
-﻿import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
@@ -55,12 +55,12 @@ export default function RegisterOrg() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.leader || !formData.councilStaffId) {
-      showAlert('error', 'à¸à¸£à¸¸à¸“à¸²à¸à¸£à¸­à¸à¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸ªà¸³à¸„à¸±à¸à¹ƒà¸«à¹‰à¸„à¸£à¸šà¸–à¹‰à¸§à¸™');
+      showAlert('error', 'กรุณากรอกข้อมูลสำคัญให้ครบถ้วน');
       return;
     }
 
     if (formData.logo && !/^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)(\?.*)?$/i.test(formData.logo) && !formData.logo.includes('discordapp.')) {
-      showAlert('error', 'à¸Šà¹ˆà¸­à¸‡ Link à¹‚à¸¥à¹‚à¸à¹‰ à¸à¸£à¸¸à¸“à¸²à¹ƒà¸ªà¹ˆà¸¥à¸´à¸‡à¸à¹Œà¸£à¸¹à¸›à¸ à¸²à¸žà¸—à¸µà¹ˆà¸–à¸¹à¸à¸•à¹‰à¸­à¸‡ (à¸•à¹‰à¸­à¸‡à¸¥à¸‡à¸—à¹‰à¸²à¸¢à¸”à¹‰à¸§à¸¢ .png, .jpg à¸¯à¸¥à¸¯ à¸«à¸£à¸·à¸­à¹€à¸›à¹‡à¸™à¸£à¸¹à¸›à¸¥à¸´à¸‡à¸à¹Œ à¸£à¸°à¸šà¸šà¸ªà¹ˆà¸§à¸™à¸à¸¥à¸²à¸‡)');
+      showAlert('error', 'ช่อง Link โลโก้ กรุณาใส่ลิงก์รูปภาพที่ถูกต้อง (ต้องลงท้ายด้วย .png, .jpg ฯลฯ หรือเป็นรูปลิงก์ ระบบส่วนกลาง)');
       return;
     }
 
@@ -76,13 +76,13 @@ export default function RegisterOrg() {
       
       const fd = new FormData();
       fd.append('file', blob, 'register.png');
-      const typeDisplay = formData.orgType === 'GANG' ? 'à¹à¸à¹Šà¸‡' : 'à¹à¸Ÿà¸¡';
+      const typeDisplay = formData.orgType === 'GANG' ? 'แก๊ง' : 'แฟม';
       const councilName = councilMembers.find(c => c.id === formData.councilStaffId)?.name || '-';
 
-      const coLeaderText = coLeaders.length > 0 ? `**à¸£à¸­à¸‡à¸«à¸±à¸§à¸«à¸™à¹‰à¸²:** ${coLeaders.map(c => c.name).join(', ')}` : '';
-      const memberText = members.length > 0 ? `**à¸ªà¸¡à¸²à¸Šà¸´à¸:**\n${members.map(m => m.name).join('\n')}` : '';
+      const coLeaderText = coLeaders.length > 0 ? `**รองหัวหน้า:** ${coLeaders.map(c => c.name).join(', ')}` : '';
+      const memberText = members.length > 0 ? `**สมาชิก:**\n${members.map(m => m.name).join('\n')}` : '';
       const membersFullText = [
-        `**à¸«à¸±à¸§à¸«à¸™à¹‰à¸²:** ${formData.leader}`,
+        `**หัวหน้า:** ${formData.leader}`,
         coLeaderText,
         memberText
       ].filter(Boolean).join('\n');
@@ -97,7 +97,7 @@ export default function RegisterOrg() {
             { name: "Type", value: typeDisplay, inline: true },
             { name: "Group", value: formData.alias ? `[${formData.alias}] ${formData.name || '-'}` : (formData.name || '-'), inline: true },
             { name: "Theme Color", value: formData.color || '-', inline: true },
-            { name: "Transaction", value: "à¸¥à¸‡à¸—à¸°à¹€à¸šà¸µà¸¢à¸™à¸­à¸‡à¸„à¹Œà¸à¸£à¹ƒà¸«à¸¡à¹ˆ", inline: false },
+            { name: "Transaction", value: "ลงทะเบียนองค์กรใหม่", inline: false },
             { name: "Members", value: membersFullText || '-', inline: false },
             { name: "Council", value: councilName, inline: false }
           ],
@@ -117,12 +117,12 @@ export default function RegisterOrg() {
         members: members.map(m => m.name),
         councilStaffId: formData.councilStaffId
       }, user);
-      showAlert('success', 'à¸¥à¸‡à¸—à¸°à¹€à¸šà¸µà¸¢à¸™à¹à¸à¹Šà¸‡/à¹à¸Ÿà¸¡à¸´à¸¥à¸µà¹ˆà¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§!');
+      showAlert('success', 'ลงทะเบียนแก๊ง/แฟมิลี่เรียบร้อยแล้ว!');
       navigate('/home');
       
     } catch (err) {
       console.error(err);
-      showAlert('error', `à¹€à¸à¸´à¸”à¸‚à¹‰à¸­à¸œà¸´à¸”à¸žà¸¥à¸²à¸”: ${err.message || 'à¹„à¸¡à¹ˆà¸ªà¸²à¸¡à¸²à¸£à¸–à¸ªà¹ˆà¸‡à¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¹„à¸”à¹‰'}`);
+      showAlert('error', `เกิดข้อผิดพลาด: ${err.message || 'ไม่สามารถส่งข้อมูลได้'}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -133,8 +133,8 @@ export default function RegisterOrg() {
       <div className="flex items-center gap-3">
         <Buildings size={32} weight="duotone" className="text-amber-500" />
         <div>
-          <h1 className="text-2xl font-bold text-white">à¸£à¸±à¸šà¸£à¸­à¸‡à¸­à¸‡à¸„à¹Œà¸à¸£ / à¸¥à¸‡à¸—à¸°à¹€à¸šà¸µà¸¢à¸™</h1>
-          <p className="text-slate-400">à¸£à¸°à¸šà¸šà¸šà¸±à¸™à¸—à¸¶à¸à¸à¸²à¸£à¸ˆà¸±à¸”à¸•à¸±à¹‰à¸‡ Gang à¸«à¸£à¸·à¸­ Family à¸­à¸¢à¹ˆà¸²à¸‡à¹€à¸›à¹‡à¸™à¸—à¸²à¸‡à¸à¸²à¸£</p>
+          <h1 className="text-2xl font-bold text-white">รับรององค์กร / ลงทะเบียน</h1>
+          <p className="text-slate-400">ระบบบันทึกการจัดตั้ง Gang หรือ Family อย่างเป็นทางการ</p>
         </div>
       </div>
 
@@ -142,7 +142,7 @@ export default function RegisterOrg() {
         <Card className="order-2 xl:order-1">
           {step === 1 ? (
             <div className="space-y-8 py-4">
-              <h3 className="text-xl font-bold text-center">à¹€à¸¥à¸·à¸­à¸à¸›à¸£à¸°à¹€à¸ à¸—à¸­à¸‡à¸„à¹Œà¸à¸£à¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¸à¸²à¸£à¸ˆà¸±à¸”à¸•à¸±à¹‰à¸‡</h3>
+              <h3 className="text-xl font-bold text-center">เลือกประเภทองค์กรที่ต้องการจัดตั้ง</h3>
               <div className="grid grid-cols-2 gap-4">
                 <button 
                   onClick={() => { setFormData({...formData, orgType: 'GANG'}); setStep(2); }}
@@ -171,14 +171,14 @@ export default function RegisterOrg() {
                   <span className="w-8 h-8 rounded bg-amber-500/20 text-amber-500 flex items-center justify-center">
                     <Buildings size={18} weight="bold" />
                   </span>
-                  à¸‚à¹‰à¸­à¸¡à¸¹à¸¥ {formData.orgType}
+                  ข้อมูล {formData.orgType}
                 </h3>
-                <Button variant="ghost" size="sm" onClick={() => setStep(1)}>à¸¢à¹‰à¸­à¸™à¸à¸¥à¸±à¸š</Button>
+                <Button variant="ghost" size="sm" onClick={() => setStep(1)}>ย้อนกลับ</Button>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <Input 
-                  label="à¸Šà¸·à¹ˆà¸­à¹à¸à¹Šà¸‡ / à¹à¸Ÿà¸¡à¸´à¸¥à¸µà¹ˆà¹€à¸•à¹‡à¸¡" 
+                  label="ชื่อแก๊ง / แฟมิลี่เต็ม" 
                   required
                   value={formData.name}
                   onChange={e => {
@@ -187,7 +187,7 @@ export default function RegisterOrg() {
                   }}
                 />
                 <Input 
-                  label="à¸•à¸±à¸§à¸¢à¹ˆà¸­ (Alias)" 
+                  label="ตัวย่อ (Alias)" 
                   value={formData.alias}
                   onChange={e => {
                     const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.]/g, '').toUpperCase();
@@ -198,7 +198,7 @@ export default function RegisterOrg() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm font-medium text-slate-300 ml-1 block mb-1">à¸ªà¸µà¸›à¸£à¸°à¸ˆà¸³à¹à¸à¹Šà¸‡</label>
+                  <label className="text-sm font-medium text-slate-300 ml-1 block mb-1">สีประจำแก๊ง</label>
                   <div className="flex gap-2 h-11">
                     <div 
                       className="h-full w-12 border border-slate-700 rounded shadow-inner"
@@ -216,15 +216,15 @@ export default function RegisterOrg() {
                   </div>
                 </div>
                 <Input 
-                  label="Link à¹‚à¸¥à¹‚à¸à¹‰ (à¸–à¹‰à¸²à¸¡à¸µ)" 
+                  label="Link โลโก้ (ถ้ามี)" 
                   value={formData.logo}
                   onChange={e => setFormData({...formData, logo: e.target.value})}
-                  error={formData.logo && !/^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)(\?.*)?$/i.test(formData.logo) && !formData.logo.includes('discordapp.') ? 'à¸¥à¸´à¸‡à¸à¹Œà¸£à¸¹à¸›à¸ à¸²à¸žà¹„à¸¡à¹ˆà¸–à¸¹à¸à¸•à¹‰à¸­à¸‡' : ''}
+                  error={formData.logo && !/^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)(\?.*)?$/i.test(formData.logo) && !formData.logo.includes('discordapp.') ? 'ลิงก์รูปภาพไม่ถูกต้อง' : ''}
                 />
               </div>
 
               <Input 
-                label="à¸Šà¸·à¹ˆà¸­ Leader (à¸«à¸±à¸§à¸«à¸™à¹‰à¸²)" 
+                label="ชื่อ Leader (หัวหน้า)" 
                 required
                 value={formData.leader}
                 onChange={e => setFormData({...formData, leader: e.target.value})}
@@ -232,15 +232,15 @@ export default function RegisterOrg() {
 
               <div className="space-y-3 pt-4 border-t border-slate-800">
                 <div className="flex items-center justify-between">
-                  <label className="text-sm font-medium text-slate-300 ml-1">à¸£à¸­à¸‡à¸«à¸±à¸§à¸«à¸™à¹‰à¸² (Co-Leader)</label>
+                  <label className="text-sm font-medium text-slate-300 ml-1">รองหัวหน้า (Co-Leader)</label>
                   <Button type="button" variant="ghost" size="sm" onClick={() => handleArrayAdd(setCoLeaders, coLeaders)} className="text-amber-400">
-                    <Plus size={16} /> à¹€à¸žà¸´à¹ˆà¸¡
+                    <Plus size={16} /> เพิ่ม
                   </Button>
                 </div>
                 {coLeaders.map(item => (
                   <div key={item.id} className="flex gap-2">
-                    <Input placeholder="à¸Šà¸·à¹ˆà¸­" className="flex-[1.5]" value={item.name} onChange={e => handleArrayChange(setCoLeaders, coLeaders, item.id, 'name', e.target.value)} />
-                    <Input type="number" placeholder="à¹€à¸šà¸­à¸£à¹Œà¹‚à¸—à¸£à¸¨à¸±à¸žà¸—à¹Œ" className="flex-1" value={item.phone} onChange={e => handleArrayChange(setCoLeaders, coLeaders, item.id, 'phone', e.target.value)} />
+                    <Input placeholder="ชื่อ" className="flex-[1.5]" value={item.name} onChange={e => handleArrayChange(setCoLeaders, coLeaders, item.id, 'name', e.target.value)} />
+                    <Input type="number" placeholder="เบอร์โทรศัพท์" className="flex-1" value={item.phone} onChange={e => handleArrayChange(setCoLeaders, coLeaders, item.id, 'phone', e.target.value)} />
                     <Button type="button" variant="danger" size="icon" onClick={() => handleArrayRemove(setCoLeaders, coLeaders, item.id)}><Trash size={16}/></Button>
                   </div>
                 ))}
@@ -248,29 +248,29 @@ export default function RegisterOrg() {
 
               <div className="space-y-3 pt-4 border-t border-slate-800">
                 <div className="flex items-center justify-between">
-                  <label className="text-sm font-medium text-slate-300 ml-1">à¸ªà¸¡à¸²à¸Šà¸´à¸à¸—à¸±à¹ˆà¸§à¹„à¸› (Member)</label>
+                  <label className="text-sm font-medium text-slate-300 ml-1">สมาชิกทั่วไป (Member)</label>
                   <Button type="button" variant="ghost" size="sm" onClick={() => handleArrayAdd(setMembers, members)} className="text-amber-400">
-                    <Plus size={16} /> à¹€à¸žà¸´à¹ˆà¸¡
+                    <Plus size={16} /> เพิ่ม
                   </Button>
                 </div>
                 {members.map(item => (
                   <div key={item.id} className="flex gap-2">
-                    <Input placeholder="à¸Šà¸·à¹ˆà¸­" className="flex-[1.5]" value={item.name} onChange={e => handleArrayChange(setMembers, members, item.id, 'name', e.target.value)} />
-                    <Input type="number" placeholder="à¹€à¸šà¸­à¸£à¹Œà¹‚à¸—à¸£à¸¨à¸±à¸žà¸—à¹Œ" className="flex-1" value={item.phone} onChange={e => handleArrayChange(setMembers, members, item.id, 'phone', e.target.value)} />
+                    <Input placeholder="ชื่อ" className="flex-[1.5]" value={item.name} onChange={e => handleArrayChange(setMembers, members, item.id, 'name', e.target.value)} />
+                    <Input type="number" placeholder="เบอร์โทรศัพท์" className="flex-1" value={item.phone} onChange={e => handleArrayChange(setMembers, members, item.id, 'phone', e.target.value)} />
                     <Button type="button" variant="danger" size="icon" onClick={() => handleArrayRemove(setMembers, members, item.id)}><Trash size={16}/></Button>
                   </div>
                 ))}
               </div>
 
               <div className="pt-4 border-t border-slate-800 space-y-1.5">
-                <label className="text-sm font-medium text-slate-300 ml-1">à¸ªà¸ à¸²à¸œà¸¹à¹‰à¸•à¸£à¸§à¸ˆà¸ªà¸­à¸š</label>
+                <label className="text-sm font-medium text-slate-300 ml-1">สภาผู้ตรวจสอบ</label>
                 <select 
                   className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition-colors"
                   value={formData.councilStaffId}
                   onChange={e => setFormData({...formData, councilStaffId: e.target.value})}
                   required
                 >
-                  <option value="" disabled>-- à¹€à¸¥à¸·à¸­à¸à¸Šà¸·à¹ˆà¸­à¸ªà¸ à¸² --</option>
+                  <option value="" disabled>-- เลือกชื่อสภา --</option>
                   {councilMembers.map(c => (
                     <option key={c.id} value={c.id}>{c.name}</option>
                   ))}
@@ -278,7 +278,7 @@ export default function RegisterOrg() {
               </div>
 
               <Button type="submit" className="w-full" size="lg" isLoading={isSubmitting}>
-                <PaperPlaneTilt size={20} weight="bold" /> à¸¢à¸·à¸™à¸¢à¸±à¸™à¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¹€à¸‚à¹‰à¸²à¸ªà¸¹à¹ˆà¸£à¸°à¸šà¸š
+                <PaperPlaneTilt size={20} weight="bold" /> ยืนยันข้อมูลเข้าสู่ระบบ
               </Button>
             </form>
           )}
@@ -321,7 +321,7 @@ export default function RegisterOrg() {
                   </div>
                 </div>
                 <div className="col-span-2 p-3 bg-blue-50 border-l-4 border-blue-500">
-                  <div className="text-xs text-blue-800 uppercase font-bold mb-1">Leader (à¸«à¸±à¸§à¸«à¸™à¹‰à¸²)</div>
+                  <div className="text-xs text-blue-800 uppercase font-bold mb-1">Leader (หัวหน้า)</div>
                   <div className="font-black text-xl text-blue-900">{formData.leader || '...'}</div>
                 </div>
               </div>

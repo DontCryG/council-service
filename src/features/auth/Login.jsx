@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { auth, db } from '../../core/firebase';
@@ -27,7 +27,7 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!email || !password) {
-      setError('à¸à¸£à¸¸à¸“à¸²à¸à¸£à¸­à¸à¸Šà¸·à¹ˆà¸­à¸œà¸¹à¹‰à¹ƒà¸Šà¹‰à¸‡à¸²à¸™à¸«à¸£à¸·à¸­à¸­à¸µà¹€à¸¡à¸¥à¹à¸¥à¸°à¸£à¸«à¸±à¸ªà¸œà¹ˆà¸²à¸™à¹ƒà¸«à¹‰à¸„à¸£à¸šà¸–à¹‰à¸§à¸™');
+      setError('กรุณากรอกชื่อผู้ใช้งานหรืออีเมลและรหัสผ่านให้ครบถ้วน');
       return;
     }
     
@@ -61,9 +61,9 @@ export default function Login() {
     } catch (err) {
       console.error(err);
       if (err.code === 'auth/invalid-credential') {
-        setError('à¸Šà¸·à¹ˆà¸­à¸œà¸¹à¹‰à¹ƒà¸Šà¹‰à¸‡à¸²à¸™à¸«à¸£à¸·à¸­à¸£à¸«à¸±à¸ªà¸œà¹ˆà¸²à¸™à¹„à¸¡à¹ˆà¸–à¸¹à¸à¸•à¹‰à¸­à¸‡');
+        setError('ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง');
       } else {
-        setError('à¹€à¸à¸´à¸”à¸‚à¹‰à¸­à¸œà¸´à¸”à¸žà¸¥à¸²à¸”à¹ƒà¸™à¸à¸²à¸£à¹€à¸‚à¹‰à¸²à¸ªà¸¹à¹ˆà¸£à¸°à¸šà¸š: ' + err.message);
+        setError('เกิดข้อผิดพลาดในการเข้าสู่ระบบ: ' + err.message);
       }
     } finally {
       setLoading(false);
@@ -83,14 +83,14 @@ export default function Login() {
         <div className="bg-slate-800 p-1.5 rounded-full">
           <ArrowLeft size={16} weight="bold" />
         </div>
-        à¸à¸¥à¸±à¸šà¸«à¸™à¹‰à¸²à¸«à¸¥à¸±à¸
+        กลับหน้าหลัก
       </button>
 
       <div className={cn("max-w-md w-full bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 p-8 rounded-2xl shadow-2xl relative z-10 animate-fade-in-up", error ? "animate-shake" : "")}>
         <div className="text-center mb-8 flex flex-col items-center">
           <img src="/logo.png" alt="COUNCIL SYSTEM" className="h-28 object-contain drop-shadow-lg mb-4" />
-          <h1 className="text-2xl font-bold text-white mb-2">à¹€à¸‚à¹‰à¸²à¸ªà¸¹à¹ˆà¸£à¸°à¸šà¸š</h1>
-          <p className="text-slate-400 text-sm">à¹€à¸‚à¹‰à¸²à¸ªà¸¹à¹ˆà¸£à¸°à¸šà¸šà¸ˆà¸±à¸”à¸à¸²à¸£à¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸ªà¸ à¸² COUNCIL SYSTEM</p>
+          <h1 className="text-2xl font-bold text-white mb-2">เข้าสู่ระบบ</h1>
+          <p className="text-slate-400 text-sm">เข้าสู่ระบบจัดการข้อมูลสภา COUNCIL SYSTEM</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-5">
@@ -112,7 +112,7 @@ export default function Login() {
             <Input 
               label="Password"
               type="password"
-              placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+              placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="pl-10"
@@ -132,7 +132,7 @@ export default function Login() {
             isLoading={loading}
           >
             <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer" />
-            à¹€à¸‚à¹‰à¸²à¸ªà¸¹à¹ˆà¸£à¸°à¸šà¸š
+            เข้าสู่ระบบ
           </Button>
         </form>
       </div>

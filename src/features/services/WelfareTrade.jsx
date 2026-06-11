@@ -1,4 +1,4 @@
-﻿import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
@@ -81,12 +81,12 @@ export default function WelfareTrade() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.orgName || !formData.oldOwner || !formData.newOwner || !formData.councilStaffId) {
-      showAlert('error', 'à¸à¸£à¸¸à¸“à¸²à¸à¸£à¸­à¸à¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¹ƒà¸«à¹‰à¸„à¸£à¸šà¸–à¹‰à¸§à¸™');
+      showAlert('error', 'กรุณากรอกข้อมูลให้ครบถ้วน');
       return;
     }
 
     if (items.some(i => !i.name.trim())) {
-      showAlert('error', 'à¸à¸£à¸¸à¸“à¸²à¸£à¸°à¸šà¸¸à¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸ªà¸´à¹ˆà¸‡à¸‚à¸­à¸‡à¸—à¸µà¹ˆà¸ˆà¸°à¹à¸¥à¸à¹€à¸›à¸¥à¸µà¹ˆà¸¢à¸™à¹ƒà¸«à¹‰à¸„à¸£à¸š');
+      showAlert('error', 'กรุณาระบุข้อมูลสิ่งของที่จะแลกเปลี่ยนให้ครบ');
       return;
     }
 
@@ -121,13 +121,13 @@ export default function WelfareTrade() {
         totalPrice: getTotalPrice(),
         councilStaffId: formData.councilStaffId
       }, user);
-      showAlert('success', 'à¸ªà¹ˆà¸‡à¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¹à¸¥à¸à¹€à¸›à¸¥à¸µà¹ˆà¸¢à¸™à¸ªà¸§à¸±à¸ªà¸”à¸´à¸à¸²à¸£à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§!');
+      showAlert('success', 'ส่งข้อมูลแลกเปลี่ยนสวัสดิการเรียบร้อยแล้ว!');
       setShowConfirm(false);
       navigate('/home');
       
     } catch (err) {
       console.error(err);
-      showAlert('error', 'à¹€à¸à¸´à¸”à¸‚à¹‰à¸­à¸œà¸´à¸”à¸žà¸¥à¸²à¸”à¹ƒà¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¸‚à¹‰à¸­à¸¡à¸¹à¸¥');
+      showAlert('error', 'เกิดข้อผิดพลาดในการส่งข้อมูล');
     } finally {
       setIsSubmitting(false);
     }
@@ -138,8 +138,8 @@ export default function WelfareTrade() {
       <div className="flex items-center gap-3">
         <ArrowsLeftRight size={32} weight="duotone" className="text-violet-500" />
         <div>
-          <h1 className="text-2xl font-bold text-white">à¸£à¸°à¸šà¸šà¹€à¸—à¸£à¸”à¸ªà¸§à¸±à¸ªà¸”à¸´à¸à¸²à¸£</h1>
-          <p className="text-slate-400">à¸šà¸£à¸´à¸à¸²à¸£à¹à¸¥à¸à¹€à¸›à¸¥à¸µà¹ˆà¸¢à¸™à¹à¸¥à¸°à¸ˆà¸±à¸”à¸à¸²à¸£à¸ªà¸§à¸±à¸ªà¸”à¸´à¸à¸²à¸£à¸‚à¸­à¸‡à¸­à¸‡à¸„à¹Œà¸à¸£</p>
+          <h1 className="text-2xl font-bold text-white">ระบบเทรดสวัสดิการ</h1>
+          <p className="text-slate-400">บริการแลกเปลี่ยนและจัดการสวัสดิการขององค์กร</p>
         </div>
       </div>
 
@@ -152,14 +152,14 @@ export default function WelfareTrade() {
                 className={`flex-1 py-2 rounded-md font-bold transition-colors ${formData.tradeType === 'VEHICLE' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}
                 onClick={() => setFormData({...formData, tradeType: 'VEHICLE', pricingType: '300,000'})}
               >
-                à¹‚à¸­à¸™à¸¢à¹‰à¸²à¸¢à¸£à¸– (VEHICLE)
+                โอนย้ายรถ (VEHICLE)
               </button>
               <button
                 type="button"
                 className={`flex-1 py-2 rounded-md font-bold transition-colors ${formData.tradeType === 'WEAPON' ? 'bg-red-600 text-white' : 'text-slate-400 hover:text-white'}`}
-                onClick={() => setFormData({...formData, tradeType: 'WEAPON', pricingType: 'à¸­à¸­à¸à¸›à¸à¸•à¸´ (1.5M / à¸Šà¸´à¹‰à¸™)'})}
+                onClick={() => setFormData({...formData, tradeType: 'WEAPON', pricingType: 'ออกปกติ (1.5M / ชิ้น)'})}
               >
-                à¹‚à¸­à¸™à¸¢à¹‰à¸²à¸¢à¸­à¸²à¸§à¸¸à¸˜ (WEAPON)
+                โอนย้ายอาวุธ (WEAPON)
               </button>
             </div>
 
@@ -181,8 +181,8 @@ export default function WelfareTrade() {
             </div>
 
             <Input 
-              label="à¸Šà¸·à¹ˆà¸­à¹à¸à¹Šà¸‡ / à¹à¸Ÿà¸¡à¸´à¸¥à¸µà¹ˆ" 
-              placeholder="à¸£à¸°à¸šà¸¸à¸Šà¸·à¹ˆà¸­..." 
+              label="ชื่อแก๊ง / แฟมิลี่" 
+              placeholder="ระบุชื่อ..." 
               required
               value={formData.orgName}
               onChange={e => {
@@ -193,15 +193,15 @@ export default function WelfareTrade() {
 
             <div className="grid grid-cols-2 gap-4">
               <Input 
-                label="à¸Šà¸·à¹ˆà¸­à¹€à¸ˆà¹‰à¸²à¸‚à¸­à¸‡à¹€à¸”à¸´à¸¡" 
-                placeholder="à¸Šà¸·à¹ˆà¸­à¹ƒà¸™à¹€à¸à¸¡..." 
+                label="ชื่อเจ้าของเดิม" 
+                placeholder="ชื่อในเกม..." 
                 required
                 value={formData.oldOwner}
                 onChange={e => setFormData({...formData, oldOwner: e.target.value})}
               />
               <Input 
-                label="à¸Šà¸·à¹ˆà¸­à¸œà¸¹à¹‰à¸£à¸±à¸šà¹‚à¸­à¸™" 
-                placeholder="à¸Šà¸·à¹ˆà¸­à¹ƒà¸™à¹€à¸à¸¡..." 
+                label="ชื่อผู้รับโอน" 
+                placeholder="ชื่อในเกม..." 
                 required
                 value={formData.newOwner}
                 onChange={e => setFormData({...formData, newOwner: e.target.value})}
@@ -211,10 +211,10 @@ export default function WelfareTrade() {
             <div className="space-y-3 pt-4 border-t border-slate-800">
               <div className="flex items-center justify-between">
                 <label className="text-sm font-medium text-slate-300 ml-1">
-                  à¸£à¸²à¸¢à¸à¸²à¸£ {formData.tradeType === 'VEHICLE' ? 'à¸£à¸–à¸—à¸µà¹ˆà¹‚à¸­à¸™à¸¢à¹‰à¸²à¸¢' : 'à¸­à¸²à¸§à¸¸à¸˜à¸—à¸µà¹ˆà¹‚à¸­à¸™à¸¢à¹‰à¸²à¸¢'}
+                  รายการ {formData.tradeType === 'VEHICLE' ? 'รถที่โอนย้าย' : 'อาวุธที่โอนย้าย'}
                 </label>
                 <Button type="button" variant="ghost" size="sm" onClick={handleAddItem} className="text-violet-400 hover:text-violet-300">
-                  <Plus size={16} /> à¹€à¸žà¸´à¹ˆà¸¡à¸£à¸²à¸¢à¸à¸²à¸£
+                  <Plus size={16} /> เพิ่มรายการ
                 </Button>
               </div>
               
@@ -222,13 +222,13 @@ export default function WelfareTrade() {
                 {items.map((item, idx) => (
                   <div key={item.id} className="flex items-center gap-2">
                     <Input 
-                      placeholder={formData.tradeType === 'VEHICLE' ? 'à¸Šà¸·à¹ˆà¸­à¸£à¸– / à¸£à¸¸à¹ˆà¸™à¸£à¸–' : 'à¸Šà¸·à¹ˆà¸­à¸­à¸²à¸§à¸¸à¸˜'}
+                      placeholder={formData.tradeType === 'VEHICLE' ? 'ชื่อรถ / รุ่นรถ' : 'ชื่ออาวุธ'}
                       value={item.name}
                       onChange={(e) => handleItemChange(item.id, 'name', e.target.value)}
                       required
                     />
                     <Input 
-                      placeholder={formData.tradeType === 'VEHICLE' ? 'à¸—à¸°à¹€à¸šà¸µà¸¢à¸™' : 'à¸‹à¸µà¹€à¸£à¸µà¸¢à¸¥à¸™à¸±à¸¡à¹€à¸šà¸­à¸£à¹Œ (à¸–à¹‰à¸²à¸¡à¸µ)'}
+                      placeholder={formData.tradeType === 'VEHICLE' ? 'ทะเบียน' : 'ซีเรียลนัมเบอร์ (ถ้ามี)'}
                       value={item.detail}
                       onChange={(e) => handleItemChange(item.id, 'detail', e.target.value)}
                     />
@@ -248,14 +248,14 @@ export default function WelfareTrade() {
 
             <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-800">
               <div className="space-y-1.5">
-                <label className="text-sm font-medium text-slate-300 ml-1">à¸ªà¸ à¸²à¸œà¸¹à¹‰à¸—à¸³à¸£à¸²à¸¢à¸à¸²à¸£</label>
+                <label className="text-sm font-medium text-slate-300 ml-1">สภาผู้ทำรายการ</label>
                 <select 
                   className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition-colors"
                   value={formData.councilStaffId}
                   onChange={e => setFormData({...formData, councilStaffId: e.target.value})}
                   required
                 >
-                  <option value="" disabled>-- à¹€à¸¥à¸·à¸­à¸à¸Šà¸·à¹ˆà¸­à¸ªà¸ à¸² --</option>
+                  <option value="" disabled>-- เลือกชื่อสภา --</option>
                   {councilMembers.map(c => (
                     <option key={c.id} value={c.id}>{c.name}</option>
                   ))}
@@ -263,7 +263,7 @@ export default function WelfareTrade() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-sm font-medium text-slate-300 ml-1">à¸„à¹ˆà¸²à¸˜à¸£à¸£à¸¡à¹€à¸™à¸µà¸¢à¸¡</label>
+                <label className="text-sm font-medium text-slate-300 ml-1">ค่าธรรมเนียม</label>
                 <select 
                   className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition-colors"
                   value={formData.pricingType}
@@ -273,8 +273,8 @@ export default function WelfareTrade() {
                     <option value="300,000">300,000</option>
                   ) : (
                     <>
-                      <option value="à¸­à¸­à¸à¸›à¸à¸•à¸´ (1.5M / à¸Šà¸´à¹‰à¸™)">à¸­à¸­à¸à¸›à¸à¸•à¸´ (1.5M / à¸Šà¸´à¹‰à¸™)</option>
-                      <option value="à¸­à¸­à¸à¸¥à¸­à¸¢ (2.0M / à¸Šà¸´à¹‰à¸™)">à¸­à¸­à¸à¸¥à¸­à¸¢ (2.0M / à¸Šà¸´à¹‰à¸™)</option>
+                      <option value="ออกปกติ (1.5M / ชิ้น)">ออกปกติ (1.5M / ชิ้น)</option>
+                      <option value="ออกลอย (2.0M / ชิ้น)">ออกลอย (2.0M / ชิ้น)</option>
                     </>
                   )}
                 </select>
@@ -282,7 +282,7 @@ export default function WelfareTrade() {
             </div>
 
             <Button type="submit" className="w-full" size="lg" isLoading={isSubmitting}>
-              <PaperPlaneTilt size={20} weight="bold" /> à¸ªà¹ˆà¸‡à¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸à¸²à¸£à¹à¸¥à¸à¹„à¸›à¸¢à¸±à¸‡à¸£à¸°à¸šà¸šà¸ªà¹ˆà¸§à¸™à¸à¸¥à¸²à¸‡
+              <PaperPlaneTilt size={20} weight="bold" /> ส่งข้อมูลการแลกไปยังระบบส่วนกลาง
             </Button>
           </form>
         </Card>
@@ -303,24 +303,24 @@ export default function WelfareTrade() {
 
             <div className="space-y-4 relative z-10 bg-slate-950/50 p-6 rounded-xl border border-slate-800">
               <div className="flex flex-col mb-4 pb-4 border-b border-slate-800 border-dashed">
-                <span className="text-slate-400 text-sm">à¸Šà¸·à¹ˆà¸­à¸­à¸‡à¸„à¹Œà¸à¸£</span>
+                <span className="text-slate-400 text-sm">ชื่อองค์กร</span>
                 <span className="font-bold text-white text-xl">{formData.orgName || '...'}</span>
               </div>
               
               <div className="grid grid-cols-2 gap-4 pb-4 border-b border-slate-800 border-dashed">
                 <div>
-                  <span className="text-slate-500 text-xs block mb-1 uppercase tracking-wider">à¸œà¸¹à¹‰à¹‚à¸­à¸™ (à¹€à¸à¹ˆà¸²)</span>
+                  <span className="text-slate-500 text-xs block mb-1 uppercase tracking-wider">ผู้โอน (เก่า)</span>
                   <span className="font-bold text-red-400">{formData.oldOwner || '...'}</span>
                 </div>
                 <div className="text-right">
-                  <span className="text-slate-500 text-xs block mb-1 uppercase tracking-wider">à¸œà¸¹à¹‰à¸£à¸±à¸š (à¹ƒà¸«à¸¡à¹ˆ)</span>
+                  <span className="text-slate-500 text-xs block mb-1 uppercase tracking-wider">ผู้รับ (ใหม่)</span>
                   <span className="font-bold text-emerald-400">{formData.newOwner || '...'}</span>
                 </div>
               </div>
 
               <div className="pb-4 border-b border-slate-800 border-dashed">
                 <span className="text-slate-500 text-xs block mb-2 uppercase tracking-wider">
-                  à¸£à¸²à¸¢à¸à¸²à¸£ ({items.length})
+                  รายการ ({items.length})
                 </span>
                 {items.map((item, i) => (
                   <div key={i} className="flex justify-between items-center text-sm bg-slate-900 p-2 rounded mb-1 border border-slate-800/50">
@@ -332,13 +332,13 @@ export default function WelfareTrade() {
 
               <div className="flex justify-between items-center pt-2">
                 <div>
-                  <span className="text-slate-500 text-xs block mb-1 uppercase tracking-wider">à¸ªà¸ à¸²à¸œà¸¹à¹‰à¸—à¸³à¸£à¸²à¸¢à¸à¸²à¸£</span>
+                  <span className="text-slate-500 text-xs block mb-1 uppercase tracking-wider">สภาผู้ทำรายการ</span>
                   <span className="text-amber-500 font-bold text-sm">
                     {councilMembers.find(c => c.id === formData.councilStaffId)?.name || '...'}
                   </span>
                 </div>
                 <div className="text-right">
-                  <span className="text-slate-500 text-xs block mb-1 uppercase tracking-wider">à¸„à¹ˆà¸²à¸˜à¸£à¸£à¸¡à¹€à¸™à¸µà¸¢à¸¡</span>
+                  <span className="text-slate-500 text-xs block mb-1 uppercase tracking-wider">ค่าธรรมเนียม</span>
                   <span className="text-white font-black">{getTotalPrice()}</span>
                 </div>
               </div>
@@ -351,8 +351,8 @@ export default function WelfareTrade() {
         isOpen={showConfirm}
         onClose={() => setShowConfirm(false)}
         onConfirm={handleConfirmSubmit}
-        title="à¸¢à¸·à¸™à¸¢à¸±à¸™à¸ªà¹ˆà¸‡à¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¹à¸¥à¸à¹€à¸›à¸¥à¸µà¹ˆà¸¢à¸™à¸ªà¸§à¸±à¸ªà¸”à¸´à¸à¸²à¸£?"
-        message={`à¸„à¸¸à¸“à¸•à¹‰à¸­à¸‡à¸à¸²à¸£à¸¢à¸·à¸™à¸¢à¸±à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸‚à¸­à¸‡à¹à¸à¹Šà¸‡ ${formData.orgName} à¹ƒà¸Šà¹ˆà¸«à¸£à¸·à¸­à¹„à¸¡à¹ˆ? à¹‚à¸›à¸£à¸”à¸•à¸£à¸§à¸ˆà¸ªà¸­à¸šà¸£à¸¹à¸›à¸ à¸²à¸žà¸•à¸±à¸§à¸­à¸¢à¹ˆà¸²à¸‡à¹ƒà¸«à¹‰à¹à¸™à¹ˆà¹ƒà¸ˆ`}
+        title="ยืนยันส่งข้อมูลแลกเปลี่ยนสวัสดิการ?"
+        message={`คุณต้องการยืนยันการส่งข้อมูลของแก๊ง ${formData.orgName} ใช่หรือไม่? โปรดตรวจสอบรูปภาพตัวอย่างให้แน่ใจ`}
         isLoading={isSubmitting}
       />
     </div>
