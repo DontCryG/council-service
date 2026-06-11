@@ -234,10 +234,31 @@ export default function WelfarePreview() {
         </div>
       </div>
 
+      <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 mb-6">
+        <label className="flex items-start gap-3 cursor-pointer group">
+          <div className="relative flex items-center justify-center w-6 h-6 shrink-0 mt-0.5">
+            <input 
+              type="checkbox" 
+              className="peer sr-only"
+              checked={isAgreed}
+              onChange={(e) => setIsAgreed(e.target.checked)}
+            />
+            <div className="w-6 h-6 border-2 border-slate-600 rounded bg-slate-800 peer-checked:bg-emerald-500 peer-checked:border-emerald-500 transition-colors"></div>
+            <svg className="absolute w-4 h-4 text-white opacity-0 peer-checked:opacity-100 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <div className="text-sm text-slate-300">
+            <span className="font-bold text-white mb-1 block">ข้าพเจ้าได้อ่านและยอมรับข้อตกลง กฎของสภา และเงื่อนไขการรับสวัสดิการทั้งหมด</span>
+            สัญญามีอายุไม่น้อยกว่า 3 เดือน นับตั้งแต่วันที่ให้ความยินยอมผ่านระบบ
+          </div>
+        </label>
+      </div>
+
       <Button 
         onClick={handleSubmit} 
         disabled={!isAgreed}
-        className={`w-full h-14 text-base shadow-lg rounded-xl transition-all ${isAgreed ? 'shadow-emerald-500/20 bg-emerald-600 hover:bg-emerald-500 text-white' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`} 
+        className={`w-full h-14 text-base shadow-lg rounded-xl transition-all ${isAgreed ? 'shadow-emerald-500/20 bg-emerald-600 hover:bg-emerald-500 text-white' : 'bg-slate-800 text-slate-500 cursor-not-allowed'}`} 
         isLoading={isSubmitting}
       >
         <PaperPlaneTilt size={20} weight="bold" /> ยืนยันความถูกต้องและส่งสัญญาสวัสดิการ
