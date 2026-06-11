@@ -4,7 +4,8 @@ import {
   ArrowLeft, 
   DownloadSimple, 
   PenNib,
-  CircleNotch
+  CircleNotch,
+  Receipt
 } from '@phosphor-icons/react';
 import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../core/firebase';
