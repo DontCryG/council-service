@@ -8,7 +8,7 @@ import {
   Receipt,
   SealCheck
 } from '@phosphor-icons/react';
-import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, serverTimestamp, collection, query, where, orderBy, getDocs } from 'firebase/firestore';
 import { db } from '../../core/firebase';
 import { useAppStore } from '../../store';
 import { toPng } from 'html-to-image';
@@ -21,6 +21,7 @@ export default function CouncilLoanView() {
   const [contract, setContract] = useState(null);
   const [loading, setLoading] = useState(true);
   const [signing, setSigning] = useState(false);
+  const [paymentHistory, setPaymentHistory] = useState([]);
   const documentRef = useRef(null);
 
   // Signature Canvas Ref
@@ -34,7 +35,31 @@ export default function CouncilLoanView() {
         const docRef = doc(db, 'loan_contracts', id);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          setContract({ id: docSnap.id, ...docSnap.data() });
+          const contractData = { id: docSnap.id, ...docSnap.data() };
+          setContract(contractData);
+
+          // Fetch Payment History
+          const q = query(
+            collection(db, 'transactions'),
+            where('contractId', '==', docSnap.id),
+            where('type', '==', 'payment'),
+            orderBy('createdAt', 'asc')
+          );
+          const querySnapshot = await getDocs(q);
+          const history = [];
+          let currentBalance = contractData.totalAmount || 0;
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            currentBalance -= data.amount;
+            history.push({
+              id: doc.id,
+              ...data,
+              balanceAfter: currentBalance
+            });
+          });
+          // Reverse to show newest first
+          setPaymentHistory(history.reverse());
+
         } else {
           showAlert('error', 'ไม่พบข้อมูลสัญญา');
           navigate('/council_loan');
@@ -368,16 +393,66 @@ export default function CouncilLoanView() {
       )}
 
       {/* Payment History Section */}
-      <div className="mt-8 bg-slate-900/80 border border-slate-700/50 rounded-[32px] shadow-inner max-w-[816px] mx-auto overflow-hidden">
-        <div className="px-8 py-6 border-b border-slate-700/50 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-            <Receipt size={20} weight="bold" />
+      <div className="mt-8 bg-[#f8f9fa] border border-slate-200 rounded-2xl shadow-sm max-w-[816px] mx-auto overflow-hidden">
+        <div className="px-6 py-5 border-b border-slate-200 flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-amber-600 bg-amber-50 border border-amber-200">
+            <Receipt size={18} weight="fill" />
           </div>
-          <h3 className="text-xl font-bold text-white">ประวัติการชำระเงิน</h3>
+          <h3 className="text-[17px] font-bold text-slate-800">ประวัติการชำระเงิน</h3>
         </div>
-        <div className="p-12 text-center text-slate-500 text-sm font-medium">
-          ยังไม่มีประวัติการชำระเงิน
-        </div>
+        
+        {paymentHistory.length === 0 ? (
+          <div className="p-12 text-center text-slate-400 text-sm font-medium">
+            ยังไม่มีประวัติการชำระเงิน
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-white border-b border-slate-100">
+                  <th className="py-4 px-6 text-[13px] font-bold text-slate-400 whitespace-nowrap">วันที่ชำระ</th>
+                  <th className="py-4 px-6 text-[13px] font-bold text-slate-400 whitespace-nowrap">เลขที่ใบเสร็จ</th>
+                  <th className="py-4 px-6 text-[13px] font-bold text-slate-400 whitespace-nowrap text-center">ยอดชำระ (บาท)</th>
+                  <th className="py-4 px-6 text-[13px] font-bold text-slate-400 whitespace-nowrap text-center">ยอดคงเหลือ (บาท)</th>
+                  <th className="py-4 px-6 text-[13px] font-bold text-slate-400 whitespace-nowrap text-center">ใบเสร็จ</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white">
+                {paymentHistory.map((tx, index) => {
+                  const dateStr = tx.createdAt?.toDate ? 
+                    tx.createdAt.toDate().toLocaleString('th-TH', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    }) : '-';
+                  
+                  // Generate dummy receipt ID from transaction ID
+                  const receiptId = `RC-${tx.id.substring(0, 6).toUpperCase()}`;
+
+                  return (
+                    <tr key={tx.id} className="border-b border-slate-50 last:border-0 hover:bg-slate-50/50 transition-colors">
+                      <td className="py-4 px-6 text-[14px] text-slate-700 whitespace-nowrap">{dateStr}</td>
+                      <td className="py-4 px-6 text-[14px] text-slate-500 whitespace-nowrap">{receiptId}</td>
+                      <td className="py-4 px-6 text-[14px] font-bold text-emerald-600 text-center whitespace-nowrap">
+                        +{tx.amount.toLocaleString()}
+                      </td>
+                      <td className="py-4 px-6 text-[14px] font-bold text-slate-800 text-center whitespace-nowrap">
+                        {tx.balanceAfter.toLocaleString()}
+                      </td>
+                      <td className="py-4 px-6 text-center">
+                        <button className="text-slate-500 hover:text-blue-600 text-[13px] font-medium flex items-center justify-center gap-1.5 transition-colors mx-auto">
+                          <Receipt size={16} /> ดูใบเสร็จ
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );
