@@ -143,7 +143,7 @@ export default function EditOrgPreview() {
             <div className="flex flex-col">
               <div className="flex items-center gap-2 mb-2">
                 <SealCheck size={24} weight="fill" className="text-amber-500" />
-                <span className="text-amber-500 font-bold tracking-widest text-xs uppercase">Official Receipt</span>
+                <span className="text-amber-500 font-bold tracking-widest text-xs uppercase whitespace-nowrap">Official Receipt</span>
               </div>
               <h2 className="text-4xl font-black uppercase tracking-tight text-white drop-shadow-md">
                 {formData.orgName || 'ORGANIZATION'}
