@@ -407,31 +407,31 @@ export default function CouncilLoanView() {
       )}
 
       {/* Payment History Section */}
-      <div className="mt-8 bg-[#f8f9fa] border border-slate-200 rounded-2xl shadow-sm max-w-[816px] mx-auto overflow-hidden">
-        <div className="px-6 py-5 border-b border-slate-200 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-amber-600 bg-amber-50 border border-amber-200">
+      <div className="mt-8 bg-[#151923] border border-slate-800 rounded-2xl shadow-sm max-w-[816px] mx-auto overflow-hidden">
+        <div className="px-6 py-5 border-b border-slate-800 flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-amber-500 bg-amber-950 border border-amber-900">
             <Receipt size={18} weight="fill" />
           </div>
-          <h3 className="text-[17px] font-bold text-slate-800">ประวัติการชำระเงิน</h3>
+          <h3 className="text-[17px] font-bold text-white">ประวัติการชำระเงิน</h3>
         </div>
         
         {paymentHistory.length === 0 ? (
-          <div className="p-12 text-center text-slate-400 text-sm font-medium">
+          <div className="p-12 text-center text-slate-500 text-sm font-medium">
             ยังไม่มีประวัติการชำระเงิน
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-white border-b border-slate-100">
-                  <th className="py-4 px-6 text-[13px] font-bold text-slate-400 whitespace-nowrap">วันที่ชำระ</th>
-                  <th className="py-4 px-6 text-[13px] font-bold text-slate-400 whitespace-nowrap">เลขที่ใบเสร็จ</th>
-                  <th className="py-4 px-6 text-[13px] font-bold text-slate-400 whitespace-nowrap text-center">ยอดชำระ (บาท)</th>
-                  <th className="py-4 px-6 text-[13px] font-bold text-slate-400 whitespace-nowrap text-center">ยอดคงเหลือ (บาท)</th>
-                  <th className="py-4 px-6 text-[13px] font-bold text-slate-400 whitespace-nowrap text-center">ใบเสร็จ</th>
+                <tr className="bg-slate-900/50 border-b border-slate-800">
+                  <th className="py-4 px-6 text-[13px] font-bold text-slate-500 whitespace-nowrap">วันที่ชำระ</th>
+                  <th className="py-4 px-6 text-[13px] font-bold text-slate-500 whitespace-nowrap">เลขที่ใบเสร็จ</th>
+                  <th className="py-4 px-6 text-[13px] font-bold text-slate-500 whitespace-nowrap text-center">ยอดชำระ (บาท)</th>
+                  <th className="py-4 px-6 text-[13px] font-bold text-slate-500 whitespace-nowrap text-center">ยอดคงเหลือ (บาท)</th>
+                  <th className="py-4 px-6 text-[13px] font-bold text-slate-500 whitespace-nowrap text-center">ใบเสร็จ</th>
                 </tr>
               </thead>
-              <tbody className="bg-white">
+              <tbody className="bg-[#151923]">
                 {paymentHistory.map((tx, index) => {
                   const dateStr = tx.createdAt?.toDate ? 
                     tx.createdAt.toDate().toLocaleString('th-TH', {
@@ -446,19 +446,19 @@ export default function CouncilLoanView() {
                   const receiptId = `RC-${tx.id.substring(0, 6).toUpperCase()}`;
 
                   return (
-                    <tr key={tx.id} className="border-b border-slate-50 last:border-0 hover:bg-slate-50/50 transition-colors">
-                      <td className="py-4 px-6 text-[14px] text-slate-700 whitespace-nowrap">{dateStr}</td>
-                      <td className="py-4 px-6 text-[14px] text-slate-500 whitespace-nowrap">{receiptId}</td>
-                      <td className="py-4 px-6 text-[14px] font-bold text-emerald-600 text-center whitespace-nowrap">
+                    <tr key={tx.id} className="border-b border-slate-800 last:border-0 hover:bg-slate-800/30 transition-colors">
+                      <td className="py-4 px-6 text-[14px] text-slate-300 whitespace-nowrap">{dateStr}</td>
+                      <td className="py-4 px-6 text-[14px] text-slate-400 whitespace-nowrap">{receiptId}</td>
+                      <td className="py-4 px-6 text-[14px] font-bold text-emerald-400 text-center whitespace-nowrap">
                         +{tx.amount.toLocaleString()}
                       </td>
-                      <td className="py-4 px-6 text-[14px] font-bold text-slate-800 text-center whitespace-nowrap">
+                      <td className="py-4 px-6 text-[14px] font-bold text-white text-center whitespace-nowrap">
                         {tx.balanceAfter.toLocaleString()}
                       </td>
                       <td className="py-4 px-6 text-center">
                         <button 
                           onClick={() => navigate(`/council_loan/receipt/${tx.id}`, { state: { tx, contract } })}
-                          className="text-slate-500 hover:text-blue-600 text-[13px] font-medium flex items-center justify-center gap-1.5 transition-colors mx-auto"
+                          className="text-slate-400 hover:text-white hover:bg-slate-800 px-3 py-1.5 rounded-lg text-[13px] font-medium flex items-center justify-center gap-1.5 transition-colors mx-auto"
                         >
                           <Receipt size={16} /> ดูใบเสร็จ
                         </button>

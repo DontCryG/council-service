@@ -78,8 +78,17 @@ export default function CouncilReceiptView() {
 
   if (!tx || !contract) return null;
 
-  const dateStr = tx.createdAt?.toDate ? tx.createdAt.toDate().toLocaleString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }) : '-';
-  const timeStr = tx.createdAt?.toDate ? tx.createdAt.toDate().toLocaleTimeString('th-TH') : '-';
+  const getTxDate = (timestamp) => {
+    if (!timestamp) return null;
+    if (timestamp.toDate) return timestamp.toDate();
+    if (timestamp.seconds) return new Date(timestamp.seconds * 1000);
+    if (typeof timestamp === 'string' || typeof timestamp === 'number') return new Date(timestamp);
+    return null;
+  };
+
+  const txDate = getTxDate(tx.createdAt);
+  const dateStr = txDate ? txDate.toLocaleString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }) : '-';
+  const timeStr = txDate ? txDate.toLocaleTimeString('th-TH') : '-';
   const receiptId = `RC-${tx.id.substring(0, 6).toUpperCase()}`;
 
   const balanceAfter = tx.balanceAfter !== undefined ? tx.balanceAfter : contract.remainingAmount;
@@ -103,59 +112,59 @@ export default function CouncilReceiptView() {
         </button>
       </div>
 
-      <div className="shadow-2xl mx-auto w-fit">
+      <div className="mx-auto w-fit">
         <div 
           ref={receiptRef}
-          className="bg-white text-[#1a202c] p-12 sm:p-16 relative overflow-hidden"
+          className="bg-[#0f1523] border border-slate-800 shadow-2xl rounded-2xl text-slate-200 p-12 sm:p-16 relative overflow-hidden"
           style={{ minHeight: '800px', width: '700px' }}
         >
           {/* Header */}
           <div className="text-center mb-10">
-            <h1 className="text-3xl font-black text-slate-800 mb-2">ใบเสร็จรับเงิน</h1>
-            <p className="text-slate-500 font-medium">สภา WIP TOWN</p>
+            <h1 className="text-3xl font-black text-white mb-2">ใบเสร็จรับเงิน</h1>
+            <p className="text-slate-400 font-medium">สภา WIP TOWN</p>
           </div>
 
-          <div className="border-b-2 border-slate-800 mb-8"></div>
+          <div className="border-b-2 border-slate-700 mb-8"></div>
 
           {/* Details Grid */}
           <div className="grid grid-cols-2 gap-y-4 mb-8">
             <div className="text-[15px]">
-              <span className="font-bold text-slate-800">เลขที่ใบเสร็จ:</span> <span className="text-slate-600">{receiptId}</span>
+              <span className="font-bold text-slate-300">เลขที่ใบเสร็จ:</span> <span className="text-slate-400">{receiptId}</span>
             </div>
             <div className="text-[15px] text-right">
-              <span className="font-bold text-slate-800">วันที่ชำระ:</span> <span className="text-slate-600">{dateStr}</span>
+              <span className="font-bold text-slate-300">วันที่ชำระ:</span> <span className="text-slate-400">{dateStr}</span>
             </div>
             <div className="text-[15px]">
-              <span className="font-bold text-slate-800">อ้างอิงเลขที่สัญญา:</span> <span className="text-slate-600">{contract.contractId}</span>
+              <span className="font-bold text-slate-300">อ้างอิงเลขที่สัญญา:</span> <span className="text-slate-400">{contract.contractId}</span>
             </div>
             <div className="text-[15px] text-right">
-              <span className="font-bold text-slate-800">เวลา:</span> <span className="text-slate-600">{timeStr}</span>
+              <span className="font-bold text-slate-300">เวลา:</span> <span className="text-slate-400">{timeStr}</span>
             </div>
           </div>
 
           {/* Amount Box */}
-          <div className="border border-slate-200 rounded-2xl p-8 mb-16 bg-white shadow-sm">
+          <div className="border border-slate-700/50 rounded-2xl p-8 mb-16 bg-[#161d2b] shadow-inner">
             <div className="flex justify-between items-center mb-6">
-              <span className="text-slate-500 font-medium text-[15px]">ได้รับเงินจาก:</span>
-              <span className="font-bold text-slate-800 text-[15px]">{contract.borrowerName || '[CC] COUNCIL'}</span>
+              <span className="text-slate-400 font-medium text-[15px]">ได้รับเงินจาก:</span>
+              <span className="font-bold text-white text-[15px]">{contract.borrowerName || '[CC] COUNCIL'}</span>
             </div>
             <div className="flex justify-between items-center mb-6">
-              <span className="text-slate-500 font-medium text-[15px]">ชำระค่างวด/คืนเงินกู้:</span>
-              <span className="font-bold text-slate-800 text-[15px]">ชำระหนี้ตามสัญญา</span>
+              <span className="text-slate-400 font-medium text-[15px]">ชำระค่างวด/คืนเงินกู้:</span>
+              <span className="font-bold text-white text-[15px]">ชำระหนี้ตามสัญญา</span>
             </div>
             
-            <div className="border-b border-slate-200 mb-6"></div>
+            <div className="border-b border-slate-700/50 mb-6"></div>
 
             <div className="flex justify-between items-center mb-6">
-              <span className="font-bold text-slate-800 text-lg">จำนวนเงินที่ชำระ:</span>
-              <span className="font-black text-emerald-600 text-xl">{tx.amount?.toLocaleString()} บาท</span>
+              <span className="font-bold text-slate-300 text-lg">จำนวนเงินที่ชำระ:</span>
+              <span className="font-black text-emerald-400 text-xl">{tx.amount?.toLocaleString()} บาท</span>
             </div>
             
-            <div className="border-b border-slate-200 mb-6"></div>
+            <div className="border-b border-slate-700/50 mb-6"></div>
 
             <div className="flex justify-between items-center">
-              <span className="text-slate-500 font-medium text-[15px]">ยอดหนี้คงเหลือหลังชำระ:</span>
-              <span className="font-bold text-red-500 text-[15px]">{balanceAfter?.toLocaleString()} บาท</span>
+              <span className="text-slate-400 font-medium text-[15px]">ยอดหนี้คงเหลือหลังชำระ:</span>
+              <span className="font-bold text-rose-400 text-[15px]">{balanceAfter?.toLocaleString()} บาท</span>
             </div>
           </div>
 
@@ -164,10 +173,10 @@ export default function CouncilReceiptView() {
             <div className="flex justify-end pr-12">
               <div className="w-64 text-center">
                 <div className="flex items-end gap-2 mb-4 justify-center">
-                  <span className="font-bold text-slate-800">ลงชื่อ</span>
-                  <div className="border-b-2 border-dotted border-slate-400 w-48"></div>
+                  <span className="font-bold text-slate-300">ลงชื่อ</span>
+                  <div className="border-b-2 border-dotted border-slate-600 w-48"></div>
                 </div>
-                <p className="font-bold text-slate-800 mb-1">( เจ้าหน้าที่ตัวแทนสภา )</p>
+                <p className="font-bold text-white mb-1">( เจ้าหน้าที่ตัวแทนสภา )</p>
                 <p className="text-slate-500 text-sm">ผู้รับเงิน</p>
               </div>
             </div>
