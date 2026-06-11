@@ -33,6 +33,7 @@ const DutySystem = lazy(() => import('./features/council/DutySystem'));
 const AdminDutyHistory = lazy(() => import('./features/council/AdminDutyHistory'));
 const TransactionHistory = lazy(() => import('./features/admin/TransactionHistory'));
 const CouncilLoanHub = lazy(() => import('./features/council/CouncilLoanHub'));
+const CouncilLoanCreate = lazy(() => import('./features/council/CouncilLoanCreate'));
 const LoanPublic = lazy(() => import('./features/services/LoanPublic'));
 
 function GlobalAlert() {
@@ -231,6 +232,7 @@ function App() {
             
             <Route path="loan_public" element={<LoanPublic />} />
             <Route path="council_loan" element={<ProtectedRoute><CouncilLoanHub /></ProtectedRoute>} />
+            <Route path="council_loan/create" element={<ProtectedRoute><CouncilLoanCreate /></ProtectedRoute>} />
             {/* We will add more routes here later */}
           </Route>
           
