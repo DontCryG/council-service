@@ -77,7 +77,7 @@ export default function EditOrgPreview() {
 
       let additionalInfo = `**สี (HEX):** ${formData.hexColor || '-'}`;
       if (formData.extraDetails) {
-        additionalInfo += `\n**รายละเอียด:**\n${formData.extraDetails}`;
+        additionalInfo += `\n\n**รายละเอียด:**\n${formData.extraDetails}`;
       }
 
       const orgTypeDisplay = formData.orgType === 'GANG' ? 'แก๊ง' : (formData.orgType === 'FAMILY' ? 'ครอบครัว' : formData.orgType);
