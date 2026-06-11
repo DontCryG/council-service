@@ -236,10 +236,10 @@ export default function EditOrg() {
                     <span className="text-xs font-bold text-slate-300">จำนวนชุด (Texture)</span>
                     <span className="text-[10px] text-slate-500">*มีผลกับราคาเมื่อเลือกแก้ Texture</span>
                   </div>
-                  <div className="flex border border-slate-700 rounded-lg overflow-hidden bg-slate-950 w-32 h-10">
-                    <button type="button" className="px-3 hover:bg-slate-800 font-bold border-r border-slate-700 text-slate-400" onClick={() => setFormData(prev => ({...prev, textureCount: Math.max(1, prev.textureCount - 1)}))}>-</button>
-                    <input type="number" className="flex-1 text-center font-bold focus:outline-none appearance-none bg-transparent text-white" min="1" value={formData.textureCount} onChange={e => setFormData({...formData, textureCount: parseInt(e.target.value) || 1})} />
-                    <button type="button" className="px-3 hover:bg-slate-800 font-bold border-l border-slate-700 text-slate-400" onClick={() => setFormData(prev => ({...prev, textureCount: prev.textureCount + 1}))}>+</button>
+                  <div className="inline-flex border border-slate-700 rounded-lg overflow-hidden bg-slate-950 h-10">
+                    <button type="button" className="px-4 hover:bg-slate-800 font-bold border-r border-slate-700 text-slate-400" onClick={() => setFormData(prev => ({...prev, textureCount: Math.max(1, prev.textureCount - 1)}))}>-</button>
+                    <input type="number" className="w-16 text-center font-bold focus:outline-none bg-transparent text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" min="1" value={formData.textureCount} onChange={e => setFormData({...formData, textureCount: parseInt(e.target.value) || 1})} />
+                    <button type="button" className="px-4 hover:bg-slate-800 font-bold border-l border-slate-700 text-slate-400" onClick={() => setFormData(prev => ({...prev, textureCount: prev.textureCount + 1}))}>+</button>
                   </div>
                 </div>
                 
