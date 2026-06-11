@@ -57,7 +57,7 @@ export default function GeneralService() {
     }
 
     navigate('/general_service_preview', {
-      state: { formData: { ...formData, groupName: formData.groupName.toUpperCase() }, councilMembers, members }
+      state: { formData, councilMembers, members }
     });
   };
 
@@ -115,10 +115,12 @@ export default function GeneralService() {
               </label>
               <input 
                 className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-200 font-medium focus:outline-none focus:border-blue-500 focus:bg-slate-900 focus:ring-1 focus:ring-blue-500 transition-colors placeholder:text-slate-600"
-                style={{ textTransform: 'uppercase' }}
                 placeholder="ระบุชื่อแก๊ง หรือ ครอบครัว"
                 value={formData.groupName}
-                onChange={e => setFormData({...formData, groupName: e.target.value})}
+                onChange={e => {
+                  const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.]/g, '').toUpperCase();
+                  setFormData({...formData, groupName: val});
+                }}
                 required
               />
             </div>
