@@ -45,6 +45,8 @@ export default function RegisterOrg() {
     setter(state.map(item => item.id === id ? { ...item, name: val } : item));
   };
 
+  const isLogoValid = !formData.logo || /^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)(\?.*)?$/i.test(formData.logo) || formData.logo.includes('discordapp.') || formData.logo.includes('discord.com');
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.name || !formData.leader || !formData.councilStaffId || !formData.logo) {
@@ -133,12 +135,15 @@ export default function RegisterOrg() {
                 ลิงก์โลโก้ (URL .PNG)
               </label>
               <input 
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-200 font-medium focus:outline-none focus:border-amber-500 focus:bg-slate-900 focus:ring-1 focus:ring-amber-500 transition-colors placeholder:text-slate-600"
+                className={`w-full bg-slate-950 border ${!isLogoValid ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-slate-800 focus:border-amber-500 focus:ring-amber-500'} rounded-xl px-4 py-3.5 text-slate-200 font-medium focus:outline-none focus:bg-slate-900 focus:ring-1 transition-colors placeholder:text-slate-600`}
                 placeholder="https://..."
                 value={formData.logo}
                 onChange={e => setFormData({...formData, logo: e.target.value})}
                 required
               />
+              {!isLogoValid && (
+                <p className="text-red-400 text-xs font-medium mt-1">* ให้ใส่แค่ลิ้งค์รูปภาพเท่านั้น</p>
+              )}
             </div>
           </div>
 
