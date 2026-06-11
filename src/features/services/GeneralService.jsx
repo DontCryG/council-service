@@ -1,20 +1,16 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
-import { sendWebhook, saveTransactionLog } from '../../core/api';
 import { transactions } from '../../data/models';
-import { toBlob } from 'html-to-image';
 
-import { Card } from '../../components/ui/Card';
-import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
-import { PaperPlaneTilt, Plus, Trash, FileText, UserCircle } from '@phosphor-icons/react';
+import { Users, House, Plus, Trash, ArrowRight, WarningCircle, UserPlus, FileText } from '@phosphor-icons/react';
 
 export default function GeneralService() {
   const navigate = useNavigate();
-  const { showAlert, user } = useAppStore();
+  const { showAlert } = useAppStore();
   
   const [councilMembers, setCouncilMembers] = useState([]);
   const [formData, setFormData] = useState({
@@ -25,10 +21,7 @@ export default function GeneralService() {
     councilMemberId: ''
   });
   const [members, setMembers] = useState([{ id: 1, value: '' }]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const captureRef = useRef(null);
 
-  // Load Council Members
   useEffect(() => {
     const unsub = onSnapshot(collection(db, 'app_state'), (snapshot) => {
       let loaded = false;
@@ -38,280 +31,178 @@ export default function GeneralService() {
           loaded = true;
         }
       });
-      // Fallback
-      if (!loaded) {
-         setCouncilMembers([]);
-      }
+      if (!loaded) setCouncilMembers([]);
     });
     return () => unsub();
   }, []);
 
-  const selectedTransaction = transactions.find(t => t.id === parseInt(formData.transactionId));
-  const totalAmount = selectedTransaction 
-    ? (selectedTransaction.type === 'per_head' ? selectedTransaction.price * members.length : selectedTransaction.price)
-    : 0;
-
-  const handleAddMember = () => {
-    setMembers([...members, { id: Date.now(), value: '' }]);
-  };
-
+  const handleAddMember = () => setMembers([...members, { id: Date.now(), value: '' }]);
   const handleRemoveMember = (id) => {
     if (members.length > 1) {
       setMembers(members.filter(m => m.id !== id));
     }
   };
+  const handleMemberChange = (id, val) => setMembers(members.map(m => m.id === id ? { ...m, value: val } : m));
 
-  const handleMemberChange = (id, val) => {
-    setMembers(members.map(m => m.id === id ? { ...m, value: val } : m));
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.transactionId || !formData.groupName || !formData.requester || !formData.councilMemberId) {
       showAlert('error', 'กรุณากรอกข้อมูลให้ครบถ้วน');
       return;
     }
-
     if (members.some(m => !m.value.trim())) {
       showAlert('error', 'กรุณากรอกชื่อสมาชิกให้ครบถ้วน');
       return;
     }
 
-    setIsSubmitting(true);
-    
-    try {
-      const blob = await toBlob(captureRef.current, {
-        pixelRatio: 2,
-        backgroundColor: '#0f172a',
-        cacheBust: true
-      });
-      
-      if (!blob) throw new Error("Failed to generate image");
-      
-      // 2. Prepare FormData
-      const fd = new FormData();
-      fd.append('file', blob, 'receipt.png');
-      
-      const typeDisplay = formData.groupType === 'GANG' ? 'แก๊ง' : 'แฟม';
-      const membersText = members.map(m => m.value).join('\n');
-      const councilName = councilMembers.find(c => c.id === formData.councilMemberId)?.name || '-';
-      
-      fd.append('payload_json', JSON.stringify({
-        embeds: [{
-          title: "Council Service Log",
-          description: "Service request submitted",
-          color: 0xf59e0b,
-          fields: [
-            { name: "Type", value: typeDisplay, inline: true },
-            { name: "Group", value: formData.groupName || '-', inline: true },
-            { name: "Requester", value: formData.requester || '-', inline: false },
-            { name: "Transaction", value: selectedTransaction?.name || '-', inline: false },
-            { name: "Members", value: `\`\`\`\n${membersText || '-'}\n\`\`\``, inline: false },
-            { name: "Council", value: councilName, inline: false }
-          ],
-          image: {
-            url: "attachment://receipt.png"
-          }
-        }]
-      }));
-
-      // 3. Send Webhook
-      await sendWebhook('general', fd);
-      await saveTransactionLog('general_service', {
-        orgType: formData.groupType,
-        groupName: formData.groupName,
-        requester: formData.requester,
-        transactionId: formData.transactionId,
-        councilMemberId: formData.councilMemberId,
-        members: members.map(m => m.value)
-      }, user);
-      showAlert('success', 'ส่งข้อมูลลงระบบส่วนกลางเรียบร้อยแล้ว!');
-      navigate('/home');
-      
-    } catch (err) {
-      console.error(err);
-      showAlert('error', 'เกิดข้อผิดพลาดในการส่งเข้าสู่ระบบส่วนกลาง');
-    } finally {
-      setIsSubmitting(false);
-    }
+    navigate('/general_service_preview', {
+      state: { formData, councilMembers, members }
+    });
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      
-      <div className="flex items-center gap-3">
+    <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 py-6">
+      <div className="mb-6 flex items-center gap-3">
         <FileText size={32} weight="duotone" className="text-blue-500" />
         <div>
-          <h1 className="text-2xl font-bold text-white">แบบฟอร์มเบิกจ่าย / ธุรกรรมทั่วไป</h1>
-          <p className="text-slate-400">กรอกข้อมูลเพื่อสร้างใบเสร็จ</p>
+          <h2 className="text-2xl font-bold text-white mb-1">ระบบให้บริการทั่วไป</h2>
+          <p className="text-slate-400">ระบบบันทึกการทำธุรกรรมทั่วไปของแก๊งและครอบครัว</p>
         </div>
       </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-        {/* Form Input Side */}
-        <Card>
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium text-slate-300 ml-1">ประเภทธุรกรรม</label>
-              <select 
-                className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition-colors"
-                value={formData.transactionId}
-                onChange={e => setFormData({...formData, transactionId: e.target.value})}
-                required
-              >
-                <option value="" disabled>-- เลือกประเภทธุรกรรม --</option>
-                {transactions.map(t => (
-                  <option key={t.id} value={t.id}>{t.name}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="flex gap-4 p-1 bg-slate-900 border border-slate-700 rounded-lg">
+      
+      <div className="bg-white rounded-[24px] p-8 md:p-10 shadow-xl border border-slate-200">
+        <form onSubmit={handleSubmit} className="space-y-8">
+          
+          {/* 1. Group Type */}
+          <div className="space-y-4">
+            <label className="text-[15px] font-bold text-[#1e293b] tracking-wide flex items-center gap-2">
+              <span className="text-blue-600">1.</span> ประเภทสังกัด (GROUP TYPE)
+            </label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <button
                 type="button"
-                className={`flex-1 py-2 rounded-md font-bold transition-colors ${formData.groupType === 'GANG' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}
+                className={`py-5 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all border-2 ${formData.groupType === 'GANG' ? 'bg-amber-50 border-amber-400 text-[#1e293b]' : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'}`}
                 onClick={() => setFormData({...formData, groupType: 'GANG'})}
               >
-                GANG
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${formData.groupType === 'GANG' ? 'bg-amber-100 text-[#1e293b]' : 'bg-slate-100 text-slate-400'}`}>
+                   <Users size={20} weight="fill" />
+                </div>
+                GANG (แก๊ง)
               </button>
               <button
                 type="button"
-                className={`flex-1 py-2 rounded-md font-bold transition-colors ${formData.groupType === 'FAMILY' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'}`}
+                className={`py-5 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all border-2 ${formData.groupType === 'FAMILY' ? 'bg-blue-50 border-blue-400 text-[#1e293b]' : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'}`}
                 onClick={() => setFormData({...formData, groupType: 'FAMILY'})}
               >
-                FAMILY
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${formData.groupType === 'FAMILY' ? 'bg-blue-100 text-[#1e293b]' : 'bg-slate-100 text-slate-400'}`}>
+                   <House size={20} weight="fill" />
+                </div>
+                FAMILY (ครอบครัว)
               </button>
             </div>
+          </div>
 
-            <Input 
-              label={`ชื่อ ${formData.groupType}`} 
-              placeholder="ระบุชื่อ..." 
-              required
-              value={formData.groupName}
-              onChange={e => {
-                const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.]/g, '').toUpperCase();
-                setFormData({...formData, groupName: val});
-              }}
-            />
-
-            <Input 
-              label="ผู้ติดต่อ (ชื่อในเกม)" 
-              placeholder="ระบุชื่อผู้ติดต่อ..." 
-              required
-              value={formData.requester}
-              onChange={e => setFormData({...formData, requester: e.target.value})}
-            />
-
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-medium text-slate-300 ml-1">รายชื่อสมาชิกที่ทำธุรกรรม</label>
-                <Button type="button" variant="ghost" size="sm" onClick={handleAddMember} className="text-blue-400 hover:text-blue-300">
-                  <Plus size={16} /> เพิ่มสมาชิก
-                </Button>
-              </div>
-              
-              <div className="space-y-2">
-                {members.map((m, idx) => (
-                  <div key={m.id} className="flex items-center gap-2">
-                    <Input 
-                      placeholder={`ชื่อสมาชิกคนที่ ${idx + 1}`}
-                      value={m.value}
-                      onChange={(e) => handleMemberChange(m.id, e.target.value)}
-                      required
-                    />
-                    <Button 
-                      type="button" 
-                      variant="danger" 
-                      size="icon" 
-                      onClick={() => handleRemoveMember(m.id)}
-                      disabled={members.length === 1}
-                    >
-                      <Trash size={16} />
-                    </Button>
-                  </div>
-                ))}
-              </div>
+              <label className="text-[15px] font-bold text-[#1e293b] tracking-wide flex items-center gap-2">
+                <span className="text-blue-600">2.</span> ชื่อสังกัด (GROUP NAME)
+              </label>
+              <input 
+                className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3.5 text-slate-700 font-medium focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors placeholder:text-slate-400"
+                placeholder="ระบุชื่อแก๊ง หรือ ครอบครัว"
+                value={formData.groupName}
+                onChange={e => setFormData({...formData, groupName: e.target.value.toUpperCase()})}
+                required
+              />
             </div>
 
-            <div className="space-y-1.5 pt-4 border-t border-slate-800">
-              <label className="text-sm font-medium text-slate-300 ml-1">สภาผู้ทำรายการ</label>
+            <div className="space-y-3">
+              <label className="text-[15px] font-bold text-[#1e293b] tracking-wide flex items-center gap-2">
+                <span className="text-blue-600">3.</span> ผู้ทำรายการ (REQUESTER)
+              </label>
+              <input 
+                className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3.5 text-slate-700 font-medium focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors placeholder:text-slate-400"
+                placeholder="ชื่อ-นามสกุล (IC)"
+                value={formData.requester}
+                onChange={e => setFormData({...formData, requester: e.target.value})}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="space-y-3 pt-4">
+            <label className="text-[15px] font-bold text-[#1e293b] tracking-wide flex items-center gap-2">
+              <span className="text-blue-600">4.</span> เลือกรายการธุรกรรม (TRANSACTION)
+            </label>
+            <select 
+              className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3.5 text-slate-700 font-medium focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+              value={formData.transactionId}
+              onChange={e => setFormData({...formData, transactionId: e.target.value})}
+              required
+            >
+              <option value="" disabled>-- กรุณาเลือกรายการ --</option>
+              {transactions.map(t => (
+                <option key={t.id} value={t.id}>
+                  {t.name} - ${t.price.toLocaleString()} {t.type === 'per_head' ? '(ต่อหัว)' : '(เหมา)'}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 md:p-8 space-y-6">
+            <div className="flex items-center justify-between">
+              <label className="text-[16px] font-bold text-[#1e293b] tracking-wide flex items-center gap-2">
+                <Users size={22} className="text-[#1e293b]" />
+                <span className="text-blue-600">5.</span> รายชื่อสมาชิก (ที่เกี่ยวข้อง)
+              </label>
+              <button type="button" onClick={handleAddMember} className="text-sm font-bold bg-white border border-slate-300 text-[#1e293b] px-4 py-2 rounded-xl hover:bg-slate-100 flex items-center gap-2 transition-colors shadow-sm">
+                <UserPlus size={16} /> เพิ่มรายชื่อ
+              </button>
+            </div>
+            <div className="space-y-3">
+              {members.map(item => (
+                <div key={item.id} className="flex gap-3">
+                  <div className="flex-1 relative">
+                    <UserPlus size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input placeholder="ระบุชื่อสมาชิก..." className="w-full pl-12 bg-white border border-slate-300 rounded-xl pr-4 py-3.5 text-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" value={item.value} onChange={e => handleMemberChange(item.id, e.target.value)} required />
+                  </div>
+                  <button type="button" className={`px-4 border rounded-xl transition-colors bg-white ${members.length > 1 ? 'border-red-200 text-red-500 hover:bg-red-50' : 'border-slate-200 text-slate-300 cursor-not-allowed'}`} onClick={() => handleRemoveMember(item.id)} disabled={members.length === 1}><Trash size={20}/></button>
+                </div>
+              ))}
+            </div>
+            <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-start gap-3">
+              <WarningCircle size={20} className="text-amber-500 mt-0.5 shrink-0" />
+              <p className="text-sm text-slate-600">หากธุรกรรมคิดเงินเป็นรายหัว ระบบจะนำจำนวนคนไปคูณยอดอัตโนมัติ</p>
+            </div>
+          </div>
+
+          <div className="space-y-3 pt-6 border-t border-slate-200">
+            <label className="text-[15px] font-bold text-[#1e293b] tracking-wide flex items-center gap-2">
+              <span className="text-blue-600">6.</span> เจ้าหน้าที่สภาผู้รับเรื่อง (COUNCIL MEMBER)
+            </label>
+            <div className="relative">
+              <UserPlus size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
               <select 
-                className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition-colors"
+                className="w-full pl-12 bg-white border border-slate-300 rounded-xl pr-4 py-3.5 text-slate-700 font-medium focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors appearance-none"
                 value={formData.councilMemberId}
                 onChange={e => setFormData({...formData, councilMemberId: e.target.value})}
                 required
               >
-                <option value="" disabled>-- เลือกชื่อสภา --</option>
+                <option value="" disabled>-- เลือกเจ้าหน้าที่สภา --</option>
                 {councilMembers.map(c => (
                   <option key={c.id} value={c.id}>{c.name}</option>
                 ))}
               </select>
             </div>
-
-            <Button type="submit" className="w-full" size="lg" isLoading={isSubmitting}>
-              <PaperPlaneTilt size={20} weight="bold" /> ส่งใบเสร็จไปยังระบบส่วนกลาง
-            </Button>
-          </form>
-        </Card>
-
-        {/* Receipt Preview Side */}
-        <div className="sticky top-24">
-          <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3 ml-1">Live Preview (ภาพที่จะถูกส่ง)</h3>
-          
-          <div ref={captureRef} className="bg-slate-900 rounded-xl p-8 border-2 border-slate-800 shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
-            
-            <div className="text-center mb-8 relative z-10">
-              <h2 className="text-2xl font-black text-white tracking-widest uppercase">COUNCIL RECEIPT</h2>
-              <p className="text-slate-400 text-sm mt-1 uppercase tracking-wider">Official Service Record</p>
-            </div>
-
-            <div className="space-y-4 relative z-10">
-              <div className="flex justify-between items-center py-3 border-b border-slate-800/50">
-                <span className="text-slate-400">รายการธุรกรรม</span>
-                <span className="font-bold text-white text-right max-w-[200px]">{selectedTransaction?.name || '-'}</span>
-              </div>
-              <div className="flex justify-between items-center py-3 border-b border-slate-800/50">
-                <span className="text-slate-400">กลุ่ม ({formData.groupType?.trim()})</span>
-                <span className="font-bold text-blue-400 flex items-center">
-                  <span className={`text-[10px] px-2 py-0.5 rounded mr-2 ${formData.groupType === 'FAMILY' ? 'bg-indigo-500/20 text-indigo-400' : 'bg-blue-500/20 text-blue-400'}`}>
-                    {formData.groupType?.trim()}
-                  </span>
-                  {formData.groupName || '-'}
-                </span>
-              </div>
-              <div className="flex justify-between items-center py-3 border-b border-slate-800/50">
-                <span className="text-slate-400">ผู้ติดต่อ</span>
-                <span className="font-medium text-white">{formData.requester || '-'}</span>
-              </div>
-              
-              <div className="py-3 border-b border-slate-800/50">
-                <span className="text-slate-400 block mb-2">รายชื่อสมาชิก ({members.length} คน)</span>
-                <div className="bg-slate-950 rounded-lg p-3 max-h-[120px] overflow-y-auto custom-scrollbar">
-                  {members.map((m, i) => (
-                    <div key={i} className="text-sm text-slate-300 flex items-center gap-2 mb-1">
-                      <UserCircle size={16} className="text-slate-500" /> {m.value || '...'}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex justify-between items-center py-3 border-b border-slate-800/50">
-                <span className="text-slate-400 whitespace-nowrap">ผู้ทำรายการ (สภา)</span>
-                <span className="font-medium text-amber-500 whitespace-nowrap text-right pl-4">
-                  {councilMembers.find(c => c.id === formData.councilMemberId)?.name || '-'}
-                </span>
-              </div>
-
-              <div className="mt-6 pt-4 border-t-2 border-dashed border-slate-700 flex justify-between items-end">
-                <span className="text-slate-400 uppercase tracking-wider text-sm font-bold whitespace-nowrap">Total Amount</span>
-                <span className="text-4xl font-black text-emerald-400 tracking-tight whitespace-nowrap">
-                  ${totalAmount.toLocaleString()}
-                </span>
-              </div>
-            </div>
           </div>
-        </div>
+
+          <div className="pt-6">
+            <Button type="submit" size="lg" className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/30 rounded-xl py-4 text-lg">
+              ตรวจสอบข้อมูลก่อนส่ง <ArrowRight size={20} className="ml-2 inline" />
+            </Button>
+          </div>
+
+        </form>
       </div>
     </div>
   );

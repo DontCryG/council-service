@@ -16,6 +16,7 @@ const Login = lazy(() => import('./features/auth/Login'));
 const NotFound = lazy(() => import('./features/error/NotFound'));
 const CouncilManage = lazy(() => import('./features/council/CouncilManage'));
 const GeneralService = lazy(() => import('./features/services/GeneralService'));
+const GeneralServicePreview = lazy(() => import('./features/services/GeneralServicePreview'));
 const Welfare = lazy(() => import('./features/services/Welfare'));
 const WelfarePreview = lazy(() => import('./features/services/WelfarePreview'));
 const WelfareTrade = lazy(() => import('./features/services/WelfareTrade'));
@@ -209,6 +210,7 @@ function App() {
             {/* Map the service id from models.js to this component for all basic general services */}
             <Route path="register_org" element={<RegisterOrg />} />
             <Route path="ps1" element={<GeneralService />} />
+            <Route path="general_service_preview" element={<GeneralServicePreview />} />
             <Route path="edit_org" element={<EditOrg />} />
             
             <Route path="welfare" element={<Welfare />} />
