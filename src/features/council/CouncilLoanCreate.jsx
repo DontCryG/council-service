@@ -205,16 +205,15 @@ export default function CouncilLoanCreate() {
             <label className="block text-slate-300 text-sm font-bold mb-2">
               วันที่ครบกำหนดชำระ <span className="text-red-500">*</span>
             </label>
-            <div className="relative max-w-sm">
+            <div className="relative w-full">
               <input 
                 type="date"
                 required
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                className="w-full bg-slate-900/80 border border-slate-700 rounded-xl pl-4 pr-10 py-3 text-white focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/10 transition-all outline-none"
+                className="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/10 transition-all outline-none"
                 style={{ colorScheme: 'dark' }}
               />
-              <CalendarBlank size={20} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
             </div>
           </div>
         </div>
