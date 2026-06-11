@@ -234,6 +234,7 @@ export default function WelfarePreview() {
           </div>
         </div>
       </div>
+      </div>
 
       <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 mb-6">
         <label className="flex items-start gap-3 cursor-pointer group">
