@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
@@ -9,12 +9,13 @@ import { Trash, ArrowRight, ArrowsLeftRight, Car, Crosshair, ArrowLeft, Users, H
 
 export default function WelfareTrade() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { showAlert } = useAppStore();
   
   const [councilMembers, setCouncilMembers] = useState([]);
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(location.state?.step || 1);
   
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState(location.state?.formData || {
     tradeType: 'VEHICLE', // VEHICLE | WEAPON
     orgType: 'GANG', // GANG | FAMILY
     orgName: '',
@@ -24,7 +25,7 @@ export default function WelfareTrade() {
     pricingType: '300,000'
   });
   
-  const [items, setItems] = useState([{ id: 1, name: '', detail: '' }]);
+  const [items, setItems] = useState(location.state?.items || [{ id: 1, name: '', detail: '' }]);
 
   // Load Council Members
   useEffect(() => {
