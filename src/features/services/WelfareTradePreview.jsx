@@ -114,58 +114,80 @@ export default function WelfareTradePreview() {
         </Button>
       </div>
 
-      <div ref={captureRef} className="bg-slate-900 rounded-[32px] p-8 md:p-12 border-2 border-slate-800 shadow-2xl relative overflow-hidden mb-8">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-violet-600/10 rounded-full blur-[100px] pointer-events-none"></div>
-        
-        <div className="text-center mb-8 relative z-10">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-slate-800 text-violet-400 mb-6 border border-slate-700 shadow-lg shadow-violet-500/10">
-            {formData.tradeType === 'VEHICLE' ? <Car size={40} /> : <Crosshair size={40} />}
-          </div>
-          <h2 className="text-3xl font-black text-white tracking-widest uppercase">WELFARE TRANSFER</h2>
-          <p className="text-violet-400 font-bold mt-2 uppercase tracking-[0.2em]">{formData.orgType} - {formData.tradeType}</p>
-        </div>
-
-        <div className="flex flex-col gap-6 relative z-10 bg-slate-950/50 p-8 rounded-2xl border border-slate-800/80 backdrop-blur-sm">
-          <div className="flex flex-col pb-6 border-b border-slate-800 border-dashed">
-            <span className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">ชื่อองค์กร</span>
-            <span className="font-black text-white text-3xl tracking-wide">{formData.orgName || '...'}</span>
-          </div>
-          
-          <div className="grid grid-cols-2 gap-8 pb-6 border-b border-slate-800 border-dashed">
-            <div>
-              <span className="text-slate-500 text-xs font-bold block mb-2 uppercase tracking-wider">ผู้โอน (เก่า)</span>
-              <span className="font-bold text-red-400 text-lg">{formData.oldOwner || '...'}</span>
+      <div className="overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div style={{ width: '800px', minWidth: '800px' }} className="mx-auto">
+          <div 
+            ref={captureRef} 
+            style={{ width: '800px', height: '100%', minHeight: '600px' }}
+            className="bg-slate-900 rounded-[32px] p-8 md:p-12 border-2 border-slate-800 shadow-2xl relative overflow-hidden mb-8 mx-auto font-sans text-slate-200"
+          >
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-violet-600/10 rounded-full blur-[100px] pointer-events-none"></div>
+            
+            {/* Watermark Logo */}
+            <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] pointer-events-none">
+              <img src="/logo.png" alt="watermark" className="w-[80%] h-[80%] object-contain grayscale" />
             </div>
-            <div className="text-right">
-              <span className="text-slate-500 text-xs font-bold block mb-2 uppercase tracking-wider">ผู้รับ (ใหม่)</span>
-              <span className="font-bold text-emerald-400 text-lg">{formData.newOwner || '...'}</span>
-            </div>
-          </div>
 
-          <div className="pb-6 border-b border-slate-800 border-dashed">
-            <span className="text-slate-500 text-xs font-bold block mb-4 uppercase tracking-wider">
-              รายการ ({items.length})
-            </span>
-            <div className="space-y-2">
-              {items.map((item, i) => (
-                <div key={i} className="flex justify-between items-center bg-slate-900/80 p-3 rounded-lg border border-slate-800/50">
-                  <span className="text-slate-200 font-bold">{item.name || '...'}</span>
-                  <span className="text-slate-400 font-mono text-sm">{item.detail || '-'}</span>
+            <div className="text-center mb-10 relative z-10">
+              <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-slate-950 text-violet-400 mb-6 border-2 border-slate-800 shadow-xl shadow-violet-900/20">
+                {formData.tradeType === 'VEHICLE' ? <Car size={40} weight="fill" /> : <Crosshair size={40} weight="fill" />}
+              </div>
+              <h2 className="text-4xl font-black text-white tracking-widest uppercase whitespace-nowrap">WELFARE TRANSFER</h2>
+              <p className="text-violet-400 font-bold mt-3 uppercase tracking-[0.3em] whitespace-nowrap">{formData.orgType} - {formData.tradeType}</p>
+            </div>
+
+            <div className="flex flex-col gap-6 relative z-10 bg-slate-950/80 p-8 rounded-2xl border border-slate-800/80 shadow-inner">
+              <div className="flex flex-col pb-6 border-b border-slate-800 border-dashed">
+                <span className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2 whitespace-nowrap">Organization (ชื่อองค์กร)</span>
+                <span className="font-black text-white text-3xl tracking-wide truncate">{formData.orgName || '...'}</span>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-8 pb-6 border-b border-slate-800 border-dashed">
+                <div>
+                  <span className="text-slate-500 text-xs font-bold block mb-2 uppercase tracking-wider whitespace-nowrap">Transfer From (ผู้โอน)</span>
+                  <div className="inline-flex items-center gap-2 bg-red-500/10 px-4 py-2 rounded-lg border border-red-500/20">
+                    <span className="font-bold text-red-400 text-lg truncate">{formData.oldOwner || '...'}</span>
+                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
+                <div className="text-right">
+                  <span className="text-slate-500 text-xs font-bold block mb-2 uppercase tracking-wider whitespace-nowrap">Transfer To (ผู้รับ)</span>
+                  <div className="inline-flex items-center gap-2 bg-emerald-500/10 px-4 py-2 rounded-lg border border-emerald-500/20">
+                    <span className="font-bold text-emerald-400 text-lg truncate">{formData.newOwner || '...'}</span>
+                  </div>
+                </div>
+              </div>
 
-          <div className="flex justify-between items-end pt-2">
-            <div>
-              <span className="text-slate-500 text-xs font-bold block mb-2 uppercase tracking-wider">สภาผู้ทำรายการ</span>
-              <span className="text-amber-500 font-black text-lg tracking-wide">
-                {councilMembers.find(c => c.id === formData.councilStaffId)?.name || '...'}
-              </span>
-            </div>
-            <div className="text-right">
-              <span className="text-slate-500 text-xs font-bold block mb-2 uppercase tracking-wider">ค่าธรรมเนียมรวม</span>
-              <span className="text-white font-black text-2xl tracking-tight">{getTotalPrice()}</span>
+              <div className="pb-6 border-b border-slate-800 border-dashed">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-slate-500 text-xs font-bold uppercase tracking-wider whitespace-nowrap">
+                    Items List (รายการ)
+                  </span>
+                  <span className="bg-slate-800 text-slate-300 text-[10px] font-bold px-2 py-1 rounded">
+                    {items.length} ITEMS
+                  </span>
+                </div>
+                <div className="space-y-3">
+                  {items.map((item, i) => (
+                    <div key={i} className="flex justify-between items-center bg-slate-900 p-4 rounded-xl border border-slate-700/50 shadow-sm">
+                      <span className="text-slate-200 font-bold text-base truncate pr-4">{item.name || '...'}</span>
+                      <span className="text-slate-400 font-mono text-sm shrink-0 bg-slate-950 px-3 py-1 rounded border border-slate-800">{item.detail || '-'}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex justify-between items-end pt-2">
+                <div>
+                  <span className="text-slate-500 text-xs font-bold block mb-2 uppercase tracking-wider whitespace-nowrap">Certified By (สภาผู้ทำรายการ)</span>
+                  <span className="text-amber-500 font-black text-xl tracking-wide whitespace-nowrap">
+                    {councilMembers.find(c => c.id === formData.councilStaffId)?.name || '...'}
+                  </span>
+                </div>
+                <div className="text-right">
+                  <span className="text-slate-500 text-xs font-bold block mb-2 uppercase tracking-wider whitespace-nowrap">Total Fee (ค่าธรรมเนียมรวม)</span>
+                  <span className="text-white font-black text-3xl tracking-tight whitespace-nowrap">{getTotalPrice()}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
