@@ -169,7 +169,7 @@ export default function RegisterOrgPreview() {
                 <span>Founding Members (สมาชิกเริ่มต้น)</span>
                 <span>{members.length} คน</span>
               </span>
-              <div className="bg-slate-950 border border-slate-800 rounded-lg p-3 space-y-2 min-h-[168px] max-h-[168px] overflow-y-auto custom-scrollbar">
+              <div className="bg-slate-950 border border-slate-800 rounded-lg p-3 space-y-2 min-h-[168px]">
                 {members.length > 0 ? members.map((m, i) => (
                   <div key={i} className="text-slate-300 text-sm flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-slate-600"></div>
