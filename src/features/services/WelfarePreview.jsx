@@ -57,6 +57,7 @@ export default function WelfarePreview() {
 
       await sendWebhook('welfare', fd);
       await saveTransactionLog('welfare', {
+        refNumber: refNumber,
         orgType: formData.orgType,
         orgName: formData.orgName,
         requester: formData.requester,
