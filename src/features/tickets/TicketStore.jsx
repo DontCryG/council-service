@@ -110,7 +110,15 @@ export default function TicketStore() {
     try {
       // Re-fetch latest to avoid race conditions
       const tDoc = await getDoc(doc(db, 'app_state', 'tickets'));
-      let currentState = { orders: [], history: [], settings: ticketsState.settings };
+      let currentState = { 
+        orders: [], 
+        history: [], 
+        settings: ticketsState?.settings || {
+          rateGang: 1, rateFamily: 1, 
+          quotaGang: 10000000, quotaFamily: 3000000, 
+          roundStartDate: '2026-06-08', roundEndDate: '2026-06-14' 
+        }
+      };
       
       if (tDoc.exists()) {
         const d = tDoc.data();
