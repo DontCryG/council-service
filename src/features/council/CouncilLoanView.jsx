@@ -277,16 +277,14 @@ export default function CouncilLoanView() {
 
       {/* Council Signing Area */}
       {contract.status === 'pending_council_signature' && (
-        <div className="mt-8 bg-slate-900/80 border border-blue-500/20 rounded-[32px] p-8 shadow-inner max-w-[816px] mx-auto">
-          <div className="flex flex-col items-center text-center mb-8">
-            <div className="flex items-center gap-3 text-blue-400 font-black text-xl mb-2">
-              <PenNib size={24} weight="fill" />
-              กรุณาเซ็นชื่ออนุมัติสัญญา (สำหรับเจ้าหน้าที่สภา)
-            </div>
-            <p className="text-slate-400 text-sm">ประทับลายเซ็นเพื่อเป็นหลักฐานการอนุมัติเงินกู้</p>
+        <div className="bg-[#151923] border border-blue-500/20 p-8 rounded-3xl flex flex-col items-center text-center shadow-inner mt-8 mx-auto max-w-[816px]">
+          <div className="flex items-center gap-3 text-blue-400 mb-2">
+            <PenNib size={28} weight="fill" />
+            <h3 className="text-xl font-black text-white">กรุณาเซ็นชื่ออนุมัติสัญญา (สำหรับเจ้าหน้าที่สภา)</h3>
           </div>
+          <p className="text-slate-400 text-sm mb-8">ประทับลายเซ็นเพื่อเป็นหลักฐานการอนุมัติเงินกู้</p>
 
-          <div className="w-full bg-white rounded-3xl mb-8 relative overflow-hidden shadow-[0_0_15px_rgba(59,130,246,0.15)] border border-slate-200">
+          <div className="w-full bg-white rounded-2xl mb-8 relative overflow-hidden shadow-[0_0_15px_rgba(59,130,246,0.1)] border border-slate-200">
             {!hasSignature && (
               <div className="absolute inset-0 flex items-start justify-start p-6 text-slate-300 text-sm font-medium pointer-events-none">
                 พื้นที่เซ็นชื่อ...
@@ -307,17 +305,17 @@ export default function CouncilLoanView() {
             />
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full px-4 sm:px-12">
             <button 
               onClick={clearSignature}
-              className="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-6 py-4 rounded-xl transition-all w-full sm:w-32 shrink-0 text-center border border-slate-700"
+              className="bg-[#1e2330] hover:bg-slate-700 text-white font-bold px-6 py-4 rounded-xl transition-all w-full sm:w-1/3 border border-slate-700/50"
             >
               ล้างลายเซ็น
             </button>
             <button 
               onClick={handleCouncilSign}
               disabled={signing}
-              className="bg-[#d4af37] hover:bg-[#c5a028] text-slate-900 disabled:opacity-50 font-black px-8 py-4 rounded-xl transition-all shadow-[0_0_20px_rgba(212,175,55,0.3)] w-full sm:flex-1 max-w-sm flex justify-center items-center"
+              className="bg-[#d4af37] hover:bg-[#c5a028] disabled:opacity-50 text-slate-900 font-black px-6 py-4 rounded-xl transition-all w-full sm:w-2/3 shadow-[0_0_20px_rgba(212,175,55,0.3)] flex justify-center items-center gap-2"
             >
               {signing ? (
                 <CircleNotch size={24} className="animate-spin" />
