@@ -200,6 +200,11 @@ export default function TicketManager() {
            h.requester?.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
+  const filteredGroups = groups.filter(g => 
+    g.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    g.type?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const getUsedQuota = (groupName) => {
     // calculate approved ticket amount in history for this group
     return ticketsData.history
@@ -513,6 +518,16 @@ export default function TicketManager() {
           {/* QUOTA TAB */}
           {activeTab === 'quota' && (
             <div className="space-y-4">
+              <div className="relative">
+                <MagnifyingGlass size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                <Input 
+                  className="pl-10 bg-slate-900/80" 
+                  placeholder="ค้นหาชื่อองค์กร หรือ ประเภท..." 
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+
               <Card className="p-0 overflow-hidden">
                 <div className="overflow-x-auto custom-scrollbar">
                   <table className="w-full text-left text-sm text-slate-300">
@@ -527,10 +542,10 @@ export default function TicketManager() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-800">
-                      {groups.length === 0 ? (
-                        <tr><td colSpan="6" className="px-6 py-8 text-center text-slate-500">ไม่มีข้อมูลองค์กรในระบบ</td></tr>
+                      {filteredGroups.length === 0 ? (
+                        <tr><td colSpan="6" className="px-6 py-8 text-center text-slate-500">ไม่มีข้อมูลองค์กรที่ค้นหา</td></tr>
                       ) : (
-                        groups.map(g => {
+                        filteredGroups.map(g => {
                           const used = getUsedQuota(g.name);
                           const max = g.type === 'GANG' ? ticketsData.settings.quotaGang : ticketsData.settings.quotaFamily;
                           const remaining = Math.max(0, max - used);
