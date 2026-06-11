@@ -270,15 +270,6 @@ export default function CouncilLoanHub() {
                                 อัพเดทยอด
                               </button>
                             )}
-                            {contract.status === 'pending_council_signature' && (
-                              <button 
-                                onClick={() => handleCouncilSign(contract.contractId, contract.id)}
-                                className="bg-purple-500/10 hover:bg-purple-500 text-purple-500 hover:text-white px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-bold transition-all border border-purple-500/20 hover:border-purple-500 whitespace-nowrap shadow-sm"
-                              >
-                                <CheckCircle size={14} weight="bold" />
-                                สภาอนุมัติ
-                              </button>
-                            )}
                             
                             <div className="flex items-center gap-1 bg-slate-900/80 p-1 rounded-xl border border-slate-700/50 shadow-inner">
                               <button 
