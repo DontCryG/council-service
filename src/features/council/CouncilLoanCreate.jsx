@@ -4,11 +4,16 @@ import {
   ArrowLeft, 
   CheckCircle, 
   Calculator,
-  CalendarBlank
+  CalendarBlank,
+  CircleNotch
 } from '@phosphor-icons/react';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../../core/firebase';
+import { useAppStore } from '../../store';
 
 export default function CouncilLoanCreate() {
   const navigate = useNavigate();
+  const { user, councilUsername, showAlert } = useAppStore();
 
   // Form states
   const [borrowerName, setBorrowerName] = useState('');
@@ -19,6 +24,7 @@ export default function CouncilLoanCreate() {
   const [paymentMethod, setPaymentMethod] = useState('full');
   const [dueDate, setDueDate] = useState('');
   const [conditions, setConditions] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Calculations
   const principalAmount = parseFloat(principal) || 0;
@@ -33,11 +39,50 @@ export default function CouncilLoanCreate() {
   
   const totalAmount = principalAmount + interestAmount;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Save data to Firestore
-    console.log("Saving contract...");
-    navigate('/council_loan');
+    if (principalAmount <= 0) {
+      showAlert('error', 'เงินต้นต้องมากกว่า 0');
+      return;
+    }
+    if (!dueDate) {
+      showAlert('error', 'กรุณาระบุวันที่ครบกำหนดชำระ');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const contractId = "CNCL-" + Math.floor(10000 + Math.random() * 90000);
+      
+      await addDoc(collection(db, 'loan_contracts'), {
+        contractId,
+        borrowerName,
+        reason,
+        principalAmount,
+        interestType,
+        interestRate: rateAmount,
+        interestAmount,
+        totalAmount,
+        remainingAmount: totalAmount,
+        paymentMethod,
+        dueDate,
+        conditions,
+        status: 'active',
+        createdAt: serverTimestamp(),
+        createdBy: {
+          uid: user.uid,
+          email: user.email,
+          name: councilUsername || user.email
+        }
+      });
+
+      showAlert('success', `สร้างสัญญากู้ยืม ${contractId} สำเร็จ`);
+      navigate('/council_loan');
+    } catch (error) {
+      console.error("Error creating loan contract:", error);
+      showAlert('error', 'เกิดข้อผิดพลาดในการสร้างสัญญา');
+      setIsSubmitting(false);
+    }
   };
 
   return (

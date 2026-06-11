@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   FileText, 
@@ -8,11 +8,35 @@ import {
   UploadSimple, 
   PencilSimple, 
   Trash, 
-  ArrowLeft 
+  ArrowLeft,
+  CircleNotch
 } from '@phosphor-icons/react';
+import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
+import { db } from '../../core/firebase';
 
 export default function CouncilLoanHub() {
   const navigate = useNavigate();
+  const [contracts, setContracts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const q = query(collection(db, 'loan_contracts'), orderBy('createdAt', 'desc'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setContracts(data);
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const totalContracts = contracts.length;
+  const totalPrincipal = contracts.reduce((sum, c) => sum + (c.principalAmount || 0), 0);
+  const totalRemaining = contracts.reduce((sum, c) => sum + (c.remainingAmount || 0), 0);
+
+  const dueAlerts = [...contracts]
+    .filter(c => c.status === 'active' && c.remainingAmount > 0)
+    .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+    .slice(0, 5);
 
   return (
     <div className="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -55,7 +79,11 @@ export default function CouncilLoanHub() {
             </div>
             <div className="z-10">
               <p className="text-sm font-medium text-slate-400 mb-1">จำนวนสัญญาทั้งหมด</p>
-              <p className="text-2xl font-black text-white">1 <span className="text-lg font-bold">ฉบับ</span></p>
+              {loading ? (
+                <CircleNotch size={24} className="animate-spin text-slate-500" />
+              ) : (
+                <p className="text-2xl font-black text-white">{totalContracts} <span className="text-lg font-bold">ฉบับ</span></p>
+              )}
             </div>
           </div>
 
@@ -67,7 +95,11 @@ export default function CouncilLoanHub() {
             </div>
             <div className="z-10">
               <p className="text-sm font-medium text-slate-400 mb-1">ยอดเงินกู้รวม (เงินต้น)</p>
-              <p className="text-2xl font-black text-white">5,000,000 ฿</p>
+              {loading ? (
+                <CircleNotch size={24} className="animate-spin text-amber-500/50" />
+              ) : (
+                <p className="text-2xl font-black text-white">{totalPrincipal.toLocaleString()} ฿</p>
+              )}
             </div>
           </div>
 
@@ -79,7 +111,11 @@ export default function CouncilLoanHub() {
             </div>
             <div className="z-10">
               <p className="text-sm font-medium text-slate-400 mb-1">ยอดคงค้างรอรับชำระ</p>
-              <p className="text-2xl font-black text-red-400">2,000,000 ฿</p>
+              {loading ? (
+                <CircleNotch size={24} className="animate-spin text-red-500/50" />
+              ) : (
+                <p className="text-2xl font-black text-red-400">{totalRemaining.toLocaleString()} ฿</p>
+              )}
             </div>
           </div>
         </div>
@@ -106,33 +142,64 @@ export default function CouncilLoanHub() {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="border-t border-slate-700/50 hover:bg-slate-800/50 transition-colors">
-                    <td className="py-4 font-bold text-amber-500">CNCL-82224</td>
-                    <td className="py-4 font-bold text-slate-300">[CC] COUNCIL</td>
-                    <td className="py-4 font-black text-white">2,000,000 ฿</td>
-                    <td className="py-4">
-                      <span className="bg-amber-500/10 text-amber-400 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap border border-amber-500/20">
-                        กำลังผ่อนชำระ
-                      </span>
-                    </td>
-                    <td className="py-4">
-                      <div className="flex items-center justify-end gap-3">
-                        <button className="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-bold transition-colors shadow-sm shadow-emerald-500/20 whitespace-nowrap">
-                          <UploadSimple size={14} weight="bold" />
-                          อัพเดทยอด
-                        </button>
-                        <button className="text-slate-400 hover:text-white transition-colors">
-                          <FileText size={20} weight="fill" />
-                        </button>
-                        <button className="text-slate-400 hover:text-amber-500 transition-colors">
-                          <PencilSimple size={20} weight="fill" />
-                        </button>
-                        <button className="text-slate-400 hover:text-red-500 transition-colors">
-                          <Trash size={20} weight="fill" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
+                  {loading ? (
+                    <tr>
+                      <td colSpan="5" className="py-10 text-center text-slate-500">
+                        <CircleNotch size={32} className="animate-spin mx-auto mb-2" />
+                        กำลังโหลดข้อมูล...
+                      </td>
+                    </tr>
+                  ) : contracts.length === 0 ? (
+                    <tr>
+                      <td colSpan="5" className="py-10 text-center text-slate-500">
+                        ยังไม่มีข้อมูลสัญญากู้ยืม
+                      </td>
+                    </tr>
+                  ) : (
+                    contracts.map((contract) => (
+                      <tr key={contract.id} className="border-t border-slate-700/50 hover:bg-slate-800/50 transition-colors">
+                        <td className="py-4 font-bold text-amber-500">{contract.contractId}</td>
+                        <td className="py-4 font-bold text-slate-300">{contract.borrowerName}</td>
+                        <td className="py-4 font-black text-white">{(contract.remainingAmount || 0).toLocaleString()} ฿</td>
+                        <td className="py-4">
+                          {contract.status === 'active' && (
+                            <span className="bg-amber-500/10 text-amber-400 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap border border-amber-500/20">
+                              กำลังผ่อนชำระ
+                            </span>
+                          )}
+                          {contract.status === 'completed' && (
+                            <span className="bg-emerald-500/10 text-emerald-400 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap border border-emerald-500/20">
+                              ชำระครบแล้ว
+                            </span>
+                          )}
+                          {contract.status === 'defaulted' && (
+                            <span className="bg-red-500/10 text-red-400 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap border border-red-500/20">
+                              ผิดนัดชำระ
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-4">
+                          <div className="flex items-center justify-end gap-3">
+                            {contract.status === 'active' && (
+                              <button className="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-bold transition-colors shadow-sm shadow-emerald-500/20 whitespace-nowrap">
+                                <UploadSimple size={14} weight="bold" />
+                                อัพเดทยอด
+                              </button>
+                            )}
+                            <button className="text-slate-400 hover:text-white transition-colors" title="ดูรายละเอียด">
+                              <FileText size={20} weight="fill" />
+                            </button>
+                            <button className="text-slate-400 hover:text-amber-500 transition-colors" title="แก้ไข">
+                              <PencilSimple size={20} weight="fill" />
+                            </button>
+                            <button className="text-slate-400 hover:text-red-500 transition-colors" title="ลบสัญญา">
+                              <Trash size={20} weight="fill" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
@@ -145,21 +212,48 @@ export default function CouncilLoanHub() {
               แจ้งเตือนถึงกำหนดชำระ
             </div>
             <div className="p-6">
-              <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-5 hover:border-red-500/50 hover:shadow-md hover:shadow-red-500/5 transition-all cursor-pointer">
-                <div className="flex justify-between items-start mb-2">
-                  <span className="font-black text-white">CNCL-82224</span>
-                  <span className="bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs px-2.5 py-1 rounded-md font-bold">
-                    ใกล้ถึงกำหนด
-                  </span>
+              {loading ? (
+                <div className="text-center py-4">
+                  <CircleNotch size={24} className="animate-spin mx-auto text-slate-500" />
                 </div>
-                <p className="text-slate-400 font-medium text-sm mb-5">
-                  [CC] COUNCIL
-                </p>
-                <div className="flex justify-between items-center text-sm border-t border-slate-700/50 pt-3 mt-2">
-                  <span className="text-red-400 font-black">ค้างชำระ: 2,000,000 ฿</span>
-                  <span className="text-slate-500 font-medium text-xs">ดิว: 15/6/2569</span>
+              ) : dueAlerts.length === 0 ? (
+                <div className="text-center py-4 text-slate-500 text-sm">
+                  ไม่มีสัญญาที่ใกล้ถึงกำหนดชำระ
                 </div>
-              </div>
+              ) : (
+                <div className="space-y-4">
+                  {dueAlerts.map(alert => {
+                    const due = new Date(alert.dueDate);
+                    const isOverdue = due < new Date();
+                    
+                    return (
+                      <div key={alert.id} className="bg-slate-800/50 border border-slate-700 rounded-xl p-5 hover:border-red-500/50 hover:shadow-md hover:shadow-red-500/5 transition-all cursor-pointer">
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="font-black text-white">{alert.contractId}</span>
+                          {isOverdue ? (
+                            <span className="bg-red-500/10 border border-red-500/20 text-red-400 text-xs px-2.5 py-1 rounded-md font-bold">
+                              เลยกำหนดชำระ
+                            </span>
+                          ) : (
+                            <span className="bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs px-2.5 py-1 rounded-md font-bold">
+                              ใกล้ถึงกำหนด
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-slate-400 font-medium text-sm mb-5">
+                          {alert.borrowerName}
+                        </p>
+                        <div className="flex justify-between items-center text-sm border-t border-slate-700/50 pt-3 mt-2">
+                          <span className="text-red-400 font-black">ค้างชำระ: {(alert.remainingAmount || 0).toLocaleString()} ฿</span>
+                          <span className="text-slate-500 font-medium text-xs">
+                            ดิว: {due.toLocaleDateString('th-TH', { day: 'numeric', month: 'numeric', year: 'numeric' })}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
 
