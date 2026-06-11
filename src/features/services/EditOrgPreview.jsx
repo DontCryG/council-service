@@ -7,7 +7,7 @@ import { sendWebhook, saveTransactionLog } from '../../core/api';
 import { toBlob } from 'html-to-image';
 import Button from '../../components/ui/Button';
 import ConfirmationModal from '../../components/ui/ConfirmationModal';
-import { PaperPlaneTilt, ArrowLeft } from '@phosphor-icons/react';
+import { PaperPlaneTilt, ArrowLeft, Receipt, CheckCircle, SealCheck, User, PaintBucket, CircleDashed } from '@phosphor-icons/react';
 
 export default function EditOrgPreview() {
   const navigate = useNavigate();
@@ -58,7 +58,7 @@ export default function EditOrgPreview() {
     try {
       const blob = await toBlob(captureRef.current, { 
         pixelRatio: 2, 
-        backgroundColor: '#f1f5f9',
+        backgroundColor: '#020617', // Match dark background
         cacheBust: true 
       });
       if (!blob) throw new Error("Failed to generate image");
@@ -68,7 +68,7 @@ export default function EditOrgPreview() {
       fd.append('payload_json', JSON.stringify({
         embeds: [{
           title: "🔄 ORGANIZATION EDIT REQUEST",
-          color: 0xec4899,
+          color: 0xf59e0b, // Amber color
           thumbnail: formData.logoUrl ? { url: formData.logoUrl } : undefined,
           fields: [
             { name: "🏰 แก๊ง/แฟมิลี่", value: `${formData.orgName} (${formData.orgType})`, inline: true },
@@ -120,85 +120,110 @@ export default function EditOrgPreview() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h2 className="text-2xl font-bold text-white mb-1">ตรวจสอบข้อมูลก่อนส่ง</h2>
-          <p className="text-slate-400">โปรดตรวจสอบรายละเอียดให้แน่ใจก่อนทำการส่งข้อมูล</p>
+          <p className="text-slate-400">โปรดตรวจสอบรายละเอียดในบิลให้แน่ใจก่อนทำการส่งข้อมูล</p>
         </div>
         <Button variant="ghost" onClick={() => navigate('/edit_org', { state: { formData, step: 2 } })} className="text-slate-400 hover:text-white">
           <ArrowLeft size={20} className="mr-2" /> ย้อนกลับเพื่อแก้ไข
         </Button>
       </div>
 
-      <div className="bg-[#f1f5f9] p-6 rounded-[24px]">
-        <div ref={captureRef} className="bg-white rounded-xl p-8 border border-slate-300 shadow-xl relative overflow-hidden" style={{ color: '#1e293b' }}>
-          <div className="flex flex-row items-end justify-between border-b-2 border-slate-800 pb-4 mb-6">
-            <div className="flex flex-col justify-end">
-              <h2 className="text-3xl font-black uppercase tracking-tighter" style={{ color: '#000', lineHeight: '1.1' }}>
+      <div className="bg-slate-900/50 p-6 rounded-[32px] border border-slate-800 backdrop-blur-sm shadow-2xl">
+        <div ref={captureRef} className="bg-gradient-to-b from-slate-900 to-slate-950 rounded-2xl p-8 border border-slate-800 shadow-2xl relative overflow-hidden text-slate-200">
+          
+          {/* Decorative Elements */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
+          
+          <div className="absolute top-8 right-8 text-slate-800 opacity-20 pointer-events-none">
+            <Receipt size={120} weight="duotone" />
+          </div>
+
+          {/* Header */}
+          <div className="flex flex-row items-start justify-between border-b border-dashed border-slate-700 pb-6 mb-6 relative z-10">
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2 mb-2">
+                <SealCheck size={24} weight="fill" className="text-amber-500" />
+                <span className="text-amber-500 font-bold tracking-widest text-xs uppercase">Official Receipt</span>
+              </div>
+              <h2 className="text-4xl font-black uppercase tracking-tight text-white drop-shadow-md">
                 {formData.orgName || 'ORGANIZATION'}
               </h2>
-              <div className="text-slate-500 font-bold tracking-wider text-sm mt-1 whitespace-nowrap w-max">
-                <span>{formData.orgType} MODIFICATION</span>
+              <div className="text-slate-400 font-medium tracking-wider text-sm mt-1 flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-amber-500"></div>
+                {formData.orgType} MODIFICATION
               </div>
             </div>
-            {(formData.changeInfo || formData.bulkChange) && formData.logoUrl && (
-              <div className="ml-4 shrink-0">
-                <img src={formData.logoUrl} alt="Logo" className="w-20 h-20 object-contain drop-shadow-md rounded" crossOrigin="anonymous"/>
+            {formData.logoUrl && (
+              <div className="ml-4 shrink-0 bg-slate-800/50 p-2 rounded-xl border border-slate-700/50 backdrop-blur-sm">
+                <img src={formData.logoUrl} alt="Logo" className="w-20 h-20 object-contain drop-shadow-xl" crossOrigin="anonymous"/>
               </div>
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-x-6 gap-y-4 mb-6">
+          {/* Info Grid */}
+          <div className="grid grid-cols-2 gap-x-8 gap-y-6 mb-8 relative z-10">
             <div>
-              <div className="text-xs text-slate-500 uppercase font-bold">Requester</div>
-              <div className="font-bold text-lg">{formData.requester || '-'}</div>
+              <div className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1 flex items-center gap-1.5">
+                <User size={14} /> Requester
+              </div>
+              <div className="font-bold text-lg text-white">{formData.requester || '-'}</div>
             </div>
             <div>
-              <div className="text-xs text-slate-500 uppercase font-bold">Theme Color (New)</div>
-              <div className="flex items-center gap-2 font-mono font-bold">
-                <div className="w-4 h-4 rounded-full border border-slate-400" style={{ backgroundColor: formData.hexColor }}></div>
+              <div className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1 flex items-center gap-1.5">
+                <PaintBucket size={14} /> Theme Color (New)
+              </div>
+              <div className="flex items-center gap-3 font-mono font-bold text-white bg-slate-800/50 px-3 py-1.5 rounded-lg border border-slate-700/50 w-max">
+                <div className="w-4 h-4 rounded-full border border-slate-600 shadow-inner" style={{ backgroundColor: formData.hexColor }}></div>
                 {formData.hexColor}
               </div>
             </div>
           </div>
 
-          <div className="mb-8">
-            <div className="text-sm font-bold border-b border-slate-300 pb-1 mb-2">Requested Changes</div>
-            <ul className="text-sm flex flex-col gap-2 list-none pl-0 text-slate-700 font-medium">
-              {formData.changeInfo && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ เปลี่ยนข้อมูล Gang</span> <span>$500,000</span></li>}
-              {formData.editTexture && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ แก้ไข Texture เสื้อผ้า ({formData.textureCount} ชุด)</span> <span>${(500000 * Math.max(1, formData.textureCount)).toLocaleString()}</span></li>}
-              {formData.addCloth && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ ลงชุดเพิ่ม ({formData.textureCount} ชุด)</span> <span>${(500000 * Math.max(1, formData.textureCount)).toLocaleString()}</span></li>}
-              {formData.bulkChange && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ เหมาเปลี่ยนข้อมูล Gang</span> <span>$1,500,000</span></li>}
-              {formData.addAccessory && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ ลง Accessories Adons เสริม</span> <span>$1,000,000</span></li>}
-              {!formData.changeInfo && !formData.editTexture && !formData.addCloth && !formData.bulkChange && !formData.addAccessory && (
-                <li className="text-slate-400 italic">No changes selected</li>
-              )}
+          {/* Changes List */}
+          <div className="mb-8 relative z-10">
+            <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <CircleDashed size={16} /> Requested Changes
+            </div>
+            <ul className="text-sm flex flex-col gap-2.5 list-none pl-0 font-medium">
+              {formData.changeInfo && <li className="flex justify-between items-center bg-slate-800/40 p-3 rounded-xl border border-slate-700/50 hover:border-amber-500/30 transition-colors"><span className="flex items-center gap-2 text-white"><CheckCircle size={18} weight="fill" className="text-amber-500" /> เปลี่ยนข้อมูล Gang</span> <span className="font-mono text-amber-400">$500,000</span></li>}
+              {formData.editTexture && <li className="flex justify-between items-center bg-slate-800/40 p-3 rounded-xl border border-slate-700/50 hover:border-amber-500/30 transition-colors"><span className="flex items-center gap-2 text-white"><CheckCircle size={18} weight="fill" className="text-amber-500" /> แก้ไข Texture เสื้อผ้า <span className="text-slate-400 text-xs ml-1">x{formData.textureCount}</span></span> <span className="font-mono text-amber-400">${(500000 * Math.max(1, formData.textureCount)).toLocaleString()}</span></li>}
+              {formData.addCloth && <li className="flex justify-between items-center bg-slate-800/40 p-3 rounded-xl border border-slate-700/50 hover:border-amber-500/30 transition-colors"><span className="flex items-center gap-2 text-white"><CheckCircle size={18} weight="fill" className="text-amber-500" /> ลงชุดเพิ่ม <span className="text-slate-400 text-xs ml-1">x{formData.textureCount}</span></span> <span className="font-mono text-amber-400">${(500000 * Math.max(1, formData.textureCount)).toLocaleString()}</span></li>}
+              {formData.bulkChange && <li className="flex justify-between items-center bg-slate-800/40 p-3 rounded-xl border border-slate-700/50 hover:border-amber-500/30 transition-colors"><span className="flex items-center gap-2 text-white"><CheckCircle size={18} weight="fill" className="text-amber-500" /> เหมาเปลี่ยนข้อมูล Gang</span> <span className="font-mono text-amber-400">$1,500,000</span></li>}
+              {formData.addAccessory && <li className="flex justify-between items-center bg-slate-800/40 p-3 rounded-xl border border-slate-700/50 hover:border-amber-500/30 transition-colors"><span className="flex items-center gap-2 text-white"><CheckCircle size={18} weight="fill" className="text-amber-500" /> ลง Accessories Adons เสริม</span> <span className="font-mono text-amber-400">$1,000,000</span></li>}
             </ul>
           </div>
 
+          {/* Extra Details */}
           {formData.extraDetails && (
-            <div className="mb-8 p-4 bg-slate-200/50 rounded-lg border border-slate-300">
-              <div className="text-xs text-slate-500 uppercase font-bold mb-1">Extra Details / Remarks</div>
-              <div className="text-sm font-medium text-slate-800 whitespace-pre-wrap leading-relaxed">
-                {formData.extraDetails}
+            <div className="mb-8 p-4 bg-slate-950/50 rounded-xl border border-slate-800 relative z-10">
+              <div className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-2">Extra Details / Remarks</div>
+              <div className="text-sm text-slate-300 whitespace-pre-wrap leading-relaxed italic">
+                "{formData.extraDetails}"
               </div>
             </div>
           )}
 
-          <div className="flex justify-between items-end pt-4 mt-4 border-t-2 border-slate-300">
+          {/* Footer */}
+          <div className="flex justify-between items-end pt-6 mt-2 border-t border-dashed border-slate-700 relative z-10">
             <div>
-              <div className="text-xs text-slate-500 uppercase font-bold">Total Fees</div>
-              <div className="text-3xl font-black text-emerald-600">${calculateTotal().toLocaleString()}</div>
+              <div className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1">Total Amount Due</div>
+              <div className="text-4xl font-black text-white drop-shadow-[0_0_15px_rgba(245,158,11,0.3)]">
+                <span className="text-amber-500 mr-1">$</span>{calculateTotal().toLocaleString()}
+              </div>
             </div>
             
-            <div className="text-center w-40">
-              <div className="border-b border-slate-800 pb-1 font-medium">{councilMembers.find(c => c.id === formData.councilStaffId)?.name || '...'}</div>
-              <div className="text-xs mt-1">Council Inspector</div>
+            <div className="text-center w-48">
+              <div className="border-b border-slate-600 pb-2 font-bold text-white truncate px-2">{councilMembers.find(c => c.id === formData.councilStaffId)?.name || '...'}</div>
+              <div className="text-[10px] mt-1.5 text-slate-400 uppercase tracking-widest font-bold">Authorized Inspector</div>
             </div>
           </div>
+          
         </div>
       </div>
 
-      <div className="pt-6">
-        <Button type="button" size="lg" onClick={() => setShowConfirm(true)} className="w-full bg-pink-600 hover:bg-pink-500 text-white shadow-lg shadow-pink-500/20 rounded-xl py-4 text-lg">
-          <PaperPlaneTilt size={20} weight="bold" className="mr-2 inline" /> ยืนยันการส่งข้อมูล
+      <div className="pt-4">
+        <Button type="button" size="lg" onClick={() => setShowConfirm(true)} className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-white shadow-lg shadow-amber-500/20 rounded-xl py-4 text-lg border-none">
+          <PaperPlaneTilt size={20} weight="bold" className="mr-2 inline" /> ยืนยันและส่งสลิปคำขอ
         </Button>
       </div>
 
@@ -207,7 +232,7 @@ export default function EditOrgPreview() {
         onClose={() => setShowConfirm(false)}
         onConfirm={handleConfirmSubmit}
         title="ยืนยันส่งข้อมูลแก้ไของค์กร?"
-        message={`คุณต้องการยืนยันการส่งข้อมูลของแก๊ง ${formData.orgName} ใช่หรือไม่? โปรดตรวจสอบรายละเอียดให้แน่ใจ`}
+        message={`คุณต้องการยืนยันการส่งข้อมูลของ ${formData.orgName} ใช่หรือไม่? โปรดตรวจสอบรายละเอียดให้แน่ใจ`}
         isLoading={isSubmitting}
       />
     </div>
