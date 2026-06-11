@@ -17,6 +17,7 @@ const NotFound = lazy(() => import('./features/error/NotFound'));
 const CouncilManage = lazy(() => import('./features/council/CouncilManage'));
 const GeneralService = lazy(() => import('./features/services/GeneralService'));
 const Welfare = lazy(() => import('./features/services/Welfare'));
+const WelfarePreview = lazy(() => import('./features/services/WelfarePreview'));
 const WelfareTrade = lazy(() => import('./features/services/WelfareTrade'));
 const RegisterOrg = lazy(() => import('./features/services/RegisterOrg'));
 const EditOrg = lazy(() => import('./features/services/EditOrg'));
@@ -211,6 +212,7 @@ function App() {
             <Route path="edit_org" element={<EditOrg />} />
             
             <Route path="welfare" element={<Welfare />} />
+            <Route path="welfare_preview" element={<WelfarePreview />} />
             <Route path="welfare_trade" element={<WelfareTrade />} />
             <Route path="ps5" element={<TicketStore />} />
             
