@@ -57,7 +57,7 @@ export default function WelfarePreview() {
           image: {
             url: "attachment://welfare.png"
           },
-          footer: { text: "ระบบตรวจสอบสวัสดิการสภาส่วนกลาง" },
+          footer: { text: `Ref: ${refNumber} | Server System` },
           timestamp: new Date().toISOString()
         }]
       }));

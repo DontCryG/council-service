@@ -99,7 +99,7 @@ export default function EditOrgPreview() {
           image: {
             url: "attachment://edit_org.png"
           },
-          footer: { text: `Ref: ${refNumber} | Council Secretary System` },
+          footer: { text: `Ref: ${refNumber} | Server System` },
           timestamp: new Date().toISOString()
         }]
       }));
