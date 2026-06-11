@@ -78,7 +78,7 @@ export default function RegisterOrg() {
             <p className="text-slate-400">ระบบบันทึกการขึ้นทะเบียนแก๊งและครอบครัว</p>
           </div>
         </div>
-        <Button type="button" variant="ghost" onClick={() => step === 2 ? setStep(1) : navigate(-1)} className="text-slate-400 hover:text-white px-2">
+        <Button type="button" variant="ghost" onClick={() => step === 2 ? setStep(1) : navigate('/home')} className="text-slate-400 hover:text-white px-2">
           <ArrowLeft size={20} className="mr-2" /> ย้อนกลับ
         </Button>
       </div>
