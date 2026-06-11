@@ -115,7 +115,6 @@ export default function RegisterOrgPreview() {
             <div className={`absolute inset-0 flex items-center justify-center ${formData.logo ? 'hidden' : 'flex'}`}>
               <Buildings size={40} className="text-slate-600" />
             </div>
-            <div className="absolute bottom-0 left-0 right-0 h-2" style={{ backgroundColor: formData.color || '#333' }}></div>
           </div>
           <div className="flex-1">
             <h2 className="text-3xl font-black text-white tracking-wider flex items-center gap-3">
