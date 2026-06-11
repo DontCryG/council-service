@@ -97,7 +97,7 @@ export default function WelfarePreview() {
         <div 
           ref={captureRef} 
           style={{ width: '800px', minWidth: '800px' }}
-          className="bg-slate-900 rounded-xl p-8 sm:p-12 border-2 border-slate-800 shadow-2xl relative overflow-hidden text-slate-200 min-h-[600px] mb-8 mx-auto"
+          className="bg-slate-900 rounded-xl p-8 sm:p-12 border-2 border-slate-800 shadow-2xl relative overflow-hidden text-slate-200 font-sans min-h-[600px] mb-8 mx-auto"
         >
           {/* Background Effects */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none"></div>
@@ -222,7 +222,7 @@ export default function WelfarePreview() {
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
               <span className="text-[11px] text-slate-400 font-bold tracking-wider uppercase">System Status</span>
             </div>
-            <div className="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 text-[12px] font-bold px-4 py-2 rounded-lg border border-emerald-500/20">
+            <div className="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 text-[12px] font-bold px-4 py-2 rounded-lg border border-emerald-500/20 whitespace-nowrap">
               ✓ CERTIFIED BY COUNCIL
             </div>
           </div>
