@@ -136,7 +136,7 @@ export default function WelfareTrade() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-7xl mx-auto py-6">
-      <div className="flex items-start justify-between mb-6">
+      <div className={`flex items-start justify-between mb-6 ${step === 1 ? 'max-w-4xl mx-auto w-full' : ''}`}>
         <div className="flex items-center gap-3">
           <ArrowsLeftRight size={32} weight="duotone" className="text-violet-500" />
           <div>
