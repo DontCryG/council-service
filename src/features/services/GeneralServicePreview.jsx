@@ -134,18 +134,18 @@ export default function GeneralServicePreview() {
           </div>
 
           {/* Info Grid */}
-          <div className="grid grid-cols-2 gap-x-8 gap-y-6 mb-8 relative z-10">
-            <div>
+          <div className="grid grid-cols-3 gap-x-8 gap-y-6 mb-8 relative z-10">
+            <div className="col-span-1">
               <div className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1 flex items-center gap-1.5">
                 <User size={14} /> Requester
               </div>
-              <div className="font-bold text-lg text-white">{formData.requester || '-'}</div>
+              <div className="font-bold text-lg text-white break-words">{formData.requester || '-'}</div>
             </div>
-            <div>
+            <div className="col-span-2">
               <div className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1 flex items-center gap-1.5">
                 <Receipt size={14} /> Transaction Type
               </div>
-              <div className="font-bold text-lg text-blue-400">{selectedTransaction?.name || '-'}</div>
+              <div className="font-bold text-lg text-blue-400 leading-snug">{selectedTransaction?.name || '-'}</div>
             </div>
           </div>
 
