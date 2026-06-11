@@ -10,6 +10,7 @@ import { Trash, ArrowRight, Buildings, ArrowLeft } from '@phosphor-icons/react';
 export default function RegisterOrg() {
   const navigate = useNavigate();
   const { showAlert } = useAppStore();
+  const [step, setStep] = useState(1);
   
   const [councilMembers, setCouncilMembers] = useState([]);
   const [formData, setFormData] = useState({
@@ -65,8 +66,8 @@ export default function RegisterOrg() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 py-6">
-      <div className="mb-6 flex items-start justify-between">
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 py-6">
+      <div className="mb-6 flex items-start justify-between max-w-4xl mx-auto w-full">
         <div className="flex items-center gap-3">
           <Buildings size={32} weight="duotone" className="text-amber-500" />
           <div>
@@ -74,12 +75,39 @@ export default function RegisterOrg() {
             <p className="text-slate-400">ระบบบันทึกการขึ้นทะเบียนแก๊งและครอบครัว</p>
           </div>
         </div>
-        <Button type="button" variant="ghost" onClick={() => navigate(-1)} className="text-slate-400 hover:text-white px-2">
+        <Button type="button" variant="ghost" onClick={() => step === 2 ? setStep(1) : navigate(-1)} className="text-slate-400 hover:text-white px-2">
           <ArrowLeft size={20} className="mr-2" /> ย้อนกลับ
         </Button>
       </div>
       
-      <div className="bg-slate-900 rounded-[24px] p-8 md:p-10 shadow-2xl border border-slate-800">
+      {step === 1 ? (
+        <div className="max-w-4xl mx-auto w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <button
+                type="button"
+                onClick={() => { setFormData({...formData, orgType: 'GANG'}); setStep(2); }}
+                className="bg-slate-900 border border-slate-800 rounded-[24px] p-12 flex flex-col items-center justify-center gap-6 hover:border-amber-500/50 hover:bg-slate-800/50 transition-all group"
+              >
+                <div className="w-24 h-24 rounded-full bg-slate-800/80 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-black/20">
+                  <Buildings size={40} weight="fill" className="text-amber-500" />
+                </div>
+                <h2 className="text-2xl font-black text-white tracking-widest">GANG</h2>
+              </button>
+              
+              <button
+                type="button"
+                onClick={() => { setFormData({...formData, orgType: 'FAMILY'}); setStep(2); }}
+                className="bg-slate-900 border border-slate-800 rounded-[24px] p-12 flex flex-col items-center justify-center gap-6 hover:border-blue-500/50 hover:bg-slate-800/50 transition-all group"
+              >
+                <div className="w-24 h-24 rounded-full bg-blue-900/20 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-black/20">
+                  <Buildings size={40} weight="fill" className="text-blue-500" />
+                </div>
+                <h2 className="text-2xl font-black text-white tracking-widest">FAMILY</h2>
+              </button>
+          </div>
+        </div>
+      ) : (
+      <div className="max-w-4xl mx-auto w-full bg-slate-900 rounded-[24px] p-8 md:p-10 shadow-2xl border border-slate-800">
         <form onSubmit={handleSubmit} className="space-y-8">
           
           <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-6">
@@ -240,6 +268,7 @@ export default function RegisterOrg() {
 
         </form>
       </div>
+      )}
     </div>
   );
 }
