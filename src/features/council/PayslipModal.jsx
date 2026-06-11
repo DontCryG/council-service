@@ -44,7 +44,7 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
         }
       });
       const date = new Date();
-      const dateStr = `${String(date.getDate()).padStart(2, '0')}_${String(date.getMonth() + 1).padStart(2, '0')}_${date.getFullYear()}`;
+      const dateStr = `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
       const safeName = member.name.replace(/\s+/g, '_');
       
       const link = document.createElement('a');
