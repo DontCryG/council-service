@@ -125,13 +125,19 @@ export default function RegisterOrgPreview() {
               ) : null}
               {formData.name || 'UNNAMED ORGANIZATION'}
             </h2>
-            <div className="flex items-center gap-4 mt-3">
-              <span className="text-slate-400 text-sm flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full" style={{ backgroundColor: formData.color || '#333' }}></span>
-                HEX: <span className="font-mono text-slate-300">{formData.color || '#000000'}</span>
-              </span>
-              <span className="text-slate-600 text-sm">|</span>
-              <span className="text-slate-400 text-sm">REF: {refNumber}</span>
+            <div className="flex items-center gap-4 mt-3 text-sm text-slate-400 font-medium">
+              <div className={`px-2 py-0.5 rounded text-xs font-bold ${formData.orgType === 'FAMILY' ? 'bg-blue-500/20 text-blue-500 border border-blue-500/20' : 'bg-amber-500/20 text-amber-500 border border-amber-500/20'}`}>
+                {formData.orgType || 'GANG'}
+              </div>
+              <span className="text-slate-600">|</span>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: formData.color || '#333' }}></div>
+                HEX: {formData.color || '#000000'}
+              </div>
+              <span className="text-slate-600">|</span>
+              <div className="flex items-center gap-2">
+                REF: {refNumber}
+              </div>
             </div>
           </div>
         </div>
