@@ -13,10 +13,11 @@ import {
   Copy,
   CheckCircle
 } from '@phosphor-icons/react';
-import { collection, query, orderBy, onSnapshot, deleteDoc, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, deleteDoc, doc, updateDoc, serverTimestamp, addDoc } from 'firebase/firestore';
 import { db } from '../../core/firebase';
 import { useAppStore } from '../../store';
 import ConfirmationModal from '../../components/ui/ConfirmationModal';
+import Modal from '../../components/ui/Modal';
 
 export default function CouncilLoanHub() {
   const navigate = useNavigate();
@@ -28,6 +29,15 @@ export default function CouncilLoanHub() {
     title: '',
     message: '',
     onConfirm: null,
+    isLoading: false
+  });
+
+  const [paymentModal, setPaymentModal] = useState({
+    isOpen: false,
+    contractId: null,
+    contractNumber: '',
+    currentRemaining: 0,
+    amountStr: '',
     isLoading: false
   });
 
@@ -86,6 +96,62 @@ export default function CouncilLoanHub() {
         }
       }
     });
+  };
+
+  const handleUpdateBalance = (id, contractId, currentRemaining) => {
+    setPaymentModal({
+      isOpen: true,
+      contractId: id,
+      contractNumber: contractId,
+      currentRemaining: currentRemaining || 0,
+      amountStr: '',
+      isLoading: false
+    });
+  };
+
+  const handlePaymentSubmit = async () => {
+    try {
+      setPaymentModal(prev => ({ ...prev, isLoading: true }));
+      const payAmount = parseFloat(paymentModal.amountStr);
+      if (isNaN(payAmount) || payAmount <= 0) {
+        showAlert('error', 'กรุณาระบุจำนวนเงินที่ถูกต้อง');
+        setPaymentModal(prev => ({ ...prev, isLoading: false }));
+        return;
+      }
+      if (payAmount > paymentModal.currentRemaining) {
+        showAlert('error', 'จำนวนเงินที่ชำระต้องไม่เกินยอดค้างชำระ');
+        setPaymentModal(prev => ({ ...prev, isLoading: false }));
+        return;
+      }
+
+      // Update remainingAmount
+      const contractRef = doc(db, 'loan_contracts', paymentModal.contractId);
+      const newRemaining = paymentModal.currentRemaining - payAmount;
+      const updates = {
+        remainingAmount: newRemaining,
+        updatedAt: serverTimestamp()
+      };
+      if (newRemaining <= 0) {
+        updates.status = 'completed';
+      }
+      await updateDoc(contractRef, updates);
+
+      // Record transaction
+      await addDoc(collection(db, 'transactions'), {
+        contractId: paymentModal.contractId,
+        type: 'payment',
+        amount: payAmount,
+        createdAt: serverTimestamp(),
+        createdBy: 'council_staff'
+      });
+
+      showAlert('success', 'บันทึกการชำระเงินสำเร็จ');
+      setPaymentModal({ isOpen: false, contractId: null, contractNumber: '', currentRemaining: 0, amountStr: '', isLoading: false });
+    } catch (error) {
+      console.error(error);
+      showAlert('error', 'เกิดข้อผิดพลาดในการบันทึกการชำระเงิน');
+      setPaymentModal(prev => ({ ...prev, isLoading: false }));
+    }
   };
 
   const totalContracts = contracts.length;
@@ -265,7 +331,10 @@ export default function CouncilLoanHub() {
                         <td className="py-4">
                           <div className="flex items-center justify-end gap-2">
                             {contract.status === 'active' && (
-                              <button className="bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-white px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-bold transition-all border border-emerald-500/20 hover:border-emerald-500 whitespace-nowrap shadow-sm">
+                              <button 
+                                onClick={() => handleUpdateBalance(contract.id, contract.contractId, contract.remainingAmount)}
+                                className="bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-white px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-bold transition-all border border-emerald-500/20 hover:border-emerald-500 whitespace-nowrap shadow-sm"
+                              >
                                 <UploadSimple size={14} weight="bold" />
                                 อัพเดทยอด
                               </button>
@@ -370,7 +439,7 @@ export default function CouncilLoanHub() {
         </div>
       </div>
 
-      <ConfirmationModal 
+      <ConfirmationModal
         isOpen={confirmModal.isOpen}
         onClose={closeConfirmModal}
         onConfirm={confirmModal.onConfirm}
@@ -378,6 +447,72 @@ export default function CouncilLoanHub() {
         message={confirmModal.message}
         isLoading={confirmModal.isLoading}
       />
+
+      <Modal 
+        isOpen={paymentModal.isOpen} 
+        onClose={() => !paymentModal.isLoading && setPaymentModal(prev => ({ ...prev, isOpen: false }))}
+        title="บันทึกการชำระเงิน"
+        className="max-w-md bg-[#151923] border border-slate-700/50 rounded-3xl overflow-hidden shadow-2xl"
+        hideCloseButton={true}
+      >
+        <div className="bg-slate-900 px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+          <h2 className="text-white font-bold text-lg">บันทึกการชำระเงิน</h2>
+          <button 
+            onClick={() => setPaymentModal(prev => ({ ...prev, isOpen: false }))}
+            className="text-slate-400 hover:text-white transition-colors"
+          >
+            <X size={20} weight="bold" />
+          </button>
+        </div>
+        
+        <div className="p-6 bg-slate-800/50">
+          <div className="mb-6">
+            <p className="text-xs font-bold text-slate-400 mb-1">เลขที่สัญญา</p>
+            <p className="text-xl font-black text-white">{paymentModal.contractNumber}</p>
+          </div>
+          
+          <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-6 flex items-center justify-between">
+            <span className="text-red-400 font-bold text-sm">ยอดค้างชำระปัจจุบัน</span>
+            <span className="text-red-400 font-black text-xl">{paymentModal.currentRemaining.toLocaleString()} ฿</span>
+          </div>
+
+          <div className="mb-8">
+            <label className="block text-sm font-bold text-slate-300 mb-2">
+              จำนวนเงินที่ชำระ (บาท)
+            </label>
+            <input 
+              type="number" 
+              min="0"
+              step="any"
+              value={paymentModal.amountStr}
+              onChange={(e) => setPaymentModal(prev => ({ ...prev, amountStr: e.target.value }))}
+              className="w-full bg-slate-900 border-2 border-amber-500/50 rounded-xl px-4 py-3 text-white focus:border-amber-500 focus:ring-0 outline-none transition-all font-bold text-lg"
+              placeholder="0.00"
+            />
+          </div>
+
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setPaymentModal(prev => ({ ...prev, isOpen: false }))}
+              disabled={paymentModal.isLoading}
+              className="flex-1 bg-slate-700/50 hover:bg-slate-700 text-slate-300 font-bold py-3.5 rounded-xl transition-all"
+            >
+              ยกเลิก
+            </button>
+            <button 
+              onClick={handlePaymentSubmit}
+              disabled={paymentModal.isLoading || !paymentModal.amountStr}
+              className="flex-1 bg-[#d4af37] hover:bg-[#c5a028] disabled:opacity-50 text-slate-900 font-black py-3.5 rounded-xl transition-all shadow-[0_0_15px_rgba(212,175,55,0.3)] flex justify-center items-center gap-2"
+            >
+              {paymentModal.isLoading ? (
+                <CircleNotch size={20} className="animate-spin" />
+              ) : (
+                'บันทึกยอด'
+              )}
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
