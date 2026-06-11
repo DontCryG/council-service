@@ -37,6 +37,7 @@ const CouncilLoanHub = lazy(() => import('./features/council/CouncilLoanHub'));
 const CouncilLoanView = lazy(() => import('./features/council/CouncilLoanView'));
 const CouncilLoanCreate = lazy(() => import('./features/council/CouncilLoanCreate'));
 const CouncilLoanEdit = lazy(() => import('./features/council/CouncilLoanEdit'));
+const CouncilReceiptView = lazy(() => import('./features/council/CouncilReceiptView'));
 const LoanPublic = lazy(() => import('./features/services/LoanPublic'));
 
 function GlobalAlert() {
@@ -241,6 +242,7 @@ function App() {
             <Route path="council_loan/view/:id" element={<ProtectedRoute><CouncilLoanView /></ProtectedRoute>} />
             <Route path="council_loan/create" element={<ProtectedRoute><CouncilLoanCreate /></ProtectedRoute>} />
             <Route path="council_loan/edit/:id" element={<ProtectedRoute><CouncilLoanEdit /></ProtectedRoute>} />
+            <Route path="council_loan/receipt/:txId" element={<ProtectedRoute><CouncilReceiptView /></ProtectedRoute>} />
           </Route>
           
           <Route path="*" element={<NotFound />} />

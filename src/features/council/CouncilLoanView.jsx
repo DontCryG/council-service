@@ -41,22 +41,36 @@ export default function CouncilLoanView() {
           // Fetch Payment History
           const q = query(
             collection(db, 'transactions'),
-            where('contractId', '==', docSnap.id),
-            where('type', '==', 'payment'),
-            orderBy('createdAt', 'asc')
+            where('contractId', '==', docSnap.id)
           );
           const querySnapshot = await getDocs(q);
-          const history = [];
-          let currentBalance = contractData.totalAmount || 0;
+          
+          // Filter and sort in memory to avoid requiring a composite index
+          const historyDocs = [];
           querySnapshot.forEach((doc) => {
             const data = doc.data();
-            currentBalance -= data.amount;
+            if (data.type === 'payment') {
+              historyDocs.push({ id: doc.id, ...data });
+            }
+          });
+          
+          historyDocs.sort((a, b) => {
+            const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+            const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+            return timeA - timeB; // ascending
+          });
+
+          const history = [];
+          let currentBalance = contractData.totalAmount || 0;
+          
+          for (const tx of historyDocs) {
+            currentBalance -= tx.amount;
             history.push({
-              id: doc.id,
-              ...data,
+              ...tx,
               balanceAfter: currentBalance
             });
-          });
+          }
+          
           // Reverse to show newest first
           setPaymentHistory(history.reverse());
 
@@ -442,7 +456,10 @@ export default function CouncilLoanView() {
                         {tx.balanceAfter.toLocaleString()}
                       </td>
                       <td className="py-4 px-6 text-center">
-                        <button className="text-slate-500 hover:text-blue-600 text-[13px] font-medium flex items-center justify-center gap-1.5 transition-colors mx-auto">
+                        <button 
+                          onClick={() => navigate(`/council_loan/receipt/${tx.id}`, { state: { tx, contract } })}
+                          className="text-slate-500 hover:text-blue-600 text-[13px] font-medium flex items-center justify-center gap-1.5 transition-colors mx-auto"
+                        >
                           <Receipt size={16} /> ดูใบเสร็จ
                         </button>
                       </td>
