@@ -178,7 +178,7 @@ export default function CouncilLoanView() {
         <div className="shadow-2xl mx-auto w-fit">
           <div 
             ref={documentRef}
-            className="bg-[#fdfbf7] text-[#1a202c] p-12 sm:p-20 font-serif leading-relaxed relative overflow-hidden"
+            className="bg-[#fdfbf7] text-[#1a202c] p-12 sm:p-20 font-sans leading-relaxed relative overflow-hidden"
             style={{ minHeight: '1056px', width: '816px' }}
           >
             {/* Background Watermark */}
