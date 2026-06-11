@@ -40,7 +40,7 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
         style: {
           transform: 'scale(1)',
           transformOrigin: 'top left',
-          width: '800px'
+          width: '850px'
         }
       });
       const link = document.createElement('a');
@@ -114,8 +114,8 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
         {/* Payslip Preview */}
         <div className="flex-1 overflow-x-auto rounded-xl custom-scrollbar relative border border-slate-800 bg-slate-950/50">
           
-          {/* THE BILL: 800px fixed width for perfect capture */}
-          <div ref={printRef} className="w-[800px] shrink-0 bg-[#020617] p-10 relative overflow-hidden text-slate-300 mx-auto">
+          {/* THE BILL: 850px fixed width for perfect capture */}
+          <div ref={printRef} className="w-[850px] shrink-0 bg-[#020617] p-10 relative overflow-hidden text-slate-300 mx-auto">
             {/* Background Effects */}
             <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-[100px] -mr-40 -mt-40 pointer-events-none"></div>
             <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] -ml-40 -mb-40 pointer-events-none"></div>
@@ -138,7 +138,7 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
                   <h2 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-100 to-slate-500 tracking-tighter uppercase mb-2">
                     Payslip
                   </h2>
-                  <div className="text-xs font-bold text-slate-400 bg-slate-900/80 px-3 py-1.5 rounded-full border border-slate-800 inline-block">
+                  <div className="text-xs font-bold text-slate-400 bg-slate-900/80 px-3 py-1.5 rounded-full border border-slate-800 inline-block whitespace-nowrap">
                     วันที่ออก: {new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })}
                   </div>
                 </div>
@@ -178,10 +178,10 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
               {/* Earnings Breakdown */}
               <div className="bg-slate-900/80 border border-slate-700/50 rounded-2xl overflow-hidden shadow-2xl shadow-black/50 backdrop-blur-md">
                 <div className="bg-slate-800/80 px-6 py-4 border-b border-slate-700/80 flex items-center justify-between">
-                  <div className="font-bold text-white flex items-center gap-2">
-                    <Receipt size={20} className="text-amber-500" /> รายละเอียดรายได้ (EARNINGS)
+                  <div className="font-bold text-white flex items-center gap-2 truncate pr-4">
+                    <Receipt size={20} className="text-amber-500 shrink-0" /> <span className="truncate">รายละเอียดรายได้ (EARNINGS)</span>
                   </div>
-                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">จำนวนเงิน (บาท)</div>
+                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wider whitespace-nowrap shrink-0">จำนวนเงิน (บาท)</div>
                 </div>
                 
                 <div className="p-3 space-y-1">
@@ -205,18 +205,18 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
 
                   {/* Bonus */}
                   <div className="flex justify-between items-center px-4 py-3.5 rounded-xl hover:bg-slate-800/40 transition-colors border-t border-slate-800/50 mt-2 pt-4">
-                    <div className="font-bold text-white flex items-center gap-2">
-                      <ChartLineUp size={18} className="text-emerald-500" /> เงินเพิ่ม / โบนัสพิเศษ <span className="text-slate-500 font-normal ml-1">(Allowance/Bonus)</span>
+                    <div className="font-bold text-white flex items-center gap-2 whitespace-nowrap">
+                      <ChartLineUp size={18} className="text-emerald-500 shrink-0" /> เงินเพิ่ม / โบนัสพิเศษ <span className="text-slate-500 font-normal ml-1">(Allowance/Bonus)</span>
                     </div>
-                    <div className="text-lg font-mono font-black text-emerald-400 tracking-tight">{bonus > 0 ? formatMoney(bonus) : '-'}</div>
+                    <div className="text-lg font-mono font-black text-emerald-400 tracking-tight shrink-0 pl-4">{bonus > 0 ? formatMoney(bonus) : '-'}</div>
                   </div>
 
                   {/* Deductions */}
                   <div className="flex justify-between items-center px-4 py-3.5 rounded-xl bg-red-950/20 border border-red-900/30 mt-2">
-                    <div className="font-bold text-red-400 flex items-center gap-2">
-                      <WarningCircle size={18} /> รายการหัก <span className="text-red-500/60 font-normal ml-1">(Deductions)</span>
+                    <div className="font-bold text-red-400 flex items-center gap-2 whitespace-nowrap">
+                      <WarningCircle size={18} className="shrink-0" /> รายการหัก <span className="text-red-500/60 font-normal ml-1">(Deductions)</span>
                     </div>
-                    <div className="text-lg font-mono font-black text-red-400 tracking-tight">{deductions > 0 ? `-${formatMoney(deductions)}` : '-'}</div>
+                    <div className="text-lg font-mono font-black text-red-400 tracking-tight shrink-0 pl-4">{deductions > 0 ? `-${formatMoney(deductions)}` : '-'}</div>
                   </div>
                 </div>
               </div>
@@ -244,12 +244,12 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
               {/* Signatures */}
               <div className="flex justify-between px-12 pt-10 text-center pb-4">
                 <div>
-                  <div className="w-56 border-b-2 border-dashed border-slate-700 mb-4"></div>
+                  <div className="w-64 border-b-2 border-dashed border-slate-600 mb-4"></div>
                   <div className="font-bold text-sm text-slate-400 uppercase tracking-widest">ผู้อนุมัติ</div>
                   <div className="text-[10px] text-slate-600 mt-1 uppercase">Authorized Signatory</div>
                 </div>
                 <div>
-                  <div className="w-56 border-b-2 border-dashed border-slate-700 mb-4"></div>
+                  <div className="w-64 border-b-2 border-dashed border-slate-600 mb-4"></div>
                   <div className="font-bold text-sm text-slate-400 uppercase tracking-widest">ผู้รับเงิน</div>
                   <div className="text-[10px] text-slate-600 mt-1 uppercase">Employee Signature</div>
                 </div>
