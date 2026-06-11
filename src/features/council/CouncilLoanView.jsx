@@ -58,7 +58,7 @@ export default function CouncilLoanView() {
       });
       const link = document.createElement('a');
       link.href = dataUrl;
-      link.download = `contract_${contract?.contractId || 'document'}.png`;
+      link.download = `สัญญา_${contract?.contractId || 'document'}.png`;
       link.click();
       showAlert('success', 'ดาวน์โหลดรูปภาพสำเร็จ');
     } catch (err) {
