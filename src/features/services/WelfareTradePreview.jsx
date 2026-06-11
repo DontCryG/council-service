@@ -73,12 +73,7 @@ export default function WelfareTradePreview() {
       const fd = new FormData();
       fd.append('file', blob, 'trade.png');
       const councilName = councilMembers.find(c => c.id === formData.councilStaffId)?.name;
-      const payload = buildWelfareTradeWebhook(formData, items, getTotalPrice(), councilName);
-      
-      // Attempt to inject refNumber into discord webhook footer if possible
-      if (payload?.embeds?.[0]?.footer) {
-        payload.embeds[0].footer.text = `Ref: ${refNumber} | ${payload.embeds[0].footer.text}`;
-      }
+      const payload = buildWelfareTradeWebhook(formData, items, getTotalPrice(), councilName, refNumber);
 
       fd.append('payload_json', JSON.stringify(payload));
 

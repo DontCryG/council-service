@@ -11,25 +11,55 @@
  * @param {string} userDiscordId - The user's Discord ID (from session/auth)
  * @returns {Object} Discord webhook payload
  */
-export const buildWelfareTradeWebhook = (formData, items, totalPrice, councilName) => {
-  return {
-    embeds: [{
-      title: "🔄 WELFARE TRADE RECEIPT",
-      color: 0x8b5cf6, // Violet
-      fields: [
-        { name: "🏰 แก๊ง/แฟมิลี่", value: `${formData.orgName} (${formData.orgType})`, inline: true },
-        { name: "📦 ประเภทสวัสดิการ", value: formData.tradeType === 'VEHICLE' ? 'ยานพาหนะ' : 'อาวุธ', inline: true },
-        { name: "📤 ชื่อผู้ให้ (เก่า)", value: formData.oldOwner, inline: true },
-        { name: "📥 ชื่อผู้รับ (ใหม่)", value: formData.newOwner, inline: true },
-        { name: "🛡️ สภาที่รับเรื่อง", value: councilName || '-', inline: true },
-        { name: "💰 เรทราคา", value: totalPrice, inline: true },
-        { name: "📋 รายการของ", value: items.map(i => `${i.name} ${i.detail ? `(${i.detail})` : ''}`).join('\n'), inline: false },
-      ],
-      image: {
-        url: "attachment://trade.png"
-      },
-      footer: { text: "Council Secretary System" },
-      timestamp: new Date().toISOString()
-    }]
-  };
+export const buildWelfareTradeWebhook = (formData, items, totalPrice, councilName, refNumber) => {
+  const isVehicle = formData.tradeType === 'VEHICLE';
+
+  const itemList = items.length > 0 
+    ? "```\n" + items.map(i => `${i.name} [${i.detail || '-'}]`).join('\n') + "\n```"
+    : "```\nไม่มี\n```";
+
+  if (isVehicle) {
+    return {
+      embeds: [{
+        title: "🚗 แจ้งเตือนธุรกรรมการเทรดรถสวัสดิการ",
+        color: 0xfacc15,
+        fields: [
+          { name: "🏢 สังกัด", value: formData.orgName || '-', inline: true },
+          { name: "👤 ผู้ถือรถ (เดิม)", value: formData.oldOwner || '-', inline: true },
+          { name: "👤 ผู้รับรถ (ใหม่)", value: formData.newOwner || '-', inline: true },
+          { name: "👮 เจ้าหน้าที่ผู้รับเรื่อง", value: councilName || '-', inline: false },
+          { name: "🚙 รายการรถที่เทรด", value: itemList, inline: false },
+          { name: "💰 ค่าบริการรวม", value: `**${totalPrice} $**`, inline: false },
+        ],
+        image: {
+          url: "attachment://trade.png"
+        },
+        footer: { text: `Ref: ${refNumber || '-'} | Server System` },
+        timestamp: new Date().toISOString()
+      }]
+    };
+  } else {
+    // Weapon
+    const pricingStr = formData.pricingType ? formData.pricingType.split(' ')[0] : '-';
+    return {
+      embeds: [{
+        title: "⚔️ แจ้งเตือนธุรกรรมการเทรดอาวุธสวัสดิการ",
+        color: 0xef4444,
+        fields: [
+          { name: "📋 รูปแบบการออก", value: pricingStr, inline: true },
+          { name: "🏢 สังกัด", value: formData.orgName || '-', inline: true },
+          { name: "👤 ผู้ส่งมอบ (เดิม)", value: formData.oldOwner || '-', inline: true },
+          { name: "👤 ผู้รับมอบ (ใหม่)", value: formData.newOwner || '-', inline: true },
+          { name: "👮 เจ้าหน้าที่ผู้รับเรื่อง", value: councilName || '-', inline: false },
+          { name: "🔫 รายการอาวุธ", value: itemList, inline: false },
+          { name: "💰 ค่าบริการรวม", value: `**${totalPrice} $**`, inline: false },
+        ],
+        image: {
+          url: "attachment://trade.png"
+        },
+        footer: { text: `Ref: ${refNumber || '-'} | Server System` },
+        timestamp: new Date().toISOString()
+      }]
+    };
+  }
 };
