@@ -11,6 +11,7 @@ export const publicServices = [
     { id: 'ps5', title: 'ระบบแลก TICKET', desc: 'สั่งซื้อหรือแลกเปลี่ยนตั๋วพิเศษสำหรับสวัสดิการ', icon: 'ph-ticket' },
     { id: 'edit_org', title: 'แก้ไขข้อมูลองค์กร', desc: 'แก้ไขข้อมูลการย้ายหรือตั้งชื่อแก๊ง', icon: 'ph-pencil-simple' },
     { id: 'cs5', title: 'STORY CALENDAR', desc: 'ประวัติและปฏิทินเดินสตอรี่ของการจองทั้งหมด', icon: 'ph-calendar-check' },
+    { id: 'loan_public', title: 'ระบบขอกู้ยืมเงิน', desc: 'บริการขอกู้ยืมเงินจากสภาสำหรับประชาชนและองค์กร', icon: 'ph-hand-coins' },
 ];
 
 /**
@@ -22,6 +23,7 @@ export const councilServices = [
     { id: 'cs3', title: 'ระบบจัดการเงิน Ticket', desc: 'จัดการงบประมาณ การเก็บเงินค่า Ticket ของประชาชน', icon: 'ph-currency-circle-dollar' },
     { id: 'cs4', title: 'ระบบจัดการรายชื่อองค์กร', desc: 'จัดการฐานข้อมูลองค์กร และสถานะ Gang/Family ในเมือง', icon: 'ph-address-book' },
     { id: 'admin/transactions', title: 'ประวัติการทำรายการ (Logs)', desc: 'ดูประวัติการทำธุรกรรมและบริการทั้งหมดที่ถูกบันทึกไว้ในฐานข้อมูล', icon: 'ph-database' },
+    { id: 'council_loan', title: 'ระบบจัดการเงินกู้', desc: 'ระบบจัดการการกู้ยืมเงินและชำระเงินกู้สำหรับสภา', icon: 'ph-coins' },
 ];
 
 /**

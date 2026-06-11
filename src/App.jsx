@@ -32,6 +32,8 @@ const StoryCalendar = lazy(() => import('./features/services/StoryCalendar'));
 const DutySystem = lazy(() => import('./features/council/DutySystem'));
 const AdminDutyHistory = lazy(() => import('./features/council/AdminDutyHistory'));
 const TransactionHistory = lazy(() => import('./features/admin/TransactionHistory'));
+const CouncilLoanHub = lazy(() => import('./features/council/CouncilLoanHub'));
+const LoanPublic = lazy(() => import('./features/services/LoanPublic'));
 
 function GlobalAlert() {
   const { alert, hideAlert } = useAppStore();
@@ -226,6 +228,9 @@ function App() {
             
             <Route path="cs5" element={<StoryCalendar />} />
             <Route path="cs6" element={<ProtectedRoute><DutySystem /></ProtectedRoute>} />
+            
+            <Route path="loan_public" element={<LoanPublic />} />
+            <Route path="council_loan" element={<ProtectedRoute><CouncilLoanHub /></ProtectedRoute>} />
             {/* We will add more routes here later */}
           </Route>
           
