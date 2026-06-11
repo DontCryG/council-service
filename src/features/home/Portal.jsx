@@ -105,7 +105,7 @@ export default function Portal() {
       <div className="absolute bottom-8 left-8 right-8 md:left-12 md:right-12 flex flex-col md:flex-row justify-between items-center md:items-end gap-4 z-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500">
         <div className="flex flex-col items-center md:items-start">
           <div className="flex gap-5 mb-4 text-slate-500">
-            <a href="#" className="hover:text-white hover:scale-110 transition-all duration-300"><Globe size={22} weight="duotone" /></a>
+            <a href="https://wip-town.com/th" target="_blank" rel="noopener noreferrer" className="hover:text-white hover:scale-110 transition-all duration-300"><Globe size={22} weight="duotone" /></a>
             <a href="#" className="hover:text-blue-500 hover:scale-110 transition-all duration-300"><FacebookLogo size={22} weight="duotone" /></a>
           </div>
           <p className="text-[10px] md:text-xs text-slate-600 tracking-wider">สงวนลิขสิทธิ์ &copy; {new Date().getFullYear() + 543} สำนักงานสภาเมือง</p>
