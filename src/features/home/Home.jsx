@@ -20,7 +20,13 @@ export default function Home() {
   };
 
   const filteredPublic = filterServices(publicServices);
-  const filteredCouncil = filterServices(councilServices);
+  const filteredCouncil = filterServices(councilServices).filter(s => {
+    // Hide Admin-only rooms from non-admin users
+    if ((s.id === 'council_manage' || s.id === 'admin/transactions') && user?.role !== 'admin') {
+      return false;
+    }
+    return true;
+  });
   const filteredWebsites = filterServices(relatedWebsites);
 
   const renderServiceCard = (service, index = 0, isDanger = false, isExternal = false) => (
