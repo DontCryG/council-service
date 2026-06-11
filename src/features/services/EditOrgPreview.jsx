@@ -46,7 +46,7 @@ export default function EditOrgPreview() {
     let total = 0;
     if (formData.changeInfo) total += 500000;
     if (formData.editTexture) total += (500000 * Math.max(1, formData.textureCount));
-    if (formData.addCloth) total += (500000 * Math.max(1, formData.clothCount));
+    if (formData.addCloth) total += (500000 * Math.max(1, formData.textureCount));
     if (formData.bulkChange) total += 1500000;
     if (formData.addAccessory) total += 1000000;
     return total;
@@ -76,7 +76,7 @@ export default function EditOrgPreview() {
             { name: "รายการที่แก้ไข", value: [
                 formData.changeInfo ? "✅ เปลี่ยนข้อมูล Gang" : "",
                 formData.editTexture ? `✅ แก้ไข Texture เสื้อผ้า (${formData.textureCount} ชุด)` : "",
-                formData.addCloth ? `✅ ลงชุดเพิ่ม (${formData.clothCount} ชุด)` : "",
+                formData.addCloth ? `✅ ลงชุดเพิ่ม (${formData.textureCount} ชุด)` : "",
                 formData.bulkChange ? "✅ เหมาเปลี่ยนข้อมูล Gang" : "",
                 formData.addAccessory ? `✅ ลง Accessories Adons เสริม` : ""
             ].filter(Boolean).join('\n') || "ไม่มี", inline: false },
@@ -164,7 +164,7 @@ export default function EditOrgPreview() {
             <ul className="text-sm flex flex-col gap-2 list-none pl-0 text-slate-700 font-medium">
               {formData.changeInfo && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ เปลี่ยนข้อมูล Gang</span> <span>$500,000</span></li>}
               {formData.editTexture && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ แก้ไข Texture เสื้อผ้า ({formData.textureCount} ชุด)</span> <span>${(500000 * Math.max(1, formData.textureCount)).toLocaleString()}</span></li>}
-              {formData.addCloth && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ ลงชุดเพิ่ม ({formData.clothCount} ชุด)</span> <span>${(500000 * Math.max(1, formData.clothCount)).toLocaleString()}</span></li>}
+              {formData.addCloth && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ ลงชุดเพิ่ม ({formData.textureCount} ชุด)</span> <span>${(500000 * Math.max(1, formData.textureCount)).toLocaleString()}</span></li>}
               {formData.bulkChange && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ เหมาเปลี่ยนข้อมูล Gang</span> <span>$1,500,000</span></li>}
               {formData.addAccessory && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ ลง Accessories Adons เสริม</span> <span>$1,000,000</span></li>}
               {!formData.changeInfo && !formData.editTexture && !formData.addCloth && !formData.bulkChange && !formData.addAccessory && (

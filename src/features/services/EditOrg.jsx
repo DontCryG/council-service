@@ -94,7 +94,7 @@ export default function EditOrg() {
     let total = 0;
     if (formData.changeInfo) total += 500000;
     if (formData.editTexture) total += (500000 * Math.max(1, formData.textureCount));
-    if (formData.addCloth) total += (500000 * Math.max(1, formData.clothCount));
+    if (formData.addCloth) total += (500000 * Math.max(1, formData.textureCount));
     if (formData.bulkChange) total += 1500000;
     if (formData.addAccessory) total += 1000000;
     return total;
@@ -234,7 +234,7 @@ export default function EditOrg() {
                 <div>
                   <div className="flex items-end gap-1 mb-2">
                     <span className="text-xs font-bold text-slate-300">จำนวนชุด (Texture)</span>
-                    <span className="text-[10px] text-slate-500">*มีผลกับราคาเมื่อเลือกแก้ Texture</span>
+                    <span className="text-[10px] text-slate-500">*มีผลกับราคาเมื่อเลือกแก้ Texture หรือลงชุดเพิ่ม</span>
                   </div>
                   <div className="inline-flex border border-slate-700 rounded-lg overflow-hidden bg-slate-950 h-10">
                     <button type="button" className="px-4 hover:bg-slate-800 font-bold border-r border-slate-700 text-slate-400" onClick={() => setFormData(prev => ({...prev, textureCount: Math.max(1, prev.textureCount - 1)}))}>-</button>
