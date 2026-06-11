@@ -87,6 +87,7 @@ export default function EditOrgPreview() {
           title: "📜 Council Service Log",
           description: "**ได้รับคำร้องขออัปเดตข้อมูลสังกัดใหม่**",
           color: 0xf59e0b,
+          thumbnail: formData.logoUrl ? { url: formData.logoUrl } : undefined,
           fields: [
             { name: "ประเภท", value: orgTypeDisplay, inline: true },
             { name: "ชื่อสังกัด", value: formData.orgName, inline: true },
