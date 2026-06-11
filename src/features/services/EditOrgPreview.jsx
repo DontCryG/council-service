@@ -154,8 +154,8 @@ export default function EditOrgPreview() {
               </div>
             </div>
             {formData.logoUrl && (
-              <div className="ml-4 shrink-0 bg-slate-800/50 p-2 rounded-xl border border-slate-700/50 backdrop-blur-sm">
-                <img src={formData.logoUrl} alt="Logo" className="w-20 h-20 object-contain drop-shadow-xl" crossOrigin="anonymous"/>
+              <div className="ml-4 shrink-0 bg-slate-800/80 p-2 rounded-xl border border-slate-700">
+                <img src={formData.logoUrl} alt="Logo" className="w-20 h-20 object-contain rounded" crossOrigin="anonymous"/>
               </div>
             )}
           </div>
@@ -172,7 +172,7 @@ export default function EditOrgPreview() {
               <div className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1 flex items-center gap-1.5">
                 <PaintBucket size={14} /> Theme Color (New)
               </div>
-              <div className="flex items-center gap-3 font-mono font-bold text-white bg-slate-800/50 px-3 py-1.5 rounded-lg border border-slate-700/50 w-max">
+              <div className="flex items-center gap-3 font-mono font-bold text-white bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700 w-max">
                 <div className="w-4 h-4 rounded-full border border-slate-600 shadow-inner" style={{ backgroundColor: formData.hexColor }}></div>
                 {formData.hexColor}
               </div>
@@ -185,11 +185,11 @@ export default function EditOrgPreview() {
               <CircleDashed size={16} /> Requested Changes
             </div>
             <ul className="text-sm flex flex-col gap-2.5 list-none pl-0 font-medium">
-              {formData.changeInfo && <li className="flex justify-between items-center bg-slate-800/40 p-3 rounded-xl border border-slate-700/50 hover:border-amber-500/30 transition-colors"><span className="flex items-center gap-2 text-white"><CheckCircle size={18} weight="fill" className="text-amber-500" /> เปลี่ยนข้อมูล Gang</span> <span className="font-mono text-amber-400">$500,000</span></li>}
-              {formData.editTexture && <li className="flex justify-between items-center bg-slate-800/40 p-3 rounded-xl border border-slate-700/50 hover:border-amber-500/30 transition-colors"><span className="flex items-center gap-2 text-white"><CheckCircle size={18} weight="fill" className="text-amber-500" /> แก้ไข Texture เสื้อผ้า <span className="text-slate-400 text-xs ml-1">x{formData.textureCount}</span></span> <span className="font-mono text-amber-400">${(500000 * Math.max(1, formData.textureCount)).toLocaleString()}</span></li>}
-              {formData.addCloth && <li className="flex justify-between items-center bg-slate-800/40 p-3 rounded-xl border border-slate-700/50 hover:border-amber-500/30 transition-colors"><span className="flex items-center gap-2 text-white"><CheckCircle size={18} weight="fill" className="text-amber-500" /> ลงชุดเพิ่ม <span className="text-slate-400 text-xs ml-1">x{formData.textureCount}</span></span> <span className="font-mono text-amber-400">${(500000 * Math.max(1, formData.textureCount)).toLocaleString()}</span></li>}
-              {formData.bulkChange && <li className="flex justify-between items-center bg-slate-800/40 p-3 rounded-xl border border-slate-700/50 hover:border-amber-500/30 transition-colors"><span className="flex items-center gap-2 text-white"><CheckCircle size={18} weight="fill" className="text-amber-500" /> เหมาเปลี่ยนข้อมูล Gang</span> <span className="font-mono text-amber-400">$1,500,000</span></li>}
-              {formData.addAccessory && <li className="flex justify-between items-center bg-slate-800/40 p-3 rounded-xl border border-slate-700/50 hover:border-amber-500/30 transition-colors"><span className="flex items-center gap-2 text-white"><CheckCircle size={18} weight="fill" className="text-amber-500" /> ลง Accessories Adons เสริม</span> <span className="font-mono text-amber-400">$1,000,000</span></li>}
+              {formData.changeInfo && <li className="flex justify-between items-center bg-slate-800/60 p-3 rounded-xl border border-slate-700"><span className="flex items-center gap-2 text-white"><CheckCircle size={18} weight="fill" className="text-amber-500" /> เปลี่ยนข้อมูล Gang</span> <span className="font-mono text-amber-400">$500,000</span></li>}
+              {formData.editTexture && <li className="flex justify-between items-center bg-slate-800/60 p-3 rounded-xl border border-slate-700"><span className="flex items-center gap-2 text-white"><CheckCircle size={18} weight="fill" className="text-amber-500" /> แก้ไข Texture เสื้อผ้า <span className="text-slate-400 text-xs ml-1">x{formData.textureCount}</span></span> <span className="font-mono text-amber-400">${(500000 * Math.max(1, formData.textureCount)).toLocaleString()}</span></li>}
+              {formData.addCloth && <li className="flex justify-between items-center bg-slate-800/60 p-3 rounded-xl border border-slate-700"><span className="flex items-center gap-2 text-white"><CheckCircle size={18} weight="fill" className="text-amber-500" /> ลงชุดเพิ่ม <span className="text-slate-400 text-xs ml-1">x{formData.textureCount}</span></span> <span className="font-mono text-amber-400">${(500000 * Math.max(1, formData.textureCount)).toLocaleString()}</span></li>}
+              {formData.bulkChange && <li className="flex justify-between items-center bg-slate-800/60 p-3 rounded-xl border border-slate-700"><span className="flex items-center gap-2 text-white"><CheckCircle size={18} weight="fill" className="text-amber-500" /> เหมาเปลี่ยนข้อมูล Gang</span> <span className="font-mono text-amber-400">$1,500,000</span></li>}
+              {formData.addAccessory && <li className="flex justify-between items-center bg-slate-800/60 p-3 rounded-xl border border-slate-700"><span className="flex items-center gap-2 text-white"><CheckCircle size={18} weight="fill" className="text-amber-500" /> ลง Accessories Adons เสริม</span> <span className="font-mono text-amber-400">$1,000,000</span></li>}
             </ul>
           </div>
 
@@ -207,7 +207,7 @@ export default function EditOrgPreview() {
           <div className="flex justify-between items-end pt-6 mt-2 border-t border-dashed border-slate-700 relative z-10">
             <div>
               <div className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1">Total Amount Due</div>
-              <div className="text-4xl font-black text-white drop-shadow-[0_0_15px_rgba(245,158,11,0.3)]">
+              <div className="text-4xl font-black text-white">
                 <span className="text-amber-500 mr-1">$</span>{calculateTotal().toLocaleString()}
               </div>
             </div>
