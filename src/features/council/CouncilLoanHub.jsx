@@ -11,7 +11,8 @@ import {
   ArrowLeft,
   CircleNotch,
   Copy,
-  CheckCircle
+  CheckCircle,
+  X
 } from '@phosphor-icons/react';
 import { collection, query, orderBy, onSnapshot, deleteDoc, doc, updateDoc, serverTimestamp, addDoc } from 'firebase/firestore';
 import { db } from '../../core/firebase';
