@@ -159,12 +159,19 @@ export default function TicketStore() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-4xl mx-auto">
-      <div className="flex items-center gap-3">
-        <Ticket size={32} weight="duotone" className="text-amber-500" />
-        <div>
-          <h1 className="text-2xl font-bold text-white">ระบบแลก TICKET</h1>
-          <p className="text-slate-400">ส่งคำขอซื้อ Ticket สำหรับซื้อของสวัสดิการสภา</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <Ticket size={32} weight="duotone" className="text-amber-500" />
+          <div>
+            <h1 className="text-2xl font-bold text-white">ระบบแลก TICKET</h1>
+            <p className="text-slate-400">ส่งคำขอซื้อ Ticket สำหรับซื้อของสวัสดิการสภา</p>
+          </div>
         </div>
+        {!selectedType && (
+          <Button variant="ghost" onClick={() => navigate('/home')} className="text-slate-400 hover:text-white px-0 self-start sm:self-auto">
+            <ArrowLeft size={18} className="mr-2" /> ย้อนกลับ
+          </Button>
+        )}
       </div>
 
       {!selectedType ? (
