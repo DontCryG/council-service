@@ -5,7 +5,8 @@ import {
   DownloadSimple, 
   PenNib,
   CircleNotch,
-  Receipt
+  Receipt,
+  SealCheck
 } from '@phosphor-icons/react';
 import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../core/firebase';
@@ -177,104 +178,138 @@ export default function CouncilLoanView() {
         <div className="shadow-2xl mx-auto w-fit">
           <div 
             ref={documentRef}
-            className="bg-white text-slate-900 p-10 sm:p-16 rounded-sm font-sans leading-relaxed relative"
+            className="bg-[#fdfbf7] text-[#1a202c] p-12 sm:p-20 font-serif leading-relaxed relative overflow-hidden"
             style={{ minHeight: '1056px', width: '816px' }}
           >
-            <h1 className="text-3xl font-black text-center mb-12">สัญญากู้ยืมเงิน</h1>
-          
-          <div className="flex justify-between items-start mb-10 text-sm font-medium">
-            <div>เลขที่สัญญา: {contract.contractId}</div>
-            <div className="text-right leading-relaxed">
-              <div>ทำที่: ที่ทำการสภา WIP TOWN</div>
-              <div>วันที่: {formatDate(contract.createdAt)}</div>
-            </div>
-          </div>
-
-          <p className="mb-8 indent-12 text-[15px] leading-loose">
-            สัญญานี้ทำขึ้นระหว่าง <strong>{contract.borrowerName}</strong> โดยต่อไปนี้เรียกว่า "ผู้กู้" และหน่วยงานสภา WIP TOWN โดยต่อไปนี้เรียกว่า "ผู้ให้กู้" ทั้งสองฝ่ายตกลงทำสัญญากันดังมีข้อความต่อไปนี้
-          </p>
-
-          <div className="space-y-8 text-[15px]">
-            <div>
-              <h3 className="font-bold mb-3 text-base">ข้อ 1. จำนวนเงินกู้และการรับเงิน</h3>
-              <p className="indent-12 leading-loose">ผู้กู้ได้ตกลงกู้ยืมเงินและผู้ให้กู้ได้ตกลงให้กู้ยืมเงินเป็นจำนวนเงินทั้งสิ้น <strong>{formatMoney(contract.principalAmount)}</strong> บาท</p>
+            {/* Background Watermark */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] pointer-events-none">
+              <SealCheck size={600} weight="fill" />
             </div>
 
-            <div>
-              <h3 className="font-bold mb-3 text-base">ข้อ 2. อัตราดอกเบี้ย</h3>
-              <div className="ml-12 space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-5 h-5 border border-slate-900 bg-slate-100 shrink-0 text-center" style={{ lineHeight: '18px' }}>
-                    <span className="text-sm font-bold block">{contract.interestRate > 0 ? '✓' : ''}</span>
-                  </div>
-                  <span>ร้อยละ <strong>{contract.interestRate || '..........'}</strong> จำนวน <strong>{formatMoney(contract.interestAmount) || '..........'}</strong> บาท</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-5 h-5 border border-slate-900 bg-slate-100 shrink-0 text-center" style={{ lineHeight: '18px' }}>
-                    <span className="text-sm font-bold block">{!contract.interestRate || contract.interestRate === 0 ? '✓' : ''}</span>
-                  </div>
-                  <span>จำนวนเงิน <strong>..........</strong> บาท</span>
-                </div>
-                <p className="mt-4 font-bold">รวมเป็นเงินต้นและดอกเบี้ย {formatMoney(contract.totalAmount)} บาท</p>
-              </div>
-            </div>
+            {/* Inner Border Frame */}
+            <div className="absolute inset-6 border-double border-[6px] border-[#c9b794]/40 pointer-events-none rounded-lg"></div>
 
-            <div>
-              <h3 className="font-bold mb-3 text-base">ข้อ 3. กำหนดการชำระเงินคืน</h3>
-              <p className="indent-12 mb-4 leading-loose">ผู้กู้ตกลงจะชำระเงินต้นพร้อมดอกเบี้ยคืนให้แก่ผู้ให้กู้ ภายในวันที่ <strong>{formatDate(contract.dueDate)}</strong></p>
-              <div className="ml-12 flex items-center gap-12">
-                <div className="flex items-center gap-3">
-                  <div className="w-5 h-5 border border-slate-900 bg-slate-100 shrink-0 text-center" style={{ lineHeight: '18px' }}>
-                    <span className="text-sm font-bold block">{contract.paymentMethod === 'installments' ? '✓' : ''}</span>
-                  </div>
-                  <span>รายวัน (วันละ {formatMoney(contract.installmentAmount)} บาท)</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-5 h-5 border border-slate-900 bg-slate-100 shrink-0 text-center" style={{ lineHeight: '18px' }}>
-                    <span className="text-sm font-bold block">{contract.paymentMethod === 'full' ? '✓' : ''}</span>
-                  </div>
-                  <span>ชำระเต็มจำนวน</span>
+            <div className="relative z-10">
+              <h1 className="text-4xl font-black text-center mb-16 tracking-wide text-[#2d3748]">สัญญากู้ยืมเงิน</h1>
+            
+              <div className="flex justify-between items-end mb-12 text-[15px] font-semibold border-b-2 border-[#c9b794]/20 pb-6">
+                <div><span className="text-slate-500 mr-2">เลขที่สัญญา:</span> {contract.contractId}</div>
+                <div className="text-right leading-relaxed">
+                  <div><span className="text-slate-500 mr-2">ทำที่:</span> ที่ทำการสภา WIP TOWN</div>
+                  <div><span className="text-slate-500 mr-2">วันที่:</span> {formatDate(contract.createdAt)}</div>
                 </div>
               </div>
-            </div>
 
-            <div>
-              <h3 className="font-bold mb-3 text-base">ข้อ 4. การผิดนัดชำระหนี้</h3>
-              <p className="indent-12 text-justify leading-loose">
-                หากผู้กู้ผิดนัดชำระหนี้ตามที่ระบุไว้ในข้อ 3. ผู้กู้ยินยอมให้ผู้ให้กู้เรียกร้องให้ชำระหนี้ทั้งหมดได้ทันที พร้อมทั้งยินยอมชดใช้ค่าเสียหายและค่าใช้จ่ายต่างๆ ที่เกิดขึ้นจากการติดตามทวงถาม หากไม่ติดต่อชำระภายในเวลาที่กำหนดสภาจะทำการปรับโทษ BLACKLIST ครั้งที่ 1 ทันที
+              <p className="mb-10 indent-16 text-[16px] leading-loose text-justify">
+                สัญญานี้ทำขึ้นระหว่าง <strong className="text-lg mx-1">{contract.borrowerName}</strong> ซึ่งต่อไปในสัญญานี้เรียกว่า <strong>"ผู้กู้"</strong> ฝ่ายหนึ่ง และ <strong>หน่วยงานสภา WIP TOWN</strong> ซึ่งต่อไปในสัญญานี้เรียกว่า <strong>"ผู้ให้กู้"</strong> อีกฝ่ายหนึ่ง ทั้งสองฝ่ายตกลงทำสัญญากันโดยมีข้อความดังต่อไปนี้
               </p>
-            </div>
-          </div>
 
-          <div className="mt-32 flex justify-between items-end px-4">
-            <div className="text-center w-64">
-              <div className="h-20 flex items-end justify-center mb-3">
-                {contract.borrowerSignature ? (
-                  <img src={contract.borrowerSignature} alt="Borrower Signature" className="max-h-20 max-w-full" style={{ mixBlendMode: 'multiply' }} />
-                ) : contract.borrowerSignedAt ? (
-                  <span className="italic text-slate-500 font-serif">Signed electronically</span>
-                ) : null}
-              </div>
-              <div className="flex items-center gap-2 w-full mb-3">
-                <span className="text-sm">ลงชื่อ</span>
-                <div className="border-b border-dotted border-slate-900 flex-1"></div>
-              </div>
-              <p className="mb-1">( {contract.borrowerName} )</p>
-              <p className="text-sm text-slate-500">ผู้กู้ยืม</p>
-            </div>
+              <div className="space-y-8 text-[16px]">
+                {/* Clause 1 */}
+                <div className="bg-white/60 p-6 rounded-xl border border-[#c9b794]/20 shadow-sm">
+                  <h3 className="font-bold mb-3 text-[17px] text-[#2d3748] flex items-center gap-3">
+                    <span className="bg-[#c9b794] text-white w-7 h-7 flex items-center justify-center rounded-full text-sm shadow-sm">1</span> 
+                    จำนวนเงินกู้และการรับเงิน
+                  </h3>
+                  <p className="indent-12 leading-loose">ผู้กู้ตกลงกู้ยืมเงินและผู้ให้กู้ตกลงให้กู้ยืมเงินเป็นจำนวนเงินทั้งสิ้น <strong className="text-lg text-amber-700">{formatMoney(contract.principalAmount)}</strong> บาท</p>
+                </div>
 
-            <div className="text-center w-64">
-              <div className="h-20 flex items-end justify-center mb-3">
-                {contract.councilSignature ? (
-                  <img src={contract.councilSignature} alt="Council Signature" className="max-h-20 max-w-full" style={{ mixBlendMode: 'multiply' }} />
-                ) : null}
+                {/* Clause 2 */}
+                <div className="bg-white/60 p-6 rounded-xl border border-[#c9b794]/20 shadow-sm">
+                  <h3 className="font-bold mb-5 text-[17px] text-[#2d3748] flex items-center gap-3">
+                    <span className="bg-[#c9b794] text-white w-7 h-7 flex items-center justify-center rounded-full text-sm shadow-sm">2</span> 
+                    อัตราดอกเบี้ย
+                  </h3>
+                  <div className="ml-10 space-y-4">
+                    <div className="flex items-center gap-4">
+                      <div className="w-5 h-5 border-2 border-slate-400 bg-white shrink-0 text-center rounded shadow-sm" style={{ lineHeight: '16px' }}>
+                        <span className="text-[13px] font-black block text-slate-800">{contract.interestRate > 0 ? '✓' : ''}</span>
+                      </div>
+                      <span>คิดอัตราดอกเบี้ยร้อยละ <strong className="text-amber-700 mx-1">{contract.interestRate || '..........'}</strong> จำนวน <strong className="text-amber-700 mx-1">{formatMoney(contract.interestAmount) || '..........'}</strong> บาท</span>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <div className="w-5 h-5 border-2 border-slate-400 bg-white shrink-0 text-center rounded shadow-sm" style={{ lineHeight: '16px' }}>
+                        <span className="text-[13px] font-black block text-slate-800">{!contract.interestRate || contract.interestRate === 0 ? '✓' : ''}</span>
+                      </div>
+                      <span>ไม่คิดดอกเบี้ย (จำนวนเงิน <strong>..........</strong> บาท)</span>
+                    </div>
+                    <div className="mt-6 p-4 bg-[#c9b794]/10 rounded-lg border border-[#c9b794]/30 font-bold text-center">
+                      รวมเป็นเงินต้นและดอกเบี้ยทั้งสิ้น <span className="text-xl text-amber-700 mx-2">{formatMoney(contract.totalAmount)}</span> บาท
+                    </div>
+                  </div>
+                </div>
+
+                {/* Clause 3 */}
+                <div className="bg-white/60 p-6 rounded-xl border border-[#c9b794]/20 shadow-sm">
+                  <h3 className="font-bold mb-4 text-[17px] text-[#2d3748] flex items-center gap-3">
+                    <span className="bg-[#c9b794] text-white w-7 h-7 flex items-center justify-center rounded-full text-sm shadow-sm">3</span> 
+                    กำหนดการชำระเงินคืน
+                  </h3>
+                  <p className="indent-12 mb-5 leading-loose">ผู้กู้ตกลงจะชำระเงินต้นพร้อมดอกเบี้ยคืนให้แก่ผู้ให้กู้ให้เสร็จสิ้น ภายในวันที่ <strong className="text-amber-700">{formatDate(contract.dueDate)}</strong></p>
+                  <div className="ml-10 flex flex-col sm:flex-row gap-6 sm:gap-12">
+                    <div className="flex items-center gap-4">
+                      <div className="w-5 h-5 border-2 border-slate-400 bg-white shrink-0 text-center rounded shadow-sm" style={{ lineHeight: '16px' }}>
+                        <span className="text-[13px] font-black block text-slate-800">{contract.paymentMethod === 'installments' ? '✓' : ''}</span>
+                      </div>
+                      <span>ผ่อนชำระรายวัน (วันละ <strong className="text-amber-700 mx-1">{formatMoney(contract.installmentAmount)}</strong> บาท)</span>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <div className="w-5 h-5 border-2 border-slate-400 bg-white shrink-0 text-center rounded shadow-sm" style={{ lineHeight: '16px' }}>
+                        <span className="text-[13px] font-black block text-slate-800">{contract.paymentMethod === 'full' ? '✓' : ''}</span>
+                      </div>
+                      <span>ชำระเต็มจำนวน</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Clause 4 */}
+                <div className="bg-white/60 p-6 rounded-xl border border-[#c9b794]/20 shadow-sm">
+                  <h3 className="font-bold mb-3 text-[17px] text-[#2d3748] flex items-center gap-3">
+                    <span className="bg-[#c9b794] text-white w-7 h-7 flex items-center justify-center rounded-full text-sm shadow-sm">4</span> 
+                    การผิดนัดชำระหนี้
+                  </h3>
+                  <p className="indent-12 text-justify leading-loose text-slate-700">
+                    หากผู้กู้ผิดนัดชำระหนี้ตามที่ระบุไว้ในข้อ 3. ผู้กู้ยินยอมให้ผู้ให้กู้เรียกร้องให้ชำระหนี้ทั้งหมดได้ทันที พร้อมทั้งยินยอมชดใช้ค่าเสียหายและค่าใช้จ่ายต่างๆ ที่เกิดขึ้นจากการติดตามทวงถาม หากไม่ติดต่อชำระภายในเวลาที่กำหนด สภาจะทำการปรับโทษ <strong className="text-red-600 bg-red-50 px-2 py-0.5 rounded">BLACKLIST ครั้งที่ 1</strong> ทันที
+                  </p>
+                </div>
               </div>
-              <div className="flex items-center gap-2 w-full mb-3">
-                <span className="text-sm">ลงชื่อ</span>
-                <div className="border-b border-dotted border-slate-900 flex-1"></div>
+
+              <div className="mt-24 flex justify-between items-end px-8">
+                <div className="text-center w-64">
+                  <div className="h-20 flex items-end justify-center mb-4 relative">
+                    {contract.borrowerSignature ? (
+                      <img src={contract.borrowerSignature} alt="Borrower Signature" className="max-h-24 max-w-full absolute bottom-0 z-10" style={{ mixBlendMode: 'multiply' }} />
+                    ) : contract.borrowerSignedAt ? (
+                      <span className="italic text-slate-400 font-serif text-lg">Signed electronically</span>
+                    ) : null}
+                  </div>
+                  <div className="flex items-center gap-2 w-full mb-3">
+                    <span className="text-[15px] font-bold text-slate-600">ลงชื่อ</span>
+                    <div className="border-b-2 border-dotted border-slate-400 flex-1"></div>
+                  </div>
+                  <p className="mb-1 font-bold text-lg text-[#2d3748]">( {contract.borrowerName} )</p>
+                  <p className="text-[15px] text-slate-500 font-medium">ผู้กู้ยืม</p>
+                </div>
+
+                <div className="text-center w-64">
+                  <div className="h-20 flex items-end justify-center mb-4 relative">
+                    {contract.councilSignature ? (
+                      <>
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-20 pointer-events-none">
+                          <SealCheck size={90} weight="fill" className="text-red-600" />
+                        </div>
+                        <img src={contract.councilSignature} alt="Council Signature" className="max-h-24 max-w-full absolute bottom-0 z-10" style={{ mixBlendMode: 'multiply' }} />
+                      </>
+                    ) : null}
+                  </div>
+                  <div className="flex items-center gap-2 w-full mb-3">
+                    <span className="text-[15px] font-bold text-slate-600">ลงชื่อ</span>
+                    <div className="border-b-2 border-dotted border-slate-400 flex-1"></div>
+                  </div>
+                  <p className="mb-1 font-bold text-lg text-[#2d3748]">( เจ้าหน้าที่ตัวแทนสภา )</p>
+                  <p className="text-[15px] text-slate-500 font-medium">ผู้ให้กู้ / ผู้อนุมัติ</p>
+                </div>
               </div>
-              <p className="mb-1">( เจ้าหน้าที่ตัวแทนสภา )</p>
-              <p className="text-sm text-slate-500">ผู้ให้กู้</p>
             </div>
           </div>
         </div>
