@@ -131,176 +131,224 @@ export default function LoanPublic() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-80px)] -mt-6 -mx-6 bg-[#f4f4f5] p-6 text-slate-900 font-sans">
-      <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
-        
-        {/* Search Bar matching screenshot */}
-        <div className="bg-white rounded-2xl p-2 shadow-sm border border-slate-200 mb-6 mt-8">
-          <form onSubmit={handleSearch} className="flex items-center">
-            <div className="pl-4 pr-3 text-slate-400">
-              <MagnifyingGlass size={22} weight="bold" />
-            </div>
-            <input 
-              type="text" 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="CNCL-10328" 
-              className="flex-1 bg-transparent border-none outline-none text-slate-800 px-2 py-3 text-[17px] font-bold placeholder:text-slate-400 w-full"
-            />
-            <button 
-              type="submit"
-              disabled={loading}
-              className="bg-[#d4af37] hover:bg-[#c5a028] disabled:opacity-50 text-white font-black px-8 py-3.5 rounded-xl transition-colors text-[15px] shadow-sm flex items-center justify-center gap-2 min-w-[120px]"
-            >
-              {loading ? (
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-              ) : (
-                'ค้นหา'
-              )}
-            </button>
-          </form>
-        </div>
+    <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 pt-8 pb-12">
+      <button 
+        onClick={() => navigate('/')}
+        className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-8 ml-2"
+      >
+        <ArrowLeft size={20} />
+        <span>กลับหน้าหลัก</span>
+      </button>
 
-        {error && (
-          <p className="text-red-500 text-center mb-6 font-bold flex items-center justify-center gap-2">
-            <WarningCircle size={20} weight="bold" /> {error}
-          </p>
-        )}
+      <div className="bg-slate-800/40 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden border border-slate-700/50">
+        {/* Background decorative elements */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl -ml-20 -mb-20 pointer-events-none"></div>
 
-        {/* Contract Card matching screenshot */}
-        {contract && (
-          <div className="bg-white rounded-[24px] shadow-lg border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-300">
-            {/* Header - Dark slate */}
-            <div className="bg-[#111827] px-8 py-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div>
-                <h2 className="text-xl font-black text-white flex items-center gap-2">
-                  เลขที่สัญญา: <span className="text-[#d4af37]">{contract.contractId}</span>
-                </h2>
-                <div className="text-slate-400 font-medium text-sm mt-1.5 flex items-center gap-2">
-                  สถานะ: 
-                  <span className="text-slate-300">
-                    {contract.status === 'pending_signature' && 'รอผู้กู้เซ็นรับทราบ'}
-                    {contract.status === 'active' && 'กำลังผ่อนชำระ'}
-                    {contract.status === 'completed' && 'ชำระครบแล้ว'}
-                    {contract.status === 'defaulted' && 'ผิดนัดชำระ'}
-                  </span>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <button className="bg-[#d4af37] hover:bg-[#c5a028] text-white px-5 py-2.5 rounded-lg text-sm font-bold transition-colors flex items-center gap-2 shadow-sm">
-                  <FileText size={18} weight="fill" />
-                  ดูตัวสัญญา
-                </button>
-                <div className="text-blue-400 opacity-80">
-                  <PenNib size={28} weight="duotone" />
-                </div>
-              </div>
-            </div>
-
-            {/* Body */}
-            <div className="p-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-10 gap-x-8">
-                {/* Col 1 */}
-                <div className="space-y-8">
-                  <div>
-                    <div className="text-[13px] font-black text-slate-400 mb-1.5">ชื่อผู้กู้ยืม</div>
-                    <div className="text-[19px] font-black text-slate-800">{contract.borrowerName}</div>
-                  </div>
-                  <div>
-                    <div className="text-[13px] font-black text-slate-400 mb-1.5">ยอดเงินกู้รวม (รวมดอกเบี้ย)</div>
-                    <div className="text-[26px] font-black text-slate-800 tracking-tight">{(contract.totalAmount || contract.principalAmount || 0).toLocaleString()} <span className="text-xl">บาท</span></div>
-                  </div>
-                  <div>
-                    <div className="text-[13px] font-black text-slate-400 mb-1.5">วิธีการชำระ</div>
-                    <div className="text-[17px] font-black text-slate-800">
-                      รายวัน วันละ {contract.installmentAmount ? contract.installmentAmount.toLocaleString() : 'ไม่ระบุ'} บาท
-                    </div>
-                  </div>
-                </div>
-
-                {/* Col 2 */}
-                <div className="space-y-8">
-                  <div>
-                    <div className="text-[13px] font-black text-slate-400 mb-1.5">เหตุผลที่กู้ยืม</div>
-                    <div className="text-[19px] font-black text-slate-800">{contract.reason || contract.conditions || 'ไม่ระบุ'}</div>
-                  </div>
-                  
-                  <div className="border-2 border-slate-100 rounded-2xl p-6">
-                    <div className="text-[13px] font-black text-slate-400 mb-2">ยอดที่ต้องชำระทั้งสิ้น</div>
-                    <div className="text-4xl font-black text-slate-800 tracking-tight">{(contract.totalAmount || contract.principalAmount || 0).toLocaleString()} <span className="text-2xl">บาท</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Signature Area (If Pending) */}
-            {contract.status === 'pending_signature' && (
-              <div className="bg-[#f8fafc] border-t border-slate-200 p-8 flex flex-col items-center text-center">
-                <div className="flex items-center gap-3 text-[#1e40af] mb-2">
-                  <PenNib size={24} weight="fill" />
-                  <h3 className="text-[19px] font-black">กรุณาเซ็นชื่อเพื่อยอมรับเงื่อนไขสัญญา (สำหรับผู้กู้)</h3>
-                </div>
-                <p className="text-[#3b82f6] text-sm font-medium mb-8">
-                  หากกดยืนยันการเซ็น ถือว่าท่านยอมรับเงื่อนไขในสัญญาฉบับนี้ทุกประการ
+        <div className="relative z-10">
+          {!contract ? (
+            <>
+              <div className="text-center mb-10">
+                <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight mb-4">
+                  ตรวจสอบข้อมูลสัญญา
+                </h1>
+                <p className="text-slate-400 md:text-lg max-w-2xl mx-auto">
+                  สำหรับผู้กู้ยืม กรุณากรอกเลขที่สัญญาของคุณเพื่อเซ็นรับทราบหรือตรวจสอบยอดค้างชำระ
                 </p>
-                
-                {/* Canvas Box */}
-                <div className="w-full max-w-[600px] bg-white border-2 border-dashed border-slate-300 rounded-2xl mb-8 relative overflow-hidden">
-                  {!hasSignature && (
-                    <div className="absolute top-4 left-4 text-slate-400 text-[15px] font-medium pointer-events-none">
-                      พื้นที่เซ็นชื่อ...
-                    </div>
-                  )}
-                  <canvas 
-                    ref={canvasRef}
-                    width={600}
-                    height={200}
-                    className="w-full h-[200px] cursor-crosshair touch-none"
-                    onMouseDown={startDrawing}
-                    onMouseMove={draw}
-                    onMouseUp={stopDrawing}
-                    onMouseLeave={stopDrawing}
-                    onTouchStart={startDrawing}
-                    onTouchMove={draw}
-                    onTouchEnd={stopDrawing}
+              </div>
+
+              <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
+                <div className="flex flex-col sm:flex-row items-center bg-slate-900/50 rounded-2xl p-2 shadow-inner border border-slate-700 focus-within:border-amber-500/50 focus-within:ring-4 focus-within:ring-amber-500/10 transition-all gap-2">
+                  <div className="pl-4 text-slate-400 hidden sm:block">
+                    <MagnifyingGlass size={24} weight="bold" />
+                  </div>
+                  <input 
+                    type="text" 
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="เช่น CNCL-10001" 
+                    className="flex-1 bg-transparent border-none outline-none text-white px-4 py-3 text-lg placeholder:text-slate-500 w-full text-center sm:text-left font-bold"
                   />
-                </div>
-                
-                <div className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-[600px]">
                   <button 
-                    onClick={clearSignature}
-                    className="bg-[#f1f5f9] hover:bg-[#e2e8f0] text-slate-700 font-black px-6 py-4 rounded-xl transition-all flex items-center justify-center gap-2 w-full sm:w-1/3"
+                    type="submit"
+                    disabled={loading}
+                    className="w-full sm:w-auto bg-[#d4af37] hover:bg-[#c5a028] disabled:opacity-50 text-slate-900 font-black px-8 py-3.5 rounded-xl transition-colors text-lg whitespace-nowrap shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2"
                   >
-                    ล้างลายเซ็น
-                  </button>
-                  <button 
-                    onClick={handleSignContract}
-                    disabled={signing}
-                    className="bg-[#d4af37] hover:bg-[#c5a028] disabled:opacity-50 text-white font-black px-6 py-4 rounded-xl transition-all flex items-center justify-center gap-2 w-full sm:w-2/3 shadow-sm"
-                  >
-                    {signing ? (
-                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    {loading ? (
+                      <div className="w-6 h-6 border-2 border-slate-900/30 border-t-slate-900 rounded-full animate-spin"></div>
                     ) : (
-                      'ยืนยันการเซ็นรับทราบ'
+                      'ค้นหา'
                     )}
                   </button>
                 </div>
-              </div>
-            )}
-            
-            {/* If Not Pending Signature */}
-            {contract.status !== 'pending_signature' && (
-              <div className="bg-[#f8fafc] border-t border-slate-200 p-8 flex flex-col items-center text-center">
-                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 mb-4">
-                  <CheckCircle size={32} weight="fill" />
+                {error && (
+                  <p className="text-red-400 text-center mt-4 font-bold flex items-center justify-center gap-2">
+                    <WarningCircle size={20} weight="bold" /> {error}
+                  </p>
+                )}
+              </form>
+            </>
+          ) : (
+            <div className="animate-in fade-in zoom-in-95 duration-300">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 border-b border-slate-700/50 pb-6">
+                <div>
+                  <h2 className="text-2xl font-black text-white flex items-center gap-2">
+                    <FileText size={28} className="text-amber-500" weight="duotone" />
+                    รายละเอียดสัญญา
+                  </h2>
+                  <p className="text-slate-400 font-medium mt-1">เลขที่: <span className="text-amber-500 font-bold">{contract.contractId}</span></p>
                 </div>
-                <h3 className="text-xl font-black text-slate-800 mb-2">สัญญานี้ได้รับการลงนามแล้ว</h3>
-                <p className="text-slate-500 font-medium">คุณสามารถดูตัวสัญญาเพื่อตรวจสอบรายละเอียดเพิ่มเติมได้</p>
+                
+                <div className="flex flex-col sm:items-end">
+                  {contract.status === 'pending_signature' && (
+                    <span className="bg-blue-500/10 text-blue-400 px-4 py-2 rounded-xl text-sm font-black uppercase tracking-wider border border-blue-500/20 inline-block text-center">
+                      รอผู้กู้เซ็นรับทราบ
+                    </span>
+                  )}
+                  {contract.status === 'active' && (
+                    <span className="bg-amber-500/10 text-amber-400 px-4 py-2 rounded-xl text-sm font-black uppercase tracking-wider border border-amber-500/20 inline-block text-center">
+                      กำลังผ่อนชำระ
+                    </span>
+                  )}
+                  {contract.status === 'completed' && (
+                    <span className="bg-emerald-500/10 text-emerald-400 px-4 py-2 rounded-xl text-sm font-black uppercase tracking-wider border border-emerald-500/20 inline-block text-center">
+                      ชำระครบแล้ว
+                    </span>
+                  )}
+                  {contract.status === 'defaulted' && (
+                    <span className="bg-red-500/10 text-red-400 px-4 py-2 rounded-xl text-sm font-black uppercase tracking-wider border border-red-500/20 inline-block text-center">
+                      ผิดนัดชำระ
+                    </span>
+                  )}
+                </div>
               </div>
-            )}
-            
-          </div>
-        )}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div className="bg-slate-900/50 p-6 rounded-2xl border border-slate-700/50">
+                  <div className="text-sm font-bold text-slate-400 mb-1">ชื่อผู้กู้ยืม</div>
+                  <div className="text-xl font-black text-white">{contract.borrowerName}</div>
+                </div>
+                
+                <div className="bg-slate-900/50 p-6 rounded-2xl border border-slate-700/50 flex flex-col justify-center">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-bold text-slate-400">ยอดเงินกู้รวม (เงินต้น)</span>
+                    <CurrencyDollar size={20} className="text-amber-500" weight="bold" />
+                  </div>
+                  <div className="text-2xl font-black text-amber-500">{(contract.totalAmount || contract.principalAmount || 0).toLocaleString()} <span className="text-lg text-amber-500/50">฿</span></div>
+                </div>
+
+                <div className="bg-slate-900/50 p-6 rounded-2xl border border-slate-700/50 flex flex-col justify-center">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-bold text-slate-400">วิธีการชำระ</span>
+                    <CalendarBlank size={20} className="text-blue-400" weight="bold" />
+                  </div>
+                  <div className="text-lg font-black text-white">
+                    รายวัน วันละ {contract.installmentAmount ? contract.installmentAmount.toLocaleString() : 'ไม่ระบุ'} ฿
+                  </div>
+                </div>
+
+                <div className="bg-slate-900/50 p-6 rounded-2xl border border-slate-700/50 flex flex-col justify-center">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-bold text-slate-400">ยอดที่ต้องชำระทั้งสิ้น</span>
+                    <WarningCircle size={20} className="text-red-400" weight="bold" />
+                  </div>
+                  <div className="text-3xl font-black text-red-400">
+                    {(contract.totalAmount || contract.principalAmount || 0).toLocaleString()} <span className="text-xl opacity-50">฿</span>
+                  </div>
+                </div>
+              </div>
+
+              {(contract.reason || contract.conditions) && (
+                <div className="bg-slate-900/50 p-6 rounded-2xl border border-slate-700/50 mb-8">
+                  <div className="text-sm font-bold text-slate-400 mb-3 flex items-center gap-2">
+                    <FileText size={18} /> เหตุผลที่กู้ยืม / หมายเหตุ
+                  </div>
+                  <div className="text-slate-300 font-medium whitespace-pre-wrap leading-relaxed">
+                    {contract.reason || contract.conditions}
+                  </div>
+                </div>
+              )}
+
+              {/* Signature Section */}
+              {contract.status === 'pending_signature' && (
+                <div className="bg-slate-900/80 border border-blue-500/20 p-8 rounded-2xl flex flex-col items-center text-center shadow-inner">
+                  <div className="flex items-center gap-3 text-blue-400 mb-2">
+                    <PenNib size={28} weight="fill" />
+                    <h3 className="text-xl font-black text-white">กรุณาเซ็นชื่อเพื่อยอมรับเงื่อนไขสัญญา (สำหรับผู้กู้)</h3>
+                  </div>
+                  <p className="text-slate-400 text-sm font-medium mb-8">
+                    หากกดยืนยันการเซ็น ถือว่าท่านยอมรับเงื่อนไขในสัญญาฉบับนี้ทุกประการ
+                  </p>
+                  
+                  {/* Canvas Box */}
+                  <div className="w-full max-w-[600px] bg-white rounded-2xl mb-8 relative overflow-hidden shadow-[0_0_15px_rgba(59,130,246,0.1)]">
+                    {!hasSignature && (
+                      <div className="absolute inset-0 flex items-center justify-center text-slate-300 text-lg font-bold pointer-events-none">
+                        พื้นที่เซ็นชื่อ...
+                      </div>
+                    )}
+                    <canvas 
+                      ref={canvasRef}
+                      width={600}
+                      height={200}
+                      className="w-full h-[200px] cursor-crosshair touch-none"
+                      onMouseDown={startDrawing}
+                      onMouseMove={draw}
+                      onMouseUp={stopDrawing}
+                      onMouseLeave={stopDrawing}
+                      onTouchStart={startDrawing}
+                      onTouchMove={draw}
+                      onTouchEnd={stopDrawing}
+                    />
+                  </div>
+                  
+                  <div className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-[600px]">
+                    <button 
+                      onClick={clearSignature}
+                      className="bg-slate-800 hover:bg-slate-700 text-slate-300 font-black px-6 py-4 rounded-xl transition-all flex items-center justify-center gap-2 w-full sm:w-1/3 border border-slate-700"
+                    >
+                      ล้างลายเซ็น
+                    </button>
+                    <button 
+                      onClick={handleSignContract}
+                      disabled={signing}
+                      className="bg-[#d4af37] hover:bg-[#c5a028] disabled:opacity-50 text-slate-900 font-black px-6 py-4 rounded-xl transition-all flex items-center justify-center gap-2 w-full sm:w-2/3 shadow-[0_0_20px_rgba(212,175,55,0.3)]"
+                    >
+                      {signing ? (
+                        <div className="w-5 h-5 border-2 border-slate-900/30 border-t-slate-900 rounded-full animate-spin"></div>
+                      ) : (
+                        'ยืนยันการเซ็นรับทราบ'
+                      )}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* If Not Pending Signature */}
+              {contract.status !== 'pending_signature' && (
+                <div className="bg-slate-900/80 border border-emerald-500/20 p-8 rounded-2xl flex flex-col items-center text-center shadow-inner">
+                  <div className="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-400 mb-4 border border-emerald-500/20">
+                    <CheckCircle size={32} weight="fill" />
+                  </div>
+                  <h3 className="text-xl font-black text-white mb-2">สัญญานี้ได้รับการลงนามแล้ว</h3>
+                  <p className="text-slate-400 font-medium">คุณสามารถดูตัวสัญญาเพื่อตรวจสอบรายละเอียดเพิ่มเติมได้</p>
+                </div>
+              )}
+
+              <div className="flex justify-center mt-8">
+                <button 
+                  onClick={() => {
+                    setContract(null);
+                    setSearchQuery('');
+                  }}
+                  className="text-slate-500 hover:text-slate-300 font-bold transition-colors text-sm border-b border-transparent hover:border-slate-500 pb-0.5"
+                >
+                  ค้นหาสัญญาอื่น
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
