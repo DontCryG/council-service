@@ -20,7 +20,7 @@ export default function Welfare() {
     hasWeaponWelfare: false,
     otherWelfare: ''
   });
-  const [vehicles, setVehicles] = useState([{ id: 1, model: '', plate: '' }]);
+  const [vehicles, setVehicles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const captureRef = useRef(null);
 
