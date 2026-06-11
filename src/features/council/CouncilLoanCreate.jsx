@@ -67,7 +67,7 @@ export default function CouncilLoanCreate() {
         paymentMethod,
         dueDate,
         conditions,
-        status: 'active',
+        status: 'pending_signature',
         createdAt: serverTimestamp(),
         createdBy: {
           uid: user.uid,

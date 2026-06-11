@@ -9,13 +9,16 @@ import {
   PencilSimple, 
   Trash, 
   ArrowLeft,
-  CircleNotch
+  CircleNotch,
+  Copy
 } from '@phosphor-icons/react';
 import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { db } from '../../core/firebase';
+import { useAppStore } from '../../store';
 
 export default function CouncilLoanHub() {
   const navigate = useNavigate();
+  const { showAlert } = useAppStore();
   const [contracts, setContracts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -162,6 +165,11 @@ export default function CouncilLoanHub() {
                         <td className="py-4 font-bold text-slate-300">{contract.borrowerName}</td>
                         <td className="py-4 font-black text-white">{(contract.remainingAmount || 0).toLocaleString()} ฿</td>
                         <td className="py-4">
+                          {contract.status === 'pending_signature' && (
+                            <span className="bg-blue-500/10 text-blue-400 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap border border-blue-500/20">
+                              รอผู้กู้เซ็น
+                            </span>
+                          )}
                           {contract.status === 'active' && (
                             <span className="bg-amber-500/10 text-amber-400 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap border border-amber-500/20">
                               กำลังผ่อนชำระ
@@ -188,6 +196,16 @@ export default function CouncilLoanHub() {
                             )}
                             <button className="text-slate-400 hover:text-white transition-colors" title="ดูรายละเอียด">
                               <FileText size={20} weight="fill" />
+                            </button>
+                            <button 
+                              className="text-slate-400 hover:text-blue-500 transition-colors" 
+                              title="คัดลอกลิงก์สัญญา"
+                              onClick={() => {
+                                navigator.clipboard.writeText(`${window.location.origin}/loan_public?id=${contract.contractId}`);
+                                showAlert('success', 'คัดลอกลิงก์สำหรับผู้กู้สำเร็จ');
+                              }}
+                            >
+                              <Copy size={20} weight="fill" />
                             </button>
                             <button className="text-slate-400 hover:text-amber-500 transition-colors" title="แก้ไข">
                               <PencilSimple size={20} weight="fill" />
