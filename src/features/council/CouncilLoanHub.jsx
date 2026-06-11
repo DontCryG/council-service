@@ -44,7 +44,7 @@ export default function CouncilLoanHub() {
   return (
     <div className="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
       <button 
-        onClick={() => navigate('/')}
+        onClick={() => navigate('/home')}
         className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-6 ml-2"
       >
         <ArrowLeft size={20} />
