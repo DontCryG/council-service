@@ -66,23 +66,35 @@ export default function EditOrgPreview() {
       
       const fd = new FormData();
       fd.append('file', blob, 'edit_org.png');
+      let transactionItems = [];
+      if (formData.changeInfo) transactionItems.push("- เปลี่ยนข้อมูล Gang (500,000$)");
+      if (formData.editTexture) transactionItems.push(`- แก้ไข Texture เสื้อผ้า (${(500000 * Math.max(1, formData.textureCount)).toLocaleString()}$)`);
+      if (formData.addCloth) transactionItems.push(`- ลงชุดเพิ่ม (${(500000 * Math.max(1, formData.textureCount)).toLocaleString()}$)`);
+      if (formData.bulkChange) transactionItems.push("- เหมาเปลี่ยนข้อมูล Gang (1,500,000$)");
+      if (formData.addAccessory) transactionItems.push("- ลง Accessories Adons เสริม (1,000,000$)");
+
+      const transactionText = transactionItems.length > 0 ? `\`\`\`\n${transactionItems.join('\n')}\n\`\`\`` : "```\nไม่มี\n```";
+
+      let additionalInfo = `**สี (HEX):** ${formData.hexColor || '-'}`;
+      if (formData.extraDetails) {
+        additionalInfo += `\n**รายละเอียด:**\n${formData.extraDetails}`;
+      }
+
+      const orgTypeDisplay = formData.orgType === 'GANG' ? 'แก๊ง' : (formData.orgType === 'FAMILY' ? 'ครอบครัว' : formData.orgType);
+
       fd.append('payload_json', JSON.stringify({
         embeds: [{
-          title: "🔄 ORGANIZATION EDIT REQUEST",
-          color: 0xf59e0b, // Amber color
-          thumbnail: formData.logoUrl ? { url: formData.logoUrl } : undefined,
+          title: "📜 Council Service Log",
+          description: "**ได้รับคำร้องขออัปเดตข้อมูลสังกัดใหม่**",
+          color: 0xf59e0b,
           fields: [
-            { name: "🏰 แก๊ง/แฟมิลี่", value: `${formData.orgName} (${formData.orgType})`, inline: true },
-            { name: "👤 ผู้แจ้ง", value: formData.requester, inline: true },
-            { name: "รายการที่แก้ไข", value: [
-                formData.changeInfo ? "✅ เปลี่ยนข้อมูล Gang" : "",
-                formData.editTexture ? `✅ แก้ไข Texture เสื้อผ้า (${formData.textureCount} ชุด)` : "",
-                formData.addCloth ? `✅ ลงชุดเพิ่ม (${formData.textureCount} ชุด)` : "",
-                formData.bulkChange ? "✅ เหมาเปลี่ยนข้อมูล Gang" : "",
-                formData.addAccessory ? `✅ ลง Accessories Adons เสริม` : ""
-            ].filter(Boolean).join('\n') || "ไม่มี", inline: false },
-            { name: "รายละเอียดเพิ่มเติมที่ต้องการแก้", value: formData.extraDetails || "-", inline: false },
-            { name: "เจ้าหน้าที่สภาผู้รับเรื่อง", value: councilMembers.find(c => c.id === formData.councilStaffId)?.name || '-', inline: true },
+            { name: "ประเภท", value: orgTypeDisplay, inline: true },
+            { name: "ชื่อสังกัด", value: formData.orgName, inline: true },
+            { name: "ผู้ทำรายการ", value: formData.requester, inline: false },
+            { name: "รายการธุรกรรมที่ทำ", value: transactionText, inline: false },
+            { name: "ยอดรวมสุทธิ", value: `**${calculateTotal().toLocaleString()} $**`, inline: true },
+            { name: "เจ้าหน้าที่รับเรื่อง", value: councilMembers.find(c => c.id === formData.councilStaffId)?.name || '-', inline: true },
+            { name: "ข้อมูลเพิ่มเติมที่แจ้ง", value: additionalInfo, inline: false },
           ],
           image: {
             url: "attachment://edit_org.png"
