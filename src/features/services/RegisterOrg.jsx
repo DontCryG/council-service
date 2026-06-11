@@ -47,13 +47,13 @@ export default function RegisterOrg() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.leader || !formData.councilStaffId) {
+    if (!formData.name || !formData.leader || !formData.councilStaffId || !formData.logo) {
       showAlert('error', 'กรุณากรอกข้อมูลให้ครบถ้วน');
       return;
     }
 
-    if (formData.logo && !/^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)(\?.*)?$/i.test(formData.logo) && !formData.logo.includes('discordapp.')) {
-      showAlert('error', 'รูปภาพไม่ถูกต้อง');
+    if (!/^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)(\?.*)?$/i.test(formData.logo) && !formData.logo.includes('discordapp.') && !formData.logo.includes('discord.com')) {
+      showAlert('error', 'ให้ใส่แค่ลิ้งค์รูปภาพเท่านั้น');
       return;
     }
     
@@ -83,7 +83,7 @@ export default function RegisterOrg() {
           <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-6">
             <div className="space-y-3">
               <label className="text-[14px] font-bold text-slate-300 tracking-wide">
-                ชื่อ ROYAL CHARM/ครอบครัว (ENG)
+                ชื่อ GANG / FAMILY (ENG)
               </label>
               <input 
                 className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-200 font-medium focus:outline-none focus:border-amber-500 focus:bg-slate-900 focus:ring-1 focus:ring-amber-500 transition-colors placeholder:text-slate-600"
@@ -137,6 +137,7 @@ export default function RegisterOrg() {
                 placeholder="https://..."
                 value={formData.logo}
                 onChange={e => setFormData({...formData, logo: e.target.value})}
+                required
               />
             </div>
           </div>
