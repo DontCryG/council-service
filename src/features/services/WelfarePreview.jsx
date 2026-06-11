@@ -15,6 +15,7 @@ export default function WelfarePreview() {
   const [isAgreed, setIsAgreed] = useState(false);
 
   const { formData, vehicles } = location.state || {};
+  const [refNumber] = useState(() => `CS-WELFARE-${Math.floor(1000 + Math.random() * 9000)}`);
 
   if (!formData) {
     navigate('/welfare');
@@ -94,14 +95,14 @@ export default function WelfarePreview() {
             <img src="/logo.png" alt="Council Logo" className="w-full h-full object-contain drop-shadow-md" />
           </div>
           <div className="text-right">
-            <h2 className="text-2xl font-black text-slate-900 tracking-tight">สภาสูงสุด</h2>
-            <p className="text-[10px] font-bold text-amber-600 tracking-widest uppercase">SUPREME COUNCIL OFFICE</p>
+            <h2 className="text-2xl font-black text-slate-900 tracking-tight">ฝ่ายจัดสรรสวัสดิการ</h2>
+            <p className="text-[10px] font-bold text-amber-600 tracking-widest uppercase">WELFARE ALLOCATION DEPARTMENT</p>
           </div>
         </div>
 
         <div className="text-center mb-10 relative z-10">
           <h1 className="text-2xl font-black text-slate-800 inline-block border-b-2 border-slate-800 pb-1 mb-2">สัญญารับสวัสดิการจากสภา</h1>
-          <p className="text-xs text-slate-500 font-bold">เลขที่อ้างอิง: CS-WELFARE-0512</p>
+          <p className="text-xs text-slate-500 font-bold">เลขที่อ้างอิง: {refNumber}</p>
         </div>
 
         <div className="mb-8 leading-relaxed text-slate-800 text-sm font-medium relative z-10">
