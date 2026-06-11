@@ -153,10 +153,10 @@ export default function RegisterOrgPreview() {
             </div>
 
             <div>
-              <span className="text-xs font-bold text-slate-500 tracking-wider uppercase mb-2 block flex justify-between">
-                <span>Co-Leaders (รองหัวหน้า)</span>
-                <span>{coLeaders.length} คน</span>
-              </span>
+              <div className="text-xs font-bold text-slate-500 tracking-wider uppercase mb-2 flex justify-between items-center">
+                <span className="whitespace-nowrap">Co-Leaders (รองหัวหน้า)</span>
+                <span className="whitespace-nowrap">{coLeaders.length} คน</span>
+              </div>
               <div className="bg-slate-950 border border-slate-800 rounded-lg p-3 space-y-2 min-h-[80px]">
                 {coLeaders.length > 0 ? coLeaders.map((c, i) => (
                   <div key={i} className="text-slate-300 text-sm flex items-center gap-2">
@@ -170,10 +170,10 @@ export default function RegisterOrgPreview() {
 
           <div className="space-y-6">
             <div>
-              <span className="text-xs font-bold text-slate-500 tracking-wider uppercase mb-2 block flex justify-between">
-                <span>Founding Members (สมาชิกเริ่มต้น)</span>
-                <span>{members.length} คน</span>
-              </span>
+              <div className="text-xs font-bold text-slate-500 tracking-wider uppercase mb-2 flex justify-between items-center">
+                <span className="whitespace-nowrap">Founding Members (สมาชิกเริ่มต้น)</span>
+                <span className="whitespace-nowrap">{members.length} คน</span>
+              </div>
               <div className="bg-slate-950 border border-slate-800 rounded-lg p-3 space-y-2 min-h-[168px]">
                 {members.length > 0 ? members.map((m, i) => (
                   <div key={i} className="text-slate-300 text-sm flex items-center gap-2">
@@ -192,8 +192,8 @@ export default function RegisterOrgPreview() {
             <span className="text-2xl font-black text-white">200,000 <span className="text-sm text-slate-500 font-medium">THB</span></span>
           </div>
           <div className="flex justify-between items-center pt-4 border-t border-slate-800/50">
-            <span className="text-slate-500 font-medium text-sm">เจ้าหน้าที่ผู้รับเรื่อง (สภา)</span>
-            <span className="font-bold text-amber-500">
+            <span className="text-slate-500 font-medium text-sm whitespace-nowrap">เจ้าหน้าที่ผู้รับเรื่อง (สภา)</span>
+            <span className="font-bold text-amber-500 text-right ml-4">
               {councilMembers.find(c => c.id === formData.councilStaffId)?.name || '-'}
             </span>
           </div>
