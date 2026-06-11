@@ -80,6 +80,12 @@ export default function EditOrg() {
       return;
     }
 
+    const hasTransaction = formData.changeInfo || formData.editTexture || formData.addCloth || formData.bulkChange || formData.addAccessory;
+    if (!hasTransaction) {
+      showAlert('error', 'กรุณาเลือกรายการธุรกรรมอย่างน้อย 1 รายการ');
+      return;
+    }
+
     if (formData.logoUrl && !/^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)(\?.*)?$/i.test(formData.logoUrl) && !formData.logoUrl.includes('discordapp.')) {
       showAlert('error', 'ช่อง Link โลโก้ กรุณาใส่ลิงก์รูปภาพที่ถูกต้อง');
       return;
