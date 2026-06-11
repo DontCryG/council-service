@@ -36,7 +36,10 @@ export default function CouncilLoanHub() {
               ระบบจัดการข้อมูลและติดตามหนี้
             </p>
           </div>
-          <button className="bg-[#d4af37] hover:bg-[#c5a028] text-white px-6 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-lg shadow-amber-500/20">
+          <button 
+            onClick={() => navigate('/council_loan/create')}
+            className="bg-[#d4af37] hover:bg-[#c5a028] text-white px-6 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-lg shadow-amber-500/20"
+          >
             <Plus size={20} weight="bold" />
             สร้างสัญญาใหม่
           </button>

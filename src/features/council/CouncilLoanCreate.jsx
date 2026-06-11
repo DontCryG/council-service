@@ -1,0 +1,256 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { 
+  ArrowLeft, 
+  CheckCircle, 
+  Calculator,
+  CalendarBlank
+} from '@phosphor-icons/react';
+
+export default function CouncilLoanCreate() {
+  const navigate = useNavigate();
+
+  // Form states
+  const [borrowerName, setBorrowerName] = useState('');
+  const [reason, setReason] = useState('');
+  const [principal, setPrincipal] = useState('');
+  const [interestType, setInterestType] = useState('percent');
+  const [interestRate, setInterestRate] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('full');
+  const [dueDate, setDueDate] = useState('');
+  const [conditions, setConditions] = useState('');
+
+  // Calculations
+  const principalAmount = parseFloat(principal) || 0;
+  const rateAmount = parseFloat(interestRate) || 0;
+  
+  let interestAmount = 0;
+  if (interestType === 'percent') {
+    interestAmount = principalAmount * (rateAmount / 100);
+  } else {
+    interestAmount = rateAmount; // fixed amount
+  }
+  
+  const totalAmount = principalAmount + interestAmount;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // TODO: Save data to Firestore
+    console.log("Saving contract...");
+    navigate('/council_loan');
+  };
+
+  return (
+    <div className="max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 pb-12">
+      {/* Top Header */}
+      <div className="flex items-center gap-4 mb-8">
+        <button 
+          onClick={() => navigate('/council_loan')}
+          className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
+        >
+          <ArrowLeft size={20} />
+          <span>กลับไปแดชบอร์ด</span>
+        </button>
+        <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight">
+          สร้างสัญญากู้ยืมเงิน
+        </h1>
+      </div>
+
+      {/* Main Form Card */}
+      <form onSubmit={handleSubmit} className="bg-slate-800/40 backdrop-blur-md rounded-3xl p-6 md:p-10 shadow-2xl border border-slate-700/50">
+        
+        {/* Section 1: Borrower Info */}
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-6">
+            <span className="bg-amber-500/10 text-amber-500 font-black px-3 py-1 rounded-lg border border-amber-500/20">1</span>
+            <h2 className="text-xl font-bold text-amber-500">ข้อมูลผู้กู้และเหตุผล</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-slate-300 text-sm font-bold mb-2">
+                ชื่อ-นามสกุล ผู้กู้ยืม <span className="text-red-500">*</span>
+              </label>
+              <input 
+                type="text"
+                required
+                value={borrowerName}
+                onChange={(e) => setBorrowerName(e.target.value)}
+                className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/10 transition-all outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-slate-300 text-sm font-bold mb-2">
+                เหตุผลที่ขอกู้ยืม <span className="text-red-500">*</span>
+              </label>
+              <input 
+                type="text"
+                required
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/10 transition-all outline-none"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Section 2: Financial Info */}
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-6">
+            <span className="bg-amber-500/10 text-amber-500 font-black px-3 py-1 rounded-lg border border-amber-500/20">2</span>
+            <h2 className="text-xl font-bold text-amber-500">ข้อมูลตัวเงิน</h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div>
+              <label className="block text-slate-300 text-sm font-bold mb-2">
+                เงินต้น (บาท) <span className="text-red-500">*</span>
+              </label>
+              <input 
+                type="number"
+                min="0"
+                required
+                value={principal}
+                onChange={(e) => setPrincipal(e.target.value)}
+                className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/10 transition-all outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-slate-300 text-sm font-bold mb-2">
+                รูปแบบดอกเบี้ย
+              </label>
+              <select 
+                value={interestType}
+                onChange={(e) => setInterestType(e.target.value)}
+                className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/10 transition-all outline-none appearance-none"
+                style={{ colorScheme: 'dark' }}
+              >
+                <option value="percent">คิดเป็นเปอร์เซ็นต์ (%)</option>
+                <option value="fixed">ระบุจำนวนเงิน (บาท)</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-slate-300 text-sm font-bold mb-2">
+                อัตราดอกเบี้ย {interestType === 'percent' ? '(%)' : '(บาท)'}
+              </label>
+              <input 
+                type="number"
+                min="0"
+                step={interestType === 'percent' ? "0.1" : "1"}
+                value={interestRate}
+                onChange={(e) => setInterestRate(e.target.value)}
+                className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/10 transition-all outline-none"
+              />
+            </div>
+          </div>
+
+          {/* Summary Box */}
+          <div className="bg-slate-900/80 border border-slate-700 rounded-2xl p-5 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex items-center gap-2 text-slate-400 text-sm font-bold">
+              <Calculator size={20} weight="duotone" />
+              สรุปยอดรวม (คำนวณอัตโนมัติ)
+            </div>
+            <div className="flex items-center gap-4 text-sm font-medium">
+              <span className="text-slate-400">ต้น: {principalAmount.toLocaleString()}</span>
+              <span className="text-slate-600">+</span>
+              <span className="text-slate-400">ดอก: {interestAmount.toLocaleString()}</span>
+              <span className="text-slate-600">=</span>
+              <span className="text-amber-500 text-xl font-black ml-2 bg-amber-500/10 px-3 py-1 rounded-lg border border-amber-500/20">
+                รวม: {totalAmount.toLocaleString()} ฿
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 3: Payment Method */}
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-6">
+            <span className="bg-amber-500/10 text-amber-500 font-black px-3 py-1 rounded-lg border border-amber-500/20">3</span>
+            <h2 className="text-xl font-bold text-amber-500">วิธีการผ่อนชำระ</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <label className={`flex items-center gap-3 p-4 rounded-xl border cursor-pointer transition-all ${
+              paymentMethod === 'full' 
+                ? 'bg-amber-500/10 border-amber-500/50 text-amber-500' 
+                : 'bg-slate-900/50 border-slate-700 text-slate-300 hover:border-slate-500'
+            }`}>
+              <input 
+                type="radio" 
+                name="paymentMethod" 
+                value="full"
+                checked={paymentMethod === 'full'}
+                onChange={() => setPaymentMethod('full')}
+                className="w-4 h-4 accent-amber-500"
+              />
+              <span className="font-bold">ชำระเต็มจำนวนตามกำหนด</span>
+            </label>
+            <label className={`flex items-center gap-3 p-4 rounded-xl border cursor-pointer transition-all ${
+              paymentMethod === 'installments' 
+                ? 'bg-amber-500/10 border-amber-500/50 text-amber-500' 
+                : 'bg-slate-900/50 border-slate-700 text-slate-300 hover:border-slate-500'
+            }`}>
+              <input 
+                type="radio" 
+                name="paymentMethod" 
+                value="installments"
+                checked={paymentMethod === 'installments'}
+                onChange={() => setPaymentMethod('installments')}
+                className="w-4 h-4 accent-amber-500"
+              />
+              <span className="font-bold">ผ่อนชำระรายวัน</span>
+            </label>
+          </div>
+
+          <div className="bg-slate-900/30 border border-slate-700/50 rounded-2xl p-5">
+            <label className="block text-slate-300 text-sm font-bold mb-2">
+              วันที่ครบกำหนดชำระ <span className="text-red-500">*</span>
+            </label>
+            <div className="relative max-w-sm">
+              <input 
+                type="date"
+                required
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+                className="w-full bg-slate-900/80 border border-slate-700 rounded-xl pl-4 pr-10 py-3 text-white focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/10 transition-all outline-none"
+                style={{ colorScheme: 'dark' }}
+              />
+              <CalendarBlank size={20} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+            </div>
+          </div>
+        </div>
+
+        {/* Section 4: Additional Terms */}
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-6">
+            <span className="bg-amber-500/10 text-amber-500 font-black px-3 py-1 rounded-lg border border-amber-500/20">4</span>
+            <h2 className="text-xl font-bold text-amber-500">เงื่อนไขเพิ่มเติม</h2>
+          </div>
+          <textarea 
+            value={conditions}
+            onChange={(e) => setConditions(e.target.value)}
+            placeholder="ระบุเงื่อนไขพิเศษ (ถ้ามี)..."
+            className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-4 text-white focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/10 transition-all outline-none min-h-[120px] resize-y placeholder:text-slate-500"
+          ></textarea>
+        </div>
+
+        {/* Bottom Actions */}
+        <div className="flex flex-col-reverse md:flex-row justify-end items-center gap-4 pt-6 border-t border-slate-700/50">
+          <button 
+            type="button"
+            onClick={() => navigate('/council_loan')}
+            className="w-full md:w-auto px-8 py-3.5 rounded-xl font-bold text-slate-300 border border-slate-700 hover:bg-slate-800 transition-colors"
+          >
+            ยกเลิก
+          </button>
+          <button 
+            type="submit"
+            className="w-full md:w-auto px-8 py-3.5 rounded-xl font-bold text-white bg-[#d4af37] hover:bg-[#c5a028] transition-colors shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2"
+          >
+            <CheckCircle size={20} weight="bold" />
+            บันทึกสัญญากู้ยืม
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
