@@ -33,24 +33,31 @@ export default function WelfarePreview() {
       });
       if (!blob) throw new Error("Failed to generate image");
       
+      let welfareItems = [];
+      if (formData.hasWeaponWelfare) welfareItems.push("รถ: อาวุธไม้พูล");
+      if (vehicles && vehicles.length > 0) {
+        vehicles.forEach(v => welfareItems.push(`รถ: ${v.plate || '-'} (${v.model || '-'})`));
+      }
+      if (formData.otherWelfare) welfareItems.push(`อื่นๆ: ${formData.otherWelfare}`);
+      
+      const welfareListText = welfareItems.length > 0 ? "```\n" + welfareItems.join("\n") + "\n```" : "```\n- ไม่มีรายการ -\n```";
+
       const fd = new FormData();
       fd.append('file', blob, 'welfare.png');
       fd.append('payload_json', JSON.stringify({
         embeds: [{
-          title: "🧾 WELFARE REQUEST RECEIPT",
-          color: 0x10b981,
+          title: "📜 ตรวจพบการลงนามรับสวัสดิการใหม่",
+          description: `**เลขที่อ้างอิง:** ${refNumber}`,
+          color: 0xfacc15,
           fields: [
-            { name: "📋 ประเภท", value: formData.orgType, inline: true },
-            { name: "🏢 ชื่อสังกัด", value: formData.orgName, inline: true },
-            { name: "👤 ผู้เบิกสวัสดิการ", value: formData.requester, inline: false },
-            { name: "⚔️ สวัสดิการอาวุธไม้พูล", value: formData.hasWeaponWelfare ? '✅ รับสวัสดิการอาวุธไม้พูล' : '❌ ไม่รับ', inline: true },
-            { name: "🚗 ยานพาหนะ", value: vehicles.length > 0 ? vehicles.map(v => `${v.model} (${v.plate})`).join('\n') : 'ไม่มี', inline: false },
-            { name: "📦 อื่นๆ", value: formData.otherWelfare || '-', inline: true },
+            { name: "🏢 สังกัด", value: formData.orgName || '-', inline: true },
+            { name: "✍️ ผู้ลงนาม", value: formData.requester || '-', inline: true },
+            { name: "🎁 รายการสวัสดิการ", value: welfareListText, inline: false },
           ],
           image: {
             url: "attachment://welfare.png"
           },
-          footer: { text: "Council Secretary System" },
+          footer: { text: "ระบบตรวจสอบสวัสดิการสภาส่วนกลาง" },
           timestamp: new Date().toISOString()
         }]
       }));
