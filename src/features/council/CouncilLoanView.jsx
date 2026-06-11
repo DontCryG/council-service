@@ -200,14 +200,14 @@ export default function CouncilLoanView() {
               <h3 className="font-bold mb-3 text-base">ข้อ 2. อัตราดอกเบี้ย</h3>
               <div className="ml-12 space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-5 h-5 border border-slate-900 flex items-center justify-center text-sm font-bold bg-slate-100 shrink-0">
-                    {contract.interestRate > 0 ? '✓' : ''}
+                  <div className="w-5 h-5 border border-slate-900 bg-slate-100 shrink-0 text-center" style={{ lineHeight: '18px' }}>
+                    <span className="text-sm font-bold block">{contract.interestRate > 0 ? '✓' : ''}</span>
                   </div>
                   <span>ร้อยละ <strong>{contract.interestRate || '..........'}</strong> จำนวน <strong>{formatMoney(contract.interestAmount) || '..........'}</strong> บาท</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-5 h-5 border border-slate-900 flex items-center justify-center text-sm font-bold bg-slate-100 shrink-0">
-                    {!contract.interestRate || contract.interestRate === 0 ? '✓' : ''}
+                  <div className="w-5 h-5 border border-slate-900 bg-slate-100 shrink-0 text-center" style={{ lineHeight: '18px' }}>
+                    <span className="text-sm font-bold block">{!contract.interestRate || contract.interestRate === 0 ? '✓' : ''}</span>
                   </div>
                   <span>จำนวนเงิน <strong>..........</strong> บาท</span>
                 </div>
@@ -220,14 +220,14 @@ export default function CouncilLoanView() {
               <p className="indent-12 mb-4 leading-loose">ผู้กู้ตกลงจะชำระเงินต้นพร้อมดอกเบี้ยคืนให้แก่ผู้ให้กู้ ภายในวันที่ <strong>{formatDate(contract.dueDate)}</strong></p>
               <div className="ml-12 flex items-center gap-12">
                 <div className="flex items-center gap-3">
-                  <div className="w-5 h-5 border border-slate-900 flex items-center justify-center text-sm font-bold bg-slate-100 shrink-0">
-                    {contract.paymentMethod === 'installments' ? '✓' : ''}
+                  <div className="w-5 h-5 border border-slate-900 bg-slate-100 shrink-0 text-center" style={{ lineHeight: '18px' }}>
+                    <span className="text-sm font-bold block">{contract.paymentMethod === 'installments' ? '✓' : ''}</span>
                   </div>
                   <span>รายวัน (วันละ {formatMoney(contract.installmentAmount)} บาท)</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-5 h-5 border border-slate-900 flex items-center justify-center text-sm font-bold bg-slate-100 shrink-0">
-                    {contract.paymentMethod === 'full' ? '✓' : ''}
+                  <div className="w-5 h-5 border border-slate-900 bg-slate-100 shrink-0 text-center" style={{ lineHeight: '18px' }}>
+                    <span className="text-sm font-bold block">{contract.paymentMethod === 'full' ? '✓' : ''}</span>
                   </div>
                   <span>ชำระเต็มจำนวน</span>
                 </div>
