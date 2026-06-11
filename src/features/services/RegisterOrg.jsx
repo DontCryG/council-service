@@ -86,10 +86,10 @@ export default function RegisterOrg() {
                 ชื่อ GANG / FAMILY (ENG)
               </label>
               <input 
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-200 font-medium focus:outline-none focus:border-amber-500 focus:bg-slate-900 focus:ring-1 focus:ring-amber-500 transition-colors placeholder:text-slate-600"
-                placeholder="เช่น Council"
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-200 font-medium focus:outline-none focus:border-amber-500 focus:bg-slate-900 focus:ring-1 focus:ring-amber-500 transition-colors placeholder:text-slate-600 uppercase"
+                placeholder="เช่น COUNCIL"
                 value={formData.name}
-                onChange={e => setFormData({...formData, name: e.target.value.toUpperCase()})}
+                onChange={e => setFormData({...formData, name: e.target.value.replace(/[^a-zA-Z0-9\s\-_.]/g, '').toUpperCase()})}
                 required
               />
             </div>
@@ -99,11 +99,11 @@ export default function RegisterOrg() {
                 ตัวย่อ (ENG)
               </label>
               <input 
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-200 font-medium focus:outline-none focus:border-amber-500 focus:bg-slate-900 focus:ring-1 focus:ring-amber-500 transition-colors placeholder:text-slate-600 text-center"
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-200 font-medium focus:outline-none focus:border-amber-500 focus:bg-slate-900 focus:ring-1 focus:ring-amber-500 transition-colors placeholder:text-slate-600 text-center uppercase"
                 placeholder="CC"
                 maxLength={5}
                 value={formData.alias}
-                onChange={e => setFormData({...formData, alias: e.target.value.toUpperCase()})}
+                onChange={e => setFormData({...formData, alias: e.target.value.replace(/[^a-zA-Z0-9\s\-_.]/g, '').toUpperCase()})}
               />
             </div>
           </div>
