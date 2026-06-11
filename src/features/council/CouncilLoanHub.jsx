@@ -137,82 +137,100 @@ export default function CouncilLoanHub() {
               <table className="w-full text-left border-collapse min-w-[600px]">
                 <thead>
                   <tr>
-                    <th className="pb-4 text-xs font-bold text-slate-400 tracking-wider">เลขที่สัญญา</th>
-                    <th className="pb-4 text-xs font-bold text-slate-400 tracking-wider">ผู้กู้ยืม</th>
-                    <th className="pb-4 text-xs font-bold text-slate-400 tracking-wider">ยอดคงค้าง</th>
-                    <th className="pb-4 text-xs font-bold text-slate-400 tracking-wider">สถานะ</th>
-                    <th className="pb-4 text-xs font-bold text-slate-400 tracking-wider text-right">จัดการ</th>
+                    <th className="pb-4 pt-2 text-xs font-bold text-slate-400 tracking-wider uppercase">เลขที่สัญญา</th>
+                    <th className="pb-4 pt-2 text-xs font-bold text-slate-400 tracking-wider uppercase">ผู้กู้ยืม</th>
+                    <th className="pb-4 pt-2 text-xs font-bold text-slate-400 tracking-wider uppercase">ยอดคงค้าง</th>
+                    <th className="pb-4 pt-2 text-xs font-bold text-slate-400 tracking-wider uppercase text-center">สถานะ</th>
+                    <th className="pb-4 pt-2 text-xs font-bold text-slate-400 tracking-wider uppercase text-right">จัดการ</th>
                   </tr>
                 </thead>
                 <tbody>
                   {loading ? (
                     <tr>
-                      <td colSpan="5" className="py-10 text-center text-slate-500">
-                        <CircleNotch size={32} className="animate-spin mx-auto mb-2" />
-                        กำลังโหลดข้อมูล...
+                      <td colSpan="5" className="py-12 text-center text-slate-500">
+                        <CircleNotch size={32} className="animate-spin mx-auto mb-3 text-amber-500/50" />
+                        <span className="font-medium tracking-wide">กำลังดึงข้อมูลสัญญา...</span>
                       </td>
                     </tr>
                   ) : contracts.length === 0 ? (
                     <tr>
-                      <td colSpan="5" className="py-10 text-center text-slate-500 font-medium">
-                        ยังไม่มีข้อมูล
+                      <td colSpan="5" className="py-12 text-center text-slate-500">
+                        <div className="w-16 h-16 bg-slate-800/50 rounded-full flex items-center justify-center mx-auto mb-3 border border-slate-700/50">
+                          <FileText size={28} className="text-slate-600" />
+                        </div>
+                        <span className="font-medium tracking-wide">ยังไม่มีข้อมูล</span>
                       </td>
                     </tr>
                   ) : (
                     contracts.map((contract) => (
-                      <tr key={contract.id} className="border-t border-slate-700/50 hover:bg-slate-800/50 transition-colors">
-                        <td className="py-4 font-bold text-amber-500">{contract.contractId}</td>
-                        <td className="py-4 font-bold text-slate-300">{contract.borrowerName}</td>
-                        <td className="py-4 font-black text-white">{(contract.remainingAmount || 0).toLocaleString()} ฿</td>
+                      <tr key={contract.id} className="border-t border-slate-800 hover:bg-slate-800/30 transition-all group">
                         <td className="py-4">
+                          <div className="flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-amber-500/50 group-hover:bg-amber-400 transition-colors"></span>
+                            <span className="font-black text-amber-500/90 group-hover:text-amber-400 transition-colors tracking-wide">{contract.contractId}</span>
+                          </div>
+                        </td>
+                        <td className="py-4 font-bold text-white flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 border border-slate-600 flex items-center justify-center text-xs text-slate-300">
+                            {contract.borrowerName?.charAt(0) || '?'}
+                          </div>
+                          {contract.borrowerName}
+                        </td>
+                        <td className="py-4">
+                          <span className="font-black text-emerald-400">{(contract.remainingAmount || 0).toLocaleString()} <span className="text-emerald-500/50 ml-0.5">฿</span></span>
+                        </td>
+                        <td className="py-4 text-center">
                           {contract.status === 'pending_signature' && (
-                            <span className="bg-blue-500/10 text-blue-400 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap border border-blue-500/20">
+                            <span className="inline-flex items-center justify-center bg-blue-500/10 text-blue-400 px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider border border-blue-500/20 w-28">
                               รอผู้กู้เซ็น
                             </span>
                           )}
                           {contract.status === 'active' && (
-                            <span className="bg-amber-500/10 text-amber-400 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap border border-amber-500/20">
+                            <span className="inline-flex items-center justify-center bg-amber-500/10 text-amber-400 px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider border border-amber-500/20 w-28">
                               กำลังผ่อนชำระ
                             </span>
                           )}
                           {contract.status === 'completed' && (
-                            <span className="bg-emerald-500/10 text-emerald-400 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap border border-emerald-500/20">
+                            <span className="inline-flex items-center justify-center bg-emerald-500/10 text-emerald-400 px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider border border-emerald-500/20 w-28">
                               ชำระครบแล้ว
                             </span>
                           )}
                           {contract.status === 'defaulted' && (
-                            <span className="bg-red-500/10 text-red-400 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap border border-red-500/20">
+                            <span className="inline-flex items-center justify-center bg-red-500/10 text-red-400 px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider border border-red-500/20 w-28">
                               ผิดนัดชำระ
                             </span>
                           )}
                         </td>
                         <td className="py-4">
-                          <div className="flex items-center justify-end gap-3">
+                          <div className="flex items-center justify-end gap-2">
                             {contract.status === 'active' && (
-                              <button className="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-bold transition-colors shadow-sm shadow-emerald-500/20 whitespace-nowrap">
+                              <button className="bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-white px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-bold transition-all border border-emerald-500/20 hover:border-emerald-500 whitespace-nowrap shadow-sm">
                                 <UploadSimple size={14} weight="bold" />
                                 อัพเดทยอด
                               </button>
                             )}
-                            <button className="text-slate-400 hover:text-white transition-colors" title="ดูรายละเอียด">
-                              <FileText size={20} weight="fill" />
-                            </button>
-                            <button 
-                              className="text-slate-400 hover:text-blue-500 transition-colors" 
-                              title="คัดลอกลิงก์สัญญา"
-                              onClick={() => {
-                                navigator.clipboard.writeText(`${window.location.origin}/loan_public?id=${contract.contractId}`);
-                                showAlert('success', 'คัดลอกลิงก์สำหรับผู้กู้สำเร็จ');
-                              }}
-                            >
-                              <Copy size={20} weight="fill" />
-                            </button>
-                            <button className="text-slate-400 hover:text-amber-500 transition-colors" title="แก้ไข">
-                              <PencilSimple size={20} weight="fill" />
-                            </button>
-                            <button className="text-slate-400 hover:text-red-500 transition-colors" title="ลบสัญญา">
-                              <Trash size={20} weight="fill" />
-                            </button>
+                            
+                            <div className="flex items-center gap-1 bg-slate-900/80 p-1 rounded-xl border border-slate-700/50 shadow-inner">
+                              <button className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-all" title="ดูรายละเอียด">
+                                <FileText size={16} weight="fill" />
+                              </button>
+                              <button 
+                                className="p-1.5 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-all" 
+                                title="คัดลอกลิงก์สัญญา"
+                                onClick={() => {
+                                  navigator.clipboard.writeText(`${window.location.origin}/loan_public?id=${contract.contractId}`);
+                                  showAlert('success', 'คัดลอกลิงก์สำหรับผู้กู้สำเร็จ');
+                                }}
+                              >
+                                <Copy size={16} weight="fill" />
+                              </button>
+                              <button className="p-1.5 text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 rounded-lg transition-all" title="แก้ไข">
+                                <PencilSimple size={16} weight="fill" />
+                              </button>
+                              <button className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all" title="ลบสัญญา">
+                                <Trash size={16} weight="fill" />
+                              </button>
+                            </div>
                           </div>
                         </td>
                       </tr>
