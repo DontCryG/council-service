@@ -1,25 +1,21 @@
-import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
-import { sendWebhook, saveTransactionLog } from '../../core/api';
-import { toBlob } from 'html-to-image';
 
-import { Card } from '../../components/ui/Card';
-import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
-import ConfirmationModal from '../../components/ui/ConfirmationModal';
-import { PaperPlaneTilt, Buildings, PencilSimple, Palette, TShirt, CheckCircle } from '@phosphor-icons/react';
+import { Skull, House, Calculator, User } from '@phosphor-icons/react';
 
 export default function EditOrg() {
   const navigate = useNavigate();
-  const { showAlert, user } = useAppStore();
+  const location = useLocation();
+  const { showAlert } = useAppStore();
   
   const [councilMembers, setCouncilMembers] = useState([]);
   
-  const [formData, setFormData] = useState({
-    orgType: 'GANG',
+  const [formData, setFormData] = useState(location.state?.formData || {
+    orgType: 'GANG', // GANG | FAMILY
     orgName: '',
     requester: '',
     councilStaffId: '',
@@ -30,6 +26,7 @@ export default function EditOrg() {
     addCloth: false,
     bulkChange: false,
     addAccessory: false,
+    
     // Details
     textureCount: 1,
     clothCount: 1,
@@ -38,10 +35,6 @@ export default function EditOrg() {
     logoUrl: '',
     extraDetails: ''
   });
-  
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
-  const captureRef = useRef(null);
 
   useEffect(() => {
     const unsub = onSnapshot(collection(db, 'app_state'), (snapshot) => {
@@ -80,7 +73,7 @@ export default function EditOrg() {
     }
   }, [formData.changeInfo, formData.editTexture, formData.textureCount, formData.bulkChange, showAlert]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.orgName || !formData.requester || !formData.councilStaffId) {
       showAlert('error', 'กรุณากรอกข้อมูลสำคัญให้ครบถ้วน');
@@ -88,74 +81,13 @@ export default function EditOrg() {
     }
 
     if (formData.logoUrl && !/^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)(\?.*)?$/i.test(formData.logoUrl) && !formData.logoUrl.includes('discordapp.')) {
-      showAlert('error', 'ช่อง Link โลโก้ กรุณาใส่ลิงก์รูปภาพที่ถูกต้อง (ต้องลงท้ายด้วย .png, .jpg ฯลฯ หรือเป็นรูปลิงก์จากระบบส่วนกลาง)');
+      showAlert('error', 'ช่อง Link โลโก้ กรุณาใส่ลิงก์รูปภาพที่ถูกต้อง');
       return;
     }
 
-    setShowConfirm(true);
-  };
-
-  const handleConfirmSubmit = async () => {
-    setIsSubmitting(true);
-    
-    try {
-      const blob = await toBlob(captureRef.current, { 
-        pixelRatio: 2, 
-        backgroundColor: '#f1f5f9',
-        cacheBust: true 
-      });
-      if (!blob) throw new Error("Failed to generate image");
-      
-      const fd = new FormData();
-      fd.append('file', blob, 'edit_org.png');
-      fd.append('payload_json', JSON.stringify({
-        embeds: [{
-          title: "🔄 ORGANIZATION EDIT REQUEST",
-          color: 0xec4899, // Pink
-          thumbnail: formData.logoUrl ? { url: formData.logoUrl } : undefined,
-          fields: [
-            { name: "🏰 แก๊ง/แฟมิลี่", value: `${formData.orgName} (${formData.orgType})`, inline: true },
-            { name: "👤 ผู้แจ้ง", value: formData.requester, inline: true },
-            { name: "รายการที่แก้ไข", value: [
-                formData.changeInfo ? "✅ เปลี่ยนข้อมูล Gang" : "",
-                formData.editTexture ? `✅ แก้ไข Texture เสื้อผ้า (${formData.textureCount} ชุด)` : "",
-                formData.addCloth ? `✅ ลงชุดเพิ่ม (${formData.clothCount} ชุด)` : "",
-                formData.bulkChange ? "✅ เหมาเปลี่ยนข้อมูล Gang" : "",
-                formData.addAccessory ? `✅ ลง Accessories Adons เสริม` : ""
-            ].filter(Boolean).join('\n') || "ไม่มี", inline: false },
-            { name: "รายละเอียดเพิ่มเติมที่ต้องการแก้", value: formData.extraDetails || "-", inline: false },
-            { name: "เจ้าหน้าที่สภาผู้รับเรื่อง", value: councilMembers.find(c => c.id === formData.councilStaffId)?.name || '-', inline: true },
-          ],
-          image: {
-            url: "attachment://edit_org.png"
-          },
-          footer: { text: "Council Secretary System" },
-          timestamp: new Date().toISOString()
-        }]
-      }));
-
-      await sendWebhook('edit_org', fd);
-      await saveTransactionLog('edit_org', {
-        orgName: formData.orgName,
-        orgType: formData.orgType,
-        requester: formData.requester,
-        councilStaffId: formData.councilStaffId,
-        changeInfo: formData.changeInfo,
-        editTexture: formData.editTexture,
-        addCloth: formData.addCloth,
-        bulkChange: formData.bulkChange,
-        addAccessory: formData.addAccessory
-      }, user);
-      showAlert('success', 'ส่งข้อมูลแจ้งแก้ไขเรียบร้อยแล้ว!');
-      setShowConfirm(false);
-      navigate('/home');
-      
-    } catch (err) {
-      console.error(err);
-      showAlert('error', `เกิดข้อผิดพลาด: ${err.message || 'ไม่สามารถส่งข้อมูลได้'}`);
-    } finally {
-      setIsSubmitting(false);
-    }
+    navigate('/edit_org_preview', {
+      state: { formData }
+    });
   };
 
   const calculateTotal = () => {
@@ -169,259 +101,228 @@ export default function EditOrg() {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex items-center gap-3">
-        <PencilSimple size={32} weight="duotone" className="text-pink-500" />
-        <div>
-          <h1 className="text-2xl font-bold text-white">แจ้งแก้ไขข้อมูลองค์กร</h1>
-          <p className="text-slate-400">แบบฟอร์มแจ้งเปลี่ยนชื่อ สี โลโก้ หรือชุดประจำ Gang/Family</p>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
-        <Card>
-          <form onSubmit={handleSubmit} className="space-y-6">
+    <div className="max-w-[800px] mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 py-6">
+      
+      <div className="bg-white rounded-2xl shadow-xl overflow-hidden text-slate-800">
+        <div className="p-8 md:p-10">
+          <form onSubmit={handleSubmit} className="space-y-8">
             
-            <div className="flex gap-4 p-1 bg-slate-900 border border-slate-700 rounded-lg">
-              <button
-                type="button"
-                className={`flex-1 py-1.5 text-sm rounded-md font-bold transition-colors ${formData.orgType === 'GANG' ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-white'}`}
-                onClick={() => setFormData({...formData, orgType: 'GANG'})}
-              >
-                GANG
-              </button>
-              <button
-                type="button"
-                className={`flex-1 py-1.5 text-sm rounded-md font-bold transition-colors ${formData.orgType === 'FAMILY' ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-white'}`}
-                onClick={() => setFormData({...formData, orgType: 'FAMILY'})}
-              >
-                FAMILY
-              </button>
+            {/* 1. ประเภทสังกัด */}
+            <div className="space-y-3">
+              <label className="text-sm font-bold text-[#4a4f6c] uppercase tracking-wide">
+                1. ประเภทสังกัด (GROUP TYPE)
+              </label>
+              <div className="flex gap-4">
+                <button
+                  type="button"
+                  onClick={() => setFormData({...formData, orgType: 'GANG'})}
+                  className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-xl border-2 transition-all font-bold text-lg
+                    ${formData.orgType === 'GANG' 
+                      ? 'border-amber-400 bg-amber-50 text-[#1e293b]' 
+                      : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300'}`}
+                >
+                  <Skull size={24} weight={formData.orgType === 'GANG' ? 'fill' : 'regular'} /> GANG (แก๊ง)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFormData({...formData, orgType: 'FAMILY'})}
+                  className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-xl border-2 transition-all font-bold text-lg
+                    ${formData.orgType === 'FAMILY' 
+                      ? 'border-amber-400 bg-amber-50 text-[#1e293b]' 
+                      : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300'}`}
+                >
+                  <House size={24} weight={formData.orgType === 'FAMILY' ? 'fill' : 'regular'} /> FAMILY (ครอบครัว)
+                </button>
+              </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <Input 
-                label="ชื่อแก๊ง / แฟมิลี่" 
-                required
-                value={formData.orgName}
-                onChange={e => {
-                  const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.]/g, '').toUpperCase();
-                  setFormData({...formData, orgName: val});
-                }}
-              />
-              <Input 
-                label="ผู้แจ้ง (ชื่อในเกม)" 
-                required
-                value={formData.requester}
-                onChange={e => setFormData({...formData, requester: e.target.value})}
-              />
+            {/* 2 & 3. ชื่อสังกัด & ผู้ทำรายการ */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <label className="text-sm font-bold text-[#4a4f6c] uppercase tracking-wide">
+                  2. ชื่อสังกัด (GROUP NAME)
+                </label>
+                <input 
+                  type="text"
+                  required
+                  placeholder="ระบุชื่อแก๊ง หรือ ครอบครัว"
+                  className="w-full bg-white border border-slate-300 rounded-lg px-4 py-3 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
+                  value={formData.orgName}
+                  onChange={e => {
+                    const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.]/g, '').toUpperCase();
+                    setFormData({...formData, orgName: val});
+                  }}
+                />
+              </div>
+              <div className="space-y-3">
+                <label className="text-sm font-bold text-[#4a4f6c] uppercase tracking-wide">
+                  3. ผู้ทำรายการ (REQUESTER)
+                </label>
+                <input 
+                  type="text"
+                  required
+                  placeholder="ชื่อ-นามสกุล (IC)"
+                  className="w-full bg-white border border-slate-300 rounded-lg px-4 py-3 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
+                  value={formData.requester}
+                  onChange={e => setFormData({...formData, requester: e.target.value})}
+                />
+              </div>
             </div>
 
-            <div className="pt-4 border-t border-slate-800 space-y-4">
-              <label className="text-sm font-medium text-slate-300 ml-1">เลือกรายการที่ต้องการทำ (สามารถเลือกได้หลายข้อ)</label>
+            {/* 4. เลือกรายการธุรกรรม */}
+            <div className="space-y-3">
+              <div className="flex items-end gap-2">
+                <label className="text-sm font-bold text-[#4a4f6c] uppercase tracking-wide">
+                  4. เลือกรายการธุรกรรม (TRANSACTIONS)
+                </label>
+                <span className="text-xs text-slate-400 mb-[2px]">*สามารถเลือกได้มากกว่า 1 รายการ</span>
+              </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <label className={`flex items-center gap-3 cursor-pointer p-3 border rounded-lg transition-all ${formData.changeInfo ? 'border-pink-500 bg-pink-500/10' : 'border-slate-700 hover:bg-slate-800'}`}>
-                  <input type="checkbox" className="hidden" checked={formData.changeInfo} onChange={e => setFormData({...formData, changeInfo: e.target.checked})} />
-                  <Buildings size={20} className={formData.changeInfo ? 'text-pink-500' : 'text-slate-400'} />
-                  <span className={`font-medium ${formData.changeInfo ? 'text-white' : 'text-slate-300'}`}>เปลี่ยนข้อมูล Gang (500,000 $)</span>
-                  {formData.changeInfo && <CheckCircle size={16} weight="fill" className="text-pink-500 ml-auto" />}
+              <div className="space-y-3">
+                <label className={`flex items-center gap-4 cursor-pointer p-4 border rounded-xl transition-all ${formData.changeInfo ? 'border-amber-400 bg-amber-50/30' : 'border-slate-200 hover:border-slate-300'}`}>
+                  <input type="checkbox" className="w-5 h-5 rounded border-slate-300 text-amber-500 focus:ring-amber-500" checked={formData.changeInfo} onChange={e => setFormData({...formData, changeInfo: e.target.checked})} />
+                  <span className="font-bold text-[#1e293b] flex-1 text-lg">เปลี่ยนข้อมูล Gang</span>
+                  <span className="bg-amber-100 text-amber-600 font-black px-3 py-1 rounded-full text-sm">500,000 $</span>
                 </label>
 
-                <label className={`flex items-center gap-3 cursor-pointer p-3 border rounded-lg transition-all ${formData.editTexture ? 'border-pink-500 bg-pink-500/10' : 'border-slate-700 hover:bg-slate-800'}`}>
-                  <input type="checkbox" className="hidden" checked={formData.editTexture} onChange={e => setFormData({...formData, editTexture: e.target.checked})} />
-                  <Palette size={20} className={formData.editTexture ? 'text-pink-500' : 'text-slate-400'} />
-                  <span className={`font-medium ${formData.editTexture ? 'text-white' : 'text-slate-300'}`}>แก้ไข Texture เสื้อผ้า (500,000 $ / ชุด)</span>
-                  {formData.editTexture && <CheckCircle size={16} weight="fill" className="text-pink-500 ml-auto" />}
+                <label className={`flex items-center gap-4 cursor-pointer p-4 border rounded-xl transition-all ${formData.editTexture ? 'border-amber-400 bg-amber-50/30' : 'border-slate-200 hover:border-slate-300'}`}>
+                  <input type="checkbox" className="w-5 h-5 rounded border-slate-300 text-amber-500 focus:ring-amber-500" checked={formData.editTexture} onChange={e => setFormData({...formData, editTexture: e.target.checked})} />
+                  <span className="font-bold text-[#1e293b] flex-1 text-lg">แก้ไข Texture เสื้อผ้า</span>
+                  <span className="bg-amber-100 text-amber-600 font-black px-3 py-1 rounded-full text-sm">500,000 $ / ชุด</span>
                 </label>
 
-                <label className={`flex items-center gap-3 cursor-pointer p-3 border rounded-lg transition-all ${formData.addCloth ? 'border-pink-500 bg-pink-500/10' : 'border-slate-700 hover:bg-slate-800'}`}>
-                  <input type="checkbox" className="hidden" checked={formData.addCloth} onChange={e => setFormData({...formData, addCloth: e.target.checked})} />
-                  <TShirt size={20} className={formData.addCloth ? 'text-pink-500' : 'text-slate-400'} />
-                  <span className={`font-medium ${formData.addCloth ? 'text-white' : 'text-slate-300'}`}>ลงชุดเพิ่ม (500,000 $ / ชุด)</span>
-                  {formData.addCloth && <CheckCircle size={16} weight="fill" className="text-pink-500 ml-auto" />}
+                <label className={`flex items-center gap-4 cursor-pointer p-4 border rounded-xl transition-all ${formData.addCloth ? 'border-amber-400 bg-amber-50/30' : 'border-slate-200 hover:border-slate-300'}`}>
+                  <input type="checkbox" className="w-5 h-5 rounded border-slate-300 text-amber-500 focus:ring-amber-500" checked={formData.addCloth} onChange={e => setFormData({...formData, addCloth: e.target.checked})} />
+                  <span className="font-bold text-[#1e293b] flex-1 text-lg">ลงชุดเพิ่ม</span>
+                  <span className="bg-amber-100 text-amber-600 font-black px-3 py-1 rounded-full text-sm">500,000 $ / ชุด</span>
                 </label>
 
-                <label className={`flex items-center gap-3 cursor-pointer p-3 border rounded-lg transition-all ${formData.bulkChange ? 'border-pink-500 bg-pink-500/10' : 'border-slate-700 hover:bg-slate-800'}`}>
-                  <input type="checkbox" className="hidden" checked={formData.bulkChange} onChange={e => setFormData({...formData, bulkChange: e.target.checked})} />
-                  <Buildings size={20} className={formData.bulkChange ? 'text-pink-500' : 'text-slate-400'} />
-                  <span className={`font-medium ${formData.bulkChange ? 'text-white' : 'text-slate-300'}`}>เหมาเปลี่ยนข้อมูล Gang (1,500,000 $)</span>
-                  {formData.bulkChange && <CheckCircle size={16} weight="fill" className="text-pink-500 ml-auto" />}
+                <label className={`flex items-center gap-4 cursor-pointer p-4 border rounded-xl transition-all ${formData.bulkChange ? 'border-amber-400 bg-amber-50/30' : 'border-slate-200 hover:border-slate-300'}`}>
+                  <input type="checkbox" className="w-5 h-5 rounded border-slate-300 text-amber-500 focus:ring-amber-500" checked={formData.bulkChange} onChange={e => setFormData({...formData, bulkChange: e.target.checked})} />
+                  <span className="font-bold text-[#1e293b] flex-1 text-lg">เหมาเปลี่ยนข้อมูล Gang</span>
+                  <span className="bg-amber-100 text-amber-600 font-black px-3 py-1 rounded-full text-sm">1,500,000 $</span>
                 </label>
 
-                <label className={`flex items-center gap-3 cursor-pointer p-3 border rounded-lg transition-all sm:col-span-2 ${formData.addAccessory ? 'border-pink-500 bg-pink-500/10' : 'border-slate-700 hover:bg-slate-800'}`}>
-                  <input type="checkbox" className="hidden" checked={formData.addAccessory} onChange={e => setFormData({...formData, addAccessory: e.target.checked})} />
-                  <TShirt size={20} className={formData.addAccessory ? 'text-pink-500' : 'text-slate-400'} />
-                  <span className={`font-medium ${formData.addAccessory ? 'text-white' : 'text-slate-300'}`}>ลง Accessories Adons เสริม (1,000,000 $)</span>
-                  {formData.addAccessory && <CheckCircle size={16} weight="fill" className="text-pink-500 ml-auto" />}
+                <label className={`flex items-center gap-4 cursor-pointer p-4 border rounded-xl transition-all ${formData.addAccessory ? 'border-amber-400 bg-amber-50/30' : 'border-slate-200 hover:border-slate-300'}`}>
+                  <input type="checkbox" className="w-5 h-5 rounded border-slate-300 text-amber-500 focus:ring-amber-500" checked={formData.addAccessory} onChange={e => setFormData({...formData, addAccessory: e.target.checked})} />
+                  <span className="font-bold text-[#1e293b] flex-1 text-lg">ลง Accessories Adons เสริม</span>
+                  <span className="bg-amber-100 text-amber-600 font-black px-3 py-1 rounded-full text-sm">1,000,000 $</span>
                 </label>
               </div>
             </div>
 
-            {/* Conditional Inputs */}
-            {(formData.changeInfo || formData.bulkChange || formData.editTexture || formData.addCloth || formData.addAccessory) && (
-              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-800 bg-slate-900/50 p-4 rounded-xl">
-                {formData.editTexture && (
-                  <Input 
-                    type="number" 
-                    min="1" 
-                    label="จำนวนเทกเจอร์ที่แก้" 
-                    value={formData.textureCount}
-                    onChange={e => setFormData({...formData, textureCount: parseInt(e.target.value) || 1})}
-                  />
-                )}
-                {formData.addCloth && (
-                  <Input 
-                    type="number" 
-                    min="1" 
-                    label="จำนวนชุดที่เพิ่ม" 
-                    value={formData.clothCount}
-                    onChange={e => setFormData({...formData, clothCount: parseInt(e.target.value) || 1})}
-                  />
-                )}
-                {(formData.changeInfo || formData.bulkChange) && (
-                  <>
-                    <Input 
-                      label="Logo Link ใหม่" 
-                      placeholder="ใส่ URL รูปโลโก้"
-                      value={formData.logoUrl}
-                      onChange={e => setFormData({...formData, logoUrl: e.target.value})}
-                      error={formData.logoUrl && !/^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)(\?.*)?$/i.test(formData.logoUrl) && !formData.logoUrl.includes('discordapp.') ? 'ลิงก์รูปภาพไม่ถูกต้อง' : ''}
-                    />
-                    <div className="col-span-2">
-                      <label className="text-sm font-medium text-slate-300 ml-1 block mb-1">สีประจำแก๊ง (ใหม่)</label>
-                      <div className="flex gap-2 h-11">
-                        <div 
-                          className="h-full w-12 border border-slate-700 rounded shadow-inner"
-                          style={{ backgroundColor: formData.hexColor || '#000000' }}
-                        />
-                        <Input 
-                          className="flex-1"
-                          placeholder="#000000"
-                          value={formData.hexColor}
-                          onChange={e => {
-                            const val = e.target.value.replace(/[^A-Za-z0-9#]/g, '');
-                            setFormData({...formData, hexColor: val});
-                          }}
-                        />
-                      </div>
+            {/* 5. รายละเอียดเพิ่มเติม */}
+            <div className="bg-[#f8fafc] border border-slate-200 rounded-xl p-6 space-y-6">
+              <label className="text-sm font-bold text-[#4a4f6c] uppercase tracking-wide flex items-center gap-2">
+                <Calculator size={18} /> 5. ระบุรายละเอียดการแก้ไข (ถ้ามี)
+              </label>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <div className="flex items-end gap-1 mb-2">
+                    <span className="text-xs font-bold text-[#1e293b]">จำนวนชุด (Texture)</span>
+                    <span className="text-[10px] text-slate-400">*มีผลกับราคาเมื่อเลือกแก้ Texture</span>
+                  </div>
+                  <div className="flex border border-slate-300 rounded-lg overflow-hidden bg-white w-32 h-10">
+                    <button type="button" className="px-3 hover:bg-slate-100 font-bold border-r border-slate-300 text-slate-600" onClick={() => setFormData(prev => ({...prev, textureCount: Math.max(1, prev.textureCount - 1)}))}>-</button>
+                    <input type="number" className="flex-1 text-center font-bold focus:outline-none appearance-none" min="1" value={formData.textureCount} onChange={e => setFormData({...formData, textureCount: parseInt(e.target.value) || 1})} />
+                    <button type="button" className="px-3 hover:bg-slate-100 font-bold border-l border-slate-300 text-slate-600" onClick={() => setFormData(prev => ({...prev, textureCount: prev.textureCount + 1}))}>+</button>
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="flex items-end gap-1 mb-2">
+                    <span className="text-xs font-bold text-[#1e293b]">รหัสสี (HEX Color)</span>
+                    <span className="text-[10px] text-slate-400">*ถ้ามีการเปลี่ยนสี</span>
+                  </div>
+                  <div className="flex gap-2 h-10">
+                    <div className="h-full w-12 border border-slate-300 rounded overflow-hidden">
+                      <input 
+                        type="color" 
+                        className="w-[200%] h-[200%] -translate-x-1/4 -translate-y-1/4 cursor-pointer"
+                        value={formData.hexColor}
+                        onChange={e => setFormData({...formData, hexColor: e.target.value})}
+                      />
                     </div>
-                  </>
-                )}
+                    <input 
+                      type="text"
+                      className="flex-1 bg-white border border-slate-300 rounded-lg px-3 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500"
+                      placeholder="#FFFFFF"
+                      value={formData.hexColor}
+                      onChange={e => {
+                        const val = e.target.value.replace(/[^A-Za-z0-9#]/g, '');
+                        setFormData({...formData, hexColor: val});
+                      }}
+                    />
+                  </div>
+                </div>
               </div>
-            )}
 
-            <div className="pt-4 border-t border-slate-800 space-y-4">
-              <Input 
-                label="รายละเอียดเพิ่มเติม (ช่องทางติดต่อ / หมายเหตุ)" 
-                value={formData.extraDetails}
-                onChange={e => setFormData({...formData, extraDetails: e.target.value})}
-              />
+              <div>
+                <div className="flex items-end gap-1 mb-2">
+                  <span className="text-xs font-bold text-[#1e293b]">แนบลิงก์รูปภาพโลโก้ (Logo URL)</span>
+                  <span className="text-[10px] text-slate-400">*สำหรับอัปเดตแก๊งหรือครอบครัว</span>
+                </div>
+                <input 
+                  type="text"
+                  className="w-full bg-white border border-slate-300 rounded-lg px-4 py-2.5 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500 transition-all text-sm"
+                  placeholder="เช่น https://imgur.com/... หรือ Discord Image Link"
+                  value={formData.logoUrl}
+                  onChange={e => setFormData({...formData, logoUrl: e.target.value})}
+                />
+              </div>
 
-              <div className="space-y-1.5">
-                <label className="text-sm font-medium text-slate-300 ml-1">สภาผู้รับเรื่อง</label>
+              <div>
+                <div className="text-xs font-bold text-[#1e293b] mb-2">รายละเอียดเพิ่มเติม / สิ่งที่ต้องการแก้</div>
+                <textarea 
+                  rows="3"
+                  className="w-full bg-white border border-slate-300 rounded-lg px-4 py-3 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500 transition-all resize-none text-sm"
+                  placeholder="เช่น ขอเปลี่ยนโลโก้แก๊ง, เพิ่มลายเสื้อ, เปลี่ยนสีสัญลักษณ์..."
+                  value={formData.extraDetails}
+                  onChange={e => setFormData({...formData, extraDetails: e.target.value})}
+                />
+              </div>
+            </div>
+
+            {/* ยอดรวมเบื้องต้น */}
+            <div className="bg-[#0f172a] rounded-xl flex items-center justify-between p-6">
+              <div className="flex items-center gap-3 text-white font-bold text-lg">
+                <Calculator size={24} className="text-slate-400" /> ยอดรวมเบื้องต้น
+              </div>
+              <div className="text-4xl font-black text-amber-400">
+                {calculateTotal().toLocaleString()} <span className="text-2xl">$</span>
+              </div>
+            </div>
+
+            {/* 6. เจ้าหน้าที่สภา */}
+            <div className="space-y-3">
+              <label className="text-sm font-bold text-[#4a4f6c] uppercase tracking-wide">
+                6. เจ้าหน้าที่สภาผู้รับเรื่อง (COUNCIL MEMBER)
+              </label>
+              <div className="relative">
                 <select 
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition-colors"
+                  className="w-full bg-white border border-slate-300 rounded-lg px-4 py-3.5 text-[#1e293b] font-medium appearance-none focus:outline-none focus:border-amber-500 transition-all cursor-pointer"
                   value={formData.councilStaffId}
                   onChange={e => setFormData({...formData, councilStaffId: e.target.value})}
                   required
                 >
-                  <option value="" disabled>-- เลือกชื่อสภา --</option>
+                  <option value="" disabled>-- เลือกเจ้าหน้าที่สภา --</option>
                   {councilMembers.map(c => (
                     <option key={c.id} value={c.id}>{c.name}</option>
                   ))}
                 </select>
+                <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-slate-400">
+                  <User size={20} />
+                </div>
               </div>
             </div>
 
-            <Button type="submit" className="w-full" size="lg" isLoading={isSubmitting}>
-              <PaperPlaneTilt size={20} weight="bold" /> ยืนยันการส่งคำร้อง
+            <Button type="submit" className="w-full py-4 text-lg bg-[#4a4f6c] hover:bg-[#3d425b] text-white rounded-xl shadow-lg shadow-[#4a4f6c]/20">
+              ดำเนินการต่อ
             </Button>
           </form>
-        </Card>
-
-        {/* Preview */}
-        <div className="sticky top-24">
-          <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3 ml-1">Live Document</h3>
-          
-          <div ref={captureRef} className="bg-slate-100 rounded-xl p-8 border border-slate-300 shadow-2xl relative overflow-hidden" style={{ color: '#1e293b' }}>
-            <div className="flex flex-row items-end justify-between border-b-2 border-slate-800 pb-4 mb-6">
-              <div className="flex flex-col justify-end">
-                <h2 className="text-3xl font-black uppercase tracking-tighter" style={{ color: '#000', lineHeight: '1.1' }}>
-                  {formData.orgName || 'ORGANIZATION'}
-                </h2>
-                <div className="text-slate-500 font-bold tracking-wider text-sm mt-1 whitespace-nowrap w-max">
-                  <span>{formData.orgType} MODIFICATION</span>
-                </div>
-              </div>
-              {(formData.changeInfo || formData.bulkChange) && formData.logoUrl && (
-                <div className="ml-4 shrink-0">
-                  <img src={formData.logoUrl} alt="Logo" className="w-20 h-20 object-contain drop-shadow-md rounded" crossOrigin="anonymous"/>
-                </div>
-              )}
-            </div>
-
-            <div className="grid grid-cols-2 gap-x-6 gap-y-4 mb-6">
-              <div>
-                <div className="text-xs text-slate-500 uppercase font-bold">Requester</div>
-                <div className="font-bold text-lg">{formData.requester || '-'}</div>
-              </div>
-              <div>
-                <div className="text-xs text-slate-500 uppercase font-bold">Theme Color (New)</div>
-                <div className="flex items-center gap-2 font-mono font-bold">
-                  <div className="w-4 h-4 rounded-full border border-slate-400" style={{ backgroundColor: formData.hexColor }}></div>
-                  {formData.hexColor}
-                </div>
-              </div>
-            </div>
-
-            <div className="mb-8">
-              <div className="text-sm font-bold border-b border-slate-300 pb-1 mb-2">Requested Changes</div>
-              <ul className="text-sm space-y-2 list-none pl-0 text-slate-700 font-medium">
-                {formData.changeInfo && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ เปลี่ยนข้อมูล Gang</span> <span>$500,000</span></li>}
-                {formData.editTexture && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ แก้ไข Texture เสื้อผ้า ({formData.textureCount} ชุด)</span> <span>${(500000 * Math.max(1, formData.textureCount)).toLocaleString()}</span></li>}
-                {formData.addCloth && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ ลงชุดเพิ่ม ({formData.clothCount} ชุด)</span> <span>${(500000 * Math.max(1, formData.clothCount)).toLocaleString()}</span></li>}
-                {formData.bulkChange && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ เหมาเปลี่ยนข้อมูล Gang</span> <span>$1,500,000</span></li>}
-                {formData.addAccessory && <li className="flex justify-between items-center bg-white p-2 rounded border border-slate-200"><span className="whitespace-nowrap">✅ ลง Accessories Adons เสริม</span> <span>$1,000,000</span></li>}
-                {!formData.changeInfo && !formData.editTexture && !formData.addCloth && !formData.bulkChange && !formData.addAccessory && (
-                  <li className="text-slate-400 italic">No changes selected</li>
-                )}
-              </ul>
-            </div>
-
-            {formData.extraDetails && (
-              <div className="mb-8 p-4 bg-slate-200/50 rounded-lg border border-slate-300">
-                <div className="text-xs text-slate-500 uppercase font-bold mb-1">Extra Details / Remarks</div>
-                <div className="text-sm font-medium text-slate-800 whitespace-pre-wrap leading-relaxed">
-                  {formData.extraDetails}
-                </div>
-              </div>
-            )}
-
-            <div className="flex justify-between items-end pt-4 mt-4 border-t-2 border-slate-300">
-              <div>
-                <div className="text-xs text-slate-500 uppercase font-bold">Total Fees</div>
-                <div className="text-3xl font-black text-emerald-600">${calculateTotal().toLocaleString()}</div>
-              </div>
-              
-              <div className="text-center w-40">
-                <div className="border-b border-slate-800 pb-1 font-medium">{councilMembers.find(c => c.id === formData.councilStaffId)?.name || '...'}</div>
-                <div className="text-xs mt-1">Council Inspector</div>
-              </div>
-            </div>
-
-          </div>
         </div>
       </div>
-      
-      <ConfirmationModal 
-        isOpen={showConfirm}
-        onClose={() => setShowConfirm(false)}
-        onConfirm={handleConfirmSubmit}
-        title="ยืนยันส่งข้อมูลแก้ไของค์กร?"
-        message={`คุณต้องการยืนยันการส่งข้อมูลของแก๊ง ${formData.orgName} ใช่หรือไม่? โปรดตรวจสอบรายละเอียดให้แน่ใจ`}
-        isLoading={isSubmitting}
-      />
     </div>
   );
 }

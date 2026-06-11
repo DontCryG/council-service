@@ -24,6 +24,7 @@ const WelfareTradePreview = lazy(() => import('./features/services/WelfareTradeP
 const RegisterOrg = lazy(() => import('./features/services/RegisterOrg'));
 const RegisterOrgPreview = lazy(() => import('./features/services/RegisterOrgPreview'));
 const EditOrg = lazy(() => import('./features/services/EditOrg'));
+const EditOrgPreview = lazy(() => import('./features/services/EditOrgPreview'));
 const GroupManager = lazy(() => import('./features/council/GroupManager'));
 const TicketManager = lazy(() => import('./features/tickets/TicketManager'));
 const TicketStore = lazy(() => import('./features/tickets/TicketStore'));
@@ -215,6 +216,7 @@ function App() {
             <Route path="ps1" element={<GeneralService />} />
             <Route path="general_service_preview" element={<GeneralServicePreview />} />
             <Route path="edit_org" element={<EditOrg />} />
+            <Route path="edit_org_preview" element={<EditOrgPreview />} />
             
             <Route path="welfare" element={<Welfare />} />
             <Route path="welfare_preview" element={<WelfarePreview />} />
