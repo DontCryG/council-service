@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { MagnifyingGlass, FileText, CheckCircle, WarningCircle, PenNib, Eraser } from '@phosphor-icons/react';
+import { MagnifyingGlass, FileText, CheckCircle, WarningCircle, PenNib, Eraser, ArrowLeft, CurrencyDollar, CalendarBlank } from '@phosphor-icons/react';
 import { collection, query, where, getDocs, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../core/firebase';
 import { useAppStore } from '../../store';
