@@ -193,7 +193,7 @@ export default function RegisterOrgPreview() {
           </div>
           <div className="flex justify-between items-center pt-4 border-t border-slate-800/50">
             <span className="text-slate-500 font-medium text-sm whitespace-nowrap">เจ้าหน้าที่ผู้รับเรื่อง (สภา)</span>
-            <span className="font-bold text-amber-500 text-right ml-4">
+            <span className="font-bold text-amber-500 text-right ml-4 whitespace-nowrap">
               {councilMembers.find(c => c.id === formData.councilStaffId)?.name || '-'}
             </span>
           </div>
