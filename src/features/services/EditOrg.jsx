@@ -116,13 +116,13 @@ export default function EditOrg() {
         </Button>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-xl overflow-hidden text-slate-800">
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden text-white">
         <div className="p-8 md:p-10">
           <form onSubmit={handleSubmit} className="space-y-8">
             
             {/* 1. ประเภทสังกัด */}
             <div className="space-y-3">
-              <label className="text-sm font-bold text-[#4a4f6c] uppercase tracking-wide">
+              <label className="text-sm font-bold text-slate-400 uppercase tracking-wide">
                 1. ประเภทสังกัด (GROUP TYPE)
               </label>
               <div className="flex gap-4">
@@ -131,8 +131,8 @@ export default function EditOrg() {
                   onClick={() => setFormData({...formData, orgType: 'GANG'})}
                   className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-xl border-2 transition-all font-bold text-lg
                     ${formData.orgType === 'GANG' 
-                      ? 'border-amber-400 bg-amber-50 text-[#1e293b]' 
-                      : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300'}`}
+                      ? 'border-amber-500 bg-amber-500/10 text-amber-500' 
+                      : 'border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-slate-300'}`}
                 >
                   <Skull size={24} weight={formData.orgType === 'GANG' ? 'fill' : 'regular'} /> GANG (แก๊ง)
                 </button>
@@ -141,8 +141,8 @@ export default function EditOrg() {
                   onClick={() => setFormData({...formData, orgType: 'FAMILY'})}
                   className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-xl border-2 transition-all font-bold text-lg
                     ${formData.orgType === 'FAMILY' 
-                      ? 'border-amber-400 bg-amber-50 text-[#1e293b]' 
-                      : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300'}`}
+                      ? 'border-amber-500 bg-amber-500/10 text-amber-500' 
+                      : 'border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-slate-300'}`}
                 >
                   <House size={24} weight={formData.orgType === 'FAMILY' ? 'fill' : 'regular'} /> FAMILY (ครอบครัว)
                 </button>
@@ -152,14 +152,14 @@ export default function EditOrg() {
             {/* 2 & 3. ชื่อสังกัด & ผู้ทำรายการ */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-3">
-                <label className="text-sm font-bold text-[#4a4f6c] uppercase tracking-wide">
+                <label className="text-sm font-bold text-slate-400 uppercase tracking-wide">
                   2. ชื่อสังกัด (GROUP NAME)
                 </label>
                 <input 
                   type="text"
                   required
                   placeholder="ระบุชื่อแก๊ง หรือ ครอบครัว"
-                  className="w-full bg-white border border-slate-300 rounded-lg px-4 py-3 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
+                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
                   value={formData.orgName}
                   onChange={e => {
                     const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.]/g, '').toUpperCase();
@@ -168,14 +168,14 @@ export default function EditOrg() {
                 />
               </div>
               <div className="space-y-3">
-                <label className="text-sm font-bold text-[#4a4f6c] uppercase tracking-wide">
+                <label className="text-sm font-bold text-slate-400 uppercase tracking-wide">
                   3. ผู้ทำรายการ (REQUESTER)
                 </label>
                 <input 
                   type="text"
                   required
                   placeholder="ชื่อ-นามสกุล (IC)"
-                  className="w-full bg-white border border-slate-300 rounded-lg px-4 py-3 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
+                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
                   value={formData.requester}
                   onChange={e => setFormData({...formData, requester: e.target.value})}
                 />
@@ -185,71 +185,71 @@ export default function EditOrg() {
             {/* 4. เลือกรายการธุรกรรม */}
             <div className="space-y-3">
               <div className="flex items-end gap-2">
-                <label className="text-sm font-bold text-[#4a4f6c] uppercase tracking-wide">
+                <label className="text-sm font-bold text-slate-400 uppercase tracking-wide">
                   4. เลือกรายการธุรกรรม (TRANSACTIONS)
                 </label>
-                <span className="text-xs text-slate-400 mb-[2px]">*สามารถเลือกได้มากกว่า 1 รายการ</span>
+                <span className="text-xs text-slate-500 mb-[2px]">*สามารถเลือกได้มากกว่า 1 รายการ</span>
               </div>
               
               <div className="space-y-3">
-                <label className={`flex items-center gap-4 cursor-pointer p-4 border rounded-xl transition-all ${formData.changeInfo ? 'border-amber-400 bg-amber-50/30' : 'border-slate-200 hover:border-slate-300'}`}>
-                  <input type="checkbox" className="w-5 h-5 rounded border-slate-300 text-amber-500 focus:ring-amber-500" checked={formData.changeInfo} onChange={e => setFormData({...formData, changeInfo: e.target.checked})} />
-                  <span className="font-bold text-[#1e293b] flex-1 text-lg">เปลี่ยนข้อมูล Gang</span>
-                  <span className="bg-amber-100 text-amber-600 font-black px-3 py-1 rounded-full text-sm">500,000 $</span>
+                <label className={`flex items-center gap-4 cursor-pointer p-4 border rounded-xl transition-all ${formData.changeInfo ? 'border-amber-500/50 bg-amber-500/10' : 'border-slate-700 hover:border-slate-600 hover:bg-slate-800/50'}`}>
+                  <input type="checkbox" className="w-5 h-5 rounded border-slate-600 bg-slate-950 text-amber-500 focus:ring-amber-500" checked={formData.changeInfo} onChange={e => setFormData({...formData, changeInfo: e.target.checked})} />
+                  <span className={`font-bold flex-1 text-lg ${formData.changeInfo ? 'text-white' : 'text-slate-300'}`}>เปลี่ยนข้อมูล Gang</span>
+                  <span className="bg-amber-500/20 text-amber-400 font-black px-3 py-1 rounded-full text-sm">500,000 $</span>
                 </label>
 
-                <label className={`flex items-center gap-4 cursor-pointer p-4 border rounded-xl transition-all ${formData.editTexture ? 'border-amber-400 bg-amber-50/30' : 'border-slate-200 hover:border-slate-300'}`}>
-                  <input type="checkbox" className="w-5 h-5 rounded border-slate-300 text-amber-500 focus:ring-amber-500" checked={formData.editTexture} onChange={e => setFormData({...formData, editTexture: e.target.checked})} />
-                  <span className="font-bold text-[#1e293b] flex-1 text-lg">แก้ไข Texture เสื้อผ้า</span>
-                  <span className="bg-amber-100 text-amber-600 font-black px-3 py-1 rounded-full text-sm">500,000 $ / ชุด</span>
+                <label className={`flex items-center gap-4 cursor-pointer p-4 border rounded-xl transition-all ${formData.editTexture ? 'border-amber-500/50 bg-amber-500/10' : 'border-slate-700 hover:border-slate-600 hover:bg-slate-800/50'}`}>
+                  <input type="checkbox" className="w-5 h-5 rounded border-slate-600 bg-slate-950 text-amber-500 focus:ring-amber-500" checked={formData.editTexture} onChange={e => setFormData({...formData, editTexture: e.target.checked})} />
+                  <span className={`font-bold flex-1 text-lg ${formData.editTexture ? 'text-white' : 'text-slate-300'}`}>แก้ไข Texture เสื้อผ้า</span>
+                  <span className="bg-amber-500/20 text-amber-400 font-black px-3 py-1 rounded-full text-sm">500,000 $ / ชุด</span>
                 </label>
 
-                <label className={`flex items-center gap-4 cursor-pointer p-4 border rounded-xl transition-all ${formData.addCloth ? 'border-amber-400 bg-amber-50/30' : 'border-slate-200 hover:border-slate-300'}`}>
-                  <input type="checkbox" className="w-5 h-5 rounded border-slate-300 text-amber-500 focus:ring-amber-500" checked={formData.addCloth} onChange={e => setFormData({...formData, addCloth: e.target.checked})} />
-                  <span className="font-bold text-[#1e293b] flex-1 text-lg">ลงชุดเพิ่ม</span>
-                  <span className="bg-amber-100 text-amber-600 font-black px-3 py-1 rounded-full text-sm">500,000 $ / ชุด</span>
+                <label className={`flex items-center gap-4 cursor-pointer p-4 border rounded-xl transition-all ${formData.addCloth ? 'border-amber-500/50 bg-amber-500/10' : 'border-slate-700 hover:border-slate-600 hover:bg-slate-800/50'}`}>
+                  <input type="checkbox" className="w-5 h-5 rounded border-slate-600 bg-slate-950 text-amber-500 focus:ring-amber-500" checked={formData.addCloth} onChange={e => setFormData({...formData, addCloth: e.target.checked})} />
+                  <span className={`font-bold flex-1 text-lg ${formData.addCloth ? 'text-white' : 'text-slate-300'}`}>ลงชุดเพิ่ม</span>
+                  <span className="bg-amber-500/20 text-amber-400 font-black px-3 py-1 rounded-full text-sm">500,000 $ / ชุด</span>
                 </label>
 
-                <label className={`flex items-center gap-4 cursor-pointer p-4 border rounded-xl transition-all ${formData.bulkChange ? 'border-amber-400 bg-amber-50/30' : 'border-slate-200 hover:border-slate-300'}`}>
-                  <input type="checkbox" className="w-5 h-5 rounded border-slate-300 text-amber-500 focus:ring-amber-500" checked={formData.bulkChange} onChange={e => setFormData({...formData, bulkChange: e.target.checked})} />
-                  <span className="font-bold text-[#1e293b] flex-1 text-lg">เหมาเปลี่ยนข้อมูล Gang</span>
-                  <span className="bg-amber-100 text-amber-600 font-black px-3 py-1 rounded-full text-sm">1,500,000 $</span>
+                <label className={`flex items-center gap-4 cursor-pointer p-4 border rounded-xl transition-all ${formData.bulkChange ? 'border-amber-500/50 bg-amber-500/10' : 'border-slate-700 hover:border-slate-600 hover:bg-slate-800/50'}`}>
+                  <input type="checkbox" className="w-5 h-5 rounded border-slate-600 bg-slate-950 text-amber-500 focus:ring-amber-500" checked={formData.bulkChange} onChange={e => setFormData({...formData, bulkChange: e.target.checked})} />
+                  <span className={`font-bold flex-1 text-lg ${formData.bulkChange ? 'text-white' : 'text-slate-300'}`}>เหมาเปลี่ยนข้อมูล Gang</span>
+                  <span className="bg-amber-500/20 text-amber-400 font-black px-3 py-1 rounded-full text-sm">1,500,000 $</span>
                 </label>
 
-                <label className={`flex items-center gap-4 cursor-pointer p-4 border rounded-xl transition-all ${formData.addAccessory ? 'border-amber-400 bg-amber-50/30' : 'border-slate-200 hover:border-slate-300'}`}>
-                  <input type="checkbox" className="w-5 h-5 rounded border-slate-300 text-amber-500 focus:ring-amber-500" checked={formData.addAccessory} onChange={e => setFormData({...formData, addAccessory: e.target.checked})} />
-                  <span className="font-bold text-[#1e293b] flex-1 text-lg">ลง Accessories Adons เสริม</span>
-                  <span className="bg-amber-100 text-amber-600 font-black px-3 py-1 rounded-full text-sm">1,000,000 $</span>
+                <label className={`flex items-center gap-4 cursor-pointer p-4 border rounded-xl transition-all ${formData.addAccessory ? 'border-amber-500/50 bg-amber-500/10' : 'border-slate-700 hover:border-slate-600 hover:bg-slate-800/50'}`}>
+                  <input type="checkbox" className="w-5 h-5 rounded border-slate-600 bg-slate-950 text-amber-500 focus:ring-amber-500" checked={formData.addAccessory} onChange={e => setFormData({...formData, addAccessory: e.target.checked})} />
+                  <span className={`font-bold flex-1 text-lg ${formData.addAccessory ? 'text-white' : 'text-slate-300'}`}>ลง Accessories Adons เสริม</span>
+                  <span className="bg-amber-500/20 text-amber-400 font-black px-3 py-1 rounded-full text-sm">1,000,000 $</span>
                 </label>
               </div>
             </div>
 
             {/* 5. รายละเอียดเพิ่มเติม */}
-            <div className="bg-[#f8fafc] border border-slate-200 rounded-xl p-6 space-y-6">
-              <label className="text-sm font-bold text-[#4a4f6c] uppercase tracking-wide flex items-center gap-2">
+            <div className="bg-slate-800/30 border border-slate-700 rounded-xl p-6 space-y-6">
+              <label className="text-sm font-bold text-slate-400 uppercase tracking-wide flex items-center gap-2">
                 <Calculator size={18} /> 5. ระบุรายละเอียดการแก้ไข (ถ้ามี)
               </label>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <div className="flex items-end gap-1 mb-2">
-                    <span className="text-xs font-bold text-[#1e293b]">จำนวนชุด (Texture)</span>
-                    <span className="text-[10px] text-slate-400">*มีผลกับราคาเมื่อเลือกแก้ Texture</span>
+                    <span className="text-xs font-bold text-slate-300">จำนวนชุด (Texture)</span>
+                    <span className="text-[10px] text-slate-500">*มีผลกับราคาเมื่อเลือกแก้ Texture</span>
                   </div>
-                  <div className="flex border border-slate-300 rounded-lg overflow-hidden bg-white w-32 h-10">
-                    <button type="button" className="px-3 hover:bg-slate-100 font-bold border-r border-slate-300 text-slate-600" onClick={() => setFormData(prev => ({...prev, textureCount: Math.max(1, prev.textureCount - 1)}))}>-</button>
-                    <input type="number" className="flex-1 text-center font-bold focus:outline-none appearance-none" min="1" value={formData.textureCount} onChange={e => setFormData({...formData, textureCount: parseInt(e.target.value) || 1})} />
-                    <button type="button" className="px-3 hover:bg-slate-100 font-bold border-l border-slate-300 text-slate-600" onClick={() => setFormData(prev => ({...prev, textureCount: prev.textureCount + 1}))}>+</button>
+                  <div className="flex border border-slate-700 rounded-lg overflow-hidden bg-slate-950 w-32 h-10">
+                    <button type="button" className="px-3 hover:bg-slate-800 font-bold border-r border-slate-700 text-slate-400" onClick={() => setFormData(prev => ({...prev, textureCount: Math.max(1, prev.textureCount - 1)}))}>-</button>
+                    <input type="number" className="flex-1 text-center font-bold focus:outline-none appearance-none bg-transparent text-white" min="1" value={formData.textureCount} onChange={e => setFormData({...formData, textureCount: parseInt(e.target.value) || 1})} />
+                    <button type="button" className="px-3 hover:bg-slate-800 font-bold border-l border-slate-700 text-slate-400" onClick={() => setFormData(prev => ({...prev, textureCount: prev.textureCount + 1}))}>+</button>
                   </div>
                 </div>
                 
                 <div>
                   <div className="flex items-end gap-1 mb-2">
-                    <span className="text-xs font-bold text-[#1e293b]">รหัสสี (HEX Color)</span>
-                    <span className="text-[10px] text-slate-400">*ถ้ามีการเปลี่ยนสี</span>
+                    <span className="text-xs font-bold text-slate-300">รหัสสี (HEX Color)</span>
+                    <span className="text-[10px] text-slate-500">*ถ้ามีการเปลี่ยนสี</span>
                   </div>
                   <div className="flex gap-2 h-10">
-                    <div className="h-full w-12 border border-slate-300 rounded overflow-hidden">
+                    <div className="h-full w-12 border border-slate-700 rounded overflow-hidden">
                       <input 
                         type="color" 
                         className="w-[200%] h-[200%] -translate-x-1/4 -translate-y-1/4 cursor-pointer"
@@ -259,7 +259,7 @@ export default function EditOrg() {
                     </div>
                     <input 
                       type="text"
-                      className="flex-1 bg-white border border-slate-300 rounded-lg px-3 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500"
+                      className="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
                       placeholder="#FFFFFF"
                       value={formData.hexColor}
                       onChange={e => {
@@ -273,12 +273,12 @@ export default function EditOrg() {
 
               <div>
                 <div className="flex items-end gap-1 mb-2">
-                  <span className="text-xs font-bold text-[#1e293b]">แนบลิงก์รูปภาพโลโก้ (Logo URL)</span>
-                  <span className="text-[10px] text-slate-400">*สำหรับอัปเดตแก๊งหรือครอบครัว</span>
+                  <span className="text-xs font-bold text-slate-300">แนบลิงก์รูปภาพโลโก้ (Logo URL)</span>
+                  <span className="text-[10px] text-slate-500">*สำหรับอัปเดตแก๊งหรือครอบครัว</span>
                 </div>
                 <input 
                   type="text"
-                  className="w-full bg-white border border-slate-300 rounded-lg px-4 py-2.5 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500 transition-all text-sm"
+                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 transition-all text-sm"
                   placeholder="เช่น https://imgur.com/... หรือ Discord Image Link"
                   value={formData.logoUrl}
                   onChange={e => setFormData({...formData, logoUrl: e.target.value})}
@@ -286,10 +286,10 @@ export default function EditOrg() {
               </div>
 
               <div>
-                <div className="text-xs font-bold text-[#1e293b] mb-2">รายละเอียดเพิ่มเติม / สิ่งที่ต้องการแก้</div>
+                <div className="text-xs font-bold text-slate-300 mb-2">รายละเอียดเพิ่มเติม / สิ่งที่ต้องการแก้</div>
                 <textarea 
                   rows="3"
-                  className="w-full bg-white border border-slate-300 rounded-lg px-4 py-3 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500 transition-all resize-none text-sm"
+                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 transition-all resize-none text-sm"
                   placeholder="เช่น ขอเปลี่ยนโลโก้แก๊ง, เพิ่มลายเสื้อ, เปลี่ยนสีสัญลักษณ์..."
                   value={formData.extraDetails}
                   onChange={e => setFormData({...formData, extraDetails: e.target.value})}
@@ -298,7 +298,7 @@ export default function EditOrg() {
             </div>
 
             {/* ยอดรวมเบื้องต้น */}
-            <div className="bg-[#0f172a] rounded-xl flex items-center justify-between p-6">
+            <div className="bg-[#0f172a] border border-slate-800 rounded-xl flex items-center justify-between p-6">
               <div className="flex items-center gap-3 text-white font-bold text-lg">
                 <Calculator size={24} className="text-slate-400" /> ยอดรวมเบื้องต้น
               </div>
@@ -309,28 +309,28 @@ export default function EditOrg() {
 
             {/* 6. เจ้าหน้าที่สภา */}
             <div className="space-y-3">
-              <label className="text-sm font-bold text-[#4a4f6c] uppercase tracking-wide">
+              <label className="text-sm font-bold text-slate-400 uppercase tracking-wide">
                 6. เจ้าหน้าที่สภาผู้รับเรื่อง (COUNCIL MEMBER)
               </label>
               <div className="relative">
                 <select 
-                  className="w-full bg-white border border-slate-300 rounded-lg px-4 py-3.5 text-[#1e293b] font-medium appearance-none focus:outline-none focus:border-amber-500 transition-all cursor-pointer"
+                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3.5 text-white font-medium appearance-none focus:outline-none focus:border-amber-500 transition-all cursor-pointer"
                   value={formData.councilStaffId}
                   onChange={e => setFormData({...formData, councilStaffId: e.target.value})}
                   required
                 >
-                  <option value="" disabled>-- เลือกเจ้าหน้าที่สภา --</option>
+                  <option value="" disabled className="text-slate-500">-- เลือกเจ้าหน้าที่สภา --</option>
                   {councilMembers.map(c => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
+                    <option key={c.id} value={c.id} className="text-white bg-slate-900">{c.name}</option>
                   ))}
                 </select>
-                <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-slate-400">
+                <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-slate-500">
                   <User size={20} />
                 </div>
               </div>
             </div>
 
-            <Button type="submit" className="w-full py-4 text-lg bg-[#4a4f6c] hover:bg-[#3d425b] text-white rounded-xl shadow-lg shadow-[#4a4f6c]/20">
+            <Button type="submit" className="w-full py-4 text-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-white rounded-xl shadow-lg shadow-amber-500/20 border-none">
               ดำเนินการต่อ
             </Button>
           </form>
