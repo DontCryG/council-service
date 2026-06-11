@@ -68,12 +68,22 @@ export default function TicketStore() {
   let maxQuota = 0;
   let usedQuota = 0;
   let currentRate = 1;
+  let roundStartDate = 'N/A';
+  let roundEndDate = 'N/A';
 
-  if (selectedGroup && ticketsState?.settings) {
-    maxQuota = selectedGroup.type === 'GANG' ? ticketsState.settings.quotaGang : ticketsState.settings.quotaFamily;
-    currentRate = selectedGroup.type === 'GANG' ? ticketsState.settings.rateGang : ticketsState.settings.rateFamily;
+  if (selectedGroup) {
+    const settings = ticketsState?.settings || {
+      rateGang: 1, rateFamily: 1, 
+      quotaGang: 10000000, quotaFamily: 3000000, 
+      roundStartDate: '2026-06-08', roundEndDate: '2026-06-14' 
+    };
+
+    maxQuota = selectedGroup.type === 'GANG' ? (settings.quotaGang || 10000000) : (settings.quotaFamily || 3000000);
+    currentRate = selectedGroup.type === 'GANG' ? (settings.rateGang || 1) : (settings.rateFamily || 1);
+    roundStartDate = settings.roundStartDate || 'N/A';
+    roundEndDate = settings.roundEndDate || 'N/A';
     
-    usedQuota = (ticketsState.history || [])
+    usedQuota = (ticketsState?.history || [])
       .filter(h => h.groupName === selectedGroup.name && h.status === 'APPROVED')
       .reduce((acc, cur) => acc + (parseInt(cur.amount) || 0), 0);
   }
@@ -238,7 +248,7 @@ export default function TicketStore() {
           {selectedGroup && (
             <div className="bg-slate-900/50 border border-slate-800 p-4 rounded-xl grid grid-cols-3 gap-4 text-center">
               <div>
-                <div className="text-xs text-slate-500 uppercase font-bold mb-1">โควต้าสูงสุด ({ticketsState?.settings?.roundStartDate} - {ticketsState?.settings?.roundEndDate})</div>
+                <div className="text-xs text-slate-500 uppercase font-bold mb-1">โควต้าทั้งหมด ({roundStartDate} - {roundEndDate})</div>
                 <div className="font-mono text-lg text-slate-300">{parseInt(maxQuota).toLocaleString()}</div>
               </div>
               <div>
