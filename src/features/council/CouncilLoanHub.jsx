@@ -218,8 +218,9 @@ export default function CouncilLoanHub() {
                                 className="p-1.5 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-all" 
                                 title="คัดลอกลิงก์สัญญา"
                                 onClick={() => {
-                                  navigator.clipboard.writeText(`${window.location.origin}/loan_public?id=${contract.contractId}`);
-                                  showAlert('success', 'คัดลอกลิงก์สำหรับผู้กู้สำเร็จ');
+                                  const textToCopy = `กรุณาเซ็นสัญญากู้ยืมเลขที่: ${contract.contractId} ได้ที่\n${window.location.origin}/loan_public?id=${contract.contractId}`;
+                                  navigator.clipboard.writeText(textToCopy);
+                                  showAlert('success', 'คัดลอกข้อความสำหรับส่งให้ผู้กู้สำเร็จ');
                                 }}
                               >
                                 <Copy size={16} weight="fill" />
