@@ -68,11 +68,14 @@ export default function GeneralServicePreview() {
 
       await sendWebhook('general', fd);
       await saveTransactionLog('general_service', {
+        refNumber: refNumber,
         orgType: formData.groupType,
         groupName: formData.groupName,
         requester: formData.requester,
         transactionId: formData.transactionId,
+        transactionName: selectedTransaction?.name || '-',
         councilMemberId: formData.councilMemberId,
+        councilMemberName: councilName,
         members: members.map(m => m.value)
       }, user);
 

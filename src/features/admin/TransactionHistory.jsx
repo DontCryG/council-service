@@ -174,7 +174,6 @@ export default function TransactionHistory() {
             {/* Welfare: formatted card */}
             {selectedLog.type === 'welfare' ? (
               <div className="bg-slate-900 rounded-xl border border-slate-700 overflow-hidden">
-                {/* Header */}
                 <div className="bg-emerald-900/30 border-b border-emerald-700/40 px-5 py-4">
                   <div className="flex items-center gap-2 text-emerald-400 font-bold text-base mb-1">
                     <span>📋</span> ตรวจพบการลงนามรับสวัสดิการใหม่
@@ -183,8 +182,6 @@ export default function TransactionHistory() {
                     เลขที่อ้างอิง: <span className="text-slate-200 font-mono font-bold">{selectedLog.data.refNumber || `CS-${selectedLog.id?.slice(0,8).toUpperCase() || 'N/A'}`}</span>
                   </div>
                 </div>
-
-                {/* Info Grid */}
                 <div className="px-5 py-4 grid grid-cols-2 gap-4 border-b border-slate-700/60">
                   <div>
                     <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">🏢 สังกัด</div>
@@ -196,38 +193,113 @@ export default function TransactionHistory() {
                     <div className="text-white font-bold">{selectedLog.data.requester || '-'}</div>
                   </div>
                 </div>
-
-                {/* Welfare Items */}
                 <div className="px-5 py-4 border-b border-slate-700/60">
                   <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-3 flex items-center gap-1">
                     🎁 รายการสวัสดิการ
                   </div>
                   <div className="space-y-1.5">
                     {selectedLog.data.hasWeaponWelfare && (
-                      <div className="bg-slate-800 rounded-lg px-3 py-2 text-slate-200 text-sm font-medium">
-                        รถ: อาวุธไม้พูล
-                      </div>
+                      <div className="bg-slate-800 rounded-lg px-3 py-2 text-slate-200 text-sm font-medium">รถ: อาวุธไม้พูล</div>
                     )}
                     {(selectedLog.data.vehicles || []).map((v, i) => (
-                      <div key={i} className="bg-slate-800 rounded-lg px-3 py-2 text-slate-200 text-sm font-medium">
-                        รถ: {v.model || '-'} {v.plate ? `(${v.plate})` : ''}
-                      </div>
+                      <div key={i} className="bg-slate-800 rounded-lg px-3 py-2 text-slate-200 text-sm font-medium">รถ: {v.model || '-'} {v.plate ? `(${v.plate})` : ''}</div>
                     ))}
                     {selectedLog.data.otherWelfare && (
-                      <div className="bg-slate-800 rounded-lg px-3 py-2 text-slate-200 text-sm font-medium">
-                        อื่นๆ: {selectedLog.data.otherWelfare}
-                      </div>
+                      <div className="bg-slate-800 rounded-lg px-3 py-2 text-slate-200 text-sm font-medium">อื่นๆ: {selectedLog.data.otherWelfare}</div>
                     )}
                     {!selectedLog.data.hasWeaponWelfare && !(selectedLog.data.vehicles?.length) && !selectedLog.data.otherWelfare && (
                       <div className="text-slate-500 italic text-sm">- ไม่มีรายการ -</div>
                     )}
                   </div>
                 </div>
-
-                {/* Footer */}
-                <div className="px-5 py-3 text-slate-500 text-xs">
-                  ระบบตรวจสอบสวัสดิการสภาส่วนกลาง • {selectedLog.createdAt.toLocaleString('th-TH')}
+                <div className="px-5 py-3 text-slate-500 text-xs">ระบบตรวจสอบสวัสดิการสภาส่วนกลาง • {selectedLog.createdAt.toLocaleString('th-TH')}</div>
+              </div>
+            ) : selectedLog.type === 'register_org' ? (
+              <div className="bg-slate-900 rounded-xl border border-slate-700 overflow-hidden">
+                <div className="bg-blue-900/30 border-b border-blue-700/40 px-5 py-4">
+                  <div className="flex items-center gap-2 text-blue-400 font-bold text-base mb-1">
+                    <span>📝</span> ลงทะเบียนองค์กรใหม่
+                  </div>
+                  <div className="text-slate-400 text-xs">
+                    เลขที่อ้างอิง: <span className="text-slate-200 font-mono font-bold">{selectedLog.data.refNumber || `CS-${selectedLog.id?.slice(0,8).toUpperCase() || 'N/A'}`}</span>
+                  </div>
                 </div>
+                <div className="px-5 py-4 grid grid-cols-2 gap-4 border-b border-slate-700/60">
+                  <div>
+                    <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">🏢 ชื่อองค์กร</div>
+                    <div className="text-white font-bold">{selectedLog.data.alias ? `[${selectedLog.data.alias}] ` : ''}{selectedLog.data.name || '-'}</div>
+                    <div className="text-slate-400 text-xs mt-0.5">{selectedLog.data.orgType || ''}</div>
+                  </div>
+                  <div>
+                    <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">👨‍💼 เจ้าหน้าที่สภา</div>
+                    <div className="text-amber-500 font-bold">{selectedLog.data.councilStaffName || '-'}</div>
+                  </div>
+                </div>
+                <div className="px-5 py-4 border-b border-slate-700/60">
+                  <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-3 flex items-center gap-1">👥 สมาชิก</div>
+                  <div className="space-y-3">
+                    {selectedLog.data.coLeaders && selectedLog.data.coLeaders.length > 0 && (
+                      <div>
+                        <div className="text-slate-400 text-xs mb-1">รองหัวหน้า:</div>
+                        <div className="flex flex-wrap gap-2">
+                          {selectedLog.data.coLeaders.map((c, i) => <span key={i} className="bg-slate-800 px-2.5 py-1 rounded text-slate-200 text-xs">{c}</span>)}
+                        </div>
+                      </div>
+                    )}
+                    {selectedLog.data.members && selectedLog.data.members.length > 0 && (
+                      <div>
+                        <div className="text-slate-400 text-xs mb-1">สมาชิก ({selectedLog.data.members.length}):</div>
+                        <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 pr-2">
+                          {selectedLog.data.members.map((m, i) => <span key={i} className="bg-slate-800/60 px-2.5 py-1 rounded border border-slate-700 text-slate-300 text-xs">{m}</span>)}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="px-5 py-3 text-slate-500 text-xs">ระบบทะเบียนสภาส่วนกลาง • {selectedLog.createdAt.toLocaleString('th-TH')}</div>
+              </div>
+            ) : selectedLog.type === 'general_service' ? (
+              <div className="bg-slate-900 rounded-xl border border-slate-700 overflow-hidden">
+                <div className="bg-amber-900/30 border-b border-amber-700/40 px-5 py-4">
+                  <div className="flex items-center gap-2 text-amber-400 font-bold text-base mb-1">
+                    <span>🧾</span> บริการทั่วไป
+                  </div>
+                  <div className="text-slate-400 text-xs">
+                    เลขที่อ้างอิง: <span className="text-slate-200 font-mono font-bold">{selectedLog.data.refNumber || `CS-${selectedLog.id?.slice(0,8).toUpperCase() || 'N/A'}`}</span>
+                  </div>
+                </div>
+                <div className="px-5 py-4 grid grid-cols-2 gap-4 border-b border-slate-700/60">
+                  <div className="space-y-4">
+                    <div>
+                      <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">🏢 สังกัด</div>
+                      <div className="text-white font-bold">{selectedLog.data.groupName || '-'}</div>
+                      <div className="text-slate-400 text-xs mt-0.5">{selectedLog.data.orgType || ''}</div>
+                    </div>
+                    <div>
+                      <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">✍️ ผู้แจ้ง</div>
+                      <div className="text-white font-bold">{selectedLog.data.requester || '-'}</div>
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">💳 ธุรกรรม</div>
+                      <div className="text-blue-400 font-bold">{selectedLog.data.transactionName || '-'}</div>
+                    </div>
+                    <div>
+                      <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">👨‍💼 เจ้าหน้าที่สภา</div>
+                      <div className="text-amber-500 font-bold">{selectedLog.data.councilMemberName || '-'}</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="px-5 py-4 border-b border-slate-700/60">
+                  <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-3 flex items-center gap-1">👥 สมาชิกที่เกี่ยวข้อง ({selectedLog.data.members?.length || 0})</div>
+                  <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 pr-2">
+                    {(selectedLog.data.members || []).map((m, i) => (
+                      <span key={i} className="bg-slate-800 px-2.5 py-1 rounded text-slate-200 text-xs border border-slate-700">{m}</span>
+                    ))}
+                  </div>
+                </div>
+                <div className="px-5 py-3 text-slate-500 text-xs">ระบบบริการทั่วไปสภาส่วนกลาง • {selectedLog.createdAt.toLocaleString('th-TH')}</div>
               </div>
             ) : (
               /* Default: raw JSON for other types */

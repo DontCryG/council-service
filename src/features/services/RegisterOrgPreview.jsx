@@ -71,13 +71,15 @@ export default function RegisterOrgPreview() {
 
       await sendWebhook('register_org', fd);
       await saveTransactionLog('register_org', {
+        refNumber: refNumber,
         orgType: formData.orgType,
         name: formData.name,
         alias: formData.alias,
         color: formData.color,
         coLeaders: coLeaders.map(c => c.name),
         members: members.map(m => m.name),
-        councilStaffId: formData.councilStaffId
+        councilStaffId: formData.councilStaffId,
+        councilStaffName: councilName
       }, user);
 
       showAlert('success', 'ขึ้นทะเบียนสังกัดใหม่สำเร็จ !');
