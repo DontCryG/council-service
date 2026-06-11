@@ -21,6 +21,7 @@ const Welfare = lazy(() => import('./features/services/Welfare'));
 const WelfarePreview = lazy(() => import('./features/services/WelfarePreview'));
 const WelfareTrade = lazy(() => import('./features/services/WelfareTrade'));
 const RegisterOrg = lazy(() => import('./features/services/RegisterOrg'));
+const RegisterOrgPreview = lazy(() => import('./features/services/RegisterOrgPreview'));
 const EditOrg = lazy(() => import('./features/services/EditOrg'));
 const GroupManager = lazy(() => import('./features/council/GroupManager'));
 const TicketManager = lazy(() => import('./features/tickets/TicketManager'));
@@ -209,6 +210,7 @@ function App() {
 
             {/* Map the service id from models.js to this component for all basic general services */}
             <Route path="register_org" element={<RegisterOrg />} />
+            <Route path="register_org_preview" element={<RegisterOrgPreview />} />
             <Route path="ps1" element={<GeneralService />} />
             <Route path="general_service_preview" element={<GeneralServicePreview />} />
             <Route path="edit_org" element={<EditOrg />} />

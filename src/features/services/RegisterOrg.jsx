@@ -1,24 +1,19 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
-import { sendWebhook, saveTransactionLog } from '../../core/api';
-import { toBlob } from 'html-to-image';
 
-import { Card } from '../../components/ui/Card';
-import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
-import { PaperPlaneTilt, Plus, Trash, Buildings } from '@phosphor-icons/react';
+import { Trash, ArrowRight, Buildings } from '@phosphor-icons/react';
 
 export default function RegisterOrg() {
   const navigate = useNavigate();
-  const { showAlert, user } = useAppStore();
+  const { showAlert } = useAppStore();
   
   const [councilMembers, setCouncilMembers] = useState([]);
-  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    orgType: 'GANG',
+    orgType: 'GANG', // hardcoded to maintain backward compatibility
     name: '',
     alias: '',
     color: '#000000',
@@ -28,9 +23,7 @@ export default function RegisterOrg() {
   });
   
   const [coLeaders, setCoLeaders] = useState([]);
-  const [members, setMembers] = useState([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const captureRef = useRef(null);
+  const [members, setMembers] = useState([{ id: Date.now(), name: '' }]);
 
   useEffect(() => {
     const unsub = onSnapshot(collection(db, 'app_state'), (snapshot) => {
@@ -46,332 +39,198 @@ export default function RegisterOrg() {
     return () => unsub();
   }, []);
 
-  const handleArrayAdd = (setter, state) => setter([...state, { id: Date.now(), name: '', phone: '' }]);
+  const handleArrayAdd = (setter, state) => setter([...state, { id: Date.now(), name: '' }]);
   const handleArrayRemove = (setter, state, id) => setter(state.filter(item => item.id !== id));
-  const handleArrayChange = (setter, state, id, field, val) => {
-    setter(state.map(item => item.id === id ? { ...item, [field]: val } : item));
+  const handleArrayChange = (setter, state, id, val) => {
+    setter(state.map(item => item.id === id ? { ...item, name: val } : item));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.name || !formData.leader || !formData.councilStaffId) {
-      showAlert('error', 'กรุณากรอกข้อมูลสำคัญให้ครบถ้วน');
+      showAlert('error', 'กรุณากรอกข้อมูลให้ครบถ้วน');
       return;
     }
 
     if (formData.logo && !/^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)(\?.*)?$/i.test(formData.logo) && !formData.logo.includes('discordapp.')) {
-      showAlert('error', 'ช่อง Link โลโก้ กรุณาใส่ลิงก์รูปภาพที่ถูกต้อง (ต้องลงท้ายด้วย .png, .jpg ฯลฯ หรือเป็นรูปลิงก์ ระบบส่วนกลาง)');
+      showAlert('error', 'รูปภาพไม่ถูกต้อง');
       return;
     }
-
-    setIsSubmitting(true);
     
-    try {
-      const blob = await toBlob(captureRef.current, { 
-        pixelRatio: 2, 
-        backgroundColor: '#f1f5f9',
-        cacheBust: true 
-      });
-      if (!blob) throw new Error("Failed to generate image");
-      
-      const fd = new FormData();
-      fd.append('file', blob, 'register.png');
-      const typeDisplay = formData.orgType === 'GANG' ? 'แก๊ง' : 'แฟม';
-      const councilName = councilMembers.find(c => c.id === formData.councilStaffId)?.name || '-';
-
-      const coLeaderText = coLeaders.length > 0 ? `**รองหัวหน้า:** ${coLeaders.map(c => c.name).join(', ')}` : '';
-      const memberText = members.length > 0 ? `**สมาชิก:**\n${members.map(m => m.name).join('\n')}` : '';
-      const membersFullText = [
-        `**หัวหน้า:** ${formData.leader}`,
-        coLeaderText,
-        memberText
-      ].filter(Boolean).join('\n');
-
-      fd.append('payload_json', JSON.stringify({
-        embeds: [{
-          title: "Council Service Log",
-          description: "Organization registration submitted",
-          color: 0xf59e0b,
-          thumbnail: formData.logo ? { url: formData.logo } : undefined,
-          fields: [
-            { name: "Type", value: typeDisplay, inline: true },
-            { name: "Group", value: formData.alias ? `[${formData.alias}] ${formData.name || '-'}` : (formData.name || '-'), inline: true },
-            { name: "Theme Color", value: formData.color || '-', inline: true },
-            { name: "Transaction", value: "ลงทะเบียนองค์กรใหม่", inline: false },
-            { name: "Members", value: membersFullText || '-', inline: false },
-            { name: "Council", value: councilName, inline: false }
-          ],
-          image: {
-            url: "attachment://register.png"
-          }
-        }]
-      }));
-
-      await sendWebhook('register_org', fd);
-      await saveTransactionLog('register_org', {
-        orgType: formData.orgType,
-        name: formData.name,
-        alias: formData.alias,
-        color: formData.color,
-        coLeaders: coLeaders.map(c => c.name),
-        members: members.map(m => m.name),
-        councilStaffId: formData.councilStaffId
-      }, user);
-      showAlert('success', 'ลงทะเบียนแก๊ง/แฟมิลี่เรียบร้อยแล้ว!');
-      navigate('/home');
-      
-    } catch (err) {
-      console.error(err);
-      showAlert('error', `เกิดข้อผิดพลาด: ${err.message || 'ไม่สามารถส่งข้อมูลได้'}`);
-    } finally {
-      setIsSubmitting(false);
-    }
+    navigate('/register_org_preview', {
+      state: { formData, councilMembers, coLeaders, members: members.filter(m => m.name.trim() !== '') }
+    });
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className={`flex items-center gap-3 ${step === 1 ? "max-w-4xl mx-auto w-full" : ""}`}>
+    <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 py-6">
+      <div className="mb-6 flex items-center gap-3">
         <Buildings size={32} weight="duotone" className="text-amber-500" />
         <div>
-          <h1 className="text-2xl font-bold text-white">รับรององค์กร / ลงทะเบียน</h1>
-          <p className="text-slate-400">ระบบบันทึกการจัดตั้ง Gang หรือ Family อย่างเป็นทางการ</p>
+          <h2 className="text-2xl font-bold text-white mb-1">ลงทะเบียนองค์กรใหม่</h2>
+          <p className="text-slate-400">ระบบบันทึกการขึ้นทะเบียนแก๊งและครอบครัว</p>
         </div>
       </div>
-
-      {step === 1 ? (
-        <div className="mt-8 max-w-4xl mx-auto w-full">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <button
-                onClick={() => { setFormData({...formData, orgType: 'GANG'}); setStep(2); }}
-                className="bg-slate-900 border border-slate-800 rounded-[24px] p-12 flex flex-col items-center justify-center gap-6 hover:border-amber-500/50 hover:bg-slate-800/50 transition-all group"
-              >
-                <div className="w-24 h-24 rounded-full bg-slate-800/80 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-black/20">
-                  <Buildings size={40} weight="fill" className="text-amber-500" />
-                </div>
-                <h2 className="text-2xl font-black text-white tracking-widest">GANG</h2>
-              </button>
-              
-              <button
-                onClick={() => { setFormData({...formData, orgType: 'FAMILY'}); setStep(2); }}
-                className="bg-slate-900 border border-slate-800 rounded-[24px] p-12 flex flex-col items-center justify-center gap-6 hover:border-blue-500/50 hover:bg-slate-800/50 transition-all group"
-              >
-                <div className="w-24 h-24 rounded-full bg-blue-900/20 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-black/20">
-                  <Buildings size={40} weight="fill" className="text-blue-500" />
-                </div>
-                <h2 className="text-2xl font-black text-white tracking-widest">FAMILY</h2>
-              </button>
-          </div>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start mt-8">
-          <Card className="order-2 xl:order-1">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                  <span className="w-8 h-8 rounded bg-amber-500/20 text-amber-500 flex items-center justify-center">
-                    <Buildings size={18} weight="bold" />
-                  </span>
-                  ข้อมูล {formData.orgType}
-                </h3>
-                <Button variant="ghost" size="sm" onClick={() => setStep(1)}>ย้อนกลับ</Button>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <Input 
-                  label="ชื่อแก๊ง / แฟมิลี่เต็ม" 
-                  required
-                  value={formData.name}
-                  onChange={e => {
-                    const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.]/g, '').toUpperCase();
-                    setFormData({...formData, name: val});
-                  }}
-                />
-                <Input 
-                  label="ตัวย่อ (Alias)" 
-                  value={formData.alias}
-                  onChange={e => {
-                    const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.]/g, '').toUpperCase();
-                    setFormData({...formData, alias: val});
-                  }}
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm font-medium text-slate-300 ml-1 block mb-1">สีประจำแก๊ง</label>
-                  <div className="flex gap-2 h-11">
-                    <div 
-                      className="h-full w-12 border border-slate-700 rounded shadow-inner"
-                      style={{ backgroundColor: formData.color || '#000000' }}
-                    />
-                    <Input 
-                      className="flex-1"
-                      placeholder="#000000"
-                      value={formData.color}
-                      onChange={e => {
-                        const val = e.target.value.replace(/[^A-Za-z0-9#]/g, '');
-                        setFormData({...formData, color: val});
-                      }}
-                    />
-                  </div>
-                </div>
-                <Input 
-                  label="Link โลโก้ (ถ้ามี)" 
-                  value={formData.logo}
-                  onChange={e => setFormData({...formData, logo: e.target.value})}
-                  error={formData.logo && !/^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)(\?.*)?$/i.test(formData.logo) && !formData.logo.includes('discordapp.') ? 'ลิงก์รูปภาพไม่ถูกต้อง' : ''}
-                />
-              </div>
-
-              <Input 
-                label="ชื่อ Leader (หัวหน้า)" 
+      
+      <div className="bg-slate-900 rounded-[24px] p-8 md:p-10 shadow-2xl border border-slate-800">
+        <form onSubmit={handleSubmit} className="space-y-8">
+          
+          <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-6">
+            <div className="space-y-3">
+              <label className="text-[14px] font-bold text-slate-300 tracking-wide">
+                ชื่อ ROYAL CHARM/ครอบครัว (ENG)
+              </label>
+              <input 
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-200 font-medium focus:outline-none focus:border-amber-500 focus:bg-slate-900 focus:ring-1 focus:ring-amber-500 transition-colors placeholder:text-slate-600"
+                placeholder="เช่น Council"
+                value={formData.name}
+                onChange={e => setFormData({...formData, name: e.target.value.toUpperCase()})}
                 required
-                value={formData.leader}
-                onChange={e => setFormData({...formData, leader: e.target.value})}
               />
+            </div>
 
-              <div className="space-y-3 pt-4 border-t border-slate-800">
-                <div className="flex items-center justify-between">
-                  <label className="text-sm font-medium text-slate-300 ml-1">รองหัวหน้า (Co-Leader)</label>
-                  <Button type="button" variant="ghost" size="sm" onClick={() => handleArrayAdd(setCoLeaders, coLeaders)} className="text-amber-400">
-                    <Plus size={16} /> เพิ่ม
-                  </Button>
-                </div>
-                {coLeaders.map(item => (
-                  <div key={item.id} className="flex gap-2">
-                    <Input placeholder="ชื่อ" className="flex-[1.5]" value={item.name} onChange={e => handleArrayChange(setCoLeaders, coLeaders, item.id, 'name', e.target.value)} />
-                    <Input type="number" placeholder="เบอร์โทรศัพท์" className="flex-1" value={item.phone} onChange={e => handleArrayChange(setCoLeaders, coLeaders, item.id, 'phone', e.target.value)} />
-                    <Button type="button" variant="danger" size="icon" onClick={() => handleArrayRemove(setCoLeaders, coLeaders, item.id)}><Trash size={16}/></Button>
-                  </div>
-                ))}
-              </div>
-
-              <div className="space-y-3 pt-4 border-t border-slate-800">
-                <div className="flex items-center justify-between">
-                  <label className="text-sm font-medium text-slate-300 ml-1">สมาชิกทั่วไป (Member)</label>
-                  <Button type="button" variant="ghost" size="sm" onClick={() => handleArrayAdd(setMembers, members)} className="text-amber-400">
-                    <Plus size={16} /> เพิ่ม
-                  </Button>
-                </div>
-                {members.map(item => (
-                  <div key={item.id} className="flex gap-2">
-                    <Input placeholder="ชื่อ" className="flex-[1.5]" value={item.name} onChange={e => handleArrayChange(setMembers, members, item.id, 'name', e.target.value)} />
-                    <Input type="number" placeholder="เบอร์โทรศัพท์" className="flex-1" value={item.phone} onChange={e => handleArrayChange(setMembers, members, item.id, 'phone', e.target.value)} />
-                    <Button type="button" variant="danger" size="icon" onClick={() => handleArrayRemove(setMembers, members, item.id)}><Trash size={16}/></Button>
-                  </div>
-                ))}
-              </div>
-
-              <div className="pt-4 border-t border-slate-800 space-y-1.5">
-                <label className="text-sm font-medium text-slate-300 ml-1">สภาผู้ตรวจสอบ</label>
-                <select 
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition-colors"
-                  value={formData.councilStaffId}
-                  onChange={e => setFormData({...formData, councilStaffId: e.target.value})}
-                  required
-                >
-                  <option value="" disabled>-- เลือกชื่อสภา --</option>
-                  {councilMembers.map(c => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
-                  ))}
-                </select>
-              </div>
-
-              <Button type="submit" className="w-full" size="lg" isLoading={isSubmitting}>
-                <PaperPlaneTilt size={20} weight="bold" /> ยืนยันข้อมูลเข้าสู่ระบบ
-              </Button>
-            </form>
-          </Card>
-
-          {/* Preview Side */}
-          <div className="sticky top-24 order-1 xl:order-2 mb-6 xl:mb-0">
-            <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3 ml-1">Live Document</h3>
-            
-            <div ref={captureRef} className="bg-slate-100 rounded-xl p-8 border border-slate-300 shadow-2xl relative overflow-hidden" style={{ color: '#1e293b' }}>
-              {/* Header */}
-              <div className="flex items-center justify-between border-b-2 border-slate-800 pb-4 mb-6">
-                <div>
-                  <h2 className="text-3xl font-black uppercase tracking-tighter" style={{ color: '#000' }}>
-                    {formData.name || 'ORGANIZATION'}
-                  </h2>
-                  <p className="text-slate-500 font-bold tracking-widest">{formData.orgType} REGISTRATION</p>
-                </div>
-                {formData.logo ? (
-                  <img src={formData.logo} alt="Logo" className="w-20 h-20 object-contain drop-shadow-md rounded" crossOrigin="anonymous"/>
-                ) : (
-                  <div className="w-20 h-20 bg-slate-200 border-2 border-dashed border-slate-400 rounded flex items-center justify-center">
-                    <span className="text-slate-400 text-xs">NO LOGO</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Data Grid */}
-              <div className="grid grid-cols-2 gap-x-6 gap-y-4 mb-6">
-                <div>
-                  <div className="text-xs text-slate-500 uppercase font-bold">Alias</div>
-                  <div className="font-bold text-lg">{formData.alias || '-'}</div>
-                </div>
-                <div>
-                  <div className="text-xs text-slate-500 uppercase font-bold">Theme Color</div>
-                  <div className="flex items-center gap-2 font-mono font-bold">
-                    <div className="w-4 h-4 rounded-full border border-slate-400" style={{ backgroundColor: formData.color }}></div>
-                    {formData.color}
-                  </div>
-                </div>
-                <div className="col-span-2 p-3 bg-blue-50 border-l-4 border-blue-500">
-                  <div className="text-xs text-blue-800 uppercase font-bold mb-1">Leader (หัวหน้า)</div>
-                  <div className="font-black text-xl text-blue-900">{formData.leader || '...'}</div>
-                </div>
-              </div>
-
-              {/* Lists */}
-              <div className="grid grid-cols-2 gap-6 mb-8">
-                <div>
-                  <div className="text-sm font-bold border-b border-slate-300 pb-1 mb-2">Co-Leaders ({coLeaders.length})</div>
-                  {coLeaders.length === 0 && <div className="text-slate-400 text-sm">-</div>}
-                  <ul className="text-sm space-y-1 list-disc pl-4 text-slate-700 font-medium">
-                    {coLeaders.map(c => <li key={c.id}>{c.name} {c.phone && <span className="text-xs text-slate-500">({c.phone})</span>}</li>)}
-                  </ul>
-                </div>
-                <div>
-                  <div className="text-sm font-bold border-b border-slate-300 pb-1 mb-2">Members ({members.length})</div>
-                  {members.length === 0 && <div className="text-slate-400 text-sm">-</div>}
-                  <ul className="text-sm space-y-1 list-disc pl-4 text-slate-700 font-medium">
-                    {members.map(m => <li key={m.id}>{m.name} {m.phone && <span className="text-xs text-slate-500">({m.phone})</span>}</li>)}
-                  </ul>
-                </div>
-              </div>
-
-              {/* Fee Section */}
-              <div className="mt-2 mb-8 bg-amber-50 border border-amber-200 rounded-lg p-4 flex justify-between items-center">
-                <span className="font-bold text-amber-800 uppercase tracking-wider whitespace-nowrap text-lg">Registration Fee</span>
-                <span className="text-3xl font-black text-amber-600 tracking-tighter whitespace-nowrap">$200,000</span>
-              </div>
-
-              {/* Signatures */}
-              <div className="flex justify-between items-end pt-8 mt-4 border-t-2 border-slate-300">
-                <div className="text-center w-40">
-                  <div className="border-b border-slate-800 pb-1 font-signature text-2xl">{formData.leader || '...'}</div>
-                  <div className="text-xs mt-1">Leader Signature</div>
-                </div>
-                
-                {/* Stamp */}
-                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 opacity-20 rotate-[-15deg] pointer-events-none">
-                  <div className="w-32 h-32 border-8 border-red-600 rounded-full flex items-center justify-center">
-                    <span className="text-red-600 font-black text-2xl uppercase text-center leading-tight">APPROVED<br/>COUNCIL</span>
-                  </div>
-                </div>
-
-                <div className="text-center w-40">
-                  <div className="border-b border-slate-800 pb-1 font-medium">{councilMembers.find(c => c.id === formData.councilStaffId)?.name || '...'}</div>
-                  <div className="text-xs mt-1">Council Inspector</div>
-                </div>
-              </div>
-
+            <div className="space-y-3">
+              <label className="text-[14px] font-bold text-slate-300 tracking-wide">
+                ตัวย่อ (ENG)
+              </label>
+              <input 
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-200 font-medium focus:outline-none focus:border-amber-500 focus:bg-slate-900 focus:ring-1 focus:ring-amber-500 transition-colors placeholder:text-slate-600 text-center"
+                placeholder="CC"
+                maxLength={5}
+                value={formData.alias}
+                onChange={e => setFormData({...formData, alias: e.target.value.toUpperCase()})}
+              />
             </div>
           </div>
-        </div>
-      )}
+
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-6">
+            <div className="space-y-3">
+              <label className="text-[14px] font-bold text-slate-300 tracking-wide">
+                สีประจำสังกัด (HEX)
+              </label>
+              <div className="flex gap-3">
+                <input 
+                  className="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-200 font-medium focus:outline-none focus:border-amber-500 focus:bg-slate-900 focus:ring-1 focus:ring-amber-500 transition-colors placeholder:text-slate-600 uppercase"
+                  placeholder="#000000"
+                  value={formData.color}
+                  onChange={e => setFormData({...formData, color: e.target.value})}
+                  required
+                />
+                <input 
+                  type="color"
+                  className="w-14 h-14 rounded-xl cursor-pointer border-0 p-0 bg-transparent"
+                  value={formData.color}
+                  onChange={e => setFormData({...formData, color: e.target.value})}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <label className="text-[14px] font-bold text-slate-300 tracking-wide">
+                ลิงก์โลโก้ (URL .PNG)
+              </label>
+              <input 
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-200 font-medium focus:outline-none focus:border-amber-500 focus:bg-slate-900 focus:ring-1 focus:ring-amber-500 transition-colors placeholder:text-slate-600"
+                placeholder="https://..."
+                value={formData.logo}
+                onChange={e => setFormData({...formData, logo: e.target.value})}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-3 pt-2">
+            <label className="text-[14px] font-bold text-slate-300 tracking-wide">
+              หัวหน้า (LEADER)
+            </label>
+            <input 
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-200 font-medium focus:outline-none focus:border-amber-500 focus:bg-slate-900 focus:ring-1 focus:ring-amber-500 transition-colors placeholder:text-slate-600"
+              placeholder="ชื่อ-นามสกุล (IC)"
+              value={formData.leader}
+              onChange={e => setFormData({...formData, leader: e.target.value})}
+              required
+            />
+          </div>
+
+          <div className="space-y-3 pt-2">
+            <div className="flex items-center justify-between">
+              <label className="text-[14px] font-bold text-slate-300 tracking-wide">
+                รองหัวหน้า (CO-LEADER)
+              </label>
+              <button type="button" onClick={() => handleArrayAdd(setCoLeaders, coLeaders)} className="text-sm font-bold text-amber-500 hover:text-amber-400 transition-colors">
+                + เพิ่ม
+              </button>
+            </div>
+            {coLeaders.length > 0 ? (
+              <div className="space-y-3">
+                {coLeaders.map(item => (
+                  <div key={item.id} className="flex gap-3">
+                    <input 
+                      placeholder="ระบุชื่อรองหัวหน้า..." 
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-200 focus:border-amber-500 focus:bg-slate-900 focus:ring-1 focus:ring-amber-500 transition-colors placeholder:text-slate-600" 
+                      value={item.name} 
+                      onChange={e => handleArrayChange(setCoLeaders, coLeaders, item.id, e.target.value)} 
+                      required 
+                    />
+                    <button type="button" className="px-4 border border-slate-800 rounded-xl transition-colors bg-slate-900 text-red-400 hover:border-red-500 hover:bg-red-500/10" onClick={() => handleArrayRemove(setCoLeaders, coLeaders, item.id)}>
+                      <Trash size={20}/>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+          </div>
+
+          <div className="space-y-3 pt-2">
+            <div className="flex items-center justify-between">
+              <label className="text-[14px] font-bold text-slate-300 tracking-wide">
+                สมาชิกเริ่มต้น (FOUNDING MEMBERS)
+              </label>
+              <button type="button" onClick={() => handleArrayAdd(setMembers, members)} className="text-sm font-bold text-amber-500 hover:text-amber-400 transition-colors">
+                + เพิ่ม
+              </button>
+            </div>
+            <div className="space-y-3">
+              {members.map(item => (
+                <div key={item.id} className="flex gap-3">
+                  <input 
+                    placeholder="ระบุชื่อสมาชิก..." 
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-200 focus:border-amber-500 focus:bg-slate-900 focus:ring-1 focus:ring-amber-500 transition-colors placeholder:text-slate-600" 
+                    value={item.name} 
+                    onChange={e => handleArrayChange(setMembers, members, item.id, e.target.value)} 
+                  />
+                  <button type="button" className={`px-4 border rounded-xl transition-colors bg-slate-900 ${members.length > 1 ? 'border-slate-800 text-red-400 hover:border-red-500 hover:bg-red-500/10' : 'border-slate-800 text-slate-600 cursor-not-allowed'}`} onClick={() => handleArrayRemove(setMembers, members, item.id)} disabled={members.length === 1}>
+                    <Trash size={20}/>
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-3 pt-6 border-t border-slate-800">
+            <label className="text-[14px] font-bold text-slate-300 tracking-wide">
+              เจ้าหน้าที่สภาผู้รับเรื่อง
+            </label>
+            <select 
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-200 font-medium focus:outline-none focus:border-amber-500 focus:bg-slate-900 focus:ring-1 focus:ring-amber-500 transition-colors appearance-none"
+              value={formData.councilStaffId}
+              onChange={e => setFormData({...formData, councilStaffId: e.target.value})}
+              required
+            >
+              <option value="" disabled>-- เลือกเจ้าหน้าที่สภา --</option>
+              {councilMembers.map(c => (
+                <option key={c.id} value={c.id}>{c.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="pt-6">
+            <Button type="submit" size="lg" className="w-full bg-amber-600 hover:bg-amber-500 text-white shadow-lg shadow-amber-500/20 rounded-xl py-4 text-lg">
+              ตรวจสอบข้อมูลก่อนส่ง <ArrowRight size={20} className="ml-2 inline" />
+            </Button>
+          </div>
+
+        </form>
+      </div>
     </div>
   );
 }
