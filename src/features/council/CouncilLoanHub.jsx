@@ -247,7 +247,7 @@ export default function CouncilLoanHub() {
         </div>
 
         {/* Bottom Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
           {/* Latest Contracts Table */}
           <div className="bg-slate-900/50 rounded-2xl shadow-inner border border-slate-700/50 lg:col-span-2 overflow-hidden flex flex-col">
             <div className="p-6 border-b border-slate-700/50">
