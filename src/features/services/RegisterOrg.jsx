@@ -5,7 +5,7 @@ import { db } from '../../core/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
 
 import Button from '../../components/ui/Button';
-import { Trash, ArrowRight, Buildings } from '@phosphor-icons/react';
+import { Trash, ArrowRight, Buildings, ArrowLeft } from '@phosphor-icons/react';
 
 export default function RegisterOrg() {
   const navigate = useNavigate();
@@ -64,12 +64,17 @@ export default function RegisterOrg() {
 
   return (
     <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 py-6">
-      <div className="mb-6 flex items-center gap-3">
-        <Buildings size={32} weight="duotone" className="text-amber-500" />
-        <div>
-          <h2 className="text-2xl font-bold text-white mb-1">ลงทะเบียนองค์กรใหม่</h2>
-          <p className="text-slate-400">ระบบบันทึกการขึ้นทะเบียนแก๊งและครอบครัว</p>
+      <div className="mb-6 flex items-start justify-between">
+        <div className="flex items-center gap-3">
+          <Buildings size={32} weight="duotone" className="text-amber-500" />
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-1">ลงทะเบียนองค์กรใหม่</h2>
+            <p className="text-slate-400">ระบบบันทึกการขึ้นทะเบียนแก๊งและครอบครัว</p>
+          </div>
         </div>
+        <Button type="button" variant="ghost" onClick={() => navigate(-1)} className="text-slate-400 hover:text-white px-2">
+          <ArrowLeft size={20} className="mr-2" /> ย้อนกลับ
+        </Button>
       </div>
       
       <div className="bg-slate-900 rounded-[24px] p-8 md:p-10 shadow-2xl border border-slate-800">
@@ -116,11 +121,9 @@ export default function RegisterOrg() {
                   onChange={e => setFormData({...formData, color: e.target.value})}
                   required
                 />
-                <input 
-                  type="color"
-                  className="w-14 h-14 rounded-xl cursor-pointer border-0 p-0 bg-transparent"
-                  value={formData.color}
-                  onChange={e => setFormData({...formData, color: e.target.value})}
+                <div 
+                  className="w-14 h-14 rounded-xl border border-slate-800 shrink-0"
+                  style={{ backgroundColor: formData.color || '#000000' }}
                 />
               </div>
             </div>
