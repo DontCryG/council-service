@@ -285,7 +285,7 @@ export default function Welfare() {
                 )}
                 {vehicles.map((v, i) => (
                   <div key={i} className="flex items-center gap-3 text-slate-700 font-bold text-sm">
-                     <span className="text-amber-500 text-lg leading-none">›</span> พาหนะ: {v.model || '...'} {v.plate ? \`(\${v.plate})\` : ''}
+                     <span className="text-amber-500 text-lg leading-none">›</span> พาหนะ: {v.model || '...'} {v.plate ? `(${v.plate})` : ''}
                   </div>
                 ))}
                 {formData.otherWelfare && (
