@@ -110,8 +110,9 @@ export default function WelfareTradePreview() {
         </Button>
       </div>
 
-      <div ref={captureRef} className="bg-slate-900 rounded-[24px] p-8 md:p-12 border-2 border-slate-800 shadow-2xl relative overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-violet-600/10 rounded-full blur-[100px] pointer-events-none"></div>
+      <div ref={captureRef} className="p-6 bg-[#0f172a]">
+        <div className="bg-slate-900 rounded-[32px] p-8 md:p-12 border-2 border-slate-800 shadow-2xl relative overflow-hidden">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-violet-600/10 rounded-full blur-[100px] pointer-events-none"></div>
         
         <div className="text-center mb-8 relative z-10">
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-slate-800 text-violet-400 mb-6 border border-slate-700 shadow-lg shadow-violet-500/10">
@@ -121,8 +122,8 @@ export default function WelfareTradePreview() {
           <p className="text-violet-400 font-bold mt-2 uppercase tracking-[0.2em]">{formData.orgType} - {formData.tradeType}</p>
         </div>
 
-        <div className="space-y-6 relative z-10 bg-slate-950/50 p-8 rounded-2xl border border-slate-800/80 backdrop-blur-sm">
-          <div className="flex flex-col mb-2 pb-6 border-b border-slate-800 border-dashed">
+        <div className="flex flex-col gap-6 relative z-10 bg-slate-950/50 p-8 rounded-2xl border border-slate-800/80 backdrop-blur-sm">
+          <div className="flex flex-col pb-6 border-b border-slate-800 border-dashed">
             <span className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">ชื่อองค์กร</span>
             <span className="font-black text-white text-3xl tracking-wide">{formData.orgName || '...'}</span>
           </div>
@@ -163,6 +164,7 @@ export default function WelfareTradePreview() {
               <span className="text-slate-500 text-xs font-bold block mb-2 uppercase tracking-wider">ค่าธรรมเนียมรวม</span>
               <span className="text-white font-black text-2xl tracking-tight">{getTotalPrice()}</span>
             </div>
+          </div>
           </div>
         </div>
       </div>
