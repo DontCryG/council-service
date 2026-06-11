@@ -110,9 +110,8 @@ export default function WelfareTradePreview() {
         </Button>
       </div>
 
-      <div ref={captureRef} className="p-6 bg-[#0f172a]">
-        <div className="bg-slate-900 rounded-[32px] p-8 md:p-12 border-2 border-slate-800 shadow-2xl relative overflow-hidden">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-violet-600/10 rounded-full blur-[100px] pointer-events-none"></div>
+      <div ref={captureRef} className="bg-slate-900 rounded-[32px] p-8 md:p-12 border-2 border-slate-800 shadow-2xl relative overflow-hidden mb-8">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-violet-600/10 rounded-full blur-[100px] pointer-events-none"></div>
         
         <div className="text-center mb-8 relative z-10">
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-slate-800 text-violet-400 mb-6 border border-slate-700 shadow-lg shadow-violet-500/10">
@@ -164,7 +163,6 @@ export default function WelfareTradePreview() {
               <span className="text-slate-500 text-xs font-bold block mb-2 uppercase tracking-wider">ค่าธรรมเนียมรวม</span>
               <span className="text-white font-black text-2xl tracking-tight">{getTotalPrice()}</span>
             </div>
-          </div>
           </div>
         </div>
       </div>
