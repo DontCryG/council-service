@@ -20,6 +20,7 @@ const GeneralServicePreview = lazy(() => import('./features/services/GeneralServ
 const Welfare = lazy(() => import('./features/services/Welfare'));
 const WelfarePreview = lazy(() => import('./features/services/WelfarePreview'));
 const WelfareTrade = lazy(() => import('./features/services/WelfareTrade'));
+const WelfareTradePreview = lazy(() => import('./features/services/WelfareTradePreview'));
 const RegisterOrg = lazy(() => import('./features/services/RegisterOrg'));
 const RegisterOrgPreview = lazy(() => import('./features/services/RegisterOrgPreview'));
 const EditOrg = lazy(() => import('./features/services/EditOrg'));
@@ -218,6 +219,7 @@ function App() {
             <Route path="welfare" element={<Welfare />} />
             <Route path="welfare_preview" element={<WelfarePreview />} />
             <Route path="welfare_trade" element={<WelfareTrade />} />
+            <Route path="welfare_trade_preview" element={<WelfareTradePreview />} />
             <Route path="ps5" element={<TicketStore />} />
             
             <Route path="cs5" element={<StoryCalendar />} />
