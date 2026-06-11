@@ -220,7 +220,7 @@ export default function CouncilLoanView() {
               <div className="ml-12 flex items-center gap-12">
                 <div className="flex items-center gap-3">
                   <div className="w-5 h-5 border border-slate-900 flex items-center justify-center text-sm font-bold bg-slate-100 shrink-0">
-                    {contract.paymentMethod === 'daily' ? '✓' : ''}
+                    {contract.paymentMethod === 'installments' ? '✓' : ''}
                   </div>
                   <span>รายวัน (วันละ {formatMoney(contract.installmentAmount)} บาท)</span>
                 </div>
