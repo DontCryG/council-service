@@ -12,6 +12,7 @@ export default function WelfarePreview() {
   const { showAlert, user } = useAppStore();
   const captureRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isAgreed, setIsAgreed] = useState(false);
 
   const { formData, vehicles } = location.state || {};
 
@@ -145,12 +146,17 @@ export default function WelfarePreview() {
           <p>ในกรณีที่ข้าพเจ้าฝ่าฝืน หรือประสงค์จะยกเลิกสัญญาก่อนครบกำหนด ข้าพเจ้ายินยอมให้การพิจารณา การลงโทษ การระงับสิทธิ์ หรือมาตรการอื่นใด เป็นไปตามดุลยพินิจของสภา โดยถือว่าคำวินิจฉัยของสภาเป็นที่สิ้นสุด</p>
         </div>
 
-        <div className="bg-[#fff9eb] border border-[#fde68a] rounded-lg p-4 mb-12 flex items-start gap-4 relative z-10">
-          <div className="w-5 h-5 mt-0.5 rounded border border-slate-300 bg-white flex-shrink-0"></div>
+        <label className="bg-[#fff9eb] border border-[#fde68a] rounded-lg p-4 mb-12 flex items-start gap-4 relative z-10 cursor-pointer hover:bg-[#fefce8] transition-colors">
+          <input 
+            type="checkbox" 
+            className="w-5 h-5 mt-0.5 rounded border-slate-300 bg-white flex-shrink-0 cursor-pointer accent-amber-500"
+            checked={isAgreed}
+            onChange={(e) => setIsAgreed(e.target.checked)}
+          />
           <p className="text-[#854d0e] text-[13px] font-bold leading-snug">
-            ข้าพเจ้าได้อ่านและยอมรับข้อตกลง กฎของสภา และเงื่อนไขการรับสวัสดิการทั้งหมด สัญญามีอายุไม่น้อยกว่า 3 เดือน
+            ข้าพเจ้าได้อ่านและยอมรับข้อตกลง กฎของสภา และเงื่อนไขการรับสวัสดิการทั้งหมด สัญญามีอายุไม่น้อยกว่า&nbsp;3&nbsp;เดือน
           </p>
-        </div>
+        </label>
 
         <div className="flex justify-between items-end relative z-10">
           <div>
@@ -167,7 +173,12 @@ export default function WelfarePreview() {
         </div>
       </div>
 
-      <Button onClick={handleSubmit} className="w-full h-14 text-base shadow-lg shadow-emerald-500/20 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl" isLoading={isSubmitting}>
+      <Button 
+        onClick={handleSubmit} 
+        disabled={!isAgreed}
+        className={`w-full h-14 text-base shadow-lg rounded-xl transition-all ${isAgreed ? 'shadow-emerald-500/20 bg-emerald-600 hover:bg-emerald-500 text-white' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`} 
+        isLoading={isSubmitting}
+      >
         <PaperPlaneTilt size={20} weight="bold" /> ยืนยันความถูกต้องและส่งสัญญาสวัสดิการ
       </Button>
     </div>
