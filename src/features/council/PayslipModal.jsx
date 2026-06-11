@@ -178,8 +178,8 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
               {/* Earnings Breakdown */}
               <div className="bg-slate-900/80 border border-slate-700/50 rounded-2xl overflow-hidden shadow-2xl shadow-black/50 backdrop-blur-md">
                 <div className="bg-slate-800/80 px-6 py-4 border-b border-slate-700/80 flex items-center justify-between">
-                  <div className="font-bold text-white flex items-center gap-2 truncate pr-4">
-                    <Receipt size={20} className="text-amber-500 shrink-0" /> <span className="truncate">รายละเอียดรายได้ (EARNINGS)</span>
+                  <div className="font-bold text-white flex items-center gap-2 whitespace-nowrap">
+                    <Receipt size={20} className="text-amber-500 shrink-0" /> <span>รายละเอียดรายได้ (EARNINGS)</span>
                   </div>
                   <div className="text-xs font-bold text-slate-400 uppercase tracking-wider whitespace-nowrap shrink-0">จำนวนเงิน (บาท)</div>
                 </div>
