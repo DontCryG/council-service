@@ -130,7 +130,7 @@ export default function RegisterOrg() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex items-center gap-3">
+      <div className={`flex items-center gap-3 ${step === 1 ? "max-w-4xl mx-auto w-full" : ""}`}>
         <Buildings size={32} weight="duotone" className="text-amber-500" />
         <div>
           <h1 className="text-2xl font-bold text-white">รับรององค์กร / ลงทะเบียน</h1>
@@ -139,10 +139,8 @@ export default function RegisterOrg() {
       </div>
 
       {step === 1 ? (
-        <div className="mt-8">
-          <div className="bg-slate-900/50 border border-slate-800 rounded-[24px] p-8 max-w-4xl mx-auto shadow-xl backdrop-blur-sm">
-            <h3 className="text-xl font-bold text-center mb-8 text-white">เลือกประเภทองค์กรที่ต้องการจัดตั้ง</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="mt-8 max-w-4xl mx-auto w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <button
                 onClick={() => { setFormData({...formData, orgType: 'GANG'}); setStep(2); }}
                 className="bg-slate-900 border border-slate-800 rounded-[24px] p-12 flex flex-col items-center justify-center gap-6 hover:border-amber-500/50 hover:bg-slate-800/50 transition-all group"
@@ -162,7 +160,6 @@ export default function RegisterOrg() {
                 </div>
                 <h2 className="text-2xl font-black text-white tracking-widest">FAMILY</h2>
               </button>
-            </div>
           </div>
         </div>
       ) : (

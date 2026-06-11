@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'fs';
 let code = fs.readFileSync('src/features/services/RegisterOrg.jsx', 'utf8');
 
 code = code.replace(
