@@ -319,7 +319,7 @@ export default function TicketStore() {
           <div className="bg-slate-950 border border-slate-800 p-6 rounded-xl flex items-center justify-between mt-4">
             <div>
               <p className="text-slate-400 text-sm font-bold uppercase tracking-wider">Total Amount to Pay</p>
-              <p className="text-xs text-slate-500 mt-1">ยอดเงินแดงที่ต้องจ่ายสภา</p>
+              <p className="text-xs text-slate-500 mt-1">ยอดเงินที่ต้องจ่ายสภา</p>
             </div>
             <div className="text-4xl font-black text-red-500 tracking-tighter">
               ${totalPrice.toLocaleString()}
