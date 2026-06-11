@@ -133,7 +133,7 @@ export default function LoanPublic() {
   return (
     <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 pt-8 pb-12">
       <button 
-        onClick={() => navigate('/')}
+        onClick={() => navigate('/home')}
         className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-8 ml-2"
       >
         <ArrowLeft size={20} />
