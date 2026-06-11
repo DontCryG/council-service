@@ -10,7 +10,7 @@ import {
 import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../core/firebase';
 import { useAppStore } from '../../store';
-import html2canvas from 'html2canvas';
+import { toPng } from 'html-to-image';
 
 export default function CouncilLoanView() {
   const navigate = useNavigate();
@@ -51,10 +51,13 @@ export default function CouncilLoanView() {
   const handleDownloadImage = async () => {
     if (!documentRef.current) return;
     try {
-      const canvas = await html2canvas(documentRef.current, { scale: 2 });
-      const image = canvas.toDataURL('image/png');
+      const dataUrl = await toPng(documentRef.current, { 
+        pixelRatio: 2,
+        cacheBust: true,
+        backgroundColor: '#ffffff'
+      });
       const link = document.createElement('a');
-      link.href = image;
+      link.href = dataUrl;
       link.download = `contract_${contract?.contractId || 'document'}.png`;
       link.click();
       showAlert('success', 'ดาวน์โหลดรูปภาพสำเร็จ');
