@@ -204,36 +204,38 @@ function App() {
           
           {/* Protected Routes (Wrapped in MainLayout) */}
           <Route element={<MainLayout />}>
-            <Route path="home" element={<Home />} />
+            {/* Public/Unprotected inside MainLayout */}
+            <Route path="loan_public" element={<LoanPublic />} />
+
+            {/* Protected Routes */}
+            <Route path="home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
             
-            {/* Council Only Routes */}
+            {/* Admin/Council Only Routes */}
             <Route path="/council_manage" element={<AdminRoute><CouncilManage /></AdminRoute>} />
             <Route path="/admin/duty_history" element={<AdminRoute><AdminDutyHistory /></AdminRoute>} />
             <Route path="/admin/transactions" element={<AdminRoute><TransactionHistory /></AdminRoute>} />
             <Route path="cs4" element={<ProtectedRoute><GroupManager /></ProtectedRoute>} />
             <Route path="cs3" element={<ProtectedRoute><TicketManager /></ProtectedRoute>} />
 
-            {/* Map the service id from models.js to this component for all basic general services */}
-            <Route path="register_org" element={<RegisterOrg />} />
-            <Route path="register_org_preview" element={<RegisterOrgPreview />} />
-            <Route path="ps1" element={<GeneralService />} />
-            <Route path="general_service_preview" element={<GeneralServicePreview />} />
-            <Route path="edit_org" element={<EditOrg />} />
-            <Route path="edit_org_preview" element={<EditOrgPreview />} />
+            {/* Service Forms & Previews */}
+            <Route path="register_org" element={<ProtectedRoute><RegisterOrg /></ProtectedRoute>} />
+            <Route path="register_org_preview" element={<ProtectedRoute><RegisterOrgPreview /></ProtectedRoute>} />
+            <Route path="ps1" element={<ProtectedRoute><GeneralService /></ProtectedRoute>} />
+            <Route path="general_service_preview" element={<ProtectedRoute><GeneralServicePreview /></ProtectedRoute>} />
+            <Route path="edit_org" element={<ProtectedRoute><EditOrg /></ProtectedRoute>} />
+            <Route path="edit_org_preview" element={<ProtectedRoute><EditOrgPreview /></ProtectedRoute>} />
             
-            <Route path="welfare" element={<Welfare />} />
-            <Route path="welfare_preview" element={<WelfarePreview />} />
-            <Route path="welfare_trade" element={<WelfareTrade />} />
-            <Route path="welfare_trade_preview" element={<WelfareTradePreview />} />
-            <Route path="ps5" element={<TicketStore />} />
+            <Route path="welfare" element={<ProtectedRoute><Welfare /></ProtectedRoute>} />
+            <Route path="welfare_preview" element={<ProtectedRoute><WelfarePreview /></ProtectedRoute>} />
+            <Route path="welfare_trade" element={<ProtectedRoute><WelfareTrade /></ProtectedRoute>} />
+            <Route path="welfare_trade_preview" element={<ProtectedRoute><WelfareTradePreview /></ProtectedRoute>} />
+            <Route path="ps5" element={<ProtectedRoute><TicketStore /></ProtectedRoute>} />
             
-            <Route path="cs5" element={<StoryCalendar />} />
+            <Route path="cs5" element={<ProtectedRoute><StoryCalendar /></ProtectedRoute>} />
             <Route path="cs6" element={<ProtectedRoute><DutySystem /></ProtectedRoute>} />
             
-            <Route path="loan_public" element={<LoanPublic />} />
             <Route path="council_loan" element={<ProtectedRoute><CouncilLoanHub /></ProtectedRoute>} />
             <Route path="council_loan/create" element={<ProtectedRoute><CouncilLoanCreate /></ProtectedRoute>} />
-            {/* We will add more routes here later */}
           </Route>
           
           <Route path="*" element={<NotFound />} />
