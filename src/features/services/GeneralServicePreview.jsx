@@ -154,7 +154,7 @@ export default function GeneralServicePreview() {
             <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
               <CircleDashed size={16} /> Related Members ({members.length})
             </div>
-            <div className="bg-slate-800/60 rounded-xl border border-slate-700 p-4 max-h-[160px] overflow-y-auto custom-scrollbar">
+            <div className="bg-slate-800/60 rounded-xl border border-slate-700 p-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {members.map((m, i) => (
                   <div key={i} className="flex items-center gap-2.5 text-sm text-slate-200 p-2 rounded-lg hover:bg-slate-700/50 transition-colors">
