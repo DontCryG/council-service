@@ -12,7 +12,7 @@ import {
   CircleNotch,
   Copy
 } from '@phosphor-icons/react';
-import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../core/firebase';
 import { useAppStore } from '../../store';
 
@@ -31,6 +31,18 @@ export default function CouncilLoanHub() {
     });
     return () => unsubscribe();
   }, []);
+
+  const handleDeleteContract = async (contractId, id) => {
+    if (window.confirm(`คุณแน่ใจหรือไม่ว่าต้องการลบสัญญากู้ยืม ${contractId} ?\nการกระทำนี้ไม่สามารถกู้คืนได้`)) {
+      try {
+        await deleteDoc(doc(db, 'loan_contracts', id));
+        showAlert('success', 'ลบสัญญาสำเร็จ');
+      } catch (err) {
+        console.error(err);
+        showAlert('error', 'เกิดข้อผิดพลาดในการลบสัญญา');
+      }
+    }
+  };
 
   const totalContracts = contracts.length;
   const totalPrincipal = contracts.reduce((sum, c) => sum + (c.principalAmount || 0), 0);
@@ -225,10 +237,18 @@ export default function CouncilLoanHub() {
                               >
                                 <Copy size={16} weight="fill" />
                               </button>
-                              <button className="p-1.5 text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 rounded-lg transition-all" title="แก้ไข">
+                              <button 
+                                className="p-1.5 text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 rounded-lg transition-all" 
+                                title="แก้ไข"
+                                onClick={() => navigate(`/council_loan/edit/${contract.id}`)}
+                              >
                                 <PencilSimple size={16} weight="fill" />
                               </button>
-                              <button className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all" title="ลบสัญญา">
+                              <button 
+                                className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all" 
+                                title="ลบสัญญา"
+                                onClick={() => handleDeleteContract(contract.contractId, contract.id)}
+                              >
                                 <Trash size={16} weight="fill" />
                               </button>
                             </div>
