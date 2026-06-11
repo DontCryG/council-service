@@ -138,33 +138,36 @@ export default function RegisterOrg() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
-        <Card className="order-2 xl:order-1">
-          {step === 1 ? (
-            <div className="space-y-8 py-4">
-              <h3 className="text-xl font-bold text-center">เลือกประเภทองค์กรที่ต้องการจัดตั้ง</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <button 
-                  onClick={() => { setFormData({...formData, orgType: 'GANG'}); setStep(2); }}
-                  className="flex flex-col items-center gap-4 p-8 bg-slate-900 border border-slate-700 hover:border-amber-500 hover:bg-slate-800 rounded-2xl transition-all group"
-                >
-                  <div className="w-16 h-16 bg-amber-500/10 text-amber-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Buildings size={32} weight="fill" />
-                  </div>
-                  <span className="text-xl font-black">GANG</span>
-                </button>
-                <button 
-                  onClick={() => { setFormData({...formData, orgType: 'FAMILY'}); setStep(2); }}
-                  className="flex flex-col items-center gap-4 p-8 bg-slate-900 border border-slate-700 hover:border-blue-500 hover:bg-slate-800 rounded-2xl transition-all group"
-                >
-                  <div className="w-16 h-16 bg-blue-500/10 text-blue-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Buildings size={32} weight="fill" />
-                  </div>
-                  <span className="text-xl font-black">FAMILY</span>
-                </button>
-              </div>
+      {step === 1 ? (
+        <div className="mt-8">
+          <div className="bg-slate-900/50 border border-slate-800 rounded-[24px] p-8 max-w-4xl mx-auto shadow-xl backdrop-blur-sm">
+            <h3 className="text-xl font-bold text-center mb-8 text-white">เลือกประเภทองค์กรที่ต้องการจัดตั้ง</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <button
+                onClick={() => { setFormData({...formData, orgType: 'GANG'}); setStep(2); }}
+                className="bg-slate-900 border border-slate-800 rounded-[24px] p-12 flex flex-col items-center justify-center gap-6 hover:border-amber-500/50 hover:bg-slate-800/50 transition-all group"
+              >
+                <div className="w-24 h-24 rounded-full bg-slate-800/80 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-black/20">
+                  <Buildings size={40} weight="fill" className="text-amber-500" />
+                </div>
+                <h2 className="text-2xl font-black text-white tracking-widest">GANG</h2>
+              </button>
+              
+              <button
+                onClick={() => { setFormData({...formData, orgType: 'FAMILY'}); setStep(2); }}
+                className="bg-slate-900 border border-slate-800 rounded-[24px] p-12 flex flex-col items-center justify-center gap-6 hover:border-blue-500/50 hover:bg-slate-800/50 transition-all group"
+              >
+                <div className="w-24 h-24 rounded-full bg-blue-900/20 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-black/20">
+                  <Buildings size={40} weight="fill" className="text-blue-500" />
+                </div>
+                <h2 className="text-2xl font-black text-white tracking-widest">FAMILY</h2>
+              </button>
             </div>
-          ) : (
+          </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start mt-8">
+          <Card className="order-2 xl:order-1">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="flex items-center justify-between border-b border-slate-800 pb-4">
                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
@@ -281,11 +284,9 @@ export default function RegisterOrg() {
                 <PaperPlaneTilt size={20} weight="bold" /> ยืนยันข้อมูลเข้าสู่ระบบ
               </Button>
             </form>
-          )}
-        </Card>
+          </Card>
 
-        {/* Preview Side */}
-        {step === 2 && (
+          {/* Preview Side */}
           <div className="sticky top-24 order-1 xl:order-2 mb-6 xl:mb-0">
             <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3 ml-1">Live Document</h3>
             
@@ -372,8 +373,8 @@ export default function RegisterOrg() {
 
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
