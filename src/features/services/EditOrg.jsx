@@ -5,7 +5,7 @@ import { db } from '../../core/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
 
 import Button from '../../components/ui/Button';
-import { Skull, House, Calculator, User } from '@phosphor-icons/react';
+import { Skull, House, Calculator, User, PencilSimple } from '@phosphor-icons/react';
 
 export default function EditOrg() {
   const navigate = useNavigate();
@@ -103,6 +103,14 @@ export default function EditOrg() {
   return (
     <div className="max-w-[800px] mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 py-6">
       
+      <div className="flex items-center gap-3 mb-6">
+        <PencilSimple size={32} weight="duotone" className="text-pink-500" />
+        <div>
+          <h1 className="text-2xl font-bold text-white">แจ้งแก้ไขข้อมูลองค์กร</h1>
+          <p className="text-slate-400">แบบฟอร์มแจ้งเปลี่ยนชื่อ สี โลโก้ หรือชุดประจำ Gang/Family</p>
+        </div>
+      </div>
+
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden text-slate-800">
         <div className="p-8 md:p-10">
           <form onSubmit={handleSubmit} className="space-y-8">
