@@ -184,7 +184,16 @@ export default function Welfare() {
             </div>
           </div>
 
-          <Button type="submit" className="w-full h-14 text-base shadow-lg shadow-blue-500/20 bg-blue-600 hover:bg-blue-500 text-white rounded-xl">
+          <Button 
+            type="submit" 
+            className="w-full h-14 text-base shadow-lg shadow-blue-500/20 bg-blue-600 hover:bg-blue-500 text-white rounded-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-600"
+            disabled={
+              !formData.orgName.trim() || 
+              !formData.requester.trim() || 
+              (vehicles.length === 0 && !formData.hasWeaponWelfare && !formData.otherWelfare.trim()) ||
+              (vehicles.length > 0 && vehicles.some(v => !v.model.trim() || !v.plate.trim()))
+            }
+          >
             <PaperPlaneTilt size={20} weight="bold" /> ดำเนินการต่อ (ตรวจสอบสัญญา)
           </Button>
         </form>
