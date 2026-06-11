@@ -249,14 +249,10 @@ export default function EditOrg() {
                     <span className="text-[10px] text-slate-500">*ถ้ามีการเปลี่ยนสี</span>
                   </div>
                   <div className="flex gap-2 h-10">
-                    <div className="h-full w-12 border border-slate-700 rounded overflow-hidden">
-                      <input 
-                        type="color" 
-                        className="w-[200%] h-[200%] -translate-x-1/4 -translate-y-1/4 cursor-pointer"
-                        value={formData.hexColor}
-                        onChange={e => setFormData({...formData, hexColor: e.target.value})}
-                      />
-                    </div>
+                    <div 
+                      className="h-full w-12 border border-slate-700 rounded shadow-inner"
+                      style={{ backgroundColor: formData.hexColor || '#000000' }}
+                    />
                     <input 
                       type="text"
                       className="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
