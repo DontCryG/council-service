@@ -154,8 +154,8 @@ export default function CouncilLoanHub() {
                     </tr>
                   ) : contracts.length === 0 ? (
                     <tr>
-                      <td colSpan="5" className="py-10 text-center text-slate-500">
-                        ยังไม่มีข้อมูลสัญญากู้ยืม
+                      <td colSpan="5" className="py-10 text-center text-slate-500 font-medium">
+                        ยังไม่มีข้อมูล
                       </td>
                     </tr>
                   ) : (
