@@ -116,11 +116,11 @@ export default function LoanPublic() {
       // const signatureDataUrl = canvasRef.current.toDataURL();
       
       await updateDoc(contractRef, {
-        status: 'active',
-        signedAt: serverTimestamp()
+        status: 'pending_council_signature',
+        borrowerSignedAt: serverTimestamp()
       });
       
-      setContract({ ...contract, status: 'active', signedAt: new Date() });
+      setContract({ ...contract, status: 'pending_council_signature', borrowerSignedAt: new Date() });
       showAlert('success', 'เซ็นรับทราบสัญญากู้ยืมสำเร็จ');
     } catch (err) {
       console.error(err);
@@ -203,6 +203,11 @@ export default function LoanPublic() {
                   {contract.status === 'pending_signature' && (
                     <span className="bg-blue-500/10 text-blue-400 px-4 py-2 rounded-xl text-sm font-black uppercase tracking-wider border border-blue-500/20 inline-block text-center">
                       รอผู้กู้เซ็นรับทราบ
+                    </span>
+                  )}
+                  {contract.status === 'pending_council_signature' && (
+                    <span className="bg-purple-500/10 text-purple-400 px-4 py-2 rounded-xl text-sm font-black uppercase tracking-wider border border-purple-500/20 inline-block text-center">
+                      รอสภาเซ็นอนุมัติ
                     </span>
                   )}
                   {contract.status === 'active' && (
@@ -359,13 +364,23 @@ export default function LoanPublic() {
               )}
 
               {/* If Not Pending Signature */}
-              {contract.status !== 'pending_signature' && (
+              {contract.status === 'pending_council_signature' && (
+                <div className="bg-slate-900/80 border border-purple-500/20 p-8 rounded-2xl flex flex-col items-center text-center shadow-inner">
+                  <div className="w-16 h-16 bg-purple-500/10 rounded-full flex items-center justify-center text-purple-400 mb-4 border border-purple-500/20">
+                    <CheckCircle size={32} weight="fill" />
+                  </div>
+                  <h3 className="text-xl font-black text-white mb-2">คุณลงนามในสัญญาเรียบร้อยแล้ว</h3>
+                  <p className="text-slate-400 font-medium">ขณะนี้กำลังรอตัวแทนสภาลงนามอนุมัติเพื่อเริ่มสัญญากู้ยืม</p>
+                </div>
+              )}
+              
+              {contract.status !== 'pending_signature' && contract.status !== 'pending_council_signature' && (
                 <div className="bg-slate-900/80 border border-emerald-500/20 p-8 rounded-2xl flex flex-col items-center text-center shadow-inner">
                   <div className="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-400 mb-4 border border-emerald-500/20">
                     <CheckCircle size={32} weight="fill" />
                   </div>
-                  <h3 className="text-xl font-black text-white mb-2">สัญญานี้ได้รับการลงนามแล้ว</h3>
-                  <p className="text-slate-400 font-medium">คุณสามารถดูตัวสัญญาเพื่อตรวจสอบรายละเอียดเพิ่มเติมได้</p>
+                  <h3 className="text-xl font-black text-white mb-2">สัญญานี้มีผลสมบูรณ์แล้ว</h3>
+                  <p className="text-slate-400 font-medium">สัญญากู้ยืมนี้ได้รับการอนุมัติและลงนามครบถ้วนแล้ว</p>
                 </div>
               )}
 

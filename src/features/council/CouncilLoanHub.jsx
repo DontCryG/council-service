@@ -10,9 +10,10 @@ import {
   Trash, 
   ArrowLeft,
   CircleNotch,
-  Copy
+  Copy,
+  CheckCircle
 } from '@phosphor-icons/react';
-import { collection, query, orderBy, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, deleteDoc, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../core/firebase';
 import { useAppStore } from '../../store';
 
@@ -40,6 +41,21 @@ export default function CouncilLoanHub() {
       } catch (err) {
         console.error(err);
         showAlert('error', 'เกิดข้อผิดพลาดในการลบสัญญา');
+      }
+    }
+  };
+
+  const handleCouncilSign = async (contractId, id) => {
+    if (window.confirm(`คุณต้องการลงนามอนุมัติสัญญากู้ยืม ${contractId} ใช่หรือไม่?\nสถานะจะเปลี่ยนเป็น "กำลังผ่อนชำระ"`)) {
+      try {
+        await updateDoc(doc(db, 'loan_contracts', id), {
+          status: 'active',
+          councilSignedAt: serverTimestamp()
+        });
+        showAlert('success', 'ลงนามอนุมัติสัญญาสำเร็จ');
+      } catch (err) {
+        console.error(err);
+        showAlert('error', 'เกิดข้อผิดพลาดในการอนุมัติสัญญา');
       }
     }
   };
@@ -197,6 +213,11 @@ export default function CouncilLoanHub() {
                               รอผู้กู้เซ็น
                             </span>
                           )}
+                          {contract.status === 'pending_council_signature' && (
+                            <span className="inline-flex items-center justify-center bg-purple-500/10 text-purple-400 px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider border border-purple-500/20 w-28">
+                              รอสภาเซ็น
+                            </span>
+                          )}
                           {contract.status === 'active' && (
                             <span className="inline-flex items-center justify-center bg-amber-500/10 text-amber-400 px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider border border-amber-500/20 w-28">
                               กำลังผ่อนชำระ
@@ -219,6 +240,15 @@ export default function CouncilLoanHub() {
                               <button className="bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-white px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-bold transition-all border border-emerald-500/20 hover:border-emerald-500 whitespace-nowrap shadow-sm">
                                 <UploadSimple size={14} weight="bold" />
                                 อัพเดทยอด
+                              </button>
+                            )}
+                            {contract.status === 'pending_council_signature' && (
+                              <button 
+                                onClick={() => handleCouncilSign(contract.contractId, contract.id)}
+                                className="bg-purple-500/10 hover:bg-purple-500 text-purple-500 hover:text-white px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-bold transition-all border border-purple-500/20 hover:border-purple-500 whitespace-nowrap shadow-sm"
+                              >
+                                <CheckCircle size={14} weight="bold" />
+                                สภาอนุมัติ
                               </button>
                             )}
                             
