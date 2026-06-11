@@ -243,8 +243,42 @@ export default function LoanPublic() {
                     <CalendarBlank size={20} className="text-blue-400" weight="bold" />
                   </div>
                   <div className="text-lg font-black text-white">
-                    รายวัน วันละ {contract.installmentAmount ? contract.installmentAmount.toLocaleString() : 'ไม่ระบุ'} ฿
+                    {contract.paymentMethod === 'full' ? (
+                      <span className="text-emerald-400">ชำระเต็มจำนวน</span>
+                    ) : (
+                      <>
+                        รายวัน วันละ {' '}
+                        <span className="text-amber-500">
+                        {contract.installmentAmount 
+                          ? contract.installmentAmount.toLocaleString() 
+                          : (() => {
+                              if (!contract.dueDate || !contract.createdAt) return 'ไม่ระบุ';
+                              const start = contract.createdAt?.toDate ? contract.createdAt.toDate() : new Date(contract.createdAt);
+                              start.setHours(0,0,0,0);
+                              const end = new Date(contract.dueDate);
+                              end.setHours(0,0,0,0);
+                              const diffTime = end - start;
+                              const diffDays = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+                              const total = contract.totalAmount || contract.principalAmount || 0;
+                              return Math.ceil(total / diffDays).toLocaleString();
+                            })()
+                        }
+                        </span> ฿
+                      </>
+                    )}
                   </div>
+                  {contract.dueDate && (
+                    <div className="mt-2 pt-2 border-t border-slate-700/50 flex items-center justify-between text-sm">
+                      <span className="text-slate-500 font-bold">วันสิ้นสุดสัญญา:</span>
+                      <span className="text-slate-300 font-medium">
+                        {new Date(contract.dueDate).toLocaleDateString('th-TH', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="bg-slate-900/50 p-6 rounded-2xl border border-slate-700/50 flex flex-col justify-center">
