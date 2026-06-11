@@ -1,4 +1,5 @@
 import { useEffect, Suspense, lazy } from 'react';
+// Force rebuild cache bust
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, collection, query, where, onSnapshot, Timestamp } from 'firebase/firestore';
