@@ -34,6 +34,7 @@ const DutySystem = lazy(() => import('./features/council/DutySystem'));
 const AdminDutyHistory = lazy(() => import('./features/council/AdminDutyHistory'));
 const TransactionHistory = lazy(() => import('./features/admin/TransactionHistory'));
 const CouncilLoanHub = lazy(() => import('./features/council/CouncilLoanHub'));
+const CouncilLoanView = lazy(() => import('./features/council/CouncilLoanView'));
 const CouncilLoanCreate = lazy(() => import('./features/council/CouncilLoanCreate'));
 const CouncilLoanEdit = lazy(() => import('./features/council/CouncilLoanEdit'));
 const LoanPublic = lazy(() => import('./features/services/LoanPublic'));
@@ -237,6 +238,7 @@ function App() {
             <Route path="cs6" element={<ProtectedRoute><DutySystem /></ProtectedRoute>} />
             
             <Route path="council_loan" element={<ProtectedRoute><CouncilLoanHub /></ProtectedRoute>} />
+            <Route path="council_loan/view/:id" element={<ProtectedRoute><CouncilLoanView /></ProtectedRoute>} />
             <Route path="council_loan/create" element={<ProtectedRoute><CouncilLoanCreate /></ProtectedRoute>} />
             <Route path="council_loan/edit/:id" element={<ProtectedRoute><CouncilLoanEdit /></ProtectedRoute>} />
           </Route>

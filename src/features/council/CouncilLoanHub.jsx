@@ -281,7 +281,11 @@ export default function CouncilLoanHub() {
                             )}
                             
                             <div className="flex items-center gap-1 bg-slate-900/80 p-1 rounded-xl border border-slate-700/50 shadow-inner">
-                              <button className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-all" title="ดูรายละเอียด">
+                              <button 
+                                className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-all" 
+                                title="ดูรายละเอียด"
+                                onClick={() => navigate(`/council_loan/view/${contract.id}`)}
+                              >
                                 <FileText size={16} weight="fill" />
                               </button>
                               <button 
