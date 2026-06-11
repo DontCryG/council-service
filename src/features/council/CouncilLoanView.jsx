@@ -174,12 +174,13 @@ export default function CouncilLoanView() {
 
       {/* Contract Document */}
       <div className="overflow-x-auto pb-8">
-        <div 
-          ref={documentRef}
-          className="bg-white text-slate-900 p-10 sm:p-16 rounded-sm shadow-2xl mx-auto font-sans leading-relaxed relative"
-          style={{ minHeight: '1056px', width: '816px' }}
-        >
-          <h1 className="text-3xl font-black text-center mb-12">สัญญากู้ยืมเงิน</h1>
+        <div className="shadow-2xl mx-auto w-fit">
+          <div 
+            ref={documentRef}
+            className="bg-white text-slate-900 p-10 sm:p-16 rounded-sm font-sans leading-relaxed relative"
+            style={{ minHeight: '1056px', width: '816px' }}
+          >
+            <h1 className="text-3xl font-black text-center mb-12">สัญญากู้ยืมเงิน</h1>
           
           <div className="flex justify-between items-start mb-10 text-sm font-medium">
             <div>เลขที่สัญญา: {contract.contractId}</div>
@@ -277,6 +278,7 @@ export default function CouncilLoanView() {
             </div>
           </div>
         </div>
+      </div>
       </div>
 
       {/* Council Signing Area */}
