@@ -93,7 +93,7 @@ export default function GeneralServicePreview() {
           <h2 className="text-2xl font-bold text-white mb-1">ตรวจสอบข้อมูลก่อนส่ง</h2>
           <p className="text-slate-400">โปรดตรวจสอบรายละเอียดในบิลให้แน่ใจก่อนทำการส่งข้อมูล</p>
         </div>
-        <Button variant="ghost" onClick={() => navigate(-1)} className="text-slate-400 hover:text-white">
+        <Button variant="ghost" onClick={() => navigate('/ps1', { state: { formData, councilMembers, members } })} className="text-slate-400 hover:text-white">
           <ArrowLeft size={20} className="mr-2" /> ย้อนกลับเพื่อแก้ไข
         </Button>
       </div>

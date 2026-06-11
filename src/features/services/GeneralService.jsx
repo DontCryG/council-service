@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
@@ -10,17 +10,18 @@ import { Users, House, Plus, Trash, ArrowRight, WarningCircle, UserPlus, FileTex
 
 export default function GeneralService() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { showAlert } = useAppStore();
   
   const [councilMembers, setCouncilMembers] = useState([]);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState(() => location.state?.formData || {
     transactionId: '',
     groupType: 'GANG',
     groupName: '',
     requester: '',
     councilMemberId: ''
   });
-  const [members, setMembers] = useState([{ id: 1, value: '' }]);
+  const [members, setMembers] = useState(() => location.state?.members || [{ id: 1, value: '' }]);
 
   useEffect(() => {
     const unsub = onSnapshot(collection(db, 'app_state'), (snapshot) => {
