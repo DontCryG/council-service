@@ -4,7 +4,7 @@ import { useAppStore } from '../../store';
 
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
-import { PaperPlaneTilt, Trash, Gift, Car, Users, House, Sword } from '@phosphor-icons/react';
+import { PaperPlaneTilt, Trash, Gift, Car, Users, House, Sword, ArrowLeft } from '@phosphor-icons/react';
 
 export default function Welfare() {
   const navigate = useNavigate();
@@ -43,12 +43,17 @@ export default function Welfare() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-[800px] mx-auto py-6">
-      <div className="flex items-center gap-3">
-        <Gift size={32} weight="duotone" className="text-emerald-500" />
-        <div>
-          <h1 className="text-2xl font-bold text-white">ระบบเบิกสวัสดิการ Gang / Family</h1>
-          <p className="text-slate-400">ยื่นแบบฟอร์มขอเบิกสวัสดิการสำหรับ GANG / FAMILY</p>
+      <div className="flex items-start justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <Gift size={32} weight="duotone" className="text-emerald-500" />
+          <div>
+            <h1 className="text-2xl font-bold text-white mb-1">ระบบเบิกสวัสดิการ Gang / Family</h1>
+            <p className="text-slate-400">ยื่นแบบฟอร์มขอเบิกสวัสดิการสำหรับ GANG / FAMILY</p>
+          </div>
         </div>
+        <Button type="button" variant="ghost" onClick={() => navigate(-1)} className="text-slate-400 hover:text-white px-2">
+          <ArrowLeft size={20} className="mr-2" /> ย้อนกลับ
+        </Button>
       </div>
 
       <div className="bg-slate-900/80 border border-slate-800 rounded-[24px] p-8 shadow-xl backdrop-blur-sm">
