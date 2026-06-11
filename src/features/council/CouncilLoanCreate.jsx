@@ -54,6 +54,16 @@ export default function CouncilLoanCreate() {
     try {
       const contractId = "CNCL-" + Math.floor(10000 + Math.random() * 90000);
       
+      let installmentAmount = null;
+      if (paymentMethod === 'installments') {
+        const start = new Date();
+        start.setHours(0,0,0,0);
+        const end = new Date(dueDate);
+        end.setHours(0,0,0,0);
+        const diffDays = Math.max(1, Math.ceil((end - start) / (1000 * 60 * 60 * 24)));
+        installmentAmount = Math.ceil(totalAmount / diffDays);
+      }
+      
       await addDoc(collection(db, 'loan_contracts'), {
         contractId,
         borrowerName,
@@ -66,6 +76,7 @@ export default function CouncilLoanCreate() {
         remainingAmount: totalAmount,
         paymentMethod,
         dueDate,
+        installmentAmount,
         conditions,
         status: 'pending_signature',
         createdAt: serverTimestamp(),
@@ -81,6 +92,7 @@ export default function CouncilLoanCreate() {
     } catch (error) {
       console.error("Error creating loan contract:", error);
       showAlert('error', `ข้อผิดพลาด: ${error.message}`);
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -248,18 +260,58 @@ export default function CouncilLoanCreate() {
 
           <div className="bg-slate-900/30 border border-slate-700/50 rounded-2xl p-5">
             <label className="block text-slate-300 text-sm font-bold mb-2">
-              วันที่ครบกำหนดชำระ <span className="text-red-500">*</span>
+              วันที่ครบกำหนดชำระ (วันสิ้นสุดสัญญา) <span className="text-red-500">*</span>
             </label>
-            <div className="relative w-full">
+            <div className="relative w-full mb-4">
               <input 
                 type="date"
                 required
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
+                min={new Date().toISOString().split('T')[0]}
                 className="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/10 transition-all outline-none"
                 style={{ colorScheme: 'dark' }}
               />
             </div>
+
+            {paymentMethod === 'installments' && dueDate && (
+              <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 mt-4 animate-in fade-in zoom-in-95 duration-300">
+                <h4 className="text-amber-500 font-bold mb-3 text-sm flex items-center gap-2">
+                  <Calculator size={18} /> คำนวณยอดผ่อนชำระอัตโนมัติ
+                </h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-slate-900/50 rounded-lg p-3">
+                    <div className="text-slate-400 text-xs font-bold mb-1">ระยะเวลาผ่อน</div>
+                    <div className="text-white font-black">
+                      {(() => {
+                        const start = new Date();
+                        start.setHours(0,0,0,0);
+                        const end = new Date(dueDate);
+                        end.setHours(0,0,0,0);
+                        const diffTime = end - start;
+                        const diffDays = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+                        return `${diffDays} วัน`;
+                      })()}
+                    </div>
+                  </div>
+                  <div className="bg-slate-900/50 rounded-lg p-3">
+                    <div className="text-slate-400 text-xs font-bold mb-1">ยอดผ่อนต่อวัน</div>
+                    <div className="text-amber-500 font-black text-lg leading-none">
+                      {(() => {
+                        const start = new Date();
+                        start.setHours(0,0,0,0);
+                        const end = new Date(dueDate);
+                        end.setHours(0,0,0,0);
+                        const diffTime = end - start;
+                        const diffDays = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+                        const daily = Math.ceil(totalAmount / diffDays);
+                        return `${daily.toLocaleString()} ฿`;
+                      })()}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
