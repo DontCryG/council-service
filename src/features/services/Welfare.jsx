@@ -163,13 +163,13 @@ export default function Welfare() {
                 <div className="bg-slate-800/30 border-2 border-slate-700/50 rounded-2xl p-6 flex flex-col min-h-[240px]">
                   <div className="flex justify-between items-center mb-6">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                      <div className="w-10 h-10 shrink-0 rounded-lg bg-blue-500/10 flex items-center justify-center">
                         <Car size={20} weight="fill" className="text-blue-400" />
                       </div>
-                      <h3 className="font-bold text-slate-200 text-base">สวัสดิการรถ</h3>
+                      <h3 className="font-bold text-slate-200 text-base whitespace-nowrap">สวัสดิการรถ</h3>
                     </div>
-                    <button type="button" onClick={handleAddVehicle} className="text-sm font-bold text-amber-500 hover:text-amber-400 transition-colors">
-                      + เพิ่มรายการ
+                    <button type="button" onClick={handleAddVehicle} className="text-sm font-bold text-amber-500 hover:text-amber-400 transition-colors whitespace-nowrap shrink-0">
+                      + เพิ่มรถ
                     </button>
                   </div>
 
@@ -205,16 +205,16 @@ export default function Welfare() {
                 {/* Weapons Card */}
                 <div className="bg-slate-800/30 border-2 border-slate-700/50 rounded-2xl p-6 flex flex-col min-h-[240px]">
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center">
+                    <div className="w-10 h-10 shrink-0 rounded-lg bg-red-500/10 flex items-center justify-center">
                       <Sword size={20} weight="fill" className="text-red-400" />
                     </div>
-                    <h3 className="font-bold text-slate-200 text-base">สวัสดิการอาวุธ</h3>
+                    <h3 className="font-bold text-slate-200 text-base whitespace-nowrap">สวัสดิการอาวุธ</h3>
                   </div>
                   
                   <label className="flex items-center gap-3 cursor-pointer p-4 border border-slate-700 rounded-xl hover:border-red-500/50 hover:bg-slate-800/50 transition-colors mb-4">
                     <input 
                       type="checkbox" 
-                      className="w-5 h-5 rounded border-slate-600 bg-slate-900 text-red-500 focus:ring-red-500 focus:ring-offset-slate-900"
+                      className="w-5 h-5 cursor-pointer accent-red-500 shrink-0"
                       checked={formData.hasWeaponWelfare}
                       onChange={e => setFormData({...formData, hasWeaponWelfare: e.target.checked})}
                     />
