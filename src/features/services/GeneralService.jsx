@@ -70,31 +70,31 @@ export default function GeneralService() {
         </div>
       </div>
       
-      <div className="bg-white rounded-[24px] p-8 md:p-10 shadow-xl border border-slate-200">
+      <div className="bg-slate-900 rounded-[24px] p-8 md:p-10 shadow-2xl border border-slate-800">
         <form onSubmit={handleSubmit} className="space-y-8">
           
           {/* 1. Group Type */}
           <div className="space-y-4">
-            <label className="text-[15px] font-bold text-[#1e293b] tracking-wide flex items-center gap-2">
-              <span className="text-blue-600">1.</span> ประเภทสังกัด (GROUP TYPE)
+            <label className="text-[15px] font-bold text-slate-200 tracking-wide flex items-center gap-2">
+              <span className="text-blue-500">1.</span> ประเภทสังกัด (GROUP TYPE)
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <button
                 type="button"
-                className={`py-5 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all border-2 ${formData.groupType === 'GANG' ? 'bg-amber-50 border-amber-400 text-[#1e293b]' : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'}`}
+                className={`py-5 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all border-2 ${formData.groupType === 'GANG' ? 'bg-amber-500/10 border-amber-500/30 text-amber-500' : 'bg-slate-800/50 border-slate-700 text-slate-400 hover:border-slate-600'}`}
                 onClick={() => setFormData({...formData, groupType: 'GANG'})}
               >
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${formData.groupType === 'GANG' ? 'bg-amber-100 text-[#1e293b]' : 'bg-slate-100 text-slate-400'}`}>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${formData.groupType === 'GANG' ? 'bg-amber-500/20 text-amber-500' : 'bg-slate-800 text-slate-500'}`}>
                    <Users size={20} weight="fill" />
                 </div>
                 GANG (แก๊ง)
               </button>
               <button
                 type="button"
-                className={`py-5 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all border-2 ${formData.groupType === 'FAMILY' ? 'bg-blue-50 border-blue-400 text-[#1e293b]' : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'}`}
+                className={`py-5 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all border-2 ${formData.groupType === 'FAMILY' ? 'bg-blue-500/10 border-blue-500/30 text-blue-400' : 'bg-slate-800/50 border-slate-700 text-slate-400 hover:border-slate-600'}`}
                 onClick={() => setFormData({...formData, groupType: 'FAMILY'})}
               >
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${formData.groupType === 'FAMILY' ? 'bg-blue-100 text-[#1e293b]' : 'bg-slate-100 text-slate-400'}`}>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${formData.groupType === 'FAMILY' ? 'bg-blue-500/20 text-blue-400' : 'bg-slate-800 text-slate-500'}`}>
                    <House size={20} weight="fill" />
                 </div>
                 FAMILY (ครอบครัว)
@@ -104,11 +104,11 @@ export default function GeneralService() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-3">
-              <label className="text-[15px] font-bold text-[#1e293b] tracking-wide flex items-center gap-2">
-                <span className="text-blue-600">2.</span> ชื่อสังกัด (GROUP NAME)
+              <label className="text-[15px] font-bold text-slate-200 tracking-wide flex items-center gap-2">
+                <span className="text-blue-500">2.</span> ชื่อสังกัด (GROUP NAME)
               </label>
               <input 
-                className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3.5 text-slate-700 font-medium focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors placeholder:text-slate-400"
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-200 font-medium focus:outline-none focus:border-blue-500 focus:bg-slate-900 focus:ring-1 focus:ring-blue-500 transition-colors placeholder:text-slate-600"
                 placeholder="ระบุชื่อแก๊ง หรือ ครอบครัว"
                 value={formData.groupName}
                 onChange={e => setFormData({...formData, groupName: e.target.value.toUpperCase()})}
@@ -117,11 +117,11 @@ export default function GeneralService() {
             </div>
 
             <div className="space-y-3">
-              <label className="text-[15px] font-bold text-[#1e293b] tracking-wide flex items-center gap-2">
-                <span className="text-blue-600">3.</span> ผู้ทำรายการ (REQUESTER)
+              <label className="text-[15px] font-bold text-slate-200 tracking-wide flex items-center gap-2">
+                <span className="text-blue-500">3.</span> ผู้ทำรายการ (REQUESTER)
               </label>
               <input 
-                className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3.5 text-slate-700 font-medium focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors placeholder:text-slate-400"
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-200 font-medium focus:outline-none focus:border-blue-500 focus:bg-slate-900 focus:ring-1 focus:ring-blue-500 transition-colors placeholder:text-slate-600"
                 placeholder="ชื่อ-นามสกุล (IC)"
                 value={formData.requester}
                 onChange={e => setFormData({...formData, requester: e.target.value})}
@@ -131,11 +131,11 @@ export default function GeneralService() {
           </div>
 
           <div className="space-y-3 pt-4">
-            <label className="text-[15px] font-bold text-[#1e293b] tracking-wide flex items-center gap-2">
-              <span className="text-blue-600">4.</span> เลือกรายการธุรกรรม (TRANSACTION)
+            <label className="text-[15px] font-bold text-slate-200 tracking-wide flex items-center gap-2">
+              <span className="text-blue-500">4.</span> เลือกรายการธุรกรรม (TRANSACTION)
             </label>
             <select 
-              className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3.5 text-slate-700 font-medium focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-200 font-medium focus:outline-none focus:border-blue-500 focus:bg-slate-900 focus:ring-1 focus:ring-blue-500 transition-colors"
               value={formData.transactionId}
               onChange={e => setFormData({...formData, transactionId: e.target.value})}
               required
@@ -149,13 +149,13 @@ export default function GeneralService() {
             </select>
           </div>
 
-          <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 md:p-8 space-y-6">
+          <div className="bg-slate-800/30 border border-slate-700 rounded-2xl p-6 md:p-8 space-y-6">
             <div className="flex items-center justify-between">
-              <label className="text-[16px] font-bold text-[#1e293b] tracking-wide flex items-center gap-2">
-                <Users size={22} className="text-[#1e293b]" />
-                <span className="text-blue-600">5.</span> รายชื่อสมาชิก (ที่เกี่ยวข้อง)
+              <label className="text-[16px] font-bold text-slate-200 tracking-wide flex items-center gap-2">
+                <Users size={22} className="text-slate-200" />
+                <span className="text-blue-500">5.</span> รายชื่อสมาชิก (ที่เกี่ยวข้อง)
               </label>
-              <button type="button" onClick={handleAddMember} className="text-sm font-bold bg-white border border-slate-300 text-[#1e293b] px-4 py-2 rounded-xl hover:bg-slate-100 flex items-center gap-2 transition-colors shadow-sm">
+              <button type="button" onClick={handleAddMember} className="text-sm font-bold bg-slate-800 border border-slate-700 text-slate-300 px-4 py-2 rounded-xl hover:bg-slate-700 hover:text-white flex items-center gap-2 transition-colors shadow-sm">
                 <UserPlus size={16} /> เพิ่มรายชื่อ
               </button>
             </div>
@@ -163,27 +163,27 @@ export default function GeneralService() {
               {members.map(item => (
                 <div key={item.id} className="flex gap-3">
                   <div className="flex-1 relative">
-                    <UserPlus size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input placeholder="ระบุชื่อสมาชิก..." className="w-full pl-12 bg-white border border-slate-300 rounded-xl pr-4 py-3.5 text-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" value={item.value} onChange={e => handleMemberChange(item.id, e.target.value)} required />
+                    <UserPlus size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
+                    <input placeholder="ระบุชื่อสมาชิก..." className="w-full pl-12 bg-slate-950 border border-slate-800 rounded-xl pr-4 py-3.5 text-slate-200 focus:border-blue-500 focus:bg-slate-900 focus:ring-1 focus:ring-blue-500 transition-colors placeholder:text-slate-600" value={item.value} onChange={e => handleMemberChange(item.id, e.target.value)} required />
                   </div>
-                  <button type="button" className={`px-4 border rounded-xl transition-colors bg-white ${members.length > 1 ? 'border-red-200 text-red-500 hover:bg-red-50' : 'border-slate-200 text-slate-300 cursor-not-allowed'}`} onClick={() => handleRemoveMember(item.id)} disabled={members.length === 1}><Trash size={20}/></button>
+                  <button type="button" className={`px-4 border rounded-xl transition-colors bg-slate-900 ${members.length > 1 ? 'border-slate-700 text-red-400 hover:border-red-500 hover:bg-red-500/10' : 'border-slate-800 text-slate-600 cursor-not-allowed'}`} onClick={() => handleRemoveMember(item.id)} disabled={members.length === 1}><Trash size={20}/></button>
                 </div>
               ))}
             </div>
-            <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-start gap-3">
+            <div className="bg-blue-900/20 border border-blue-800/50 rounded-xl p-4 flex items-start gap-3">
               <WarningCircle size={20} className="text-amber-500 mt-0.5 shrink-0" />
-              <p className="text-sm text-slate-600">หากธุรกรรมคิดเงินเป็นรายหัว ระบบจะนำจำนวนคนไปคูณยอดอัตโนมัติ</p>
+              <p className="text-sm text-blue-300">หากธุรกรรมคิดเงินเป็นรายหัว ระบบจะนำจำนวนคนไปคูณยอดอัตโนมัติ</p>
             </div>
           </div>
 
-          <div className="space-y-3 pt-6 border-t border-slate-200">
-            <label className="text-[15px] font-bold text-[#1e293b] tracking-wide flex items-center gap-2">
-              <span className="text-blue-600">6.</span> เจ้าหน้าที่สภาผู้รับเรื่อง (COUNCIL MEMBER)
+          <div className="space-y-3 pt-6 border-t border-slate-800">
+            <label className="text-[15px] font-bold text-slate-200 tracking-wide flex items-center gap-2">
+              <span className="text-blue-500">6.</span> เจ้าหน้าที่สภาผู้รับเรื่อง (COUNCIL MEMBER)
             </label>
             <div className="relative">
-              <UserPlus size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+              <UserPlus size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
               <select 
-                className="w-full pl-12 bg-white border border-slate-300 rounded-xl pr-4 py-3.5 text-slate-700 font-medium focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors appearance-none"
+                className="w-full pl-12 bg-slate-950 border border-slate-800 rounded-xl pr-4 py-3.5 text-slate-200 font-medium focus:outline-none focus:border-blue-500 focus:bg-slate-900 focus:ring-1 focus:ring-blue-500 transition-colors appearance-none"
                 value={formData.councilMemberId}
                 onChange={e => setFormData({...formData, councilMemberId: e.target.value})}
                 required
@@ -197,7 +197,7 @@ export default function GeneralService() {
           </div>
 
           <div className="pt-6">
-            <Button type="submit" size="lg" className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/30 rounded-xl py-4 text-lg">
+            <Button type="submit" size="lg" className="w-full bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/20 rounded-xl py-4 text-lg">
               ตรวจสอบข้อมูลก่อนส่ง <ArrowRight size={20} className="ml-2 inline" />
             </Button>
           </div>
