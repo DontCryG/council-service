@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
@@ -9,11 +9,14 @@ import { Trash, ArrowRight, Buildings, ArrowLeft } from '@phosphor-icons/react';
 
 export default function RegisterOrg() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { showAlert } = useAppStore();
-  const [step, setStep] = useState(1);
+  const initialState = location.state || {};
   
+  const [step, setStep] = useState(initialState.step || 1);
   const [councilMembers, setCouncilMembers] = useState([]);
-  const [formData, setFormData] = useState({
+  
+  const [formData, setFormData] = useState(initialState.formData || {
     orgType: 'GANG', // hardcoded to maintain backward compatibility
     name: '',
     alias: '',
@@ -23,8 +26,8 @@ export default function RegisterOrg() {
     councilStaffId: ''
   });
   
-  const [coLeaders, setCoLeaders] = useState([]);
-  const [members, setMembers] = useState([{ id: Date.now(), name: '' }]);
+  const [coLeaders, setCoLeaders] = useState(initialState.coLeaders || []);
+  const [members, setMembers] = useState(initialState.members || [{ id: Date.now(), name: '' }]);
 
   useEffect(() => {
     const unsub = onSnapshot(collection(db, 'app_state'), (snapshot) => {

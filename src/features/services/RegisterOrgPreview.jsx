@@ -94,7 +94,7 @@ export default function RegisterOrgPreview() {
   return (
     <div className="max-w-[800px] mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 py-6">
       <div className="mb-6 flex items-center justify-between">
-        <Button type="button" variant="ghost" onClick={() => navigate(-1)} className="text-slate-400 hover:text-white px-0">
+        <Button type="button" variant="ghost" onClick={() => navigate('/register_org', { state: { formData, coLeaders, members, step: 2 } })} className="text-slate-400 hover:text-white px-0">
           <ArrowLeft size={20} className="mr-2" /> ย้อนกลับไปแก้ไข
         </Button>
         <h2 className="text-xl font-bold text-white">ตรวจสอบข้อมูลลงทะเบียนองค์กรใหม่</h2>
