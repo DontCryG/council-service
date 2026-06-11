@@ -70,9 +70,9 @@ export default function CouncilLoanCreate() {
         status: 'pending_signature',
         createdAt: serverTimestamp(),
         createdBy: {
-          uid: user.uid,
-          email: user.email,
-          name: councilUsername || user.email
+          uid: user?.uid || 'unknown',
+          email: user?.email || 'unknown',
+          name: councilUsername || user?.email || 'Unknown'
         }
       });
 
@@ -80,7 +80,7 @@ export default function CouncilLoanCreate() {
       navigate('/council_loan');
     } catch (error) {
       console.error("Error creating loan contract:", error);
-      showAlert('error', 'เกิดข้อผิดพลาดในการสร้างสัญญา');
+      showAlert('error', `ข้อผิดพลาด: ${error.message}`);
       setIsSubmitting(false);
     }
   };
