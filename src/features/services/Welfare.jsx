@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppStore } from '../../store';
 
 import Input from '../../components/ui/Input';
@@ -8,16 +8,17 @@ import { PaperPlaneTilt, Trash, Gift, Car, Users, House, Sword, ArrowLeft } from
 
 export default function Welfare() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { showAlert } = useAppStore();
   
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState(() => location.state?.formData || {
     orgType: 'GANG',
     orgName: '',
     requester: '',
     hasWeaponWelfare: false,
     otherWelfare: ''
   });
-  const [vehicles, setVehicles] = useState([]);
+  const [vehicles, setVehicles] = useState(() => location.state?.vehicles || []);
 
   const handleAddVehicle = () => {
     setVehicles([...vehicles, { id: Date.now(), model: '', plate: '' }]);
