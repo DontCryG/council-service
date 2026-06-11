@@ -94,7 +94,11 @@ export default function WelfarePreview() {
       </div>
 
       <div className="overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
-        <div ref={captureRef} className="w-[800px] shrink-0 bg-slate-900 rounded-xl p-8 sm:p-12 border-2 border-slate-800 shadow-2xl relative overflow-hidden text-slate-200 min-h-[600px] mb-8">
+        <div 
+          ref={captureRef} 
+          style={{ width: '800px', minWidth: '800px' }}
+          className="bg-slate-900 rounded-xl p-8 sm:p-12 border-2 border-slate-800 shadow-2xl relative overflow-hidden text-slate-200 min-h-[600px] mb-8 mx-auto"
+        >
           {/* Background Effects */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none"></div>
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -ml-32 -mb-32 pointer-events-none"></div>
