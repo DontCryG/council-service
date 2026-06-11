@@ -326,6 +326,19 @@ export default function CouncilLoanView() {
           </div>
         </div>
       )}
+
+      {/* Payment History Section */}
+      <div className="mt-8 bg-slate-50 border border-slate-200 rounded-2xl shadow-sm max-w-[816px] mx-auto overflow-hidden">
+        <div className="px-6 py-4 border-b border-slate-200 flex items-center gap-2">
+          <div className="w-6 h-6 rounded flex items-center justify-center bg-amber-500/20 text-amber-600">
+            <Receipt size={16} weight="bold" />
+          </div>
+          <h3 className="font-bold text-slate-700">ประวัติการชำระเงิน</h3>
+        </div>
+        <div className="p-8 text-center text-slate-400 text-sm font-medium">
+          ยังไม่มีประวัติการชำระเงิน
+        </div>
+      </div>
     </div>
   );
 }
