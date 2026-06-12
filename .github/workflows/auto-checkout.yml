@@ -1,0 +1,29 @@
+name: Auto Check-out Cron Job
+
+on:
+  schedule:
+    # Runs every 15 minutes
+    - cron: '*/15 * * * *'
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  auto-checkout:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Auto Check-out Script
+        env:
+          WEBHOOK_DUTY_IN: ${{ secrets.WEBHOOK_DUTY_IN }}
+        run: node scripts/autoCheckOut.js
