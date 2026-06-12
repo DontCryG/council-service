@@ -197,8 +197,12 @@ function App() {
     return <LoadingScreen message="กำลังตรวจสอบสิทธิ์การเข้าถึง..." />;
   }
 
+  const initialEntries = window.location.pathname === '/loan_public' 
+    ? [window.location.pathname + window.location.search] 
+    : ['/'];
+
   return (
-    <Router>
+    <Router initialEntries={initialEntries}>
       <GlobalAlert />
       <LiveNotifications />
       <Suspense fallback={<LoadingScreen message="กำลังโหลดข้อมูล..." />}>
