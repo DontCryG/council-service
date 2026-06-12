@@ -137,6 +137,8 @@ function AdminRoute({ children }) {
   return children;
 }
 
+import LoadingScreen from './components/ui/LoadingScreen';
+
 function App() {
   const { setUser, setCouncilUsername, isAuthLoaded } = useAppStore();
 
@@ -192,22 +194,14 @@ function App() {
   }, [setUser]);
 
   if (!isAuthLoaded) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950">
-        <div className="w-12 h-12 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
-      </div>
-    );
+    return <LoadingScreen message="กำลังตรวจสอบสิทธิ์การเข้าถึง..." />;
   }
 
   return (
     <Router>
       <GlobalAlert />
       <LiveNotifications />
-      <Suspense fallback={
-        <div className="min-h-screen flex items-center justify-center bg-slate-950">
-          <div className="w-12 h-12 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
-        </div>
-      }>
+      <Suspense fallback={<LoadingScreen message="กำลังโหลดข้อมูล..." />}>
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Portal />} />
