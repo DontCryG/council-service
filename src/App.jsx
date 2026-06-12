@@ -10,43 +10,35 @@ import { CheckCircle, XCircle, Info, X, BellRinging } from '@phosphor-icons/reac
 // Layouts
 import MainLayout from './components/layout/MainLayout';
 
-// Helper for minimum load time to show the Loadscreen beautifully
-const lazyWithDelay = (importFunc, delay = 600) => lazy(() => 
-  Promise.all([
-    importFunc(),
-    new Promise(resolve => setTimeout(resolve, delay))
-  ]).then(([moduleExports]) => moduleExports)
-);
-
-// Lazy load pages for ultimate performance with a premium transition
-const Portal = lazyWithDelay(() => import('./features/home/Portal'));
-const Home = lazyWithDelay(() => import('./features/home/Home'));
-const Login = lazyWithDelay(() => import('./features/auth/Login'));
-const NotFound = lazyWithDelay(() => import('./features/error/NotFound'));
-const CouncilManage = lazyWithDelay(() => import('./features/council/CouncilManage'));
-const GeneralService = lazyWithDelay(() => import('./features/services/GeneralService'));
-const GeneralServicePreview = lazyWithDelay(() => import('./features/services/GeneralServicePreview'));
-const Welfare = lazyWithDelay(() => import('./features/services/Welfare'));
-const WelfarePreview = lazyWithDelay(() => import('./features/services/WelfarePreview'));
-const WelfareTrade = lazyWithDelay(() => import('./features/services/WelfareTrade'));
-const WelfareTradePreview = lazyWithDelay(() => import('./features/services/WelfareTradePreview'));
-const RegisterOrg = lazyWithDelay(() => import('./features/services/RegisterOrg'));
-const RegisterOrgPreview = lazyWithDelay(() => import('./features/services/RegisterOrgPreview'));
-const EditOrg = lazyWithDelay(() => import('./features/services/EditOrg'));
-const EditOrgPreview = lazyWithDelay(() => import('./features/services/EditOrgPreview'));
-const GroupManager = lazyWithDelay(() => import('./features/council/GroupManager'));
-const TicketManager = lazyWithDelay(() => import('./features/tickets/TicketManager'));
-const TicketStore = lazyWithDelay(() => import('./features/tickets/TicketStore'));
-const StoryCalendar = lazyWithDelay(() => import('./features/services/StoryCalendar'));
-const DutySystem = lazyWithDelay(() => import('./features/council/DutySystem'));
-const AdminDutyHistory = lazyWithDelay(() => import('./features/council/AdminDutyHistory'));
-const TransactionHistory = lazyWithDelay(() => import('./features/admin/TransactionHistory'));
-const CouncilLoanHub = lazyWithDelay(() => import('./features/council/CouncilLoanHub'));
-const CouncilLoanView = lazyWithDelay(() => import('./features/council/CouncilLoanView'));
-const CouncilLoanCreate = lazyWithDelay(() => import('./features/council/CouncilLoanCreate'));
-const CouncilLoanEdit = lazyWithDelay(() => import('./features/council/CouncilLoanEdit'));
-const CouncilReceiptView = lazyWithDelay(() => import('./features/council/CouncilReceiptView'));
-const LoanPublic = lazyWithDelay(() => import('./features/services/LoanPublic'));
+// Lazy load pages for ultimate performance
+const Portal = lazy(() => import('./features/home/Portal'));
+const Home = lazy(() => import('./features/home/Home'));
+const Login = lazy(() => import('./features/auth/Login'));
+const NotFound = lazy(() => import('./features/error/NotFound'));
+const CouncilManage = lazy(() => import('./features/council/CouncilManage'));
+const GeneralService = lazy(() => import('./features/services/GeneralService'));
+const GeneralServicePreview = lazy(() => import('./features/services/GeneralServicePreview'));
+const Welfare = lazy(() => import('./features/services/Welfare'));
+const WelfarePreview = lazy(() => import('./features/services/WelfarePreview'));
+const WelfareTrade = lazy(() => import('./features/services/WelfareTrade'));
+const WelfareTradePreview = lazy(() => import('./features/services/WelfareTradePreview'));
+const RegisterOrg = lazy(() => import('./features/services/RegisterOrg'));
+const RegisterOrgPreview = lazy(() => import('./features/services/RegisterOrgPreview'));
+const EditOrg = lazy(() => import('./features/services/EditOrg'));
+const EditOrgPreview = lazy(() => import('./features/services/EditOrgPreview'));
+const GroupManager = lazy(() => import('./features/council/GroupManager'));
+const TicketManager = lazy(() => import('./features/tickets/TicketManager'));
+const TicketStore = lazy(() => import('./features/tickets/TicketStore'));
+const StoryCalendar = lazy(() => import('./features/services/StoryCalendar'));
+const DutySystem = lazy(() => import('./features/council/DutySystem'));
+const AdminDutyHistory = lazy(() => import('./features/council/AdminDutyHistory'));
+const TransactionHistory = lazy(() => import('./features/admin/TransactionHistory'));
+const CouncilLoanHub = lazy(() => import('./features/council/CouncilLoanHub'));
+const CouncilLoanView = lazy(() => import('./features/council/CouncilLoanView'));
+const CouncilLoanCreate = lazy(() => import('./features/council/CouncilLoanCreate'));
+const CouncilLoanEdit = lazy(() => import('./features/council/CouncilLoanEdit'));
+const CouncilReceiptView = lazy(() => import('./features/council/CouncilReceiptView'));
+const LoanPublic = lazy(() => import('./features/services/LoanPublic'));
 
 function GlobalAlert() {
   const { alert, hideAlert } = useAppStore();
