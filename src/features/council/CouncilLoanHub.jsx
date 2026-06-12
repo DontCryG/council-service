@@ -261,11 +261,11 @@ export default function CouncilLoanHub() {
               <table className="w-full text-left border-collapse whitespace-nowrap">
                 <thead>
                   <tr>
-                    <th className="pb-4 pt-2 pr-3 text-xs font-bold text-slate-400 tracking-wider uppercase">เลขที่สัญญา</th>
-                    <th className="pb-4 pt-2 px-3 text-xs font-bold text-slate-400 tracking-wider uppercase w-full">ผู้กู้ยืม</th>
-                    <th className="pb-4 pt-2 px-3 text-xs font-bold text-slate-400 tracking-wider uppercase">ยอดคงค้าง</th>
-                    <th className="pb-4 pt-2 px-3 text-xs font-bold text-slate-400 tracking-wider uppercase text-center">สถานะ</th>
-                    <th className="pb-4 pt-2 pl-3 text-xs font-bold text-slate-400 tracking-wider uppercase text-right min-w-[220px]">จัดการ</th>
+                    <th className="pb-4 pt-2 pr-3 text-xs font-bold text-slate-400 tracking-wider uppercase w-[15%]">เลขที่สัญญา</th>
+                    <th className="pb-4 pt-2 px-3 text-xs font-bold text-slate-400 tracking-wider uppercase w-[30%]">ผู้กู้ยืม</th>
+                    <th className="pb-4 pt-2 px-3 text-xs font-bold text-slate-400 tracking-wider uppercase w-[20%]">ยอดคงค้าง</th>
+                    <th className="pb-4 pt-2 px-3 text-xs font-bold text-slate-400 tracking-wider uppercase text-center w-[15%]">สถานะ</th>
+                    <th className="pb-4 pt-2 pl-3 text-xs font-bold text-slate-400 tracking-wider uppercase text-right w-[20%] min-w-[220px]">จัดการ</th>
                   </tr>
                 </thead>
                 <tbody>
