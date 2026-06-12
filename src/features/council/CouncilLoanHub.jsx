@@ -258,7 +258,7 @@ export default function CouncilLoanHub() {
               </h2>
             </div>
             <div className="p-6 overflow-x-auto">
-              <table className="w-full text-left border-collapse min-w-[1000px]">
+              <table className="w-full text-left border-collapse whitespace-nowrap">
                 <thead>
                   <tr>
                     <th className="pb-4 pt-2 px-2 text-xs font-bold text-slate-400 tracking-wider uppercase">เลขที่สัญญา</th>
