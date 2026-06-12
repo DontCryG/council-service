@@ -20,6 +20,7 @@ export default function GroupManager() {
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [customSuitColor, setCustomSuitColor] = useState('');
   
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [groupToDelete, setGroupToDelete] = useState(null);
@@ -80,13 +81,21 @@ export default function GroupManager() {
   const handleOpenModal = (group = null) => {
     if (group) {
       setEditingId(group.id);
+      let suitC = group.suitColor || 'ยังไม่ระบุ / สีอิสระ';
+      let customC = '';
+      if (!SUIT_COLORS.includes(suitC)) {
+        customC = suitC;
+        suitC = 'อื่นๆ (ระบุเอง)';
+      }
       setFormData({ 
         ...group, 
-        suitColor: group.suitColor || 'ยังไม่ระบุ / สีอิสระ' 
+        suitColor: suitC 
       });
+      setCustomSuitColor(customC);
     } else {
       setEditingId(null);
       setFormData({ type: 'GANG', name: '', logo: '', suitColor: 'ยังไม่ระบุ / สีอิสระ', updatedBy: '', updatedAt: '' });
+      setCustomSuitColor('');
     }
     setIsModalOpen(true);
   };
@@ -99,8 +108,14 @@ export default function GroupManager() {
     const formattedDate = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear() + 543}`;
     const updatedBy = user?.displayName || user?.email || 'Admin';
 
+    let finalSuitColor = formData.suitColor;
+    if (finalSuitColor === 'อื่นๆ (ระบุเอง)') {
+      finalSuitColor = customSuitColor || 'อื่นๆ (ระบุเอง)';
+    }
+
     const groupData = {
       ...formData,
+      suitColor: finalSuitColor,
       updatedBy,
       updatedAt: formattedDate
     };
@@ -269,7 +284,7 @@ export default function GroupManager() {
               {/* ID Card Preview */}
               <div className="w-full aspect-[3/4] rounded-3xl bg-slate-900/50 backdrop-blur-md border border-slate-700/50 flex flex-col items-center p-6 shadow-2xl relative overflow-hidden group">
                 <div className="absolute top-0 left-0 w-full h-1.5 transition-colors duration-500"
-                  style={{ backgroundColor: getColorCode(formData.suitColor) || (formData.type === 'GANG' ? '#ef4444' : '#3b82f6') }}
+                  style={{ backgroundColor: getColorCode(formData.suitColor === 'อื่นๆ (ระบุเอง)' ? customSuitColor : formData.suitColor) || (formData.type === 'GANG' ? '#ef4444' : '#3b82f6') }}
                 />
 
                 <div className="mt-4 mb-6 w-24 h-24 rounded-2xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center p-2 shadow-inner">
@@ -295,11 +310,11 @@ export default function GroupManager() {
                 <div className="w-full pt-4 mt-4 border-t border-slate-700/50 flex items-center justify-between">
                   <span className="text-[10px] font-bold text-slate-500 uppercase">Suit Color</span>
                   <div className="flex items-center gap-1.5">
-                    {getColorCode(formData.suitColor) && (
-                      <div className="w-3 h-3 rounded-full border border-slate-600" style={{ backgroundColor: getColorCode(formData.suitColor) }}></div>
+                    {getColorCode(formData.suitColor === 'อื่นๆ (ระบุเอง)' ? customSuitColor : formData.suitColor) && (
+                      <div className="w-3 h-3 rounded-full border border-slate-600" style={{ backgroundColor: getColorCode(formData.suitColor === 'อื่นๆ (ระบุเอง)' ? customSuitColor : formData.suitColor) }}></div>
                     )}
                     <span className="text-xs font-bold text-slate-300">
-                      {formData.suitColor || '-'}
+                      {formData.suitColor === 'อื่นๆ (ระบุเอง)' ? (customSuitColor || 'ระบุสี...') : (formData.suitColor || '-')}
                     </span>
                   </div>
                 </div>
@@ -408,15 +423,30 @@ export default function GroupManager() {
                   <div className="relative">
                     <Palette size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" />
                     <select 
-                      className="w-full bg-slate-900/50 border border-slate-700/50 rounded-xl pl-11 pr-4 py-3.5 text-white focus:outline-none focus:border-white/20 focus:bg-slate-800/50 font-medium text-sm appearance-none cursor-pointer transition-all"
+                      className={`w-full bg-slate-900/50 border ${formData.suitColor === 'อื่นๆ (ระบุเอง)' ? 'border-amber-500/50 shadow-[0_0_15px_-3px_rgba(245,158,11,0.15)]' : 'border-slate-700/50'} rounded-xl pl-11 pr-4 py-3.5 text-white focus:outline-none focus:border-white/20 focus:bg-slate-800/50 font-medium text-sm appearance-none cursor-pointer transition-all`}
                       value={formData.suitColor}
-                      onChange={e => setFormData({...formData, suitColor: e.target.value})}
+                      onChange={e => {
+                        setFormData({...formData, suitColor: e.target.value});
+                        if (e.target.value !== 'อื่นๆ (ระบุเอง)') setCustomSuitColor('');
+                      }}
                     >
                       {SUIT_COLORS.map(color => (
                         <option key={color} value={color} className="bg-slate-900 text-white font-medium">{color}</option>
                       ))}
                     </select>
                   </div>
+                  {formData.suitColor === 'อื่นๆ (ระบุเอง)' && (
+                    <div className="relative pt-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                      <input 
+                        type="text"
+                        placeholder="โปรดระบุชื่อสีที่ต้องการ..."
+                        required 
+                        className="w-full bg-slate-900/30 border border-amber-500/30 rounded-xl px-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500/50 focus:bg-slate-800/50 font-medium text-sm transition-all"
+                        value={customSuitColor}
+                        onChange={e => setCustomSuitColor(e.target.value)}
+                      />
+                    </div>
+                  )}
                 </div>
 
               </div>
