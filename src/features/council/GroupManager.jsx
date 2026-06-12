@@ -247,137 +247,172 @@ export default function GroupManager() {
       <Modal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)}
-        className="bg-slate-900 border-none max-w-md p-0 rounded-[32px] overflow-hidden"
+        className="bg-slate-950/80 backdrop-blur-xl border border-slate-800/60 max-w-[460px] p-0 rounded-[32px] shadow-[0_0_50px_-12px_rgba(0,0,0,0.7)] overflow-hidden"
         title={null}
         hideCloseButton={true}
       >
-        <div className="bg-slate-900 text-white p-6 pb-8 h-full flex flex-col">
-          {/* Modal Header */}
-          <div className="flex justify-between items-center mb-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-[14px] bg-[#EFA81F] flex items-center justify-center text-slate-900 shadow-lg">
-                <Plus size={24} weight="bold" />
-              </div>
-              <h2 className="text-[22px] font-black text-white">เพิ่มข้อมูลกลุ่มใหม่</h2>
-            </div>
-            <button 
-              onClick={() => setIsModalOpen(false)}
-              className="p-2 rounded-full border border-slate-700/80 text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
-            >
-              <X size={16} weight="bold" />
-            </button>
-          </div>
-          
-          <div className="h-px bg-slate-800 w-full mb-6"></div>
+        <div className="relative">
+          {/* Decorative glowing orb at the top right */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-[80px] pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* 1. Category */}
-            <div className="flex flex-col gap-2">
-              <label className="text-xs font-black text-slate-400 uppercase tracking-wide">1. หมวดหมู่ (CATEGORY)</label>
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  className={`py-3 rounded-xl font-bold flex items-center justify-center gap-2 border transition-all ${
-                    formData.type === 'GANG' 
-                      ? 'bg-red-500/10 border-red-500/50 text-red-500' 
-                      : 'bg-slate-800/50 border-slate-700 text-slate-400 hover:bg-slate-800 hover:text-slate-300'
-                  }`}
-                  onClick={() => setFormData({...formData, type: 'GANG'})}
-                >
-                  <Shield size={18} weight="bold" /> แก๊ง (Gang)
-                </button>
-                <button
-                  type="button"
-                  className={`py-3 rounded-xl font-bold flex items-center justify-center gap-2 border transition-all ${
-                    formData.type === 'FAMILY' 
-                      ? 'bg-blue-500/10 border-blue-500/50 text-blue-400' 
-                      : 'bg-slate-800/50 border-slate-700 text-slate-400 hover:bg-slate-800 hover:text-slate-300'
-                  }`}
-                  onClick={() => setFormData({...formData, type: 'FAMILY'})}
-                >
-                  <House size={18} weight="bold" /> ครอบครัว (Family)
-                </button>
-              </div>
-            </div>
-
-            {/* 2. Name */}
-            <div className="flex flex-col gap-2">
-              <label className="text-xs font-black text-slate-400 uppercase tracking-wide">2. ชื่อกลุ่ม (NAME)</label>
-              <input 
-                type="text"
-                placeholder="เช่น PEAKY BLINDERS"
-                required 
-                className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3.5 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 font-bold"
-                value={formData.name}
-                onChange={e => setFormData({...formData, name: e.target.value})}
-              />
-            </div>
-
-            {/* 3. Logo */}
-            <div className="flex flex-col gap-2">
-              <label className="text-xs font-black text-slate-400 uppercase tracking-wide">3. ลิงก์รูปภาพโลโก้ (LOGO URL) *ไม่บังคับ</label>
-              <div className="relative">
-                <Link size={18} weight="bold" className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
-                <input 
-                  type="text"
-                  placeholder="เช่น https://example.com/logo.png"
-                  className="w-full bg-slate-800/50 border border-slate-700 rounded-xl pl-11 pr-4 py-3.5 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 font-bold text-sm"
-                  value={formData.logo}
-                  onChange={e => setFormData({...formData, logo: e.target.value})}
-                />
-              </div>
-            </div>
-            
-            {/* 4. Suit Color */}
-            <div className="flex flex-col gap-2">
-              <label className="text-xs font-black text-slate-400 uppercase tracking-wide">4. สีสูท (SUIT COLOR)</label>
-              <div className="relative">
-                <Palette size={18} weight="bold" className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" />
-                <select 
-                  className="w-full bg-slate-800/50 border border-slate-700 rounded-xl pl-11 pr-4 py-3.5 text-white focus:outline-none focus:border-amber-500 font-bold text-sm appearance-none cursor-pointer"
-                  value={formData.suitColor}
-                  onChange={e => setFormData({...formData, suitColor: e.target.value})}
-                >
-                  {SUIT_COLORS.map(color => (
-                    <option key={color} value={color} className="bg-slate-800 text-white font-bold">{color}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {/* Recorder Info */}
-            <div className="bg-slate-800/30 border border-slate-700 rounded-xl p-4 flex items-center gap-3">
-              <CheckCircle size={24} weight="fill" className="text-emerald-500 shrink-0" />
-              <div>
-                <div className="text-xs font-bold text-slate-400">บันทึกข้อมูลโดย:</div>
-                <div className="text-sm font-black text-white">
-                  {user?.displayName || 'Admin'} <span className="text-slate-500 font-medium">(Council Member)</span>
+          <div className="relative p-7 h-full flex flex-col z-10">
+            {/* Header */}
+            <div className="flex justify-between items-start mb-8">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 p-[1px] shadow-lg shadow-amber-500/20">
+                  <div className="w-full h-full bg-slate-950/80 backdrop-blur-md rounded-[15px] flex items-center justify-center text-amber-500">
+                    {editingId ? <PencilSimple size={22} weight="bold" /> : <Plus size={22} weight="bold" />}
+                  </div>
+                </div>
+                <div>
+                  <h2 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400">
+                    {editingId ? 'แก้ไขข้อมูลกลุ่ม' : 'เพิ่มข้อมูลกลุ่มใหม่'}
+                  </h2>
+                  <p className="text-xs font-medium text-slate-500 mt-0.5">กรอกข้อมูลรายละเอียดองค์กรให้ครบถ้วน</p>
                 </div>
               </div>
-            </div>
-
-            {/* Actions */}
-            <div className="grid grid-cols-3 gap-3 mt-8">
-              <Button type="button" variant="ghost" className="col-span-1 py-3.5 border border-slate-700 text-slate-300 hover:text-white rounded-xl font-bold" onClick={() => setIsModalOpen(false)}>
-                ยกเลิก
-              </Button>
-              <Button type="submit" className="col-span-2 py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-900 rounded-xl font-black shadow-lg">
-                บันทึกข้อมูลเข้าสู่ระบบ
-              </Button>
+              <button 
+                onClick={() => setIsModalOpen(false)}
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-800/50 text-slate-400 hover:text-white hover:bg-slate-700 transition-all"
+              >
+                <X size={14} weight="bold" />
+              </button>
             </div>
             
-            {editingId && (
-              <div className="mt-6 flex justify-center">
-                <button 
-                  type="button" 
-                  onClick={() => triggerDelete(editingId)}
-                  className="text-[15px] font-black text-[#E04444] border-b-2 border-[#E04444] pb-0.5 hover:text-red-400 hover:border-red-400 transition-colors tracking-wide"
-                >
-                  ลบกลุ่มนี้ออกจากระบบ
-                </button>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* 1. Category (Radio Cards) */}
+              <div className="space-y-3">
+                <label className="text-[11px] font-black text-slate-500 uppercase tracking-widest pl-1">หมวดหมู่องค์กร</label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    className={`relative overflow-hidden py-3.5 px-4 rounded-2xl font-bold flex flex-col items-start gap-1 transition-all duration-300 group ${
+                      formData.type === 'GANG' 
+                        ? 'bg-red-500/10 border-2 border-red-500/50 shadow-[0_0_20px_-5px_rgba(239,68,68,0.2)]' 
+                        : 'bg-slate-900/50 border-2 border-transparent hover:bg-slate-800'
+                    }`}
+                    onClick={() => setFormData({...formData, type: 'GANG'})}
+                  >
+                    <div className="flex items-center gap-2 w-full">
+                      <Shield size={18} weight="fill" className={formData.type === 'GANG' ? 'text-red-500' : 'text-slate-500 group-hover:text-slate-400'} />
+                      <span className={`text-sm ${formData.type === 'GANG' ? 'text-red-400' : 'text-slate-400 group-hover:text-slate-300'}`}>แก๊ง (Gang)</span>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`relative overflow-hidden py-3.5 px-4 rounded-2xl font-bold flex flex-col items-start gap-1 transition-all duration-300 group ${
+                      formData.type === 'FAMILY' 
+                        ? 'bg-blue-500/10 border-2 border-blue-500/50 shadow-[0_0_20px_-5px_rgba(59,130,246,0.2)]' 
+                        : 'bg-slate-900/50 border-2 border-transparent hover:bg-slate-800'
+                    }`}
+                    onClick={() => setFormData({...formData, type: 'FAMILY'})}
+                  >
+                    <div className="flex items-center gap-2 w-full">
+                      <House size={18} weight="fill" className={formData.type === 'FAMILY' ? 'text-blue-500' : 'text-slate-500 group-hover:text-slate-400'} />
+                      <span className={`text-sm ${formData.type === 'FAMILY' ? 'text-blue-400' : 'text-slate-400 group-hover:text-slate-300'}`}>ครอบครัว (Family)</span>
+                    </div>
+                  </button>
+                </div>
               </div>
-            )}
-          </form>
+
+              {/* 2. Name */}
+              <div className="space-y-2 relative group">
+                <label className="text-[11px] font-black text-slate-500 uppercase tracking-widest pl-1">ชื่อกลุ่ม (Name)</label>
+                <div className="relative">
+                  <input 
+                    type="text"
+                    placeholder="เช่น PEAKY BLINDERS"
+                    required 
+                    className="w-full bg-slate-900/60 border border-slate-700/50 rounded-2xl px-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500/50 focus:bg-slate-800/80 focus:shadow-[0_0_15px_-3px_rgba(245,158,11,0.15)] font-bold transition-all"
+                    value={formData.name}
+                    onChange={e => setFormData({...formData, name: e.target.value})}
+                  />
+                </div>
+              </div>
+
+              {/* 3. Logo */}
+              <div className="space-y-2 relative group">
+                <div className="flex justify-between items-center pl-1 pr-2">
+                  <label className="text-[11px] font-black text-slate-500 uppercase tracking-widest">ลิงก์รูปภาพโลโก้</label>
+                  <span className="text-[10px] font-medium text-slate-600 bg-slate-800/50 px-2 py-0.5 rounded-md">ตัวเลือกเสริม</span>
+                </div>
+                <div className="relative">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 rounded-md bg-slate-800 flex items-center justify-center">
+                    <Link size={14} weight="bold" className="text-slate-400" />
+                  </div>
+                  <input 
+                    type="text"
+                    placeholder="https://example.com/logo.png"
+                    className="w-full bg-slate-900/60 border border-slate-700/50 rounded-2xl pl-12 pr-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500/50 focus:bg-slate-800/80 focus:shadow-[0_0_15px_-3px_rgba(245,158,11,0.15)] font-medium text-sm transition-all"
+                    value={formData.logo}
+                    onChange={e => setFormData({...formData, logo: e.target.value})}
+                  />
+                </div>
+              </div>
+              
+              {/* 4. Suit Color */}
+              <div className="space-y-2 relative group">
+                <label className="text-[11px] font-black text-slate-500 uppercase tracking-widest pl-1">สีสูทประจำกลุ่ม</label>
+                <div className="relative">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 rounded-md bg-slate-800 flex items-center justify-center pointer-events-none">
+                    <Palette size={14} weight="bold" className="text-slate-400" />
+                  </div>
+                  <select 
+                    className="w-full bg-slate-900/60 border border-slate-700/50 rounded-2xl pl-12 pr-4 py-3.5 text-white focus:outline-none focus:border-amber-500/50 focus:bg-slate-800/80 focus:shadow-[0_0_15px_-3px_rgba(245,158,11,0.15)] font-bold text-sm appearance-none cursor-pointer transition-all"
+                    value={formData.suitColor}
+                    onChange={e => setFormData({...formData, suitColor: e.target.value})}
+                  >
+                    {SUIT_COLORS.map(color => (
+                      <option key={color} value={color} className="bg-slate-900 text-white font-bold">{color}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Recorder Info */}
+              <div className="mt-4 flex items-center justify-between bg-slate-900/40 border border-slate-800/60 rounded-2xl p-3 px-4">
+                <div className="flex items-center gap-3">
+                  <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-500/10">
+                    <CheckCircle size={18} weight="fill" className="text-emerald-500" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase">บันทึกข้อมูลโดย</span>
+                    <span className="text-sm font-bold text-slate-200">
+                      {user?.displayName || 'Admin'}
+                    </span>
+                  </div>
+                </div>
+                <div className="text-[10px] font-bold px-2 py-1 bg-amber-500/10 text-amber-500 rounded-lg">
+                  Council Member
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="pt-2">
+                <div className="flex gap-3">
+                  <Button type="button" variant="ghost" className="w-1/3 py-4 bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 text-slate-300 hover:text-white rounded-2xl font-bold transition-all" onClick={() => setIsModalOpen(false)}>
+                    ยกเลิก
+                  </Button>
+                  <button type="submit" className="w-2/3 py-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 rounded-2xl font-black shadow-[0_0_20px_-5px_rgba(245,158,11,0.4)] hover:shadow-[0_0_25px_-5px_rgba(245,158,11,0.6)] hover:scale-[1.02] active:scale-[0.98] transition-all">
+                    บันทึกข้อมูลเข้าสู่ระบบ
+                  </button>
+                </div>
+              </div>
+              
+              {editingId && (
+                <div className="mt-4 flex justify-center pb-2">
+                  <button 
+                    type="button" 
+                    onClick={() => triggerDelete(editingId)}
+                    className="group flex items-center gap-2 text-[13px] font-bold text-slate-500 hover:text-red-400 transition-colors"
+                  >
+                    <Trash size={16} weight="duotone" className="group-hover:animate-bounce" />
+                    <span className="border-b border-transparent group-hover:border-red-400/50">ลบกลุ่มนี้ออกจากระบบ</span>
+                  </button>
+                </div>
+              )}
+            </form>
+          </div>
         </div>
       </Modal>
 
