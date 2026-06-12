@@ -261,11 +261,11 @@ export default function CouncilLoanHub() {
               <table className="w-full text-left border-collapse whitespace-nowrap">
                 <thead>
                   <tr>
-                    <th className="pb-4 pt-2 pr-4 text-xs font-bold text-slate-400 tracking-wider uppercase">เลขที่สัญญา</th>
-                    <th className="pb-4 pt-2 px-4 text-xs font-bold text-slate-400 tracking-wider uppercase w-full">ผู้กู้ยืม</th>
-                    <th className="pb-4 pt-2 px-4 text-xs font-bold text-slate-400 tracking-wider uppercase">ยอดคงค้าง</th>
-                    <th className="pb-4 pt-2 px-4 text-xs font-bold text-slate-400 tracking-wider uppercase text-center">สถานะ</th>
-                    <th className="pb-4 pt-2 pl-4 text-xs font-bold text-slate-400 tracking-wider uppercase text-right min-w-[220px]">จัดการ</th>
+                    <th className="pb-4 pt-2 pr-3 text-xs font-bold text-slate-400 tracking-wider uppercase">เลขที่สัญญา</th>
+                    <th className="pb-4 pt-2 px-3 text-xs font-bold text-slate-400 tracking-wider uppercase w-full">ผู้กู้ยืม</th>
+                    <th className="pb-4 pt-2 px-3 text-xs font-bold text-slate-400 tracking-wider uppercase">ยอดคงค้าง</th>
+                    <th className="pb-4 pt-2 px-3 text-xs font-bold text-slate-400 tracking-wider uppercase text-center">สถานะ</th>
+                    <th className="pb-4 pt-2 pl-3 text-xs font-bold text-slate-400 tracking-wider uppercase text-right min-w-[220px]">จัดการ</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -288,24 +288,24 @@ export default function CouncilLoanHub() {
                   ) : (
                     contracts.map((contract) => (
                       <tr key={contract.id} className="border-t border-slate-800 hover:bg-slate-800/30 transition-all group">
-                        <td className="py-4 pr-4">
+                        <td className="py-4 pr-3">
                           <div className="flex items-center gap-2 whitespace-nowrap">
                             <span className="w-2 h-2 rounded-full bg-amber-500/50 group-hover:bg-amber-400 transition-colors shrink-0"></span>
                             <span className="font-black text-amber-500/90 group-hover:text-amber-400 transition-colors tracking-wide">{contract.contractId}</span>
                           </div>
                         </td>
-                        <td className="py-4 px-4 font-bold text-white">
+                        <td className="py-4 px-3 font-bold text-white">
                           <div className="flex items-center gap-3 whitespace-nowrap">
                             <span className="text-[15px]">{contract.borrowerName}</span>
                           </div>
                         </td>
-                        <td className="py-4 px-4">
+                        <td className="py-4 px-3">
                           <div className="flex items-center gap-1.5 whitespace-nowrap">
                             <span className="font-black text-emerald-400 text-[15px]">{(contract.remainingAmount || 0).toLocaleString()}</span>
                             <span className="font-black text-emerald-500/50 text-[15px]">฿</span>
                           </div>
                         </td>
-                        <td className="py-4 px-4 text-center">
+                        <td className="py-4 px-3 text-center">
                           <div className="flex justify-center whitespace-nowrap">
                             {contract.status === 'pending_signature' && (
                               <span className="inline-flex items-center justify-center bg-blue-500/10 text-blue-400 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider border border-blue-500/20 w-32">
@@ -334,7 +334,7 @@ export default function CouncilLoanHub() {
                             )}
                           </div>
                         </td>
-                        <td className="py-4 pl-4">
+                        <td className="py-4 pl-3">
                           <div className="flex items-center justify-end gap-2 whitespace-nowrap">
                             {contract.status === 'active' && (
                               <button 
@@ -413,22 +413,22 @@ export default function CouncilLoanHub() {
                     
                     return (
                       <div key={alert.id} className="bg-slate-800/50 border border-slate-700 rounded-xl p-5 hover:border-red-500/50 hover:shadow-md hover:shadow-red-500/5 transition-all cursor-pointer">
-                        <div className="flex justify-between items-start mb-2">
-                          <span className="font-black text-white">{alert.contractId}</span>
+                        <div className="flex justify-between items-start gap-2 mb-2">
+                          <span className="font-black text-white truncate">{alert.contractId}</span>
                           {isOverdue ? (
-                            <span className="bg-red-500/10 border border-red-500/20 text-red-400 text-xs px-2.5 py-1 rounded-md font-bold">
+                            <span className="bg-red-500/10 border border-red-500/20 text-red-400 text-xs px-2 py-1 rounded-md font-bold whitespace-nowrap shrink-0">
                               เลยกำหนดชำระ
                             </span>
                           ) : (
-                            <span className="bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs px-2.5 py-1 rounded-md font-bold">
+                            <span className="bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs px-2 py-1 rounded-md font-bold whitespace-nowrap shrink-0">
                               ใกล้ถึงกำหนด
                             </span>
                           )}
                         </div>
-                        <p className="text-slate-400 font-medium text-sm mb-5">
+                        <p className="text-slate-400 font-medium text-sm mb-5 truncate">
                           {alert.borrowerName}
                         </p>
-                        <div className="flex justify-between items-center text-sm border-t border-slate-700/50 pt-3 mt-2">
+                        <div className="flex flex-wrap justify-between items-center gap-2 text-sm border-t border-slate-700/50 pt-3 mt-2">
                           <span className="text-red-400 font-black">ค้างชำระ: {(alert.remainingAmount || 0).toLocaleString()} ฿</span>
                           <span className="text-slate-500 font-medium text-xs">
                             ดิว: {due.toLocaleDateString('th-TH', { day: 'numeric', month: 'numeric', year: 'numeric' })}
