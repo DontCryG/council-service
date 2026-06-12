@@ -262,10 +262,10 @@ export default function CouncilLoanHub() {
                 <thead>
                   <tr>
                     <th className="pb-4 pt-2 pr-4 text-xs font-bold text-slate-400 tracking-wider uppercase">เลขที่สัญญา</th>
-                    <th className="pb-4 pt-2 px-4 text-xs font-bold text-slate-400 tracking-wider uppercase">ผู้กู้ยืม</th>
+                    <th className="pb-4 pt-2 px-4 text-xs font-bold text-slate-400 tracking-wider uppercase w-full">ผู้กู้ยืม</th>
                     <th className="pb-4 pt-2 px-4 text-xs font-bold text-slate-400 tracking-wider uppercase">ยอดคงค้าง</th>
                     <th className="pb-4 pt-2 px-4 text-xs font-bold text-slate-400 tracking-wider uppercase text-center">สถานะ</th>
-                    <th className="pb-4 pt-2 pl-4 text-xs font-bold text-slate-400 tracking-wider uppercase text-right">จัดการ</th>
+                    <th className="pb-4 pt-2 pl-4 text-xs font-bold text-slate-400 tracking-wider uppercase text-right min-w-[220px]">จัดการ</th>
                   </tr>
                 </thead>
                 <tbody>
