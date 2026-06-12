@@ -145,6 +145,25 @@ export default function DutySystem() {
         newSessions.unshift(newSession);
         delete newActive[memberId];
         hasChanges = true;
+
+        try {
+          sendWebhook('duty_in', {
+            embeds: [{
+              title: "🔴 ออกจากหน้าที่ (Auto Clock Out)",
+              color: 0xef4444,
+              fields: [
+                { name: "👤 สมาชิก", value: member?.name || 'Unknown', inline: true },
+                { name: "⏰ เวลาเข้า", value: formatTime(session.checkIn) + ' น.', inline: true },
+                { name: "⏰ เวลาออก", value: formatTime(checkOut) + ' น.', inline: true },
+                { name: "⏳ เวลาสุทธิ", value: formatDuration(netMinutes), inline: true },
+                { name: "☕ เวลาพักรวม", value: formatDuration(Math.round(totalBreak)), inline: true },
+                { name: "ℹ️ หมายเหตุ", value: "ระบบเช็คเอาท์อัตโนมัติเมื่อหมดกะ", inline: false }
+              ],
+              footer: { text: "Council Duty System" },
+              timestamp: new Date(checkOut).toISOString()
+            }]
+          }).catch(console.error);
+        } catch(e) { console.error("Webhook error:", e); }
       }
     }
 
