@@ -266,54 +266,49 @@ export default function GroupManager() {
         title={null}
         hideCloseButton={true}
       >
-        <div className="flex flex-col md:flex-row w-full bg-[#0a0d14] rounded-[32px] overflow-hidden border border-slate-800/60 shadow-2xl h-full max-h-[90vh]">
+        <div className="flex flex-col md:flex-row w-full bg-[#0B0E14] rounded-[24px] overflow-hidden border border-[#1E293B] shadow-2xl h-full max-h-[90vh]">
           
           {/* Left Panel - Live Preview */}
-          <div className="w-full md:w-5/12 relative p-8 flex flex-col items-center justify-center min-h-[300px] border-b md:border-b-0 md:border-r border-slate-800/60 overflow-hidden">
-            {/* Dynamic Background */}
-            <div className={`absolute inset-0 opacity-20 transition-colors duration-700 ${
-              formData.type === 'GANG' ? 'bg-gradient-to-br from-red-600 to-transparent' : 'bg-gradient-to-br from-blue-600 to-transparent'
-            }`} />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-900/0 via-[#0a0d14]/80 to-[#0a0d14]" />
+          <div className="w-full md:w-5/12 relative p-8 flex flex-col items-center justify-center min-h-[300px] border-b md:border-b-0 md:border-r border-[#1E293B] overflow-hidden bg-[#0B0E14]">
             
-            <div className="relative z-10 w-full max-w-[260px] flex flex-col items-center">
-              <div className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-6">
+            <div className="relative z-10 w-full max-w-[240px] flex flex-col items-center">
+              <div className="text-[10px] font-black text-slate-500 uppercase tracking-[0.15em] mb-6">
                 Live Preview
               </div>
 
               {/* ID Card Preview */}
-              <div className="w-full aspect-[3/4] rounded-3xl bg-slate-900/50 backdrop-blur-md border border-slate-700/50 flex flex-col items-center p-6 shadow-2xl relative overflow-hidden group">
+              <div className="w-full rounded-3xl bg-[#121826] border border-[#1E293B]/50 flex flex-col items-center p-6 shadow-xl relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-1.5 transition-colors duration-500"
                   style={{ backgroundColor: getColorCode(formData.suitColor === 'อื่นๆ (ระบุเอง)' ? customSuitColor : formData.suitColor) || (formData.type === 'GANG' ? '#ef4444' : '#3b82f6') }}
                 />
 
-                <div className="mt-4 mb-6 w-24 h-24 rounded-2xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center p-2 shadow-inner">
+                <div className="mt-4 mb-6 w-24 h-24 rounded-2xl bg-[#1A2234] border border-[#1E293B] flex items-center justify-center p-3 shadow-inner">
                   {formData.logo ? (
                     <img src={formData.logo} alt="Logo" className="w-full h-full object-contain drop-shadow-md" onError={(e) => { e.target.style.display='none' }} />
                   ) : (
                     formData.type === 'FAMILY' 
-                      ? <House size={48} weight="duotone" className="text-blue-400 opacity-50" /> 
-                      : <Shield size={48} weight="duotone" className="text-red-400 opacity-50" />
+                      ? <House size={42} weight="fill" className="text-[#3b82f6]/40" /> 
+                      : <Shield size={42} weight="fill" className="text-[#ef4444]/40" />
                   )}
                 </div>
 
-                <h3 className="text-xl font-black text-white text-center break-words w-full leading-tight mb-2">
+                <h3 className="text-2xl font-black text-white text-center break-words w-full leading-tight mb-3">
                   {formData.name || 'Organization Name'}
                 </h3>
 
-                <div className={`px-3 py-1 rounded-md text-xs font-black tracking-wider uppercase mb-auto ${
-                  formData.type === 'FAMILY' ? 'bg-blue-500/20 text-blue-400' : 'bg-red-500/20 text-red-400'
+                <div className={`px-4 py-1.5 rounded-md text-[10px] font-black tracking-widest uppercase mb-12 ${
+                  formData.type === 'FAMILY' ? 'bg-[#3b82f6]/20 text-[#3b82f6]' : 'bg-[#ef4444]/20 text-[#ef4444]'
                 }`}>
                   {formData.type}
                 </div>
 
-                <div className="w-full pt-4 mt-4 border-t border-slate-700/50 flex items-center justify-between">
-                  <span className="text-[10px] font-bold text-slate-500 uppercase">Suit Color</span>
-                  <div className="flex items-center gap-1.5">
+                <div className="w-full pt-4 border-t border-[#1E293B] flex items-center justify-between">
+                  <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Suit Color</span>
+                  <div className="flex items-center gap-2">
                     {getColorCode(formData.suitColor === 'อื่นๆ (ระบุเอง)' ? customSuitColor : formData.suitColor) && (
-                      <div className="w-3 h-3 rounded-full border border-slate-600" style={{ backgroundColor: getColorCode(formData.suitColor === 'อื่นๆ (ระบุเอง)' ? customSuitColor : formData.suitColor) }}></div>
+                      <div className="w-2.5 h-2.5 rounded-full border border-slate-600/50" style={{ backgroundColor: getColorCode(formData.suitColor === 'อื่นๆ (ระบุเอง)' ? customSuitColor : formData.suitColor) }}></div>
                     )}
-                    <span className="text-xs font-bold text-slate-300">
+                    <span className="text-[11px] font-bold text-slate-300">
                       {formData.suitColor === 'อื่นๆ (ระบุเอง)' ? (customSuitColor || 'ระบุสี...') : (formData.suitColor || '-')}
                     </span>
                   </div>
@@ -322,16 +317,16 @@ export default function GroupManager() {
             </div>
             
             {/* Watermark */}
-            <div className="absolute bottom-4 text-[10px] font-bold text-slate-700/50 tracking-[0.3em] uppercase pointer-events-none">
+            <div className="absolute bottom-6 text-[9px] font-black text-slate-700/40 tracking-[0.25em] uppercase pointer-events-none">
               Council Database
             </div>
           </div>
 
           {/* Right Panel - Form */}
-          <div className="w-full md:w-7/12 p-8 md:p-10 flex flex-col relative overflow-y-auto">
+          <div className="w-full md:w-7/12 p-8 md:p-10 flex flex-col relative overflow-y-auto bg-[#0B0E14]">
             <button 
               onClick={() => setIsModalOpen(false)}
-              className="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-slate-800/50 text-slate-400 hover:text-white hover:bg-slate-700 transition-all z-10"
+              className="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-[#1A2234] text-slate-400 hover:text-white transition-all z-10"
             >
               <X size={14} weight="bold" />
             </button>
@@ -348,52 +343,52 @@ export default function GroupManager() {
                 
                 {/* 1. Category Selection - Modern Cards */}
                 <div className="space-y-3">
-                  <label className="text-[11px] font-black text-slate-500 uppercase tracking-wider">Classification</label>
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Classification</label>
                   <div className="grid grid-cols-2 gap-4">
                     <button
                       type="button"
-                      className={`relative p-4 rounded-2xl flex flex-col items-center gap-3 transition-all duration-300 border-2 ${
+                      className={`relative py-5 px-4 rounded-2xl flex flex-col items-center gap-3 transition-all duration-200 border ${
                         formData.type === 'GANG' 
-                          ? 'bg-red-500/5 border-red-500/50 shadow-[0_4px_20px_-5px_rgba(239,68,68,0.15)]' 
-                          : 'bg-slate-900/50 border-slate-800/50 hover:bg-slate-800/50 hover:border-slate-700'
+                          ? 'bg-[#ef4444]/5 border-[#ef4444]/60' 
+                          : 'bg-[#0B0E14] border-[#1E293B] hover:bg-[#121826]'
                       }`}
                       onClick={() => setFormData({...formData, type: 'GANG'})}
                     >
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${
-                        formData.type === 'GANG' ? 'bg-red-500/20 text-red-500' : 'bg-slate-800 text-slate-500'
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                        formData.type === 'GANG' ? 'bg-[#ef4444]/20 text-[#ef4444]' : 'bg-[#1A2234] text-slate-500'
                       }`}>
-                        <Shield size={24} weight="fill" />
+                        <Shield size={20} weight="fill" />
                       </div>
-                      <span className={`text-sm font-bold ${formData.type === 'GANG' ? 'text-white' : 'text-slate-400'}`}>GANG</span>
+                      <span className={`text-[11px] font-black tracking-widest ${formData.type === 'GANG' ? 'text-white' : 'text-slate-400'}`}>GANG</span>
                     </button>
 
                     <button
                       type="button"
-                      className={`relative p-4 rounded-2xl flex flex-col items-center gap-3 transition-all duration-300 border-2 ${
+                      className={`relative py-5 px-4 rounded-2xl flex flex-col items-center gap-3 transition-all duration-200 border ${
                         formData.type === 'FAMILY' 
-                          ? 'bg-blue-500/5 border-blue-500/50 shadow-[0_4px_20px_-5px_rgba(59,130,246,0.15)]' 
-                          : 'bg-slate-900/50 border-slate-800/50 hover:bg-slate-800/50 hover:border-slate-700'
+                          ? 'bg-[#3b82f6]/5 border-[#3b82f6]/60' 
+                          : 'bg-[#0B0E14] border-[#1E293B] hover:bg-[#121826]'
                       }`}
                       onClick={() => setFormData({...formData, type: 'FAMILY'})}
                     >
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${
-                        formData.type === 'FAMILY' ? 'bg-blue-500/20 text-blue-500' : 'bg-slate-800 text-slate-500'
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                        formData.type === 'FAMILY' ? 'bg-[#3b82f6]/20 text-[#3b82f6]' : 'bg-[#1A2234] text-slate-500'
                       }`}>
-                        <House size={24} weight="fill" />
+                        <House size={20} weight="fill" />
                       </div>
-                      <span className={`text-sm font-bold ${formData.type === 'FAMILY' ? 'text-white' : 'text-slate-400'}`}>FAMILY</span>
+                      <span className={`text-[11px] font-black tracking-widest ${formData.type === 'FAMILY' ? 'text-white' : 'text-slate-400'}`}>FAMILY</span>
                     </button>
                   </div>
                 </div>
 
                 {/* 2. Group Name */}
                 <div className="space-y-2">
-                  <label className="text-[11px] font-black text-slate-500 uppercase tracking-wider">Display Name</label>
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Display Name</label>
                   <input 
                     type="text"
                     placeholder="Enter organization name"
                     required 
-                    className="w-full bg-slate-900/50 border border-slate-700/50 rounded-xl px-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-white/20 focus:bg-slate-800/50 font-medium transition-all"
+                    className="w-full bg-[#0F141E] border border-[#1E293B] rounded-xl px-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-slate-500 font-medium text-sm transition-all"
                     value={formData.name}
                     onChange={e => setFormData({...formData, name: e.target.value})}
                   />
@@ -402,15 +397,15 @@ export default function GroupManager() {
                 {/* 3. Logo URL */}
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <label className="text-[11px] font-black text-slate-500 uppercase tracking-wider">Brand Logo URL</label>
-                    <span className="text-[10px] font-bold text-slate-600">OPTIONAL</span>
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Brand Logo URL</label>
+                    <span className="text-[9px] font-black text-slate-600 uppercase tracking-wider">OPTIONAL</span>
                   </div>
                   <div className="relative">
-                    <Link size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
+                    <Link size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600" />
                     <input 
                       type="text"
                       placeholder="https://.../logo.png"
-                      className="w-full bg-slate-900/50 border border-slate-700/50 rounded-xl pl-11 pr-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-white/20 focus:bg-slate-800/50 font-medium text-sm transition-all"
+                      className="w-full bg-[#0F141E] border border-[#1E293B] rounded-xl pl-11 pr-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-slate-500 font-medium text-sm transition-all"
                       value={formData.logo}
                       onChange={e => setFormData({...formData, logo: e.target.value})}
                     />
@@ -419,11 +414,11 @@ export default function GroupManager() {
 
                 {/* 4. Suit Color */}
                 <div className="space-y-2">
-                  <label className="text-[11px] font-black text-slate-500 uppercase tracking-wider">Official Suit Color</label>
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Official Suit Color</label>
                   <div className="relative">
-                    <Palette size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" />
+                    <Palette size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none" />
                     <select 
-                      className={`w-full bg-slate-900/50 border ${formData.suitColor === 'อื่นๆ (ระบุเอง)' ? 'border-amber-500/50 shadow-[0_0_15px_-3px_rgba(245,158,11,0.15)]' : 'border-slate-700/50'} rounded-xl pl-11 pr-4 py-3.5 text-white focus:outline-none focus:border-white/20 focus:bg-slate-800/50 font-medium text-sm appearance-none cursor-pointer transition-all`}
+                      className={`w-full bg-[#0F141E] border ${formData.suitColor === 'อื่นๆ (ระบุเอง)' ? 'border-amber-500/50' : 'border-[#1E293B]'} rounded-xl pl-11 pr-4 py-3.5 text-white focus:outline-none focus:border-slate-500 font-medium text-sm appearance-none cursor-pointer transition-all`}
                       value={formData.suitColor}
                       onChange={e => {
                         setFormData({...formData, suitColor: e.target.value});
@@ -431,7 +426,7 @@ export default function GroupManager() {
                       }}
                     >
                       {SUIT_COLORS.map(color => (
-                        <option key={color} value={color} className="bg-slate-900 text-white font-medium">{color}</option>
+                        <option key={color} value={color} className="bg-[#0B0E14] text-white font-medium">{color}</option>
                       ))}
                     </select>
                   </div>
@@ -441,7 +436,7 @@ export default function GroupManager() {
                         type="text"
                         placeholder="โปรดระบุชื่อสีที่ต้องการ..."
                         required 
-                        className="w-full bg-slate-900/30 border border-amber-500/30 rounded-xl px-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500/50 focus:bg-slate-800/50 font-medium text-sm transition-all"
+                        className="w-full bg-[#0F141E] border border-amber-500/50 rounded-xl px-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 font-medium text-sm transition-all"
                         value={customSuitColor}
                         onChange={e => setCustomSuitColor(e.target.value)}
                       />
@@ -452,33 +447,34 @@ export default function GroupManager() {
               </div>
 
               {/* Footer Actions */}
-              <div className="mt-10 pt-6 border-t border-slate-800/60 flex flex-col gap-4">
-                <div className="flex items-center justify-between w-full">
-                  
-                  {editingId ? (
-                    <button 
-                      type="button" 
-                      onClick={() => triggerDelete(editingId)}
-                      className="flex items-center gap-2 text-sm font-bold text-red-500/80 hover:text-red-400 bg-red-500/10 hover:bg-red-500/20 px-4 py-3 rounded-xl transition-all"
-                    >
-                      <Trash size={18} />
-                      <span className="hidden sm:inline">Delete Org</span>
-                    </button>
-                  ) : (
-                    <div className="flex items-center gap-2 text-slate-500 text-xs font-bold">
-                      <CheckCircle size={16} className="text-emerald-500" />
-                      <span>{user?.displayName || 'Admin'}</span>
+              <div className="mt-10 pt-6 border-t border-[#1E293B] flex items-center justify-between">
+                
+                {editingId ? (
+                  <button 
+                    type="button" 
+                    onClick={() => triggerDelete(editingId)}
+                    className="flex items-center gap-3 bg-[#2A1115] hover:bg-[#3d181e] text-[#ef4444] px-4 py-2.5 rounded-xl transition-all border border-[#451a1a]"
+                  >
+                    <Trash size={20} weight="fill" />
+                    <div className="flex flex-col text-left leading-tight">
+                      <span className="text-[11px] font-black">Delete</span>
+                      <span className="text-[11px] font-black">Org</span>
                     </div>
-                  )}
-
-                  <div className="flex gap-3 ml-auto">
-                    <Button type="button" variant="ghost" className="px-6 py-3.5 bg-slate-800/40 hover:bg-slate-800 border-none text-slate-300 hover:text-white rounded-xl font-bold transition-all" onClick={() => setIsModalOpen(false)}>
-                      Cancel
-                    </Button>
-                    <button type="submit" className="px-8 py-3.5 bg-white hover:bg-slate-200 text-slate-950 rounded-xl font-black transition-all shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)]">
-                      {editingId ? 'Save Changes' : 'Register Org'}
-                    </button>
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-2 text-slate-500 text-[11px] font-bold">
+                    <CheckCircle size={14} className="text-emerald-500" />
+                    <span>{user?.displayName || 'Admin'}</span>
                   </div>
+                )}
+
+                <div className="flex gap-3 ml-auto">
+                  <Button type="button" variant="ghost" className="px-6 py-3.5 bg-[#1A2234] hover:bg-[#232d45] border-none text-white rounded-xl font-bold transition-all" onClick={() => setIsModalOpen(false)}>
+                    Cancel
+                  </Button>
+                  <button type="submit" className="px-8 py-3.5 bg-white hover:bg-slate-200 text-black rounded-xl font-black transition-all shadow-[0_0_20px_-5px_rgba(255,255,255,0.4)]">
+                    {editingId ? 'Save Changes' : 'Register Org'}
+                  </button>
                 </div>
               </div>
             </form>
