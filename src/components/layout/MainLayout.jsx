@@ -1,30 +1,14 @@
-import { Outlet, useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { cn } from '../../utils/cn';
 import Sidebar from './Sidebar';
 import Header from './Header';
-import LoadingScreen from '../ui/LoadingScreen';
 
 export default function MainLayout() {
   const { user, sidebarOpen, toggleSidebar } = useAppStore();
-  const location = useLocation();
-  const [isTransitioning, setIsTransitioning] = useState(false);
-
-  useEffect(() => {
-    // Show loadscreen on every route change
-    setIsTransitioning(true);
-    const timer = setTimeout(() => {
-      setIsTransitioning(false);
-    }, 500); // 500ms delay for a premium transition feel
-    return () => clearTimeout(timer);
-  }, [location.pathname]);
 
   return (
     <div className="min-h-screen flex bg-slate-950 text-slate-100 overflow-hidden">
-      {/* Route Transition Loadscreen */}
-      {isTransitioning && <LoadingScreen message="กำลังโหลดข้อมูล..." />}
-
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div 
