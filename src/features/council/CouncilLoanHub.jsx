@@ -166,7 +166,7 @@ export default function CouncilLoanHub() {
     .slice(0, 5);
 
   return (
-    <div className="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="max-w-[96%] 2xl:max-w-[1600px] mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
       <button 
         onClick={() => navigate('/home')}
         className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-6 ml-2"
@@ -248,9 +248,9 @@ export default function CouncilLoanHub() {
         </div>
 
         {/* Bottom Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 items-start">
           {/* Latest Contracts Table */}
-          <div className="bg-slate-900/50 rounded-2xl shadow-inner border border-slate-700/50 lg:col-span-2 overflow-hidden flex flex-col">
+          <div className="bg-slate-900/50 rounded-2xl shadow-inner border border-slate-700/50 xl:col-span-3 overflow-hidden flex flex-col">
             <div className="p-6 border-b border-slate-700/50">
               <h2 className="flex items-center gap-2 text-amber-500 font-bold text-lg">
                 <FileText size={24} weight="duotone" />
@@ -258,14 +258,14 @@ export default function CouncilLoanHub() {
               </h2>
             </div>
             <div className="p-6 overflow-x-auto">
-              <table className="w-full text-left border-collapse whitespace-nowrap table-fixed min-w-[700px]">
+              <table className="w-full text-left border-collapse whitespace-nowrap">
                 <thead>
                   <tr>
-                    <th className="w-[18%] pb-4 pt-2 pr-2 text-xs font-bold text-slate-400 tracking-wider uppercase">เลขที่สัญญา</th>
-                    <th className="w-[28%] pb-4 pt-2 px-2 text-xs font-bold text-slate-400 tracking-wider uppercase">ผู้กู้ยืม</th>
-                    <th className="w-[18%] pb-4 pt-2 px-2 text-xs font-bold text-slate-400 tracking-wider uppercase">ยอดคงค้าง</th>
-                    <th className="w-[14%] pb-4 pt-2 px-2 text-xs font-bold text-slate-400 tracking-wider uppercase text-center">สถานะ</th>
-                    <th className="w-[22%] pb-4 pt-2 pl-2 text-xs font-bold text-slate-400 tracking-wider uppercase text-right">จัดการ</th>
+                    <th className="pb-4 pt-2 pr-4 text-xs font-bold text-slate-400 tracking-wider uppercase">เลขที่สัญญา</th>
+                    <th className="pb-4 pt-2 px-4 text-xs font-bold text-slate-400 tracking-wider uppercase">ผู้กู้ยืม</th>
+                    <th className="pb-4 pt-2 px-4 text-xs font-bold text-slate-400 tracking-wider uppercase">ยอดคงค้าง</th>
+                    <th className="pb-4 pt-2 px-4 text-xs font-bold text-slate-400 tracking-wider uppercase text-center">สถานะ</th>
+                    <th className="pb-4 pt-2 pl-4 text-xs font-bold text-slate-400 tracking-wider uppercase text-right">จัดการ</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -288,74 +288,71 @@ export default function CouncilLoanHub() {
                   ) : (
                     contracts.map((contract) => (
                       <tr key={contract.id} className="border-t border-slate-800 hover:bg-slate-800/30 transition-all group">
-                        <td className="py-4 pr-2 overflow-hidden">
-                          <div className="flex items-center gap-2 whitespace-nowrap truncate">
-                            <span className="w-1.5 h-1.5 rounded-full bg-amber-500/50 group-hover:bg-amber-400 transition-colors shrink-0"></span>
-                            <span className="font-black text-amber-500/90 group-hover:text-amber-400 transition-colors tracking-wide truncate">{contract.contractId}</span>
+                        <td className="py-4 pr-4">
+                          <div className="flex items-center gap-2 whitespace-nowrap">
+                            <span className="w-2 h-2 rounded-full bg-amber-500/50 group-hover:bg-amber-400 transition-colors shrink-0"></span>
+                            <span className="font-black text-amber-500/90 group-hover:text-amber-400 transition-colors tracking-wide">{contract.contractId}</span>
                           </div>
                         </td>
-                        <td className="py-4 px-2 font-bold text-white overflow-hidden">
-                          <div className="flex items-center gap-2.5 whitespace-nowrap min-w-0">
-                            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 border border-slate-600 flex items-center justify-center text-[10px] text-slate-300 shrink-0">
-                              {contract.borrowerName?.charAt(0) || '?'}
-                            </div>
-                            <span className="truncate text-sm">{contract.borrowerName}</span>
+                        <td className="py-4 px-4 font-bold text-white">
+                          <div className="flex items-center gap-3 whitespace-nowrap">
+                            <span className="text-[15px]">{contract.borrowerName}</span>
                           </div>
                         </td>
-                        <td className="py-4 px-2 overflow-hidden">
-                          <div className="flex items-center gap-1 whitespace-nowrap truncate">
-                            <span className="font-black text-emerald-400 text-sm">{(contract.remainingAmount || 0).toLocaleString()}</span>
-                            <span className="font-black text-emerald-500/50 text-xs">฿</span>
+                        <td className="py-4 px-4">
+                          <div className="flex items-center gap-1.5 whitespace-nowrap">
+                            <span className="font-black text-emerald-400 text-[15px]">{(contract.remainingAmount || 0).toLocaleString()}</span>
+                            <span className="font-black text-emerald-500/50 text-[15px]">฿</span>
                           </div>
                         </td>
-                        <td className="py-4 px-2 text-center overflow-hidden">
+                        <td className="py-4 px-4 text-center">
                           <div className="flex justify-center whitespace-nowrap">
                             {contract.status === 'pending_signature' && (
-                              <span className="inline-flex items-center justify-center bg-blue-500/10 text-blue-400 px-2 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider border border-blue-500/20 w-full max-w-[100px] truncate">
+                              <span className="inline-flex items-center justify-center bg-blue-500/10 text-blue-400 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider border border-blue-500/20 w-32">
                                 รอผู้กู้เซ็น
                               </span>
                             )}
                             {contract.status === 'pending_council_signature' && (
-                              <span className="inline-flex items-center justify-center bg-purple-500/10 text-purple-400 px-2 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider border border-purple-500/20 w-full max-w-[100px] truncate">
+                              <span className="inline-flex items-center justify-center bg-purple-500/10 text-purple-400 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider border border-purple-500/20 w-32">
                                 รอสภาเซ็น
                               </span>
                             )}
                             {contract.status === 'active' && (
-                              <span className="inline-flex items-center justify-center bg-amber-500/10 text-amber-400 px-2 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider border border-amber-500/20 w-full max-w-[100px] truncate">
+                              <span className="inline-flex items-center justify-center bg-amber-500/10 text-amber-400 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider border border-amber-500/20 w-32">
                                 กำลังผ่อนชำระ
                               </span>
                             )}
                             {contract.status === 'completed' && (
-                              <span className="inline-flex items-center justify-center bg-emerald-500/10 text-emerald-400 px-2 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider border border-emerald-500/20 w-full max-w-[100px] truncate">
+                              <span className="inline-flex items-center justify-center bg-emerald-500/10 text-emerald-400 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider border border-emerald-500/20 w-32">
                                 ชำระครบแล้ว
                               </span>
                             )}
                             {contract.status === 'defaulted' && (
-                              <span className="inline-flex items-center justify-center bg-red-500/10 text-red-400 px-2 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider border border-red-500/20 w-full max-w-[100px] truncate">
+                              <span className="inline-flex items-center justify-center bg-red-500/10 text-red-400 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider border border-red-500/20 w-32">
                                 ผิดนัดชำระ
                               </span>
                             )}
                           </div>
                         </td>
-                        <td className="py-4 pl-2 overflow-hidden">
-                          <div className="flex items-center justify-end gap-1.5 whitespace-nowrap">
+                        <td className="py-4 pl-4">
+                          <div className="flex items-center justify-end gap-2 whitespace-nowrap">
                             {contract.status === 'active' && (
                               <button 
                                 onClick={() => handleUpdateBalance(contract.id, contract.contractId, contract.remainingAmount)}
-                                className="bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-white px-2 py-1.5 rounded-lg flex items-center gap-1 text-[11px] font-bold transition-all border border-emerald-500/20 hover:border-emerald-500 shadow-sm shrink-0"
+                                className="bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-white px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-bold transition-all border border-emerald-500/20 hover:border-emerald-500 shadow-sm shrink-0"
                               >
-                                <UploadSimple size={12} weight="bold" />
+                                <UploadSimple size={14} weight="bold" />
                                 อัพเดทยอด
                               </button>
                             )}
                             
-                            <div className="flex items-center gap-0.5 bg-slate-900/80 p-0.5 rounded-xl border border-slate-700/50 shadow-inner shrink-0">
+                            <div className="flex items-center gap-1 bg-slate-900/80 p-1 rounded-xl border border-slate-700/50 shadow-inner shrink-0">
                               <button 
                                 className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-all" 
                                 title="ดูรายละเอียด"
                                 onClick={() => navigate(`/council_loan/view/${contract.id}`)}
                               >
-                                <FileText size={14} weight="fill" />
+                                <FileText size={16} weight="fill" />
                               </button>
                               <button 
                                 className="p-1.5 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-all" 
@@ -366,21 +363,21 @@ export default function CouncilLoanHub() {
                                   showAlert('success', 'คัดลอกข้อความสำหรับส่งให้ผู้กู้สำเร็จ');
                                 }}
                               >
-                                <Copy size={14} weight="fill" />
+                                <Copy size={16} weight="fill" />
                               </button>
                               <button 
                                 className="p-1.5 text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 rounded-lg transition-all" 
                                 title="แก้ไข"
                                 onClick={() => navigate(`/council_loan/edit/${contract.id}`)}
                               >
-                                <PencilSimple size={14} weight="fill" />
+                                <PencilSimple size={16} weight="fill" />
                               </button>
                               <button 
                                 className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all" 
                                 title="ลบสัญญา"
                                 onClick={() => handleDeleteContract(contract.contractId, contract.id)}
                               >
-                                <Trash size={14} weight="fill" />
+                                <Trash size={16} weight="fill" />
                               </button>
                             </div>
                           </div>
