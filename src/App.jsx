@@ -82,7 +82,14 @@ function LiveNotifications() {
       where('createdAt', '>', startTime)
     );
 
+    let isInitialLoad = true;
+
     const unsubscribe = onSnapshot(q, (snapshot) => {
+      if (isInitialLoad) {
+        isInitialLoad = false;
+        return; // Ignore existing documents on first load
+      }
+
       snapshot.docChanges().forEach((change) => {
         if (change.type === 'added') {
           const log = change.doc.data();
