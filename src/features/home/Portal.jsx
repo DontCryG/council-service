@@ -94,7 +94,7 @@ export default function Portal() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)]"></span>
                 </span>
-                LOGIN เข้าสู่ระบบสภา
+                ENTER เข้าสู่หน้าหลัก
               </Link>
             )}
           </div>
