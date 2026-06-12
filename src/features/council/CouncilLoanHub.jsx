@@ -14,7 +14,7 @@ import {
   CheckCircle,
   X
 } from '@phosphor-icons/react';
-import { collection, query, orderBy, onSnapshot, deleteDoc, doc, updateDoc, serverTimestamp, addDoc } from 'firebase/firestore';
+import { collection, query, orderBy, limit, onSnapshot, deleteDoc, doc, updateDoc, serverTimestamp, addDoc } from 'firebase/firestore';
 import { db } from '../../core/firebase';
 import { useAppStore } from '../../store';
 import ConfirmationModal from '../../components/ui/ConfirmationModal';
@@ -43,7 +43,8 @@ export default function CouncilLoanHub() {
   });
 
   useEffect(() => {
-    const q = query(collection(db, 'loan_contracts'), orderBy('createdAt', 'desc'));
+    // Limit to 50 latest contracts to improve initial load performance
+    const q = query(collection(db, 'loan_contracts'), orderBy('createdAt', 'desc'), limit(50));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setContracts(data);
