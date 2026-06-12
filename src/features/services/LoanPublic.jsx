@@ -241,7 +241,7 @@ export default function LoanPublic() {
                 
                 <div className="bg-slate-900/50 p-6 rounded-2xl border border-slate-700/50 flex flex-col justify-center">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-bold text-slate-400">ยอดเงินกู้รวม (เงินต้น)</span>
+                    <span className="text-sm font-bold text-slate-400">ยอดเงินกู้รวม (ดอกเบี้ย)</span>
                     <CurrencyDollar size={20} className="text-amber-500" weight="bold" />
                   </div>
                   <div className="text-2xl font-black text-amber-500">{(contract.totalAmount || contract.principalAmount || 0).toLocaleString()} <span className="text-lg text-amber-500/50">฿</span></div>

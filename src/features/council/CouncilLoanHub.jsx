@@ -221,7 +221,7 @@ export default function CouncilLoanHub() {
               <CurrencyDollar size={28} weight="bold" />
             </div>
             <div className="z-10">
-              <p className="text-sm font-medium text-slate-400 mb-1">ยอดเงินกู้รวม (เงินต้น)</p>
+              <p className="text-sm font-medium text-slate-400 mb-1">ยอดเงินกู้รวม (ดอกเบี้ย)</p>
               {loading ? (
                 <CircleNotch size={24} className="animate-spin text-amber-500/50" />
               ) : (
