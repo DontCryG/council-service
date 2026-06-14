@@ -69,8 +69,8 @@ export default function TransactionHistory() {
       <div className="flex items-center gap-3">
         <Database size={32} weight="duotone" className="text-blue-500" />
         <div>
-          <h1 className="text-2xl font-bold text-white">ประวัติการทำรายการ</h1>
-          <p className="text-slate-400">Transaction History Logs (Data Retention)</p>
+          <h1 className="text-2xl font-bold text-white">ระบบจัดการคำร้อง</h1>
+          <p className="text-slate-400">Request Management System</p>
         </div>
       </div>
 

@@ -9,7 +9,8 @@ import {
   Calendar,
   Ticket,
   SignIn,
-  ClockClockwise
+  ClockClockwise,
+  Database
 } from '@phosphor-icons/react';
 
 export default function Sidebar({ className }) {
@@ -31,6 +32,7 @@ export default function Sidebar({ className }) {
         { path: '/cs6', label: 'ระบบเข้าเวรสภา', icon: ClockClockwise, isPublic: false },
         { path: '/cs4', label: 'ระบบจัดการรายชื่อองค์กร', icon: UsersThree, isPublic: false },
         { path: '/cs3', label: 'จัดการทิคเก็ต', icon: Ticket, isPublic: false },
+        { path: '/transactions', label: 'ระบบจัดการคำร้อง', icon: Database, isPublic: false },
       ]
     },
     {
