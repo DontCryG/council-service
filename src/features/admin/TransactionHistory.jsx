@@ -168,10 +168,6 @@ ${detailsLines}
         { id: 'general_service', label: 'บริการทั่วไป', icon: FileText },
         { id: 'edit_org', label: 'แก้ไขข้อมูลสังกัด', icon: PencilSimple },
         { id: 'register_org', label: 'ขึ้นทะเบียนสังกัด', icon: Buildings },
-        ...(user?.role === 'admin' ? [
-          { id: 'leave', label: 'แจ้งลา', icon: CalendarBlank },
-          { id: 'resign', label: 'ลาออก', icon: WarningCircle }
-        ] : [])
       ]
     },
     {
@@ -179,7 +175,14 @@ ${detailsLines}
       items: [
         { id: 'welfare_trade', label: 'เทรดสวัสดิการ', icon: Handshake },
       ]
-    }
+    },
+    ...(user?.role === 'admin' ? [{
+      group: 'ระบบจัดการบุคลากร',
+      items: [
+        { id: 'leave', label: 'แจ้งลา', icon: CalendarBlank },
+        { id: 'resign', label: 'ลาออก', icon: WarningCircle }
+      ]
+    }] : [])
   ];
 
   const filteredLogs = logs.filter(log => {
