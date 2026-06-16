@@ -559,20 +559,22 @@ ${detailsLines}
                     </div>
 
                     {/* Card Footer */}
-                    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pt-6 border-t border-slate-800">
-                      <div className="w-full md:w-auto">
-                        <p className="text-xs font-bold text-slate-500 mb-1">สภาที่รับเรื่อง</p>
-                        <div className={`bg-slate-900 border px-4 py-2 rounded-lg text-sm flex items-center gap-2 min-w-[200px] ${isApproved ? 'border-emerald-500/50 text-emerald-400' : 'border-slate-700 text-slate-300'}`}>
-                          <UserCircle size={18} className={isApproved ? "text-emerald-500" : "text-blue-500"} />
-                          {isApproved ? (log.approvedBy?.displayName || log.approvedBy?.email || 'Approved') : (log.data.councilMemberName || log.data.councilStaffName || '-- เลือกเจ้าหน้าที่สภา --')}
+                    {log.type !== 'leave' && log.type !== 'resign' && (
+                      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pt-6 border-t border-slate-800">
+                        <div className="w-full md:w-auto">
+                          <p className="text-xs font-bold text-slate-500 mb-1">สภาที่รับเรื่อง</p>
+                          <div className={`bg-slate-900 border px-4 py-2 rounded-lg text-sm flex items-center gap-2 min-w-[200px] ${isApproved ? 'border-emerald-500/50 text-emerald-400' : 'border-slate-700 text-slate-300'}`}>
+                            <UserCircle size={18} className={isApproved ? "text-emerald-500" : "text-blue-500"} />
+                            {isApproved ? (log.approvedBy?.displayName || log.approvedBy?.email || 'Approved') : (log.data.councilMemberName || log.data.councilStaffName || '-- เลือกเจ้าหน้าที่สภา --')}
+                          </div>
+                        </div>
+                        
+                        <div className="w-full md:w-auto text-left md:text-right flex flex-col md:items-end">
+                          <p className="text-xs font-bold text-slate-500 mb-1">ยอดรวม</p>
+                          <p className="text-2xl font-black text-amber-500">{details.amount}</p>
                         </div>
                       </div>
-                      
-                      <div className="w-full md:w-auto text-left md:text-right flex flex-col md:items-end">
-                        <p className="text-xs font-bold text-slate-500 mb-1">ยอดรวม</p>
-                        <p className="text-2xl font-black text-amber-500">{details.amount}</p>
-                      </div>
-                    </div>
+                    )}
 
                     {/* Action Button */}
                     <div className="mt-6">
