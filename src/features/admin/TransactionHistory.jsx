@@ -79,7 +79,7 @@ export default function TransactionHistory() {
           const blob = await response.blob();
           
           const fd = new FormData();
-          fd.append('file', blob, 'receipt.jpg');
+          fd.append('files[0]', blob, 'receipt.jpg');
           fd.append('payload_json', JSON.stringify(logToApprove.data.webhookPayload));
           
           await sendWebhook(webhookType, fd);
