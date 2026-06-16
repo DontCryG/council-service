@@ -69,6 +69,32 @@ export default function TransactionHistory() {
     }
   };
 
+  const handleCopy = (log, details, isApproved) => {
+    const orgType = details.type === 'GANG' ? 'แก๊ง' : 'ครอบครัว';
+    const staffName = isApproved ? (log.approvedBy?.displayName || log.approvedBy?.email || 'Approved') : (log.data.councilMemberName || log.data.councilStaffName || '-- เลือกเจ้าหน้าที่สภา --');
+    
+    let detailsLines = '  - ไม่มีรายละเอียด';
+    if (details.detailsValue && details.detailsValue !== '-') {
+      detailsLines = details.detailsValue
+        .split('\\n')
+        .filter(line => line.trim() !== '')
+        .map(line => `  - ${line}`)
+        .join('\\n');
+    }
+
+    const text = `===== COUNCIL DATA =====
+สังกัด: ${details.title} (${orgType})
+ผู้ทำรายการ: ${details.requester}
+ธุรกรรม: ${details.transaction}
+รายละเอียด:
+${detailsLines}
+เจ้าหน้าที่: ${staffName}
+ยอดรวม: ${details.amount}`;
+
+    navigator.clipboard.writeText(text);
+    showAlert('success', 'คัดลอกข้อมูลเรียบร้อยแล้ว');
+  };
+
   const categories = [
     {
       group: 'ระบบจัดการคำร้อง',
@@ -296,7 +322,7 @@ export default function TransactionHistory() {
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <button onClick={() => navigator.clipboard.writeText(JSON.stringify(details))} className="p-1.5 text-slate-500 hover:text-slate-300 transition-colors" title="คัดลอกข้อมูล">
+                      <button onClick={() => handleCopy(log, details, isApproved)} className="p-1.5 text-slate-500 hover:text-slate-300 transition-colors" title="คัดลอกข้อมูล">
                         <Copy size={16} />
                       </button>
                       <button onClick={() => handleDelete(log.id)} className="p-1.5 text-slate-500 hover:text-red-400 transition-colors" title="ลบคำร้อง">
