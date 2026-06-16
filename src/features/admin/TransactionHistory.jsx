@@ -509,9 +509,11 @@ ${detailsLines}
                   {/* Card Header */}
                   <div className="px-6 py-3 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
                     <div className="flex items-center gap-3">
-                      <span className={`px-3 py-1 text-xs font-bold rounded-md ${details.type === 'GANG' ? 'bg-amber-500/10 text-amber-500' : 'bg-blue-500/10 text-blue-400'}`}>
-                        {details.type === 'GANG' ? 'แก๊ง' : 'ครอบครัว'}
-                      </span>
+                      {log.type !== 'leave' && log.type !== 'resign' && (
+                        <span className={`px-3 py-1 text-xs font-bold rounded-md ${details.type === 'GANG' ? 'bg-amber-500/10 text-amber-500' : 'bg-blue-500/10 text-blue-400'}`}>
+                          {details.type === 'GANG' ? 'แก๊ง' : 'ครอบครัว'}
+                        </span>
+                      )}
                       <span className="text-slate-500 text-xs flex items-center gap-1.5">
                         <Clock size={14} /> {log.createdAt.toLocaleString('th-TH')}
                       </span>
