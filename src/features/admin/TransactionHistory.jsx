@@ -205,31 +205,37 @@ ${detailsLines}
                   {changeList.map((c, i) => <li key={i}>{c}</li>)}
                 </ul>
               ) : <span>-</span>}
-              
+            </div>
+          ),
+          extraNode: (log.data.hexColor || log.data.extraDetails || log.data.logoUrl) ? (
+            <div className="space-y-4">
               {log.data.hexColor && (
-                 <div className="flex items-center gap-2 mt-2">
-                    <span className="text-xs font-bold text-slate-500">รหัสสี:</span>
-                    <div className="w-4 h-4 rounded shadow-inner border border-slate-700" style={{ backgroundColor: log.data.hexColor }}></div>
-                    <span className="text-xs text-slate-300 uppercase">{log.data.hexColor}</span>
+                 <div className="flex items-center gap-2">
+                    <span className="text-sm font-bold text-slate-400">รหัสสี:</span>
+                    <div className="w-5 h-5 rounded shadow-inner border border-slate-700" style={{ backgroundColor: log.data.hexColor }}></div>
+                    <span className="text-sm text-slate-200 font-medium uppercase">{log.data.hexColor}</span>
                  </div>
               )}
 
               {log.data.extraDetails && (
-                 <div className="mt-2 text-xs text-slate-400 bg-slate-900/50 p-3 rounded-lg border border-slate-800">
-                   <strong className="text-slate-300">เพิ่มเติม:</strong> {log.data.extraDetails}
+                 <div>
+                   <span className="text-sm font-bold text-slate-400 block mb-2">เพิ่มเติม:</span>
+                   <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 text-slate-300 text-sm">
+                     {log.data.extraDetails}
+                   </div>
                  </div>
               )}
 
               {log.data.logoUrl && (
-                 <div className="mt-2 pt-2 border-t border-slate-800 border-dashed">
-                   <span className="text-xs font-bold text-slate-500 block mb-2">โลโก้ใหม่:</span>
-                   <a href={log.data.logoUrl} target="_blank" rel="noreferrer" className="inline-block border-2 border-slate-700 hover:border-amber-500 rounded-lg overflow-hidden transition-colors">
-                     <img src={log.data.logoUrl} alt="Logo" className="w-16 h-16 object-cover bg-slate-900" />
+                 <div>
+                   <span className="text-sm font-bold text-slate-400 block mb-2">โลโก้ใหม่:</span>
+                   <a href={log.data.logoUrl} target="_blank" rel="noreferrer" className="inline-block border border-slate-700 hover:border-blue-500 rounded-xl overflow-hidden transition-colors bg-slate-950 p-1">
+                     <img src={log.data.logoUrl} alt="Logo" className="w-24 h-24 object-contain rounded-lg" />
                    </a>
                  </div>
               )}
             </div>
-          ),
+          ) : null,
           amount: log.data.totalAmount ? `${log.data.totalAmount.toLocaleString()} $` : (editTotal > 0 ? `${editTotal.toLocaleString()} $` : '-'),
         };
       }
@@ -417,11 +423,19 @@ ${detailsLines}
                         </div>
                       </div>
                       
-                      <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
-                        <p className="text-xs font-bold text-slate-500 mb-2">{details.detailsLabel}</p>
-                        <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 text-slate-300 text-sm max-h-48 overflow-y-auto whitespace-pre-wrap">
-                          {details.detailsNode || details.detailsValue}
+                      <div className="flex flex-col gap-4">
+                        <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
+                          <p className="text-xs font-bold text-slate-500 mb-2">{details.detailsLabel}</p>
+                          <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 text-slate-300 text-sm max-h-48 overflow-y-auto whitespace-pre-wrap">
+                            {details.detailsNode || details.detailsValue}
+                          </div>
                         </div>
+
+                        {details.extraNode && (
+                          <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
+                            {details.extraNode}
+                          </div>
+                        )}
                       </div>
                     </div>
 
