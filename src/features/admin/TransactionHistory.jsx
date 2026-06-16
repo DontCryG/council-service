@@ -84,7 +84,8 @@ export default function TransactionHistory() {
           
           await sendWebhook(webhookType, fd);
           
-          // Not deleting image to keep history in database
+          // Delete image to save space
+          await deleteTransactionImage(imageData.id);
         } else {
           // Fallback if image not found
           await sendWebhook(webhookType, logToApprove.data.webhookPayload);
@@ -169,6 +170,9 @@ ${detailsLines}
   ];
 
   const filteredLogs = logs.filter(log => {
+    // Filter out approved logs
+    if (log.status === 'approved') return false;
+
     // 1. Filter by category
     if (log.type !== activeCategory) return false;
     

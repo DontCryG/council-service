@@ -88,11 +88,18 @@ export const deleteTransactionLog = async (logId) => {
 export const updateTransactionLogStatus = async (logId, status, user) => {
   try {
     const logRef = doc(db, 'transaction_logs', logId);
-    await updateDoc(logRef, {
+    const updateData = {
       status,
       approvedBy: user ? { uid: user.uid, email: user.email, displayName: user.displayName } : null,
       approvedAt: Timestamp.now()
-    });
+    };
+    
+    if (status === 'approved') {
+      const { deleteField } = await import('firebase/firestore');
+      updateData.webhookPayload = deleteField();
+    }
+    
+    await updateDoc(logRef, updateData);
   } catch (err) {
     console.error("Failed to update transaction status:", err);
     throw err;
