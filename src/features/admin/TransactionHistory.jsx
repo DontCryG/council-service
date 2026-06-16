@@ -94,12 +94,12 @@ export default function TransactionHistory() {
       case 'general_service':
         return {
           title: log.data.groupName || '-',
-          type: log.data.groupType || 'GANG',
-          transaction: log.data.serviceType || '-',
+          type: log.data.orgType || log.data.groupType || 'GANG',
+          transaction: log.data.transactionName || log.data.serviceType || '-',
           requester: log.data.requester || '-',
-          detailsLabel: 'รายละเอียด',
-          detailsValue: log.data.details || (log.data.members ? log.data.members.map(m=>m.value).join(', ') : '-'),
-          amount: log.data.totalAmount ? `${log.data.totalAmount.toLocaleString()} $` : '-',
+          detailsLabel: 'รายละเอียดสมาชิก',
+          detailsValue: log.data.members && log.data.members.length > 0 ? log.data.members.join('\\n') : '-',
+          amount: '-',
         };
       case 'edit_org':
         return {
@@ -108,28 +108,28 @@ export default function TransactionHistory() {
           transaction: 'แก้ไขข้อมูลสังกัด',
           requester: log.data.requester || '-',
           detailsLabel: 'ข้อมูลที่แก้ไข',
-          detailsValue: log.data.editDetails || '-',
-          amount: log.data.totalAmount ? `${log.data.totalAmount.toLocaleString()} $` : '-',
+          detailsValue: log.data.changeInfo || '-',
+          amount: '-',
         };
       case 'register_org':
         return {
           title: `[${log.data.alias || '-'}] ${log.data.name || '-'}`,
           type: log.data.orgType || 'GANG',
           transaction: 'ขึ้นทะเบียนสังกัดใหม่',
-          requester: log.data.leaderName || '-',
-          detailsLabel: 'ข้อมูลเพิ่มเติม',
-          detailsValue: `รองหัวหน้า: ${log.data.coLeaderName || '-'}`,
-          amount: log.data.totalAmount ? `${log.data.totalAmount.toLocaleString()} $` : '-',
+          requester: log.data.coLeaders?.[0] || 'ดูรายละเอียด',
+          detailsLabel: 'รายชื่อสมาชิก',
+          detailsValue: `รองหัวหน้า:\\n${log.data.coLeaders?.join('\\n') || '-'}\\n\\nสมาชิก:\\n${log.data.members?.join('\\n') || '-'}`,
+          amount: '-',
         };
       case 'welfare_trade':
         return {
           title: log.data.orgName || '-',
           type: log.data.orgType || 'GANG',
           transaction: `เทรดสวัสดิการ (${log.data.tradeType || '-'})`,
-          requester: log.data.traderName || '-',
+          requester: log.data.oldOwner || log.data.newOwner || '-',
           detailsLabel: 'รายละเอียดไอเทม',
-          detailsValue: log.data.items ? log.data.items.map(i => `${i.name} x${i.amount}`).join(', ') : '-',
-          amount: '-',
+          detailsValue: log.data.items ? log.data.items.map(i => `${i.name} x${i.amount}`).join('\\n') : '-',
+          amount: log.data.totalPrice ? `${log.data.totalPrice.toLocaleString()} $` : '-',
         };
       case 'welfare':
         return {
@@ -138,7 +138,11 @@ export default function TransactionHistory() {
           transaction: 'เบิกสวัสดิการ',
           requester: log.data.requester || '-',
           detailsLabel: 'รายการเบิก',
-          detailsValue: log.data.details || '-',
+          detailsValue: [
+            ...(log.data.vehicles ? log.data.vehicles.map(v => `รถ: ${v.name} (ทะเบียน: ${v.plate})`) : []),
+            log.data.hasWeaponWelfare ? 'เบิกอาวุธ: ใช่' : '',
+            log.data.otherWelfare ? `อื่นๆ: ${log.data.otherWelfare}` : ''
+          ].filter(Boolean).join('\\n') || '-',
           amount: '-',
         };
       default:
@@ -236,7 +240,7 @@ export default function TransactionHistory() {
         </div>
 
         {/* Content List */}
-        <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6">
+        <div className="flex-1 overflow-y-auto p-4 md:p-8">
           {loading ? (
             <div className="flex justify-center items-center h-40 text-slate-500">
               <ArrowsClockwise className="animate-spin mr-2" size={24} /> กำลังอัปเดตข้อมูล...
@@ -247,9 +251,10 @@ export default function TransactionHistory() {
               <p>ไม่มีรายการคำร้องในหมวดหมู่นี้</p>
             </div>
           ) : (
-            filteredLogs.map(log => {
-              const details = getLogDetails(log);
-              const isApproved = log.status === 'approved';
+            <div className="grid grid-cols-1 2xl:grid-cols-2 gap-6">
+              {filteredLogs.map(log => {
+                const details = getLogDetails(log);
+                const isApproved = log.status === 'approved';
               
               return (
                 <div key={log.id} className={`bg-slate-950 border rounded-2xl overflow-hidden shadow-lg transition-all ${isApproved ? 'border-emerald-500/30 opacity-75' : 'border-slate-800 hover:border-slate-700'}`}>
@@ -332,7 +337,8 @@ export default function TransactionHistory() {
                   </div>
                 </div>
               );
-            })
+            })}
+            </div>
           )}
         </div>
       </div>
