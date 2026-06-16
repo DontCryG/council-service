@@ -148,14 +148,18 @@ export default function TransactionHistory() {
         .join('\n');
     }
 
-    const text = `===== COUNCIL DATA =====
-สังกัด: ${details.title} (${orgType})
-ผู้ทำรายการ: ${details.requester}
-ธุรกรรม: ${details.transaction}
-รายละเอียด:
-${detailsLines}
-เจ้าหน้าที่: ${staffName}
-ยอดรวม: ${details.amount}`;
+    let text = `===== COUNCIL DATA =====\n`;
+    if (log.type !== 'leave' && log.type !== 'resign') {
+      text += `สังกัด: ${details.title} (${orgType})\n`;
+    }
+    text += `ผู้ทำรายการ: ${details.requester}\n`;
+    text += `ธุรกรรม: ${details.transaction}\n`;
+    text += `รายละเอียด:\n${detailsLines}`;
+    
+    if (log.type !== 'leave' && log.type !== 'resign') {
+      text += `\nเจ้าหน้าที่: ${staffName}\n`;
+      text += `ยอดรวม: ${details.amount}`;
+    }
 
     navigator.clipboard.writeText(text);
     showAlert('success', 'คัดลอกข้อมูลเรียบร้อยแล้ว');
