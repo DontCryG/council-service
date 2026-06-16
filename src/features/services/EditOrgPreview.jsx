@@ -3,8 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
-import { saveTransactionLog, uploadReceiptImage } from '../../core/api';
-import { toBlob } from 'html-to-image';
+import { saveTransactionLog, saveTransactionImage } from '../../core/api';
+import { toJpeg } from 'html-to-image';
 import Button from '../../components/ui/Button';
 import ConfirmationModal from '../../components/ui/ConfirmationModal';
 import { PaperPlaneTilt, ArrowLeft, Receipt, CheckCircle, SealCheck, User, PaintBucket, CircleDashed } from '@phosphor-icons/react';
@@ -57,14 +57,13 @@ export default function EditOrgPreview() {
     setIsSubmitting(true);
     
     try {
-      const blob = await toBlob(captureRef.current, { 
-        pixelRatio: 2, 
+      const dataUrl = await toJpeg(captureRef.current, { 
+        quality: 0.6,
+        pixelRatio: 1.5, 
         backgroundColor: '#020617', // Match dark background
         cacheBust: true 
       });
-      if (!blob) throw new Error("Failed to generate image");
-
-      const imageUrl = await uploadReceiptImage(blob, 'edit_org', refNumber);
+      if (!dataUrl) throw new Error("Failed to generate image");
       
       let transactionItems = [];
       if (formData.changeInfo) transactionItems.push("- เปลี่ยนข้อมูล Gang (500,000$)");
@@ -98,14 +97,14 @@ export default function EditOrgPreview() {
             { name: "ข้อมูลเพิ่มเติมที่แจ้ง", value: additionalInfo, inline: false },
           ],
           image: {
-            url: imageUrl
+            url: "attachment://edit_org.jpg"
           },
           footer: { text: `Ref: ${refNumber} | Server System` },
           timestamp: new Date().toISOString()
         }]
       };
 
-      await saveTransactionLog('edit_org', {
+      const logId = await saveTransactionLog('edit_org', {
         refNumber: refNumber,
         orgName: formData.orgName,
         orgType: formData.orgType,
@@ -124,6 +123,8 @@ export default function EditOrgPreview() {
         totalAmount: calculateTotal(),
         webhookPayload: webhookPayload
       }, user);
+      
+      await saveTransactionImage(logId, dataUrl);
       showAlert('success', 'ส่งข้อมูลแจ้งแก้ไขเรียบร้อยแล้ว!');
       setShowConfirm(false);
       navigate('/home');

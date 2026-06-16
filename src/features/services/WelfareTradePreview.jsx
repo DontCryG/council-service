@@ -3,9 +3,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
-import { saveTransactionLog, uploadReceiptImage } from '../../core/api';
+import { saveTransactionLog, saveTransactionImage } from '../../core/api';
 import { buildWelfareTradeWebhook } from '../../services/discordFormatters';
-import { toBlob } from 'html-to-image';
+import { toJpeg } from 'html-to-image';
 
 import Button from '../../components/ui/Button';
 import ConfirmationModal from '../../components/ui/ConfirmationModal';
@@ -63,20 +63,20 @@ export default function WelfareTradePreview() {
     setIsSubmitting(true);
     
     try {
-      const blob = await toBlob(captureRef.current, { 
-        pixelRatio: 2, 
+      const dataUrl = await toJpeg(captureRef.current, { 
+        quality: 0.6,
+        pixelRatio: 1.5, 
         backgroundColor: '#0f172a',
         cacheBust: true
       });
-      if (!blob) throw new Error("Failed to generate image");
+      if (!dataUrl) throw new Error("Failed to generate image");
       
-      const imageUrl = await uploadReceiptImage(blob, 'welfare_trade', refNumber);
       const councilName = councilMembers.find(c => c.id === formData.councilStaffId)?.name;
       const payload = buildWelfareTradeWebhook(formData, items, getTotalPrice(), councilName, refNumber);
 
-      payload.embeds[0].image = { url: imageUrl };
+      payload.embeds[0].image = { url: "attachment://trade.jpg" };
 
-      await saveTransactionLog('welfare_trade', {
+      const logId = await saveTransactionLog('welfare_trade', {
         refNumber: refNumber,
         orgName: formData.orgName,
         orgType: formData.orgType,
@@ -89,6 +89,8 @@ export default function WelfareTradePreview() {
         councilStaffName: councilName || '-',
         webhookPayload: payload
       }, user);
+      
+      await saveTransactionImage(logId, dataUrl);
       showAlert('success', 'ส่งข้อมูลแลกเปลี่ยนสวัสดิการเรียบร้อยแล้ว!');
       setShowConfirm(false);
       navigate('/home');

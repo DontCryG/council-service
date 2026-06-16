@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
-import { saveTransactionLog, uploadReceiptImage } from '../../core/api';
-import { toBlob } from 'html-to-image';
+import { saveTransactionLog, saveTransactionImage } from '../../core/api';
+import { toJpeg } from 'html-to-image';
 import Button from '../../components/ui/Button';
 import { PaperPlaneTilt, ArrowLeft, Receipt, SealCheck, CircleDashed, User, UserCircle } from '@phosphor-icons/react';
 import { transactions } from '../../data/models';
@@ -32,14 +32,13 @@ export default function GeneralServicePreview() {
     setIsSubmitting(true);
     
     try {
-      const blob = await toBlob(captureRef.current, { 
-        pixelRatio: 2, 
+      const dataUrl = await toJpeg(captureRef.current, { 
+        quality: 0.6,
+        pixelRatio: 1.5, 
         backgroundColor: '#0f172a',
         cacheBust: true 
       });
-      if (!blob) throw new Error("Failed to generate image");
-      
-      const imageUrl = await uploadReceiptImage(blob, 'general_service', refNumber);
+      if (!dataUrl) throw new Error("Failed to generate image");
 
       const typeDisplay = formData.groupType === 'GANG' ? 'แก๊ง' : 'ครอบครัว';
       const councilName = councilMembers.find(c => c.id === formData.councilMemberId)?.name || '-';
@@ -59,14 +58,14 @@ export default function GeneralServicePreview() {
             { name: "Council", value: councilName, inline: false }
           ],
           image: {
-            url: imageUrl
+            url: "attachment://receipt.jpg"
           },
           footer: { text: `Ref: ${refNumber} | Server System` },
           timestamp: new Date().toISOString()
         }]
       };
 
-      await saveTransactionLog('general_service', {
+      const logId = await saveTransactionLog('general_service', {
         refNumber: refNumber,
         orgType: formData.groupType,
         groupName: formData.groupName,
@@ -78,6 +77,8 @@ export default function GeneralServicePreview() {
         members: members.map(m => m.value),
         webhookPayload: webhookPayload
       }, user);
+      
+      await saveTransactionImage(logId, dataUrl);
 
       showAlert('success', 'บันทึกข้อมูลและออกใบเสร็จสำเร็จ !');
       navigate('/home');

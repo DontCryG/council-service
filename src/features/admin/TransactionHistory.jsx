@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { listenTransactionLogs, deleteTransactionLog, updateTransactionLogStatus, sendWebhook } from '../../core/api';
+import { listenTransactionLogs, deleteTransactionLog, updateTransactionLogStatus, sendWebhook, getTransactionImage, deleteTransactionImage } from '../../core/api';
 import { useAppStore } from '../../store';
 import { 
   FileText, PencilSimple, Buildings, Handshake, Gift,
@@ -69,7 +69,27 @@ export default function TransactionHistory() {
       if (logToApprove && logToApprove.data.webhookPayload) {
         let webhookType = logToApprove.type;
         if (webhookType === 'general_service') webhookType = 'general';
-        await sendWebhook(webhookType, logToApprove.data.webhookPayload);
+        
+        // Fetch image from Firestore
+        const imageData = await getTransactionImage(logToApprove.id);
+        
+        if (imageData && imageData.base64Image) {
+          // Convert base64 to Blob
+          const response = await fetch(imageData.base64Image);
+          const blob = await response.blob();
+          
+          const fd = new FormData();
+          fd.append('file', blob, 'receipt.jpg');
+          fd.append('payload_json', JSON.stringify(logToApprove.data.webhookPayload));
+          
+          await sendWebhook(webhookType, fd);
+          
+          // Delete image to save space
+          await deleteTransactionImage(imageData.id);
+        } else {
+          // Fallback if image not found
+          await sendWebhook(webhookType, logToApprove.data.webhookPayload);
+        }
       }
       
       await updateTransactionLogStatus(approveModal.logId, 'approved', user);

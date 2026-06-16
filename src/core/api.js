@@ -1,8 +1,7 @@
 const API_BASE_URL = '/api';
 
-import { db, storage } from './firebase';
-import { collection, addDoc, query, orderBy, getDocs, Timestamp, doc, updateDoc, onSnapshot } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { db } from './firebase';
+import { collection, addDoc, query, orderBy, getDocs, Timestamp, doc, updateDoc, onSnapshot, getDoc, deleteDoc } from 'firebase/firestore';
 
 /**
  * Saves a transaction log to Firestore
@@ -18,10 +17,12 @@ export const saveTransactionLog = async (type, data, user = null) => {
       createdAt: Timestamp.now(),
       createdBy: user ? { uid: user.uid, email: user.email } : null
     };
-    await addDoc(collection(db, 'transaction_logs'), logData);
+    const docRef = await addDoc(collection(db, 'transaction_logs'), logData);
+    return docRef.id;
   } catch (err) {
     console.error("Failed to save transaction log:", err);
     alert('Save Log Error: ' + err.message);
+    throw err;
   }
 };
 
@@ -132,27 +133,48 @@ export const sendWebhook = async (type, formData) => {
 };
 
 /**
- * Uploads a receipt image blob to Firebase Storage and returns the download URL
- * @param {Blob} blob - The image blob to upload
- * @param {string} type - Transaction type for folder organization
- * @param {string} refNumber - Reference number for file naming
- * @returns {Promise<string>} The download URL
+ * Saves a base64 image string to Firestore in a separate collection
  */
-export const uploadReceiptImage = async (blob, type, refNumber) => {
+export const saveTransactionImage = async (logId, base64Image) => {
   try {
-    const fileName = `receipts/${type}/${refNumber}_${Date.now()}.png`;
-    const storageRef = ref(storage, fileName);
-    
-    const uploadPromise = uploadBytes(storageRef, blob);
-    const timeoutPromise = new Promise((_, reject) => 
-      setTimeout(() => reject(new Error("Firebase Storage Timeout: กรุณาตรวจสอบว่าเปิดใช้งาน Storage ใน Firebase Console และตั้งค่า Rules เรียบร้อยแล้ว")), 10000)
-    );
-
-    await Promise.race([uploadPromise, timeoutPromise]);
-    
-    return await getDownloadURL(storageRef);
+    await addDoc(collection(db, 'transactionImages'), {
+      logId,
+      base64Image,
+      createdAt: Timestamp.now()
+    });
   } catch (err) {
-    console.error("Failed to upload receipt image:", err);
+    console.error("Failed to save transaction image:", err);
     throw err;
+  }
+};
+
+/**
+ * Retrieves a base64 image string from Firestore for a specific logId
+ */
+export const getTransactionImage = async (logId) => {
+  try {
+    const q = query(collection(db, 'transactionImages'), orderBy('createdAt', 'desc'));
+    const snapshot = await getDocs(q);
+    const doc = snapshot.docs.find(d => d.data().logId === logId);
+    if (doc) {
+      return { id: doc.id, base64Image: doc.data().base64Image };
+    }
+    return null;
+  } catch (err) {
+    console.error("Failed to get transaction image:", err);
+    return null;
+  }
+};
+
+/**
+ * Deletes a transaction image document by its imageDocId
+ */
+export const deleteTransactionImage = async (imageDocId) => {
+  try {
+    if (imageDocId) {
+      await deleteDoc(doc(db, 'transactionImages', imageDocId));
+    }
+  } catch (err) {
+    console.error("Failed to delete transaction image:", err);
   }
 };
