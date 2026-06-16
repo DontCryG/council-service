@@ -296,7 +296,7 @@ ${detailsLines}
           transaction: `เทรดสวัสดิการ (${log.data.tradeType || '-'})`,
           requester: log.data.oldOwner || log.data.newOwner || '-',
           detailsLabel: 'รายละเอียดไอเทม',
-          detailsValue: log.data.items ? log.data.items.map(i => `${i.name} x${i.amount}`).join('\n') : '-',
+          detailsValue: log.data.items ? log.data.items.map(i => `- ${i.name} ${i.detail ? `(${i.detail})` : ''}`).join('\n') : '-',
           amount: log.data.totalPrice ? `${log.data.totalPrice.toLocaleString()} $` : '-',
         };
       case 'welfare':
