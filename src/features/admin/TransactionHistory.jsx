@@ -71,7 +71,7 @@ export default function TransactionHistory() {
         let webhookType = logToApprove.type;
         if (webhookType === 'general_service') webhookType = 'general';
         if (webhookType === 'leave') webhookType = 'duty_leave';
-        if (webhookType === 'resign') webhookType = 'duty_resign';
+        if (webhookType === 'resign') webhookType = 'duty_leave';
         
         // Fetch image from Firestore
         const imageData = await getTransactionImage(logToApprove.id);
