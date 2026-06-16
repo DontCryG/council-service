@@ -1,20 +1,23 @@
 import { useState, useEffect } from 'react';
-import { getTransactionLogs, deleteTransactionLog } from '../../core/api';
-import { Card } from '../../components/ui/Card';
-import Modal from '../../components/ui/Modal';
-import ConfirmationModal from '../../components/ui/ConfirmationModal';
-import { Clock, Database, Buildings, UserCircle, Receipt, Trash, Eye } from '@phosphor-icons/react';
+import { getTransactionLogs, deleteTransactionLog, updateTransactionLogStatus } from '../../core/api';
+import { useAppStore } from '../../store';
+import { 
+  FileText, PencilSimple, Buildings, Handshake, Gift,
+  MagnifyingGlass, ArrowsClockwise, Trash, CheckSquareOffset,
+  Copy, UserCircle, CheckCircle, Clock
+} from '@phosphor-icons/react';
 
 export default function TransactionHistory() {
+  const { user, showAlert } = useAppStore();
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('ALL');
   
-  const [selectedLog, setSelectedLog] = useState(null);
-  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  // Navigation State
+  const [activeCategory, setActiveCategory] = useState('general_service');
   
-  const [logToDelete, setLogToDelete] = useState(null);
-  const [isDeleting, setIsDeleting] = useState(false);
+  // Filter State
+  const [searchTerm, setSearchTerm] = useState('');
+  const [groupFilter, setGroupFilter] = useState('ALL'); // ALL, GANG, FAMILY
 
   useEffect(() => {
     fetchLogs();
@@ -27,403 +30,314 @@ export default function TransactionHistory() {
     setLoading(false);
   };
 
-  const handleDelete = async () => {
-    if (!logToDelete) return;
-    setIsDeleting(true);
+  const handleApprove = async (logId) => {
     try {
-      await deleteTransactionLog(logToDelete);
-      setLogs(logs.filter(l => l.id !== logToDelete));
-      setLogToDelete(null);
+      await updateTransactionLogStatus(logId, 'approved', user);
+      showAlert('success', 'อนุมัติคำร้องเรียบร้อยแล้ว');
+      fetchLogs(); // Refresh
     } catch (err) {
-      alert('Failed to delete log');
-    }
-    setIsDeleting(false);
-  };
-
-  const getTypeLabel = (type) => {
-    switch (type) {
-      case 'edit_org': return { label: 'แก้ไขข้อมูลองค์กร', color: 'text-pink-400', bg: 'bg-pink-500/10' };
-      case 'welfare': return { label: 'เบิกสวัสดิการ', color: 'text-emerald-400', bg: 'bg-emerald-500/10' };
-      case 'welfare_trade': return { label: 'แลกเปลี่ยนสวัสดิการ', color: 'text-violet-400', bg: 'bg-violet-500/10' };
-      case 'general_service': return { label: 'บริการทั่วไป', color: 'text-amber-400', bg: 'bg-amber-500/10' };
-      case 'register_org': return { label: 'ลงทะเบียนแก๊งใหม่', color: 'text-blue-400', bg: 'bg-blue-500/10' };
-      default: return { label: type, color: 'text-slate-400', bg: 'bg-slate-500/10' };
+      showAlert('error', 'เกิดข้อผิดพลาดในการอนุมัติ');
     }
   };
 
-  const getSummaryText = (log) => {
+  const handleDelete = async (logId) => {
+    if (!window.confirm('คุณต้องการลบคำร้องนี้ใช่หรือไม่?')) return;
+    try {
+      await deleteTransactionLog(logId);
+      setLogs(logs.filter(l => l.id !== logId));
+      showAlert('success', 'ลบคำร้องสำเร็จ');
+    } catch (err) {
+      showAlert('error', 'ไม่สามารถลบคำร้องได้');
+    }
+  };
+
+  const categories = [
+    {
+      group: 'ระบบจัดการคำร้อง',
+      items: [
+        { id: 'general_service', label: 'บริการทั่วไป', icon: FileText },
+        { id: 'edit_org', label: 'แก้ไขข้อมูลสังกัด', icon: PencilSimple },
+        { id: 'register_org', label: 'ขึ้นทะเบียนสังกัด', icon: Buildings },
+      ]
+    },
+    {
+      group: 'ระบบสวัสดิการ',
+      items: [
+        { id: 'welfare_trade', label: 'เทรดสวัสดิการ', icon: Handshake },
+        { id: 'welfare', label: 'เบิกสวัสดิการ', icon: Gift },
+      ]
+    }
+  ];
+
+  const filteredLogs = logs.filter(log => {
+    // 1. Filter by category
+    if (log.type !== activeCategory) return false;
+    
+    // 2. Filter by Group Type (GANG/FAMILY)
+    if (groupFilter !== 'ALL') {
+      const type = log.data.groupType || log.data.orgType;
+      if (type !== groupFilter) return false;
+    }
+
+    // 3. Search Term
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      const groupName = (log.data.groupName || log.data.orgName || log.data.name || '').toLowerCase();
+      const requester = (log.data.requester || '').toLowerCase();
+      if (!groupName.includes(term) && !requester.includes(term)) {
+        return false;
+      }
+    }
+    return true;
+  });
+
+  const getLogDetails = (log) => {
     switch (log.type) {
-      case 'edit_org': return `${log.data.orgType || ''} ${log.data.orgName || ''} (ผู้แจ้ง: ${log.data.requester || '-'})`;
-      case 'welfare': return `${log.data.orgType || ''} ${log.data.orgName || ''} (ผู้เบิก: ${log.data.requester || '-'})`;
-      case 'welfare_trade': return `${log.data.orgType || ''} ${log.data.orgName || ''} (${log.data.tradeType || '-'})`;
-      case 'general_service': return `${log.data.groupName || '-'} (ผู้แจ้ง: ${log.data.requester || '-'})`;
-      case 'register_org': return `[${log.data.alias || '-'}] ${log.data.name || ''} (${log.data.orgType || ''})`;
-      default: return 'Custom Action';
+      case 'general_service':
+        return {
+          title: log.data.groupName || '-',
+          type: log.data.groupType || 'GANG',
+          transaction: log.data.serviceType || '-',
+          requester: log.data.requester || '-',
+          detailsLabel: 'รายละเอียด',
+          detailsValue: log.data.details || (log.data.members ? log.data.members.map(m=>m.value).join(', ') : '-'),
+          amount: log.data.totalAmount ? `${log.data.totalAmount.toLocaleString()} $` : '-',
+        };
+      case 'edit_org':
+        return {
+          title: log.data.orgName || '-',
+          type: log.data.orgType || 'GANG',
+          transaction: 'แก้ไขข้อมูลสังกัด',
+          requester: log.data.requester || '-',
+          detailsLabel: 'ข้อมูลที่แก้ไข',
+          detailsValue: log.data.editDetails || '-',
+          amount: log.data.totalAmount ? `${log.data.totalAmount.toLocaleString()} $` : '-',
+        };
+      case 'register_org':
+        return {
+          title: `[${log.data.alias || '-'}] ${log.data.name || '-'}`,
+          type: log.data.orgType || 'GANG',
+          transaction: 'ขึ้นทะเบียนสังกัดใหม่',
+          requester: log.data.leaderName || '-',
+          detailsLabel: 'ข้อมูลเพิ่มเติม',
+          detailsValue: `รองหัวหน้า: ${log.data.coLeaderName || '-'}`,
+          amount: log.data.totalAmount ? `${log.data.totalAmount.toLocaleString()} $` : '-',
+        };
+      case 'welfare_trade':
+        return {
+          title: log.data.orgName || '-',
+          type: log.data.orgType || 'GANG',
+          transaction: `เทรดสวัสดิการ (${log.data.tradeType || '-'})`,
+          requester: log.data.traderName || '-',
+          detailsLabel: 'รายละเอียดไอเทม',
+          detailsValue: log.data.items ? log.data.items.map(i => `${i.name} x${i.amount}`).join(', ') : '-',
+          amount: '-',
+        };
+      case 'welfare':
+        return {
+          title: log.data.orgName || '-',
+          type: log.data.orgType || 'GANG',
+          transaction: 'เบิกสวัสดิการ',
+          requester: log.data.requester || '-',
+          detailsLabel: 'รายการเบิก',
+          detailsValue: log.data.details || '-',
+          amount: '-',
+        };
+      default:
+        return {
+          title: 'Unknown', type: 'GANG', transaction: 'Unknown', requester: '-', detailsLabel: '-', detailsValue: '-', amount: '-'
+        };
     }
   };
 
-  const filteredLogs = filter === 'ALL' ? logs : logs.filter(l => l.type === filter);
+  const activeCategoryLabel = categories.flatMap(c => c.items).find(i => i.id === activeCategory)?.label || '';
+  const pendingCount = logs.filter(l => l.type === activeCategory && l.status !== 'approved').length;
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex items-center gap-3">
-        <Database size={32} weight="duotone" className="text-blue-500" />
-        <div>
-          <h1 className="text-2xl font-bold text-white">ระบบจัดการคำร้อง</h1>
-          <p className="text-slate-400">Request Management System</p>
-        </div>
+    <div className="flex flex-col lg:flex-row gap-6 min-h-[calc(100vh-8rem)] animate-in fade-in slide-in-from-bottom-4 duration-500">
+      
+      {/* LEFT SIDEBAR (Menu) */}
+      <div className="w-full lg:w-72 flex-shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col gap-8 h-max">
+        {categories.map((cat, i) => (
+          <div key={i} className="space-y-3">
+            <h3 className="text-xs font-bold text-amber-500 tracking-wider uppercase px-2">{cat.group}</h3>
+            <div className="space-y-1">
+              {cat.items.map(item => {
+                const Icon = item.icon;
+                const isActive = activeCategory === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveCategory(item.id)}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
+                      isActive 
+                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/20' 
+                        : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'
+                    }`}
+                  >
+                    <Icon size={20} weight={isActive ? "fill" : "duotone"} />
+                    {item.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </div>
 
-      <Card>
-        <div className="mb-6 flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
-          {['ALL', 'register_org', 'edit_org', 'welfare', 'welfare_trade', 'general_service'].map(t => (
-            <button
-              key={t}
-              onClick={() => setFilter(t)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
-                filter === t ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white'
-              }`}
-            >
-              {t === 'ALL' ? 'ทั้งหมด' : getTypeLabel(t).label}
-            </button>
-          ))}
+      {/* RIGHT CONTENT AREA */}
+      <div className="flex-1 bg-slate-900 border border-slate-800 rounded-2xl shadow-xl flex flex-col overflow-hidden relative">
+        
+        {/* Header */}
+        <div className="px-8 py-6 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-black text-white">{activeCategoryLabel}</h1>
+            <p className="text-slate-400 text-sm mt-1">รายการคำร้องที่รอตรวจสอบทั้งหมด</p>
+          </div>
+          <div className="flex flex-wrap items-center gap-3 text-xs font-bold">
+            <div className="bg-amber-500/10 text-amber-500 px-4 py-2 rounded-full flex items-center gap-2 border border-amber-500/20">
+              <Clock size={16} /> รอตรวจสอบ {pendingCount}
+            </div>
+            <div className="bg-emerald-500/10 text-emerald-500 px-4 py-2 rounded-full flex items-center gap-2 border border-emerald-500/20">
+              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div> LIVE SYNC
+            </div>
+          </div>
         </div>
 
-        {loading ? (
-          <div className="flex justify-center items-center py-20 text-slate-500">
-            <Clock className="animate-spin mr-2" size={24} /> กำลังโหลดข้อมูล...
+        {/* Toolbar */}
+        <div className="px-8 py-4 border-b border-slate-800 flex flex-col xl:flex-row xl:items-center justify-between gap-4 bg-slate-900/50">
+          <div className="relative w-full xl:w-96">
+            <MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+            <input 
+              type="text" 
+              placeholder="ค้นหาข้อมูลผู้ร้อง, ชื่อแก๊ง..." 
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-blue-500 transition-colors"
+            />
           </div>
-        ) : filteredLogs.length === 0 ? (
-          <div className="text-center py-20 text-slate-500 border-2 border-dashed border-slate-700 rounded-xl">
-            ไม่มีประวัติการทำรายการในหมวดหมู่นี้
+
+          <div className="flex items-center gap-3 overflow-x-auto pb-2 xl:pb-0 scrollbar-hide">
+            <div className="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
+              {['ALL', 'GANG', 'FAMILY'].map(g => (
+                <button
+                  key={g}
+                  onClick={() => setGroupFilter(g)}
+                  className={`px-4 sm:px-6 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
+                    groupFilter === g ? 'bg-slate-800 text-white shadow-sm' : 'text-slate-500 hover:text-slate-300'
+                  }`}
+                >
+                  {g === 'ALL' ? 'ทั้งหมด (ALL)' : `${g} (${g === 'GANG' ? 'แก๊ง' : 'ครอบครัว'})`}
+                </button>
+              ))}
+            </div>
+            <button onClick={fetchLogs} className="p-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition-colors border border-slate-700 flex-shrink-0">
+              <ArrowsClockwise size={18} />
+            </button>
           </div>
-        ) : (
-          <div className="space-y-3">
-            {filteredLogs.map(log => {
-              const typeInfo = getTypeLabel(log.type);
+        </div>
+
+        {/* Content List */}
+        <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6">
+          {loading ? (
+            <div className="flex justify-center items-center h-40 text-slate-500">
+              <ArrowsClockwise className="animate-spin mr-2" size={24} /> กำลังอัปเดตข้อมูล...
+            </div>
+          ) : filteredLogs.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-64 text-slate-500 border-2 border-dashed border-slate-800 rounded-2xl">
+              <CheckSquareOffset size={48} className="mb-3 text-slate-600" />
+              <p>ไม่มีรายการคำร้องในหมวดหมู่นี้</p>
+            </div>
+          ) : (
+            filteredLogs.map(log => {
+              const details = getLogDetails(log);
+              const isApproved = log.status === 'approved';
+              
               return (
-                <div key={log.id} className="bg-slate-800/50 p-4 rounded-xl border border-slate-700 flex flex-col md:flex-row gap-4 justify-between md:items-center hover:bg-slate-800 transition-colors group">
-                  <div className="space-y-1 flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className={`px-2.5 py-1 rounded-md text-xs font-bold ${typeInfo.bg} ${typeInfo.color}`}>
-                        {typeInfo.label}
+                <div key={log.id} className={`bg-slate-950 border rounded-2xl overflow-hidden shadow-lg transition-all ${isApproved ? 'border-emerald-500/30 opacity-75' : 'border-slate-800 hover:border-slate-700'}`}>
+                  
+                  {/* Card Header */}
+                  <div className="px-6 py-3 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                    <div className="flex items-center gap-3">
+                      <span className={`px-3 py-1 text-xs font-bold rounded-md ${details.type === 'GANG' ? 'bg-amber-500/10 text-amber-500' : 'bg-blue-500/10 text-blue-400'}`}>
+                        {details.type === 'GANG' ? 'แก๊ง' : 'ครอบครัว'}
                       </span>
-                      <span className="text-slate-500 text-xs flex items-center gap-1">
+                      <span className="text-slate-500 text-xs flex items-center gap-1.5">
                         <Clock size={14} /> {log.createdAt.toLocaleString('th-TH')}
                       </span>
                     </div>
-                    <div className="text-white font-medium flex items-center gap-2">
-                      <Receipt size={18} className="text-slate-400" />
-                      {getSummaryText(log)}
+                    <div className="flex items-center gap-2">
+                      <button onClick={() => navigator.clipboard.writeText(JSON.stringify(details))} className="p-1.5 text-slate-500 hover:text-slate-300 transition-colors" title="คัดลอกข้อมูล">
+                        <Copy size={16} />
+                      </button>
+                      <button onClick={() => handleDelete(log.id)} className="p-1.5 text-slate-500 hover:text-red-400 transition-colors" title="ลบคำร้อง">
+                        <Trash size={16} />
+                      </button>
                     </div>
                   </div>
-                  
-                  <div className="flex items-center gap-3 self-end md:self-auto">
-                    {log.createdBy && (
-                      <div className="text-sm text-slate-400 flex items-center gap-1.5 bg-slate-900/50 px-3 py-1.5 rounded-lg hidden md:flex">
-                        <UserCircle size={16} className="text-amber-500" />
-                        <span>{log.createdBy.email}</span>
+
+                  {/* Card Body */}
+                  <div className="p-6 md:p-8">
+                    <h2 className="text-2xl font-black text-white mb-6">{details.title}</h2>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                      <div className="space-y-5">
+                        <div>
+                          <p className="text-xs font-bold text-slate-500 mb-1">รายการธุรกรรม</p>
+                          <p className="text-blue-400 font-bold text-lg">{details.transaction}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-slate-500 mb-1">ผู้ทำรายการ</p>
+                          <p className="text-slate-200 font-medium">{details.requester}</p>
+                        </div>
                       </div>
-                    )}
-                    
-                    <button
-                      onClick={() => {
-                        setSelectedLog(log);
-                        setIsDetailsModalOpen(true);
-                      }}
-                      className="p-2 bg-slate-700 hover:bg-blue-600 text-slate-300 hover:text-white rounded-lg transition-colors flex items-center gap-2 text-sm"
-                      title="ดูรายละเอียด"
-                    >
-                      <Eye size={18} />
-                      <span className="md:hidden">ดูรายละเอียด</span>
-                    </button>
-                    
-                    <button
-                      onClick={() => setLogToDelete(log.id)}
-                      className="p-2 bg-slate-700 hover:bg-red-500 text-slate-300 hover:text-white rounded-lg transition-colors flex items-center gap-2 text-sm"
-                      title="ลบประวัติ"
-                    >
-                      <Trash size={18} />
-                      <span className="md:hidden">ลบ</span>
-                    </button>
+                      
+                      <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
+                        <p className="text-xs font-bold text-slate-500 mb-2">{details.detailsLabel}</p>
+                        <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 text-slate-300 text-sm max-h-32 overflow-y-auto whitespace-pre-wrap">
+                          {details.detailsValue}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Card Footer */}
+                    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pt-6 border-t border-slate-800">
+                      <div className="w-full md:w-auto">
+                        <p className="text-xs font-bold text-slate-500 mb-1">สภาที่รับเรื่อง</p>
+                        <div className={`bg-slate-900 border px-4 py-2 rounded-lg text-sm flex items-center gap-2 min-w-[200px] ${isApproved ? 'border-emerald-500/50 text-emerald-400' : 'border-slate-700 text-slate-300'}`}>
+                          <UserCircle size={18} className={isApproved ? "text-emerald-500" : "text-blue-500"} />
+                          {isApproved ? (log.approvedBy?.displayName || log.approvedBy?.email || 'Approved') : '-- เลือกเจ้าหน้าที่สภา --'}
+                        </div>
+                      </div>
+                      
+                      <div className="w-full md:w-auto text-left md:text-right flex flex-col md:items-end">
+                        <p className="text-xs font-bold text-slate-500 mb-1">ยอดรวม</p>
+                        <p className="text-2xl font-black text-amber-500">{details.amount}</p>
+                      </div>
+                    </div>
+
+                    {/* Action Button */}
+                    <div className="mt-6">
+                      {isApproved ? (
+                        <div className="w-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 py-4 rounded-xl font-bold flex items-center justify-center gap-2 cursor-default">
+                          <CheckCircle size={20} weight="fill" /> ตรวจสอบและอนุมัติเรียบร้อยแล้ว
+                        </div>
+                      ) : (
+                        <button 
+                          onClick={() => handleApprove(log.id)}
+                          className="w-full bg-[#d4af37] hover:bg-[#c5a028] text-slate-900 py-4 rounded-xl font-black transition-all shadow-[0_0_15px_rgba(212,175,55,0.2)] hover:shadow-[0_0_25px_rgba(212,175,55,0.4)] flex items-center justify-center gap-2"
+                        >
+                          <CheckSquareOffset size={20} weight="bold" /> ตรวจสอบและอนุมัติ
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               );
-            })}
-          </div>
-        )}
-      </Card>
-      
-      {/* Details Modal */}
-      <Modal
-        isOpen={isDetailsModalOpen}
-        onClose={() => setIsDetailsModalOpen(false)}
-        title="รายละเอียดการทำรายการ"
-      >
-      {selectedLog && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className={`px-3 py-1 rounded-md text-sm font-bold ${getTypeLabel(selectedLog.type).bg} ${getTypeLabel(selectedLog.type).color} w-max`}>
-                {getTypeLabel(selectedLog.type).label}
-              </div>
-              <div className="text-slate-400 text-sm">
-                {selectedLog.createdAt.toLocaleString('th-TH')}
-              </div>
-            </div>
-            
-            {/* Welfare: formatted card */}
-            {selectedLog.type === 'welfare' ? (
-              <div className="bg-slate-900 rounded-xl border border-slate-700 overflow-hidden">
-                <div className="bg-emerald-900/30 border-b border-emerald-700/40 px-5 py-4">
-                  <div className="flex items-center gap-2 text-emerald-400 font-bold text-base mb-1">
-                    <span>📋</span> ตรวจพบการลงนามรับสวัสดิการใหม่
-                  </div>
-                  <div className="text-slate-400 text-xs">
-                    เลขที่อ้างอิง: <span className="text-slate-200 font-mono font-bold">{selectedLog.data.refNumber || `CS-${selectedLog.id?.slice(0,8).toUpperCase() || 'N/A'}`}</span>
-                  </div>
-                </div>
-                <div className="px-5 py-4 grid grid-cols-2 gap-4 border-b border-slate-700/60">
-                  <div>
-                    <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">🏢 สังกัด</div>
-                    <div className="text-white font-bold">{selectedLog.data.orgName || '-'}</div>
-                    <div className="text-slate-400 text-xs mt-0.5">{selectedLog.data.orgType || ''}</div>
-                  </div>
-                  <div>
-                    <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">✍️ ผู้ลงนาม</div>
-                    <div className="text-white font-bold">{selectedLog.data.requester || '-'}</div>
-                  </div>
-                </div>
-                <div className="px-5 py-4 border-b border-slate-700/60">
-                  <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-3 flex items-center gap-1">
-                    🎁 รายการสวัสดิการ
-                  </div>
-                  <div className="space-y-1.5">
-                    {selectedLog.data.hasWeaponWelfare && (
-                      <div className="bg-slate-800 rounded-lg px-3 py-2 text-slate-200 text-sm font-medium">รถ: อาวุธไม้พูล</div>
-                    )}
-                    {(selectedLog.data.vehicles || []).map((v, i) => (
-                      <div key={i} className="bg-slate-800 rounded-lg px-3 py-2 text-slate-200 text-sm font-medium">รถ: {v.model || '-'} {v.plate ? `(${v.plate})` : ''}</div>
-                    ))}
-                    {selectedLog.data.otherWelfare && (
-                      <div className="bg-slate-800 rounded-lg px-3 py-2 text-slate-200 text-sm font-medium">อื่นๆ: {selectedLog.data.otherWelfare}</div>
-                    )}
-                    {!selectedLog.data.hasWeaponWelfare && !(selectedLog.data.vehicles?.length) && !selectedLog.data.otherWelfare && (
-                      <div className="text-slate-500 italic text-sm">- ไม่มีรายการ -</div>
-                    )}
-                  </div>
-                </div>
-                <div className="px-5 py-3 text-slate-500 text-xs">ระบบตรวจสอบสวัสดิการสภาส่วนกลาง • {selectedLog.createdAt.toLocaleString('th-TH')}</div>
-              </div>
-            ) : selectedLog.type === 'register_org' ? (
-              <div className="bg-slate-900 rounded-xl border border-slate-700 overflow-hidden">
-                <div className="bg-blue-900/30 border-b border-blue-700/40 px-5 py-4">
-                  <div className="flex items-center gap-2 text-blue-400 font-bold text-base mb-1">
-                    <span>📝</span> ลงทะเบียนองค์กรใหม่
-                  </div>
-                  <div className="text-slate-400 text-xs">
-                    เลขที่อ้างอิง: <span className="text-slate-200 font-mono font-bold">{selectedLog.data.refNumber || `CS-${selectedLog.id?.slice(0,8).toUpperCase() || 'N/A'}`}</span>
-                  </div>
-                </div>
-                <div className="px-5 py-4 grid grid-cols-2 gap-4 border-b border-slate-700/60">
-                  <div>
-                    <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">🏢 ชื่อองค์กร</div>
-                    <div className="text-white font-bold">{selectedLog.data.alias ? `[${selectedLog.data.alias}] ` : ''}{selectedLog.data.name || '-'}</div>
-                    <div className="text-slate-400 text-xs mt-0.5">{selectedLog.data.orgType || ''}</div>
-                  </div>
-                  <div>
-                    <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">👨‍💼 เจ้าหน้าที่สภา</div>
-                    <div className="text-amber-500 font-bold">{selectedLog.data.councilStaffName || '-'}</div>
-                  </div>
-                </div>
-                <div className="px-5 py-4 border-b border-slate-700/60">
-                  <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-3 flex items-center gap-1">👥 สมาชิก</div>
-                  <div className="space-y-3">
-                    {selectedLog.data.coLeaders && selectedLog.data.coLeaders.length > 0 && (
-                      <div>
-                        <div className="text-slate-400 text-xs mb-1">รองหัวหน้า:</div>
-                        <div className="flex flex-wrap gap-2">
-                          {selectedLog.data.coLeaders.map((c, i) => <span key={i} className="bg-slate-800 px-2.5 py-1 rounded text-slate-200 text-xs">{c}</span>)}
-                        </div>
-                      </div>
-                    )}
-                    {selectedLog.data.members && selectedLog.data.members.length > 0 && (
-                      <div>
-                        <div className="text-slate-400 text-xs mb-1">สมาชิก ({selectedLog.data.members.length}):</div>
-                        <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 pr-2">
-                          {selectedLog.data.members.map((m, i) => <span key={i} className="bg-slate-800/60 px-2.5 py-1 rounded border border-slate-700 text-slate-300 text-xs">{m}</span>)}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="px-5 py-3 text-slate-500 text-xs">ระบบทะเบียนสภาส่วนกลาง • {selectedLog.createdAt.toLocaleString('th-TH')}</div>
-              </div>
-            ) : selectedLog.type === 'general_service' ? (
-              <div className="bg-slate-900 rounded-xl border border-slate-700 overflow-hidden">
-                <div className="bg-amber-900/30 border-b border-amber-700/40 px-5 py-4">
-                  <div className="flex items-center gap-2 text-amber-400 font-bold text-base mb-1">
-                    <span>🧾</span> บริการทั่วไป
-                  </div>
-                  <div className="text-slate-400 text-xs">
-                    เลขที่อ้างอิง: <span className="text-slate-200 font-mono font-bold">{selectedLog.data.refNumber || `CS-${selectedLog.id?.slice(0,8).toUpperCase() || 'N/A'}`}</span>
-                  </div>
-                </div>
-                <div className="px-5 py-4 grid grid-cols-2 gap-4 border-b border-slate-700/60">
-                  <div className="space-y-4">
-                    <div>
-                      <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">🏢 สังกัด</div>
-                      <div className="text-white font-bold">{selectedLog.data.groupName || '-'}</div>
-                      <div className="text-slate-400 text-xs mt-0.5">{selectedLog.data.orgType || ''}</div>
-                    </div>
-                    <div>
-                      <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">✍️ ผู้แจ้ง</div>
-                      <div className="text-white font-bold">{selectedLog.data.requester || '-'}</div>
-                    </div>
-                  </div>
-                  <div className="space-y-4">
-                    <div>
-                      <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">💳 ธุรกรรม</div>
-                      <div className="text-blue-400 font-bold">{selectedLog.data.transactionName || '-'}</div>
-                    </div>
-                    <div>
-                      <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">👨‍💼 เจ้าหน้าที่สภา</div>
-                      <div className="text-amber-500 font-bold">{selectedLog.data.councilMemberName || '-'}</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="px-5 py-4 border-b border-slate-700/60">
-                  <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-3 flex items-center gap-1">👥 สมาชิกที่เกี่ยวข้อง ({selectedLog.data.members?.length || 0})</div>
-                  <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 pr-2">
-                    {(selectedLog.data.members || []).map((m, i) => (
-                      <span key={i} className="bg-slate-800 px-2.5 py-1 rounded text-slate-200 text-xs border border-slate-700">{m}</span>
-                    ))}
-                  </div>
-                </div>
-                <div className="px-5 py-3 text-slate-500 text-xs">ระบบบริการทั่วไปสภาส่วนกลาง • {selectedLog.createdAt.toLocaleString('th-TH')}</div>
-              </div>
-            ) : selectedLog.type === 'edit_org' ? (
-              <div className="bg-slate-900 rounded-xl border border-slate-700 overflow-hidden">
-                <div className="bg-amber-900/30 border-b border-amber-700/40 px-5 py-4">
-                  <div className="flex items-center gap-2 text-amber-500 font-bold text-base mb-1">
-                    <span>🔄</span> แก้ไขข้อมูลองค์กร
-                  </div>
-                  <div className="text-slate-400 text-xs">
-                    เลขที่อ้างอิง: <span className="text-slate-200 font-mono font-bold">{selectedLog.data.refNumber || `CS-${selectedLog.id?.slice(0,8).toUpperCase() || 'N/A'}`}</span>
-                  </div>
-                </div>
-                <div className="px-5 py-4 grid grid-cols-2 gap-4 border-b border-slate-700/60">
-                  <div>
-                    <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">🏢 สังกัด</div>
-                    <div className="text-white font-bold">{selectedLog.data.orgName || '-'}</div>
-                    <div className="text-slate-400 text-xs mt-0.5">{selectedLog.data.orgType || ''}</div>
-                  </div>
-                  <div>
-                    <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">✍️ ผู้แจ้ง</div>
-                    <div className="text-white font-bold">{selectedLog.data.requester || '-'}</div>
-                  </div>
-                </div>
-                <div className="px-5 py-4 border-b border-slate-700/60">
-                  <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-3 flex items-center gap-1">🛠️ รายการแก้ไข</div>
-                  <div className="space-y-1.5">
-                    {selectedLog.data.changeInfo && <div className="bg-slate-800 rounded-lg px-3 py-2 text-slate-200 text-sm font-medium">✅ เปลี่ยนข้อมูล Gang</div>}
-                    {selectedLog.data.editTexture && <div className="bg-slate-800 rounded-lg px-3 py-2 text-slate-200 text-sm font-medium">✅ แก้ไข Texture เสื้อผ้า</div>}
-                    {selectedLog.data.addCloth && <div className="bg-slate-800 rounded-lg px-3 py-2 text-slate-200 text-sm font-medium">✅ ลงชุดเพิ่ม</div>}
-                    {selectedLog.data.bulkChange && <div className="bg-slate-800 rounded-lg px-3 py-2 text-slate-200 text-sm font-medium">✅ เหมาเปลี่ยนข้อมูล Gang</div>}
-                    {selectedLog.data.addAccessory && <div className="bg-slate-800 rounded-lg px-3 py-2 text-slate-200 text-sm font-medium">✅ ลง Accessories Adons เสริม</div>}
-                    {!selectedLog.data.changeInfo && !selectedLog.data.editTexture && !selectedLog.data.addCloth && !selectedLog.data.bulkChange && !selectedLog.data.addAccessory && (
-                      <div className="text-slate-500 italic text-sm">- ไม่มีรายการ -</div>
-                    )}
-                  </div>
-                </div>
-                <div className="px-5 py-4 border-b border-slate-700/60 flex justify-between items-center">
-                  <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider flex items-center gap-1">👨‍💼 เจ้าหน้าที่สภา</div>
-                  <div className="text-amber-500 font-bold">{selectedLog.data.councilStaffName || '-'}</div>
-                </div>
-                <div className="px-5 py-3 text-slate-500 text-xs">ระบบแจ้งแก้ไของค์กรสภาส่วนกลาง • {selectedLog.createdAt.toLocaleString('th-TH')}</div>
-              </div>
-            ) : selectedLog.type === 'welfare_trade' ? (
-              <div className="bg-slate-900 rounded-xl border border-slate-700 overflow-hidden">
-                <div className="bg-violet-900/30 border-b border-violet-700/40 px-5 py-4">
-                  <div className="flex items-center gap-2 text-violet-400 font-bold text-base mb-1">
-                    <span>🔁</span> แลกเปลี่ยนสวัสดิการ
-                  </div>
-                  <div className="text-slate-400 text-xs">
-                    เลขที่อ้างอิง: <span className="text-slate-200 font-mono font-bold">{selectedLog.data.refNumber || `CS-${selectedLog.id?.slice(0,8).toUpperCase() || 'N/A'}`}</span>
-                  </div>
-                </div>
-                <div className="px-5 py-4 grid grid-cols-2 gap-4 border-b border-slate-700/60">
-                  <div className="space-y-4">
-                    <div>
-                      <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">🏢 สังกัด</div>
-                      <div className="text-white font-bold">{selectedLog.data.orgName || '-'}</div>
-                      <div className="text-slate-400 text-xs mt-0.5">{selectedLog.data.orgType || ''}</div>
-                    </div>
-                    <div>
-                      <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">🏷️ ประเภทสวัสดิการ</div>
-                      <div className="text-violet-400 font-bold">{selectedLog.data.tradeType || '-'}</div>
-                    </div>
-                  </div>
-                  <div className="space-y-4">
-                    <div>
-                      <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">📤 ผู้โอน (เก่า)</div>
-                      <div className="text-red-400 font-bold">{selectedLog.data.oldOwner || '-'}</div>
-                    </div>
-                    <div>
-                      <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">📥 ผู้รับ (ใหม่)</div>
-                      <div className="text-emerald-400 font-bold">{selectedLog.data.newOwner || '-'}</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="px-5 py-4 border-b border-slate-700/60">
-                  <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider mb-3 flex items-center gap-1">🎁 รายการ ({selectedLog.data.items?.length || 0})</div>
-                  <div className="space-y-2 max-h-40 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 pr-2">
-                    {(selectedLog.data.items || []).map((item, i) => (
-                      <div key={i} className="flex justify-between items-center bg-slate-800 rounded-lg p-2.5">
-                        <span className="text-slate-200 text-sm font-bold">{item.name || '-'}</span>
-                        <span className="text-slate-400 text-xs font-mono">{item.detail || '-'}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="px-5 py-4 border-b border-slate-700/60 flex justify-between items-center">
-                  <div className="text-slate-500 text-[11px] font-bold uppercase tracking-wider flex items-center gap-1">👨‍💼 เจ้าหน้าที่สภา</div>
-                  <div className="text-amber-500 font-bold">{selectedLog.data.councilStaffName || '-'}</div>
-                </div>
-                <div className="px-5 py-3 text-slate-500 text-xs flex justify-between">
-                  <span>ระบบตรวจสอบสวัสดิการสภาส่วนกลาง • {selectedLog.createdAt.toLocaleString('th-TH')}</span>
-                  <span className="font-bold text-slate-400">รวม: {selectedLog.data.totalPrice || '-'}</span>
-                </div>
-              </div>
-            ) : (
-              /* Default: raw JSON for other types */
-              <div className="bg-slate-900 rounded-xl p-4 border border-slate-700 overflow-auto max-h-[60vh] scrollbar-thin scrollbar-thumb-slate-700">
-                <pre className="text-slate-300 text-xs font-mono whitespace-pre-wrap">
-                  {JSON.stringify(selectedLog.data, null, 2)}
-                </pre>
-              </div>
-            )}
-            
-            {selectedLog.createdBy && (
-              <div className="flex items-center gap-2 text-slate-400 text-sm bg-slate-800/50 p-3 rounded-lg border border-slate-700">
-                <UserCircle size={20} className="text-amber-500" />
-                <span>บันทึกโดย: {selectedLog.createdBy.email}</span>
-              </div>
-            )}
-          </div>
-        )}
-      </Modal>
-
-      {/* Delete Confirmation */}
-      <ConfirmationModal
-        isOpen={!!logToDelete}
-        onClose={() => setLogToDelete(null)}
-        onConfirm={handleDelete}
-        title="ลบประวัติการทำรายการ"
-        message="คุณแน่ใจหรือไม่ที่จะลบประวัติรายการนี้? การกระทำนี้ไม่สามารถย้อนกลับได้"
-        confirmText="ลบข้อมูล"
-        confirmStyle="danger"
-        isLoading={isDeleting}
-      />
+            })
+          )}
+        </div>
+      </div>
     </div>
   );
 }

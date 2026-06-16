@@ -1,7 +1,7 @@
 const API_BASE_URL = '/api';
 
 import { db } from './firebase';
-import { collection, addDoc, query, orderBy, getDocs, Timestamp } from 'firebase/firestore';
+import { collection, addDoc, query, orderBy, getDocs, Timestamp, doc, updateDoc } from 'firebase/firestore';
 
 /**
  * Saves a transaction log to Firestore
@@ -53,6 +53,26 @@ export const deleteTransactionLog = async (logId) => {
     await deleteDoc(doc(db, 'transaction_logs', logId));
   } catch (err) {
     console.error("Failed to delete transaction log:", err);
+    throw err;
+  }
+};
+
+/**
+ * Updates the status of a transaction log (e.g., for Approval)
+ * @param {string} logId - The ID of the log
+ * @param {string} status - New status ('pending' | 'approved')
+ * @param {Object} user - The user approving it
+ */
+export const updateTransactionLogStatus = async (logId, status, user) => {
+  try {
+    const logRef = doc(db, 'transaction_logs', logId);
+    await updateDoc(logRef, {
+      status,
+      approvedBy: user ? { uid: user.uid, email: user.email, displayName: user.displayName } : null,
+      approvedAt: Timestamp.now()
+    });
+  } catch (err) {
+    console.error("Failed to update transaction status:", err);
     throw err;
   }
 };
