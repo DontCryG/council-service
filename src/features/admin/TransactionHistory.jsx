@@ -84,8 +84,7 @@ export default function TransactionHistory() {
           
           await sendWebhook(webhookType, fd);
           
-          // Delete image to save space
-          await deleteTransactionImage(imageData.id);
+          // Not deleting image to keep history in database
         } else {
           // Fallback if image not found
           await sendWebhook(webhookType, logToApprove.data.webhookPayload);
