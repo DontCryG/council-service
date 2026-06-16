@@ -13,6 +13,11 @@ export const useAppStore = create((set) => ({
   setLoading: (isLoading) => set({ isLoading }),
 
   // Theme / UI State
+  theme: localStorage.getItem('theme') || 'dark',
+  setTheme: (theme) => {
+    localStorage.setItem('theme', theme);
+    set({ theme });
+  },
   sidebarOpen: false,
   toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
   

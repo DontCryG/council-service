@@ -458,7 +458,7 @@ export default function CouncilLoanHub() {
         isOpen={paymentModal.isOpen} 
         onClose={() => !paymentModal.isLoading && setPaymentModal(prev => ({ ...prev, isOpen: false }))}
         title="บันทึกการชำระเงิน"
-        className="max-w-md bg-[#151923] border border-slate-700/50 rounded-3xl overflow-hidden shadow-2xl"
+        className="max-w-md bg-slate-950 border border-slate-700/50 rounded-3xl overflow-hidden shadow-2xl"
         hideCloseButton={true}
       >
         <div className="bg-slate-900 px-6 py-4 border-b border-slate-800 flex items-center justify-between">

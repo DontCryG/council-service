@@ -1,11 +1,11 @@
 import { useAppStore } from '../../store';
 import { auth } from '../../core/firebase';
 import { signOut } from 'firebase/auth';
-import { SignOut, User, List } from '@phosphor-icons/react';
+import { SignOut, User, List, Sun, Moon } from '@phosphor-icons/react';
 import Button from '../ui/Button';
 
 export default function Header() {
-  const { user, councilUsername, toggleSidebar } = useAppStore();
+  const { user, councilUsername, toggleSidebar, theme, setTheme } = useAppStore();
 
   const handleLogout = async () => {
     try {
@@ -15,6 +15,10 @@ export default function Header() {
     }
     localStorage.removeItem('council_user');
     useAppStore.getState().setUser(null);
+  };
+
+  const toggleTheme = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
   };
 
   return (
@@ -29,12 +33,20 @@ export default function Header() {
         <h2 className="text-lg font-semibold text-white hidden sm:block">Dashboard</h2>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 sm:gap-4">
+        <button
+          onClick={toggleTheme}
+          className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-full transition-colors flex items-center justify-center"
+          title={theme === 'dark' ? 'เปลี่ยนเป็น Light Mode' : 'เปลี่ยนเป็น Dark Mode'}
+        >
+          {theme === 'dark' ? <Sun size={20} weight="bold" /> : <Moon size={20} weight="bold" />}
+        </button>
+
         <div className="flex items-center gap-3 bg-slate-800/50 px-3 py-1.5 rounded-full border border-slate-700/50">
           <div className="w-8 h-8 rounded-full bg-blue-600/20 text-blue-500 flex items-center justify-center">
             <User size={18} weight="bold" />
           </div>
-          <span className="text-sm font-medium text-slate-300">
+          <span className="text-sm font-medium text-slate-300 hidden sm:block">
             {user ? (councilUsername || user.councilUsername || user.displayName || (user.email?.includes('@') ? user.email.split('@')[0] : user.email) || 'User') : 'Guest'}
           </span>
         </div>

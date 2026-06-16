@@ -140,7 +140,15 @@ function AdminRoute({ children }) {
 import LoadingScreen from './components/ui/LoadingScreen';
 
 function App() {
-  const { setUser, setCouncilUsername, isAuthLoaded } = useAppStore();
+  const { setUser, setCouncilUsername, isAuthLoaded, theme } = useAppStore();
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {

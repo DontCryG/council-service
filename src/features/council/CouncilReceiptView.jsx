@@ -120,7 +120,7 @@ export default function CouncilReceiptView() {
 
         <div 
           ref={receiptRef}
-          className="bg-[#0b101a] ring-1 ring-white/10 rounded-2xl text-slate-200 relative overflow-hidden flex flex-col justify-between"
+          className="bg-slate-950 ring-1 ring-white/10 rounded-2xl text-slate-200 relative overflow-hidden flex flex-col justify-between"
           style={{ minHeight: '850px', width: '650px' }}
         >
           {/* Top Decorative Bar */}
@@ -152,7 +152,7 @@ export default function CouncilReceiptView() {
 
             {/* PAID Stamp Badge */}
             <div className="absolute top-10 right-10 rotate-12 opacity-80 pointer-events-none">
-              <div className="border-4 border-emerald-500 text-emerald-500 rounded-xl px-6 py-2 flex items-center gap-3 bg-[#0b101a]/50 backdrop-blur-sm">
+              <div className="border-4 border-emerald-500 text-emerald-500 rounded-xl px-6 py-2 flex items-center gap-3 bg-slate-950/50 backdrop-blur-sm">
                 <SealCheck size={32} weight="fill" />
                 <span className="font-black text-2xl tracking-widest">ชำระแล้ว</span>
               </div>
@@ -224,7 +224,7 @@ export default function CouncilReceiptView() {
           </div>
 
           {/* Footer Barcode Section */}
-          <div className="bg-[#151b2b] border-t border-slate-800 p-6 flex flex-col items-center justify-center relative z-10">
+          <div className="bg-slate-900 border-t border-slate-800 p-6 flex flex-col items-center justify-center relative z-10">
             <Barcode size={48} weight="light" className="text-slate-600 mb-2" />
             <p className="font-mono text-[10px] text-slate-600 tracking-[0.2em]">{tx.id.toUpperCase()}</p>
           </div>

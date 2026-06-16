@@ -266,10 +266,10 @@ export default function GroupManager() {
         title={null}
         hideCloseButton={true}
       >
-        <div className="flex flex-col md:flex-row w-full bg-[#0B0E14] rounded-[24px] overflow-hidden border border-[#1E293B] shadow-2xl h-full max-h-[90vh]">
+        <div className="flex flex-col md:flex-row w-full bg-slate-950 rounded-[24px] overflow-hidden border border-slate-800 shadow-2xl h-full max-h-[90vh]">
           
           {/* Left Panel - Live Preview */}
-          <div className="w-full md:w-5/12 relative p-8 flex flex-col items-center justify-center min-h-[300px] border-b md:border-b-0 md:border-r border-[#1E293B] overflow-hidden bg-[#0B0E14]">
+          <div className="w-full md:w-5/12 relative p-8 flex flex-col items-center justify-center min-h-[300px] border-b md:border-b-0 md:border-r border-slate-800 overflow-hidden bg-slate-950">
             
             <div className="relative z-10 w-full max-w-[240px] flex flex-col items-center">
               <div className="text-[10px] font-black text-slate-500 uppercase tracking-[0.15em] mb-6">
@@ -277,12 +277,12 @@ export default function GroupManager() {
               </div>
 
               {/* ID Card Preview */}
-              <div className="w-full rounded-3xl bg-[#121826] border border-[#1E293B]/50 flex flex-col items-center p-6 shadow-xl relative overflow-hidden">
+              <div className="w-full rounded-3xl bg-slate-900 border border-slate-800/50 flex flex-col items-center p-6 shadow-xl relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-1.5 transition-colors duration-500"
                   style={{ backgroundColor: getColorCode(formData.suitColor === 'อื่นๆ (ระบุเอง)' ? customSuitColor : formData.suitColor) || (formData.type === 'GANG' ? '#ef4444' : '#3b82f6') }}
                 />
 
-                <div className="mt-4 mb-6 w-24 h-24 rounded-2xl bg-[#1A2234] border border-[#1E293B] flex items-center justify-center p-3 shadow-inner">
+                <div className="mt-4 mb-6 w-24 h-24 rounded-2xl bg-slate-800 border border-slate-800 flex items-center justify-center p-3 shadow-inner">
                   {formData.logo ? (
                     <img src={formData.logo} alt="Logo" className="w-full h-full object-contain drop-shadow-md" onError={(e) => { e.target.style.display='none' }} />
                   ) : (
@@ -302,7 +302,7 @@ export default function GroupManager() {
                   {formData.type}
                 </div>
 
-                <div className="w-full pt-4 border-t border-[#1E293B] flex items-center justify-between">
+                <div className="w-full pt-4 border-t border-slate-800 flex items-center justify-between">
                   <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Suit Color</span>
                   <div className="flex items-center gap-2">
                     {getColorCode(formData.suitColor === 'อื่นๆ (ระบุเอง)' ? customSuitColor : formData.suitColor) && (
@@ -323,10 +323,10 @@ export default function GroupManager() {
           </div>
 
           {/* Right Panel - Form */}
-          <div className="w-full md:w-7/12 p-8 md:p-10 flex flex-col relative overflow-y-auto bg-[#0B0E14]">
+          <div className="w-full md:w-7/12 p-8 md:p-10 flex flex-col relative overflow-y-auto bg-slate-950">
             <button 
               onClick={() => setIsModalOpen(false)}
-              className="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-[#1A2234] text-slate-400 hover:text-white transition-all z-10"
+              className="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-slate-800 text-slate-400 hover:text-white transition-all z-10"
             >
               <X size={14} weight="bold" />
             </button>
@@ -350,12 +350,12 @@ export default function GroupManager() {
                       className={`relative py-5 px-4 rounded-2xl flex flex-col items-center gap-3 transition-all duration-200 border ${
                         formData.type === 'GANG' 
                           ? 'bg-[#ef4444]/5 border-[#ef4444]/60' 
-                          : 'bg-[#0B0E14] border-[#1E293B] hover:bg-[#121826]'
+                          : 'bg-slate-950 border-slate-800 hover:bg-slate-900'
                       }`}
                       onClick={() => setFormData({...formData, type: 'GANG'})}
                     >
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                        formData.type === 'GANG' ? 'bg-[#ef4444]/20 text-[#ef4444]' : 'bg-[#1A2234] text-slate-500'
+                        formData.type === 'GANG' ? 'bg-[#ef4444]/20 text-[#ef4444]' : 'bg-slate-800 text-slate-500'
                       }`}>
                         <Shield size={20} weight="fill" />
                       </div>
@@ -367,12 +367,12 @@ export default function GroupManager() {
                       className={`relative py-5 px-4 rounded-2xl flex flex-col items-center gap-3 transition-all duration-200 border ${
                         formData.type === 'FAMILY' 
                           ? 'bg-[#3b82f6]/5 border-[#3b82f6]/60' 
-                          : 'bg-[#0B0E14] border-[#1E293B] hover:bg-[#121826]'
+                          : 'bg-slate-950 border-slate-800 hover:bg-slate-900'
                       }`}
                       onClick={() => setFormData({...formData, type: 'FAMILY'})}
                     >
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                        formData.type === 'FAMILY' ? 'bg-[#3b82f6]/20 text-[#3b82f6]' : 'bg-[#1A2234] text-slate-500'
+                        formData.type === 'FAMILY' ? 'bg-[#3b82f6]/20 text-[#3b82f6]' : 'bg-slate-800 text-slate-500'
                       }`}>
                         <House size={20} weight="fill" />
                       </div>
@@ -388,7 +388,7 @@ export default function GroupManager() {
                     type="text"
                     placeholder="Enter organization name"
                     required 
-                    className="w-full bg-[#0F141E] border border-[#1E293B] rounded-xl px-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-slate-500 font-medium text-sm transition-all"
+                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-slate-500 font-medium text-sm transition-all"
                     value={formData.name}
                     onChange={e => setFormData({...formData, name: e.target.value})}
                   />
@@ -405,7 +405,7 @@ export default function GroupManager() {
                     <input 
                       type="text"
                       placeholder="https://.../logo.png"
-                      className="w-full bg-[#0F141E] border border-[#1E293B] rounded-xl pl-11 pr-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-slate-500 font-medium text-sm transition-all"
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-11 pr-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-slate-500 font-medium text-sm transition-all"
                       value={formData.logo}
                       onChange={e => setFormData({...formData, logo: e.target.value})}
                     />
@@ -418,7 +418,7 @@ export default function GroupManager() {
                   <div className="relative">
                     <Palette size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none" />
                     <select 
-                      className={`w-full bg-[#0F141E] border ${formData.suitColor === 'อื่นๆ (ระบุเอง)' ? 'border-amber-500/50' : 'border-[#1E293B]'} rounded-xl pl-11 pr-4 py-3.5 text-white focus:outline-none focus:border-slate-500 font-medium text-sm appearance-none cursor-pointer transition-all`}
+                      className={`w-full bg-slate-900 border ${formData.suitColor === 'อื่นๆ (ระบุเอง)' ? 'border-amber-500/50' : 'border-slate-800'} rounded-xl pl-11 pr-4 py-3.5 text-white focus:outline-none focus:border-slate-500 font-medium text-sm appearance-none cursor-pointer transition-all`}
                       value={formData.suitColor}
                       onChange={e => {
                         setFormData({...formData, suitColor: e.target.value});
@@ -426,7 +426,7 @@ export default function GroupManager() {
                       }}
                     >
                       {SUIT_COLORS.map(color => (
-                        <option key={color} value={color} className="bg-[#0B0E14] text-white font-medium">{color}</option>
+                        <option key={color} value={color} className="bg-slate-950 text-white font-medium">{color}</option>
                       ))}
                     </select>
                   </div>
@@ -436,7 +436,7 @@ export default function GroupManager() {
                         type="text"
                         placeholder="โปรดระบุชื่อสีที่ต้องการ..."
                         required 
-                        className="w-full bg-[#0F141E] border border-amber-500/50 rounded-xl px-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 font-medium text-sm transition-all"
+                        className="w-full bg-slate-900 border border-amber-500/50 rounded-xl px-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 font-medium text-sm transition-all"
                         value={customSuitColor}
                         onChange={e => setCustomSuitColor(e.target.value)}
                       />
@@ -447,7 +447,7 @@ export default function GroupManager() {
               </div>
 
               {/* Footer Actions */}
-              <div className="mt-10 pt-6 border-t border-[#1E293B] flex items-center justify-between">
+              <div className="mt-10 pt-6 border-t border-slate-800 flex items-center justify-between">
                 
                 {editingId ? (
                   <button 
@@ -469,7 +469,7 @@ export default function GroupManager() {
                 )}
 
                 <div className="flex gap-3 ml-auto">
-                  <Button type="button" variant="ghost" className="px-6 py-3.5 bg-[#1A2234] hover:bg-[#232d45] border-none text-white rounded-xl font-bold transition-all" onClick={() => setIsModalOpen(false)}>
+                  <Button type="button" variant="ghost" className="px-6 py-3.5 bg-slate-800 hover:bg-[#232d45] border-none text-white rounded-xl font-bold transition-all" onClick={() => setIsModalOpen(false)}>
                     Cancel
                   </Button>
                   <button type="submit" className="px-8 py-3.5 bg-white hover:bg-slate-200 text-black rounded-xl font-black transition-all shadow-[0_0_20px_-5px_rgba(255,255,255,0.4)]">

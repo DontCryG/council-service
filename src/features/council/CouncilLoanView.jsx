@@ -356,7 +356,7 @@ export default function CouncilLoanView() {
 
       {/* Council Signing Area */}
       {contract.status === 'pending_council_signature' && (
-        <div className="bg-[#151923] border border-blue-500/20 p-8 rounded-3xl flex flex-col items-center text-center shadow-inner mt-8 mx-auto max-w-[816px]">
+        <div className="bg-slate-950 border border-blue-500/20 p-8 rounded-3xl flex flex-col items-center text-center shadow-inner mt-8 mx-auto max-w-[816px]">
           <div className="flex items-center gap-3 text-blue-400 mb-2">
             <PenNib size={28} weight="fill" />
             <h3 className="text-xl font-black text-white">กรุณาเซ็นชื่ออนุมัติสัญญา (สำหรับเจ้าหน้าที่สภา)</h3>
@@ -387,7 +387,7 @@ export default function CouncilLoanView() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full px-4 sm:px-12">
             <button 
               onClick={clearSignature}
-              className="bg-[#1e2330] hover:bg-slate-700 text-white font-bold px-6 py-4 rounded-xl transition-all w-full sm:w-1/3 border border-slate-700/50"
+              className="bg-slate-800 hover:bg-slate-700 text-white font-bold px-6 py-4 rounded-xl transition-all w-full sm:w-1/3 border border-slate-700/50"
             >
               ล้างลายเซ็น
             </button>
@@ -407,7 +407,7 @@ export default function CouncilLoanView() {
       )}
 
       {/* Payment History Section */}
-      <div className="mt-8 bg-[#151923] border border-slate-800 rounded-2xl shadow-sm max-w-[816px] mx-auto overflow-hidden">
+      <div className="mt-8 bg-slate-950 border border-slate-800 rounded-2xl shadow-sm max-w-[816px] mx-auto overflow-hidden">
         <div className="px-6 py-5 border-b border-slate-800 flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg flex items-center justify-center text-amber-500 bg-amber-950 border border-amber-900">
             <Receipt size={18} weight="fill" />
@@ -431,7 +431,7 @@ export default function CouncilLoanView() {
                   <th className="py-4 px-6 text-[13px] font-bold text-slate-500 whitespace-nowrap text-center">ใบเสร็จ</th>
                 </tr>
               </thead>
-              <tbody className="bg-[#151923]">
+              <tbody className="bg-slate-950">
                 {paymentHistory.map((tx, index) => {
                   const dateStr = tx.createdAt?.toDate ? 
                     tx.createdAt.toDate().toLocaleString('th-TH', {

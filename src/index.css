@@ -4,27 +4,43 @@
 
 @layer base {
   :root {
-    --color-bg-base: #0f172a;
-    --color-bg-card: #1e293b;
-    --color-bg-card-hover: #334155;
+    /* LIGHT MODE MAPPING (Inverted Slate) */
+    --tw-color-slate-50: 2 6 23;      /* slate-950 */
+    --tw-color-slate-100: 15 23 42;    /* slate-900 */
+    --tw-color-slate-200: 30 41 59;    /* slate-800 */
+    --tw-color-slate-300: 51 65 85;    /* slate-700 */
+    --tw-color-slate-400: 71 85 105;   /* slate-600 */
+    --tw-color-slate-500: 100 116 139; /* slate-500 */
+    --tw-color-slate-600: 148 163 184; /* slate-400 */
+    --tw-color-slate-700: 203 213 225; /* slate-300 */
+    --tw-color-slate-800: 226 232 240; /* slate-200 */
+    --tw-color-slate-900: 241 245 249; /* slate-100 */
+    --tw-color-slate-950: 248 250 252; /* slate-50 */
     
-    --color-text-primary: #f8fafc;
-    --color-text-secondary: #94a3b8;
-    
-    --color-primary: #3b82f6;
-    --color-primary-hover: #2563eb;
-    
-    --color-success: #10b981;
-    --color-danger: #ef4444;
-    --color-warning: #f59e0b;
-    
-    --color-border: #334155;
-    --color-border-focus: #3b82f6;
+    --tw-color-white: 15 23 42;        /* Dark text instead of white */
+    --tw-color-black: 255 255 255;     /* White bg instead of black */
+  }
+
+  .dark {
+    /* DARK MODE MAPPING (Original Slate) */
+    --tw-color-slate-50: 248 250 252;
+    --tw-color-slate-100: 241 245 249;
+    --tw-color-slate-200: 226 232 240;
+    --tw-color-slate-300: 203 213 225;
+    --tw-color-slate-400: 148 163 184;
+    --tw-color-slate-500: 100 116 139;
+    --tw-color-slate-600: 71 85 105;
+    --tw-color-slate-700: 51 65 85;
+    --tw-color-slate-800: 30 41 59;
+    --tw-color-slate-900: 15 23 42;
+    --tw-color-slate-950: 2 6 23;
+
+    --tw-color-white: 255 255 255;
+    --tw-color-black: 0 0 0;
   }
   
   body {
-    background-color: var(--color-bg-base);
-    color: var(--color-text-primary);
+    @apply bg-slate-950 text-slate-100;
     font-family: 'Inter', 'Sarabun', sans-serif;
   }
 }
