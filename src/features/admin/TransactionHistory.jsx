@@ -117,6 +117,12 @@ export default function TransactionHistory() {
   const confirmDelete = async () => {
     setConfirmModal(prev => ({ ...prev, isLoading: true }));
     try {
+      // Delete associated image if it exists
+      const imageData = await getTransactionImage(confirmModal.logId);
+      if (imageData) {
+        await deleteTransactionImage(imageData.id);
+      }
+      
       await deleteTransactionLog(confirmModal.logId);
       showAlert('success', 'ลบคำร้องเรียบร้อยแล้ว');
       setConfirmModal({ isOpen: false, logId: null, isLoading: false });

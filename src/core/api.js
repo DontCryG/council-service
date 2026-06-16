@@ -1,7 +1,7 @@
 const API_BASE_URL = '/api';
 
 import { db } from './firebase';
-import { collection, addDoc, query, orderBy, getDocs, Timestamp, doc, updateDoc, onSnapshot, getDoc, deleteDoc } from 'firebase/firestore';
+import { collection, addDoc, query, orderBy, where, getDocs, Timestamp, doc, updateDoc, onSnapshot, getDoc, deleteDoc } from 'firebase/firestore';
 
 /**
  * Saves a transaction log to Firestore
@@ -160,10 +160,10 @@ export const saveTransactionImage = async (logId, base64Image) => {
  */
 export const getTransactionImage = async (logId) => {
   try {
-    const q = query(collection(db, 'transactionImages'), orderBy('createdAt', 'desc'));
+    const q = query(collection(db, 'transactionImages'), where('logId', '==', logId));
     const snapshot = await getDocs(q);
-    const doc = snapshot.docs.find(d => d.data().logId === logId);
-    if (doc) {
+    if (!snapshot.empty) {
+      const doc = snapshot.docs[0];
       return { id: doc.id, base64Image: doc.data().base64Image };
     }
     return null;
