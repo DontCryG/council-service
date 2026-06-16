@@ -6,6 +6,7 @@ import {
   Trash, CheckCircle, Clock, Copy, UserCircle, CheckSquareOffset, ArrowsClockwise, MagnifyingGlass
 } from '@phosphor-icons/react';
 import { transactions } from '../../data/models';
+import ConfirmationModal from '../../components/ui/ConfirmationModal';
 
 export default function TransactionHistory() {
   const { user, showAlert } = useAppStore();
@@ -18,6 +19,12 @@ export default function TransactionHistory() {
   // Filter State
   const [searchTerm, setSearchTerm] = useState('');
   const [groupFilter, setGroupFilter] = useState('ALL'); // ALL, GANG, FAMILY
+  
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    logId: null,
+    isLoading: false
+  });
 
   useEffect(() => {
     setLoading(true);
@@ -38,14 +45,27 @@ export default function TransactionHistory() {
     }
   };
 
-  const handleDelete = async (logId) => {
-    if (!window.confirm('คุณต้องการลบคำร้องนี้ใช่หรือไม่?')) return;
+  const handleDelete = (logId) => {
+    if (user?.role !== 'admin') {
+      showAlert('error', 'คุณไม่มีสิทธิ์ลบข้อมูลนี้');
+      return;
+    }
+    setConfirmModal({
+      isOpen: true,
+      logId,
+      isLoading: false
+    });
+  };
+
+  const confirmDelete = async () => {
+    setConfirmModal(prev => ({ ...prev, isLoading: true }));
     try {
-      await deleteTransactionLog(logId);
-      setLogs(logs.filter(l => l.id !== logId));
-      showAlert('success', 'ลบคำร้องสำเร็จ');
+      await deleteTransactionLog(confirmModal.logId);
+      showAlert('success', 'ลบคำร้องเรียบร้อยแล้ว');
+      setConfirmModal({ isOpen: false, logId: null, isLoading: false });
     } catch (err) {
-      showAlert('error', 'ไม่สามารถลบคำร้องได้');
+      showAlert('error', 'เกิดข้อผิดพลาดในการลบ');
+      setConfirmModal(prev => ({ ...prev, isLoading: false }));
     }
   };
 
@@ -103,7 +123,7 @@ export default function TransactionHistory() {
           transaction: log.data.transactionName || log.data.serviceType || '-',
           requester: log.data.requester || '-',
           detailsLabel: 'รายละเอียดสมาชิก',
-          detailsValue: log.data.members && log.data.members.length > 0 ? log.data.members.join('\\n') : '-',
+          detailsValue: log.data.members && log.data.members.length > 0 ? log.data.members.join('\n') : '-',
           amount: log.data.totalAmount ? `${log.data.totalAmount.toLocaleString()} $` : (calcAmount ? `${calcAmount.toLocaleString()} $` : '-'),
         };
       }
@@ -124,7 +144,7 @@ export default function TransactionHistory() {
           transaction: 'ขึ้นทะเบียนสังกัดใหม่',
           requester: log.data.coLeaders?.[0] || 'ดูรายละเอียด',
           detailsLabel: 'รายชื่อสมาชิก',
-          detailsValue: `รองหัวหน้า:\\n${log.data.coLeaders?.join('\\n') || '-'}\\n\\nสมาชิก:\\n${log.data.members?.join('\\n') || '-'}`,
+          detailsValue: `รองหัวหน้า:\n${log.data.coLeaders?.join('\n') || '-'}\n\nสมาชิก:\n${log.data.members?.join('\n') || '-'}`,
           amount: '-',
         };
       case 'welfare_trade':
@@ -134,7 +154,7 @@ export default function TransactionHistory() {
           transaction: `เทรดสวัสดิการ (${log.data.tradeType || '-'})`,
           requester: log.data.oldOwner || log.data.newOwner || '-',
           detailsLabel: 'รายละเอียดไอเทม',
-          detailsValue: log.data.items ? log.data.items.map(i => `${i.name} x${i.amount}`).join('\\n') : '-',
+          detailsValue: log.data.items ? log.data.items.map(i => `${i.name} x${i.amount}`).join('\n') : '-',
           amount: log.data.totalPrice ? `${log.data.totalPrice.toLocaleString()} $` : '-',
         };
       case 'welfare':
@@ -148,7 +168,7 @@ export default function TransactionHistory() {
             ...(log.data.vehicles ? log.data.vehicles.map(v => `รถ: ${v.name} (ทะเบียน: ${v.plate})`) : []),
             log.data.hasWeaponWelfare ? 'เบิกอาวุธ: ใช่' : '',
             log.data.otherWelfare ? `อื่นๆ: ${log.data.otherWelfare}` : ''
-          ].filter(Boolean).join('\\n') || '-',
+          ].filter(Boolean).join('\n') || '-',
           amount: '-',
         };
       default:
@@ -348,6 +368,15 @@ export default function TransactionHistory() {
           )}
         </div>
       </div>
+
+      <ConfirmationModal
+        isOpen={confirmModal.isOpen}
+        onClose={() => setConfirmModal({ isOpen: false, logId: null, isLoading: false })}
+        onConfirm={confirmDelete}
+        title="ยืนยันการลบคำร้อง"
+        message="คุณต้องการลบคำร้องนี้ออกจากระบบใช่หรือไม่? ข้อมูลที่ถูกลบจะไม่สามารถกู้คืนได้"
+        isLoading={confirmModal.isLoading}
+      />
     </div>
   );
 }
