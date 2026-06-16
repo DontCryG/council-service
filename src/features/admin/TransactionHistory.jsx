@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getTransactionLogs, deleteTransactionLog, updateTransactionLogStatus } from '../../core/api';
+import { listenTransactionLogs, deleteTransactionLog, updateTransactionLogStatus } from '../../core/api';
 import { useAppStore } from '../../store';
 import { 
   FileText, PencilSimple, Buildings, Handshake, Gift,
@@ -20,21 +20,19 @@ export default function TransactionHistory() {
   const [groupFilter, setGroupFilter] = useState('ALL'); // ALL, GANG, FAMILY
 
   useEffect(() => {
-    fetchLogs();
-  }, []);
-
-  const fetchLogs = async () => {
     setLoading(true);
-    const data = await getTransactionLogs();
-    setLogs(data);
-    setLoading(false);
-  };
+    const unsubscribe = listenTransactionLogs((data) => {
+      setLogs(data);
+      setLoading(false);
+    });
+    
+    return () => unsubscribe();
+  }, []);
 
   const handleApprove = async (logId) => {
     try {
       await updateTransactionLogStatus(logId, 'approved', user);
       showAlert('success', 'อนุมัติคำร้องเรียบร้อยแล้ว');
-      fetchLogs(); // Refresh
     } catch (err) {
       showAlert('error', 'เกิดข้อผิดพลาดในการอนุมัติ');
     }
@@ -231,7 +229,7 @@ export default function TransactionHistory() {
                 </button>
               ))}
             </div>
-            <button onClick={fetchLogs} className="p-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition-colors border border-slate-700 flex-shrink-0">
+            <button className="p-2.5 bg-slate-800 text-slate-500 rounded-xl transition-colors border border-slate-700 flex-shrink-0 cursor-not-allowed" title="ระบบซิงก์ข้อมูลอัตโนมัติแล้ว">
               <ArrowsClockwise size={18} />
             </button>
           </div>

@@ -1,7 +1,7 @@
 const API_BASE_URL = '/api';
 
 import { db } from './firebase';
-import { collection, addDoc, query, orderBy, getDocs, Timestamp, doc, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, query, orderBy, getDocs, Timestamp, doc, updateDoc, onSnapshot } from 'firebase/firestore';
 
 /**
  * Saves a transaction log to Firestore
@@ -41,6 +41,26 @@ export const getTransactionLogs = async () => {
     console.error("Failed to get transaction logs:", err);
     return [];
   }
+};
+
+/**
+ * Listens to transaction logs in real-time
+ * @param {Function} callback - Function to call with updated data
+ * @returns {Function} Unsubscribe function
+ */
+export const listenTransactionLogs = (callback) => {
+  const q = query(collection(db, 'transaction_logs'), orderBy('createdAt', 'desc'));
+  return onSnapshot(q, (snapshot) => {
+    const data = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      createdAt: doc.data().createdAt?.toDate() || new Date()
+    }));
+    callback(data);
+  }, (err) => {
+    console.error("Failed to listen to transaction logs:", err);
+    callback([]);
+  });
 };
 
 /**
