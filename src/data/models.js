@@ -22,7 +22,7 @@ export const councilServices = [
     { id: 'cs6', title: 'ระบบเข้าเวรสภา', desc: 'จัดการการเข้าเวร ทำงาน ของสมาชิกสภา เพื่อนำไปคิดคะแนนการทำงาน', icon: 'ph-clock' },
     { id: 'cs3', title: 'ระบบจัดการเงิน Ticket', desc: 'จัดการงบประมาณ การเก็บเงินค่า Ticket ของประชาชน', icon: 'ph-currency-circle-dollar' },
     { id: 'cs4', title: 'ระบบจัดการรายชื่อองค์กร', desc: 'จัดการฐานข้อมูลองค์กร และสถานะ Gang/Family ในเมือง', icon: 'ph-address-book' },
-    { id: 'admin/transactions', title: 'ประวัติการทำรายการ (Logs)', desc: 'ดูประวัติการทำธุรกรรมและบริการทั้งหมดที่ถูกบันทึกไว้ในฐานข้อมูล', icon: 'ph-database' },
+    { id: 'transactions', title: 'ระบบจัดการคำร้อง', desc: 'ดูประวัติการทำธุรกรรมและบริการทั้งหมดที่ถูกบันทึกไว้ในฐานข้อมูล', icon: 'ph-database' },
     { id: 'council_loan', title: 'ระบบจัดการเงินกู้', desc: 'ระบบจัดการการกู้ยืมเงินและชำระเงินกู้สำหรับสภา', icon: 'ph-coins' },
 ];
 

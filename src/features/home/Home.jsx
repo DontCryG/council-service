@@ -22,7 +22,7 @@ export default function Home() {
   const filteredPublic = filterServices(publicServices);
   const filteredCouncil = filterServices(councilServices).filter(s => {
     // Hide Admin-only rooms from non-admin users
-    if ((s.id === 'council_manage' || s.id === 'admin/transactions') && user?.role !== 'admin') {
+    if ((s.id === 'council_manage' || s.id === 'transactions') && user?.role !== 'admin') {
       return false;
     }
     return true;
