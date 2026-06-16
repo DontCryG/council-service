@@ -265,10 +265,29 @@ ${detailsLines}
           title: `[${log.data.alias || '-'}] ${log.data.name || '-'}`,
           type: log.data.orgType || 'GANG',
           transaction: 'ขึ้นทะเบียนสังกัดใหม่',
-          requester: log.data.coLeaders?.[0] || 'ดูรายละเอียด',
+          requester: log.data.leader || log.data.coLeaders?.[0] || 'ดูรายละเอียด',
           detailsLabel: 'รายชื่อสมาชิก',
-          detailsValue: `รองหัวหน้า:\n${log.data.coLeaders?.join('\n') || '-'}\n\nสมาชิก:\n${log.data.members?.join('\n') || '-'}`,
-          amount: '-',
+          detailsValue: `หัวหน้า:\n${log.data.leader || '-'}\n\nรองหัวหน้า:\n${log.data.coLeaders?.join('\n') || '-'}\n\nสมาชิก:\n${log.data.members?.join('\n') || '-'}`,
+          extraNode: (log.data.color || log.data.logo) ? (
+            <div className="space-y-4">
+              {log.data.color && (
+                 <div className="flex items-center gap-2">
+                    <span className="text-sm font-bold text-slate-400">รหัสสี:</span>
+                    <div className="w-5 h-5 rounded shadow-inner border border-slate-700" style={{ backgroundColor: log.data.color }}></div>
+                    <span className="text-sm text-slate-200 font-medium uppercase">{log.data.color}</span>
+                 </div>
+              )}
+              {log.data.logo && (
+                 <div>
+                   <span className="text-sm font-bold text-slate-400 block mb-2">โลโก้สังกัด:</span>
+                   <a href={log.data.logo} target="_blank" rel="noreferrer" className="inline-block border border-slate-700 hover:border-blue-500 rounded-xl overflow-hidden transition-colors bg-slate-950 p-1">
+                     <img src={log.data.logo} alt="Logo" className="w-24 h-24 object-contain rounded-lg" />
+                   </a>
+                 </div>
+              )}
+            </div>
+          ) : null,
+          amount: log.data.totalAmount ? `${log.data.totalAmount.toLocaleString()} $` : '200,000 $',
         };
       case 'welfare_trade':
         return {

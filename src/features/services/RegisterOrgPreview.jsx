@@ -76,10 +76,13 @@ export default function RegisterOrgPreview() {
         name: formData.name,
         alias: formData.alias,
         color: formData.color,
+        leader: formData.leader,
+        logo: formData.logo,
         coLeaders: coLeaders.map(c => c.name),
         members: members.map(m => m.name),
         councilStaffId: formData.councilStaffId,
-        councilStaffName: councilName
+        councilStaffName: councilName,
+        totalAmount: 200000
       }, user);
 
       showAlert('success', 'ขึ้นทะเบียนสังกัดใหม่สำเร็จ !');
