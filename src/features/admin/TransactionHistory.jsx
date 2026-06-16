@@ -42,6 +42,13 @@ export default function TransactionHistory() {
     return () => unsubscribe();
   }, []);
 
+  const handleRefresh = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+  };
+
   const handleApprove = (logId) => {
     if (user?.role !== 'admin') {
       showAlert('error', 'คุณไม่มีสิทธิ์ในการอนุมัติ');
@@ -401,8 +408,13 @@ ${detailsLines}
                 </button>
               ))}
             </div>
-            <button className="p-2.5 bg-slate-800 text-slate-500 rounded-xl transition-colors border border-slate-700 flex-shrink-0 cursor-not-allowed" title="ระบบซิงก์ข้อมูลอัตโนมัติแล้ว">
-              <ArrowsClockwise size={18} />
+            <button 
+              onClick={handleRefresh}
+              disabled={loading}
+              className="p-2.5 bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 rounded-xl transition-colors border border-slate-700 flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed" 
+              title="รีเฟรชข้อมูล"
+            >
+              <ArrowsClockwise size={18} className={loading ? 'animate-spin' : ''} />
             </button>
           </div>
         </div>
