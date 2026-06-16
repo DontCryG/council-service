@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { listenTransactionLogs, deleteTransactionLog, updateTransactionLogStatus } from '../../core/api';
+import { listenTransactionLogs, deleteTransactionLog, updateTransactionLogStatus, sendWebhook } from '../../core/api';
 import { useAppStore } from '../../store';
 import { 
   FileText, PencilSimple, Buildings, Handshake, Gift,
@@ -64,11 +64,20 @@ export default function TransactionHistory() {
   const confirmApprove = async () => {
     setApproveModal(prev => ({ ...prev, isLoading: true }));
     try {
+      const logToApprove = logs.find(l => l.id === approveModal.logId);
+      
+      if (logToApprove && logToApprove.data.webhookPayload) {
+        let webhookType = logToApprove.type;
+        if (webhookType === 'general_service') webhookType = 'general';
+        await sendWebhook(webhookType, logToApprove.data.webhookPayload);
+      }
+      
       await updateTransactionLogStatus(approveModal.logId, 'approved', user);
-      showAlert('success', 'อนุมัติคำร้องเรียบร้อยแล้ว');
+      showAlert('success', 'อนุมัติคำร้องและส่ง Log เรียบร้อยแล้ว');
       setApproveModal({ isOpen: false, logId: null, isLoading: false });
     } catch (err) {
-      showAlert('error', 'เกิดข้อผิดพลาดในการอนุมัติ');
+      console.error("Approval error:", err);
+      showAlert('error', 'เกิดข้อผิดพลาด: ' + (err.message || 'ไม่สามารถอนุมัติได้'));
       setApproveModal(prev => ({ ...prev, isLoading: false }));
     }
   };

@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
-import { sendWebhook, saveTransactionLog } from '../../core/api';
+import { saveTransactionLog, uploadReceiptImage } from '../../core/api';
 import { toBlob } from 'html-to-image';
 import Button from '../../components/ui/Button';
 import ConfirmationModal from '../../components/ui/ConfirmationModal';
@@ -63,9 +63,9 @@ export default function EditOrgPreview() {
         cacheBust: true 
       });
       if (!blob) throw new Error("Failed to generate image");
+
+      const imageUrl = await uploadReceiptImage(blob, 'edit_org', refNumber);
       
-      const fd = new FormData();
-      fd.append('file', blob, 'edit_org.png');
       let transactionItems = [];
       if (formData.changeInfo) transactionItems.push("- เปลี่ยนข้อมูล Gang (500,000$)");
       if (formData.editTexture) transactionItems.push(`- แก้ไข Texture เสื้อผ้า (${(500000 * Math.max(1, formData.textureCount)).toLocaleString()}$)`);
@@ -82,7 +82,7 @@ export default function EditOrgPreview() {
 
       const orgTypeDisplay = formData.orgType === 'GANG' ? 'แก๊ง' : (formData.orgType === 'FAMILY' ? 'ครอบครัว' : formData.orgType);
 
-      fd.append('payload_json', JSON.stringify({
+      const webhookPayload = {
         embeds: [{
           title: "📜 Council Service Log",
           description: "**ได้รับคำร้องขออัปเดตข้อมูลสังกัดใหม่**",
@@ -98,14 +98,13 @@ export default function EditOrgPreview() {
             { name: "ข้อมูลเพิ่มเติมที่แจ้ง", value: additionalInfo, inline: false },
           ],
           image: {
-            url: "attachment://edit_org.png"
+            url: imageUrl
           },
           footer: { text: `Ref: ${refNumber} | Server System` },
           timestamp: new Date().toISOString()
         }]
-      }));
+      };
 
-      await sendWebhook('edit_org', fd);
       await saveTransactionLog('edit_org', {
         refNumber: refNumber,
         orgName: formData.orgName,
@@ -122,7 +121,8 @@ export default function EditOrgPreview() {
         hexColor: formData.hexColor,
         logoUrl: formData.logoUrl,
         extraDetails: formData.extraDetails,
-        totalAmount: calculateTotal()
+        totalAmount: calculateTotal(),
+        webhookPayload: webhookPayload
       }, user);
       showAlert('success', 'ส่งข้อมูลแจ้งแก้ไขเรียบร้อยแล้ว!');
       setShowConfirm(false);

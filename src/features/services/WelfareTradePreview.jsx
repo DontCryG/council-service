@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
-import { sendWebhook, saveTransactionLog } from '../../core/api';
+import { saveTransactionLog, uploadReceiptImage } from '../../core/api';
 import { buildWelfareTradeWebhook } from '../../services/discordFormatters';
 import { toBlob } from 'html-to-image';
 
@@ -70,14 +70,12 @@ export default function WelfareTradePreview() {
       });
       if (!blob) throw new Error("Failed to generate image");
       
-      const fd = new FormData();
-      fd.append('file', blob, 'trade.png');
+      const imageUrl = await uploadReceiptImage(blob, 'welfare_trade', refNumber);
       const councilName = councilMembers.find(c => c.id === formData.councilStaffId)?.name;
       const payload = buildWelfareTradeWebhook(formData, items, getTotalPrice(), councilName, refNumber);
 
-      fd.append('payload_json', JSON.stringify(payload));
+      payload.embeds[0].image = { url: imageUrl };
 
-      await sendWebhook('welfare_trade', fd);
       await saveTransactionLog('welfare_trade', {
         refNumber: refNumber,
         orgName: formData.orgName,
@@ -88,7 +86,8 @@ export default function WelfareTradePreview() {
         items: items,
         totalPrice: getTotalPrice(),
         councilStaffId: formData.councilStaffId,
-        councilStaffName: councilName || '-'
+        councilStaffName: councilName || '-',
+        webhookPayload: payload
       }, user);
       showAlert('success', 'ส่งข้อมูลแลกเปลี่ยนสวัสดิการเรียบร้อยแล้ว!');
       setShowConfirm(false);

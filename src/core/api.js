@@ -1,7 +1,8 @@
 const API_BASE_URL = '/api';
 
-import { db } from './firebase';
+import { db, storage } from './firebase';
 import { collection, addDoc, query, orderBy, getDocs, Timestamp, doc, updateDoc, onSnapshot } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 /**
  * Saves a transaction log to Firestore
@@ -126,6 +127,25 @@ export const sendWebhook = async (type, formData) => {
     return true;
   } catch (err) {
     console.error("Webhook Error:", err);
+    throw err;
+  }
+};
+
+/**
+ * Uploads a receipt image blob to Firebase Storage and returns the download URL
+ * @param {Blob} blob - The image blob to upload
+ * @param {string} type - Transaction type for folder organization
+ * @param {string} refNumber - Reference number for file naming
+ * @returns {Promise<string>} The download URL
+ */
+export const uploadReceiptImage = async (blob, type, refNumber) => {
+  try {
+    const fileName = `receipts/${type}/${refNumber}_${Date.now()}.png`;
+    const storageRef = ref(storage, fileName);
+    await uploadBytes(storageRef, blob);
+    return await getDownloadURL(storageRef);
+  } catch (err) {
+    console.error("Failed to upload receipt image:", err);
     throw err;
   }
 };

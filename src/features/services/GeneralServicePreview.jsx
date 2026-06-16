@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
-import { sendWebhook, saveTransactionLog } from '../../core/api';
+import { saveTransactionLog, uploadReceiptImage } from '../../core/api';
 import { toBlob } from 'html-to-image';
 import Button from '../../components/ui/Button';
 import { PaperPlaneTilt, ArrowLeft, Receipt, SealCheck, CircleDashed, User, UserCircle } from '@phosphor-icons/react';
@@ -39,13 +39,13 @@ export default function GeneralServicePreview() {
       });
       if (!blob) throw new Error("Failed to generate image");
       
-      const fd = new FormData();
-      fd.append('file', blob, 'receipt.png');
+      const imageUrl = await uploadReceiptImage(blob, 'general_service', refNumber);
+
       const typeDisplay = formData.groupType === 'GANG' ? 'แก๊ง' : 'ครอบครัว';
       const councilName = councilMembers.find(c => c.id === formData.councilMemberId)?.name || '-';
       const membersText = members.map(m => m.value).join('\n');
 
-      fd.append('payload_json', JSON.stringify({
+      const webhookPayload = {
         embeds: [{
           title: "Council Service Log",
           description: "Service request submitted",
@@ -59,14 +59,13 @@ export default function GeneralServicePreview() {
             { name: "Council", value: councilName, inline: false }
           ],
           image: {
-            url: "attachment://receipt.png"
+            url: imageUrl
           },
           footer: { text: `Ref: ${refNumber} | Server System` },
           timestamp: new Date().toISOString()
         }]
-      }));
+      };
 
-      await sendWebhook('general', fd);
       await saveTransactionLog('general_service', {
         refNumber: refNumber,
         orgType: formData.groupType,
@@ -76,7 +75,8 @@ export default function GeneralServicePreview() {
         transactionName: selectedTransaction?.name || '-',
         councilMemberId: formData.councilMemberId,
         councilMemberName: councilName,
-        members: members.map(m => m.value)
+        members: members.map(m => m.value),
+        webhookPayload: webhookPayload
       }, user);
 
       showAlert('success', 'บันทึกข้อมูลและออกใบเสร็จสำเร็จ !');

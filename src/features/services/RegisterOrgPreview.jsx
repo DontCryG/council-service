@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
-import { sendWebhook, saveTransactionLog } from '../../core/api';
+import { saveTransactionLog, uploadReceiptImage } from '../../core/api';
 import { toBlob } from 'html-to-image';
 import Button from '../../components/ui/Button';
 import { PaperPlaneTilt, ArrowLeft } from '@phosphor-icons/react';
@@ -34,8 +34,8 @@ export default function RegisterOrgPreview() {
       });
       if (!blob) throw new Error("Failed to generate image");
       
-      const fd = new FormData();
-      fd.append('file', blob, 'register.png');
+      const imageUrl = await uploadReceiptImage(blob, 'register_org', refNumber);
+
       const typeDisplay = formData.orgType === 'GANG' ? 'แก๊ง' : 'ครอบครัว';
       const councilName = councilMembers.find(c => c.id === formData.councilStaffId)?.name || '-';
 
@@ -47,7 +47,7 @@ export default function RegisterOrgPreview() {
         memberText
       ].filter(Boolean).join('\n');
 
-      fd.append('payload_json', JSON.stringify({
+      const webhookPayload = {
         embeds: [{
           title: "Council Service Log",
           description: "Organization registration submitted",
@@ -62,14 +62,13 @@ export default function RegisterOrgPreview() {
             { name: "Council", value: councilName, inline: false }
           ],
           image: {
-            url: "attachment://register.png"
+            url: imageUrl
           },
           footer: { text: `Ref: ${refNumber} | Server System` },
           timestamp: new Date().toISOString()
         }]
-      }));
+      };
 
-      await sendWebhook('register_org', fd);
       await saveTransactionLog('register_org', {
         refNumber: refNumber,
         orgType: formData.orgType,
@@ -82,7 +81,8 @@ export default function RegisterOrgPreview() {
         members: members.map(m => m.name),
         councilStaffId: formData.councilStaffId,
         councilStaffName: councilName,
-        totalAmount: 200000
+        totalAmount: 200000,
+        webhookPayload: webhookPayload
       }, user);
 
       showAlert('success', 'ขึ้นทะเบียนสังกัดใหม่สำเร็จ !');
