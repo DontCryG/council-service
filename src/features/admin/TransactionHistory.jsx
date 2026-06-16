@@ -3,9 +3,9 @@ import { listenTransactionLogs, deleteTransactionLog, updateTransactionLogStatus
 import { useAppStore } from '../../store';
 import { 
   FileText, PencilSimple, Buildings, Handshake, Gift,
-  MagnifyingGlass, ArrowsClockwise, Trash, CheckSquareOffset,
-  Copy, UserCircle, CheckCircle, Clock
+  Trash, CheckCircle, Clock, Copy, UserCircle, CheckSquareOffset, ArrowsClockwise, MagnifyingGlass
 } from '@phosphor-icons/react';
+import { transactions } from '../../data/models';
 
 export default function TransactionHistory() {
   const { user, showAlert } = useAppStore();
@@ -91,7 +91,12 @@ export default function TransactionHistory() {
 
   const getLogDetails = (log) => {
     switch (log.type) {
-      case 'general_service':
+      case 'general_service': {
+        const trans = transactions.find(t => t.id === parseInt(log.data.transactionId));
+        let calcAmount = 0;
+        if (trans) {
+           calcAmount = trans.type === 'per_head' ? trans.price * (log.data.members?.length || 1) : trans.price;
+        }
         return {
           title: log.data.groupName || '-',
           type: log.data.orgType || log.data.groupType || 'GANG',
@@ -99,8 +104,9 @@ export default function TransactionHistory() {
           requester: log.data.requester || '-',
           detailsLabel: 'รายละเอียดสมาชิก',
           detailsValue: log.data.members && log.data.members.length > 0 ? log.data.members.join('\\n') : '-',
-          amount: '-',
+          amount: log.data.totalAmount ? `${log.data.totalAmount.toLocaleString()} $` : (calcAmount ? `${calcAmount.toLocaleString()} $` : '-'),
         };
+      }
       case 'edit_org':
         return {
           title: log.data.orgName || '-',
@@ -309,7 +315,7 @@ export default function TransactionHistory() {
                         <p className="text-xs font-bold text-slate-500 mb-1">สภาที่รับเรื่อง</p>
                         <div className={`bg-slate-900 border px-4 py-2 rounded-lg text-sm flex items-center gap-2 min-w-[200px] ${isApproved ? 'border-emerald-500/50 text-emerald-400' : 'border-slate-700 text-slate-300'}`}>
                           <UserCircle size={18} className={isApproved ? "text-emerald-500" : "text-blue-500"} />
-                          {isApproved ? (log.approvedBy?.displayName || log.approvedBy?.email || 'Approved') : '-- เลือกเจ้าหน้าที่สภา --'}
+                          {isApproved ? (log.approvedBy?.displayName || log.approvedBy?.email || 'Approved') : (log.data.councilMemberName || log.data.councilStaffName || '-- เลือกเจ้าหน้าที่สภา --')}
                         </div>
                       </div>
                       
