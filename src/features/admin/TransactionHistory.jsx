@@ -76,10 +76,10 @@ export default function TransactionHistory() {
     let detailsLines = '  - ไม่มีรายละเอียด';
     if (details.detailsValue && details.detailsValue !== '-') {
       detailsLines = details.detailsValue
-        .split('\\n')
+        .split('\n')
         .filter(line => line.trim() !== '')
         .map(line => `  - ${line}`)
-        .join('\\n');
+        .join('\n');
     }
 
     const text = `===== COUNCIL DATA =====
@@ -164,13 +164,15 @@ ${detailsLines}
            changeList.push(`- ${log.data.changeInfo}`);
         }
 
+        const tCount = log.data.textureCount ? Math.max(1, parseInt(log.data.textureCount)) : 1;
+
         if (log.data.editTexture) {
-           editTotal += 500000;
-           changeList.push("- แก้ไข Texture เสื้อผ้า");
+           editTotal += 500000 * tCount;
+           changeList.push(`- แก้ไข Texture เสื้อผ้า (${tCount} ชุด)`);
         }
         if (log.data.addCloth) {
-           editTotal += 500000;
-           changeList.push("- ลงชุดเพิ่ม");
+           editTotal += 500000 * tCount;
+           changeList.push(`- ลงชุดเพิ่ม (${tCount} ชุด)`);
         }
         if (log.data.bulkChange) {
            editTotal += 1500000;
@@ -180,6 +182,14 @@ ${detailsLines}
            editTotal += 1000000;
            changeList.push("- ลง Accessories Adons เสริม");
         }
+        
+        let extraInfoStr = [];
+        if (log.data.hexColor) extraInfoStr.push(`รหัสสี: ${log.data.hexColor}`);
+        if (log.data.extraDetails) extraInfoStr.push(`เพิ่มเติม: ${log.data.extraDetails}`);
+
+        const detailsString = changeList.length > 0 
+           ? changeList.join('\n') + (extraInfoStr.length > 0 ? '\n\n' + extraInfoStr.join('\n') : '')
+           : '-';
 
         return {
           title: log.data.orgName || '-',
@@ -187,7 +197,39 @@ ${detailsLines}
           transaction: 'แก้ไขข้อมูลสังกัด',
           requester: log.data.requester || '-',
           detailsLabel: 'ข้อมูลที่แก้ไข',
-          detailsValue: changeList.length > 0 ? changeList.join('\\n') : '-',
+          detailsValue: detailsString,
+          detailsNode: (
+            <div className="space-y-3">
+              {changeList.length > 0 ? (
+                <ul className="list-disc list-inside space-y-1">
+                  {changeList.map((c, i) => <li key={i}>{c}</li>)}
+                </ul>
+              ) : <span>-</span>}
+              
+              {log.data.hexColor && (
+                 <div className="flex items-center gap-2 mt-2">
+                    <span className="text-xs font-bold text-slate-500">รหัสสี:</span>
+                    <div className="w-4 h-4 rounded shadow-inner border border-slate-700" style={{ backgroundColor: log.data.hexColor }}></div>
+                    <span className="text-xs text-slate-300 uppercase">{log.data.hexColor}</span>
+                 </div>
+              )}
+
+              {log.data.extraDetails && (
+                 <div className="mt-2 text-xs text-slate-400 bg-slate-900/50 p-3 rounded-lg border border-slate-800">
+                   <strong className="text-slate-300">เพิ่มเติม:</strong> {log.data.extraDetails}
+                 </div>
+              )}
+
+              {log.data.logoUrl && (
+                 <div className="mt-2 pt-2 border-t border-slate-800 border-dashed">
+                   <span className="text-xs font-bold text-slate-500 block mb-2">โลโก้ใหม่:</span>
+                   <a href={log.data.logoUrl} target="_blank" rel="noreferrer" className="inline-block border-2 border-slate-700 hover:border-amber-500 rounded-lg overflow-hidden transition-colors">
+                     <img src={log.data.logoUrl} alt="Logo" className="w-16 h-16 object-cover bg-slate-900" />
+                   </a>
+                 </div>
+              )}
+            </div>
+          ),
           amount: log.data.totalAmount ? `${log.data.totalAmount.toLocaleString()} $` : (editTotal > 0 ? `${editTotal.toLocaleString()} $` : '-'),
         };
       }
@@ -377,8 +419,8 @@ ${detailsLines}
                       
                       <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
                         <p className="text-xs font-bold text-slate-500 mb-2">{details.detailsLabel}</p>
-                        <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 text-slate-300 text-sm max-h-32 overflow-y-auto whitespace-pre-wrap">
-                          {details.detailsValue}
+                        <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 text-slate-300 text-sm max-h-48 overflow-y-auto whitespace-pre-wrap">
+                          {details.detailsNode || details.detailsValue}
                         </div>
                       </div>
                     </div>

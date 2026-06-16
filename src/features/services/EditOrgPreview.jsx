@@ -117,7 +117,12 @@ export default function EditOrgPreview() {
         editTexture: formData.editTexture,
         addCloth: formData.addCloth,
         bulkChange: formData.bulkChange,
-        addAccessory: formData.addAccessory
+        addAccessory: formData.addAccessory,
+        textureCount: formData.textureCount,
+        hexColor: formData.hexColor,
+        logoUrl: formData.logoUrl,
+        extraDetails: formData.extraDetails,
+        totalAmount: calculateTotal()
       }, user);
       showAlert('success', 'ส่งข้อมูลแจ้งแก้ไขเรียบร้อยแล้ว!');
       setShowConfirm(false);
