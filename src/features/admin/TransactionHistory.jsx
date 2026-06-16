@@ -153,16 +153,44 @@ ${detailsLines}
           amount: log.data.totalAmount ? `${log.data.totalAmount.toLocaleString()} $` : (calcAmount ? `${calcAmount.toLocaleString()} $` : '-'),
         };
       }
-      case 'edit_org':
+      case 'edit_org': {
+        let editTotal = 0;
+        let changeList = [];
+        
+        if (log.data.changeInfo === true || log.data.changeInfo === "true") {
+           editTotal += 500000;
+           changeList.push("- เปลี่ยนข้อมูล Gang");
+        } else if (typeof log.data.changeInfo === 'string' && log.data.changeInfo !== 'false' && log.data.changeInfo.trim() !== '') {
+           changeList.push(`- ${log.data.changeInfo}`);
+        }
+
+        if (log.data.editTexture) {
+           editTotal += 500000;
+           changeList.push("- แก้ไข Texture เสื้อผ้า");
+        }
+        if (log.data.addCloth) {
+           editTotal += 500000;
+           changeList.push("- ลงชุดเพิ่ม");
+        }
+        if (log.data.bulkChange) {
+           editTotal += 1500000;
+           changeList.push("- เหมาเปลี่ยนข้อมูล Gang");
+        }
+        if (log.data.addAccessory) {
+           editTotal += 1000000;
+           changeList.push("- ลง Accessories Adons เสริม");
+        }
+
         return {
           title: log.data.orgName || '-',
           type: log.data.orgType || 'GANG',
           transaction: 'แก้ไขข้อมูลสังกัด',
           requester: log.data.requester || '-',
           detailsLabel: 'ข้อมูลที่แก้ไข',
-          detailsValue: log.data.changeInfo || '-',
-          amount: '-',
+          detailsValue: changeList.length > 0 ? changeList.join('\\n') : '-',
+          amount: log.data.totalAmount ? `${log.data.totalAmount.toLocaleString()} $` : (editTotal > 0 ? `${editTotal.toLocaleString()} $` : '-'),
         };
+      }
       case 'register_org':
         return {
           title: `[${log.data.alias || '-'}] ${log.data.name || '-'}`,
