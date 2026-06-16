@@ -7,6 +7,7 @@ export async function onRequestPost(context) {
         case 'duty_in': webhookUrl = env.WEBHOOK_DUTY_CLOCK_IN; break;
         case 'duty_out': webhookUrl = env.WEBHOOK_DUTY_CLOCK_OUT; break;
         case 'duty_leave': webhookUrl = env.WEBHOOK_DUTY_LEAVE; break;
+        case 'duty_resign': webhookUrl = env.WEBHOOK_DUTY_RESIGN; break;
         case 'edit_org': webhookUrl = env.WEBHOOK_EDIT_ORG; break;
         case 'general': webhookUrl = env.WEBHOOK_GENERAL_SERVICE; break;
         case 'register_org': webhookUrl = env.WEBHOOK_REGISTER_ORG; break;
