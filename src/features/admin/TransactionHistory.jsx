@@ -136,7 +136,6 @@ ${detailsLines}
       group: 'ระบบสวัสดิการ',
       items: [
         { id: 'welfare_trade', label: 'เทรดสวัสดิการ', icon: Handshake },
-        { id: 'welfare', label: 'เบิกสวัสดิการ', icon: Gift },
       ]
     }
   ];
