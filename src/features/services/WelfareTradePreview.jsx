@@ -74,7 +74,7 @@ export default function WelfareTradePreview() {
       const councilName = councilMembers.find(c => c.id === formData.councilStaffId)?.name;
       const payload = buildWelfareTradeWebhook(formData, items, getTotalPrice(), councilName, refNumber);
 
-      payload.embeds[0].image = { url: "attachment://trade.jpg" };
+      payload.embeds[0].image = { url: "attachment://receipt.jpg" };
 
       const logId = await saveTransactionLog('welfare_trade', {
         refNumber: refNumber,

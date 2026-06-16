@@ -61,7 +61,7 @@ export default function RegisterOrgPreview() {
             { name: "Council", value: councilName, inline: false }
           ],
           image: {
-            url: "attachment://register.jpg"
+            url: "attachment://receipt.jpg"
           },
           footer: { text: `Ref: ${refNumber} | Server System` },
           timestamp: new Date().toISOString()

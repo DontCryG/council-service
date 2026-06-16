@@ -97,7 +97,7 @@ export default function EditOrgPreview() {
             { name: "ข้อมูลเพิ่มเติมที่แจ้ง", value: additionalInfo, inline: false },
           ],
           image: {
-            url: "attachment://edit_org.jpg"
+            url: "attachment://receipt.jpg"
           },
           footer: { text: `Ref: ${refNumber} | Server System` },
           timestamp: new Date().toISOString()
