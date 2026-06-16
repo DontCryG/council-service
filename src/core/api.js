@@ -142,7 +142,14 @@ export const uploadReceiptImage = async (blob, type, refNumber) => {
   try {
     const fileName = `receipts/${type}/${refNumber}_${Date.now()}.png`;
     const storageRef = ref(storage, fileName);
-    await uploadBytes(storageRef, blob);
+    
+    const uploadPromise = uploadBytes(storageRef, blob);
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error("Firebase Storage Timeout: กรุณาตรวจสอบว่าเปิดใช้งาน Storage ใน Firebase Console และตั้งค่า Rules เรียบร้อยแล้ว")), 10000)
+    );
+
+    await Promise.race([uploadPromise, timeoutPromise]);
+    
     return await getDownloadURL(storageRef);
   } catch (err) {
     console.error("Failed to upload receipt image:", err);
