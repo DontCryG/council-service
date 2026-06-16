@@ -8,7 +8,7 @@ import {
 } from '@phosphor-icons/react';
 import { Card } from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
-import { sendWebhook } from '../../core/api';
+import { sendWebhook, saveTransactionLog, listenTransactionLogs } from '../../core/api';
 
 const monthNamesShort = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
 
@@ -94,6 +94,8 @@ export default function DutySystem() {
     return () => clearInterval(interval);
   }, []);
 
+  const [transactionLogs, setTransactionLogs] = useState([]);
+
   useEffect(() => {
     const unsubDuty = onSnapshot(doc(db, 'app_state', 'duty'), (snap) => {
       if (snap.exists()) setDutyData(snap.data());
@@ -103,7 +105,10 @@ export default function DutySystem() {
     const unsubCouncil = onSnapshot(doc(db, 'app_state', 'council_members'), (snap) => {
       if (snap.exists()) setCouncilMembers(snap.data().members || []);
     });
-    return () => { unsubDuty(); unsubCouncil(); };
+    const unsubLogs = listenTransactionLogs((data) => {
+      setTransactionLogs(data);
+    });
+    return () => { unsubDuty(); unsubCouncil(); unsubLogs(); };
   }, []);
 
   // Auto-checkout effect
@@ -340,10 +345,23 @@ export default function DutySystem() {
   const avgMinutes = filteredHistory.length > 0 ? (totalFilteredMinutes / filteredHistory.length) : 0;
 
   // Filtered leave history
-  const filteredLeaves = (dutyData.leaves || []).filter(lv => {
+  const filteredLeaves = [
+    ...(dutyData.leaves || []),
+    ...transactionLogs.filter(log => log.type === 'leave').map(log => ({
+      id: log.id,
+      memberId: log.data.memberId,
+      memberName: log.data.memberName,
+      type: log.data.type,
+      dateFrom: log.data.dateFrom,
+      dateTo: log.data.dateTo,
+      reason: log.data.reason,
+      status: log.status,
+      submittedAt: log.createdAt?.getTime() || Date.now()
+    }))
+  ].filter(lv => {
     const targetId = currentMember?.id || user?.uid;
     return lv.memberId === targetId;
-  });
+  }).sort((a, b) => b.submittedAt - a.submittedAt);
 
   const activeMemberIds = Object.keys(dutyData.activeSessions || {});
   const selectedSession = selectedMemberId ? dutyData.activeSessions?.[selectedMemberId] : null;
@@ -684,22 +702,14 @@ export default function DutySystem() {
                       showAlert('error', 'กรุณากรอกข้อมูลให้ครบถ้วน'); return;
                     }
                     const memberName = councilMembers.find(m => m.id === leaveForm.memberId)?.name || 'Unknown';
-                    const leaves = [...(dutyData.leaves || [])];
-                    leaves.unshift({
-                      id: 'lv_' + Date.now(),
+                    const payload = {
                       memberId: leaveForm.memberId,
                       memberName: memberName,
                       type: leaveForm.type,
                       dateFrom: leaveForm.dateFrom,
                       dateTo: leaveForm.dateTo,
                       reason: leaveForm.reason,
-                      status: 'pending',
-                      submittedAt: Date.now()
-                    });
-                    saveToDb({ ...dutyData, leaves });
-                    
-                    try {
-                      await sendWebhook('duty_leave', {
+                      webhookPayload: {
                         embeds: [{
                           title: "📝 แจ้งลางาน (Leave Request)",
                           color: 0x3b82f6,
@@ -713,11 +723,17 @@ export default function DutySystem() {
                           footer: { text: "Council Duty System" },
                           timestamp: new Date().toISOString()
                         }]
-                      });
-                    } catch(e) { console.error("Webhook error:", e); }
+                      }
+                    };
 
-                    setLeaveForm({ memberId: '', type: 'ลากิจ (Personal)', dateFrom: '', dateTo: '', reason: '' });
-                    showAlert('success', 'ส่งใบลาเรียบร้อยแล้ว รอผู้มีอำนาจอนุมัติ');
+                    try {
+                      await saveTransactionLog('leave', payload, user);
+                      setLeaveForm({ memberId: '', type: 'ลากิจ (Personal)', dateFrom: '', dateTo: '', reason: '' });
+                      showAlert('success', 'ส่งใบลาเรียบร้อยแล้ว รอแอดมินอนุมัติในระบบจัดการคำร้อง');
+                    } catch(e) {
+                      console.error("Save log error:", e);
+                      showAlert('error', 'เกิดข้อผิดพลาดในการส่งใบลา');
+                    }
                   }}
                   className="w-full py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-900 font-black rounded-xl transition-colors"
                 >
@@ -842,20 +858,12 @@ export default function DutySystem() {
                       showAlert('error', 'กรุณากรอกข้อมูลให้ครบถ้วน'); return;
                     }
                     const memberName = councilMembers.find(m => m.id === resignForm.memberId)?.name || 'Unknown';
-                    const resignations = [...(dutyData.resignations || [])];
-                    resignations.unshift({
-                      id: 'res_' + Date.now(),
+                    const payload = {
                       memberId: resignForm.memberId,
                       memberName: memberName,
                       lastDay: resignForm.lastDay,
                       reason: resignForm.reason,
-                      status: 'pending',
-                      submittedAt: Date.now()
-                    });
-                    saveToDb({ ...dutyData, resignations });
-
-                    try {
-                      await sendWebhook('duty_leave', {
+                      webhookPayload: {
                         embeds: [{
                           title: "🚨 แจ้งลาออก (Resignation)",
                           color: 0xef4444,
@@ -867,11 +875,17 @@ export default function DutySystem() {
                           footer: { text: "Council Duty System" },
                           timestamp: new Date().toISOString()
                         }]
-                      });
-                    } catch(e) { console.error("Webhook error:", e); }
+                      }
+                    };
 
-                    setResignForm({ memberId: '', lastDay: '', reason: '', confirmed: false });
-                    showAlert('success', 'ยื่นเรื่องลาออกเรียบร้อยแล้ว กรุณารออนุมัติจากสภา');
+                    try {
+                      await saveTransactionLog('resign', payload, user);
+                      setResignForm({ memberId: '', lastDay: '', reason: '', confirmed: false });
+                      showAlert('success', 'ยื่นเรื่องลาออกเรียบร้อยแล้ว รอแอดมินอนุมัติในระบบจัดการคำร้อง');
+                    } catch(e) {
+                      console.error("Save log error:", e);
+                      showAlert('error', 'เกิดข้อผิดพลาดในการส่งใบลาออก');
+                    }
                   }}
                   className="w-full py-3.5 bg-red-600 hover:bg-red-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-black rounded-xl transition-colors"
                 >

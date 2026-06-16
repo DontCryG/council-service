@@ -3,7 +3,8 @@ import { listenTransactionLogs, deleteTransactionLog, updateTransactionLogStatus
 import { useAppStore } from '../../store';
 import { 
   FileText, PencilSimple, Buildings, Handshake, Gift,
-  Trash, CheckCircle, Clock, Copy, UserCircle, CheckSquareOffset, ArrowsClockwise, MagnifyingGlass
+  Trash, CheckCircle, Clock, Copy, UserCircle, CheckSquareOffset, ArrowsClockwise, MagnifyingGlass,
+  CalendarBlank, WarningCircle
 } from '@phosphor-icons/react';
 import { transactions } from '../../data/models';
 import ConfirmationModal from '../../components/ui/ConfirmationModal';
@@ -69,6 +70,8 @@ export default function TransactionHistory() {
       if (logToApprove && logToApprove.data.webhookPayload) {
         let webhookType = logToApprove.type;
         if (webhookType === 'general_service') webhookType = 'general';
+        if (webhookType === 'leave') webhookType = 'duty_leave';
+        if (webhookType === 'resign') webhookType = 'duty_resign';
         
         // Fetch image from Firestore
         const imageData = await getTransactionImage(logToApprove.id);
@@ -165,6 +168,10 @@ ${detailsLines}
         { id: 'general_service', label: 'บริการทั่วไป', icon: FileText },
         { id: 'edit_org', label: 'แก้ไขข้อมูลสังกัด', icon: PencilSimple },
         { id: 'register_org', label: 'ขึ้นทะเบียนสังกัด', icon: Buildings },
+        ...(user?.role === 'admin' ? [
+          { id: 'leave', label: 'แจ้งลา', icon: CalendarBlank },
+          { id: 'resign', label: 'ลาออก', icon: WarningCircle }
+        ] : [])
       ]
     },
     {
@@ -356,6 +363,26 @@ ${detailsLines}
             log.data.otherWelfare ? `อื่นๆ: ${log.data.otherWelfare}` : ''
           ].filter(Boolean).join('\n') || '-',
           amount: '-',
+        };
+      case 'leave':
+        return {
+          title: log.data.memberName || '-',
+          type: 'COUNCIL',
+          transaction: 'แจ้งลางาน',
+          requester: log.data.memberName || '-',
+          detailsLabel: 'รายละเอียดการลา',
+          detailsValue: `ประเภท: ${log.data.type}\nตั้งแต่: ${log.data.dateFrom}\nถึง: ${log.data.dateTo}\nเหตุผล: ${log.data.reason}`,
+          amount: '-'
+        };
+      case 'resign':
+        return {
+          title: log.data.memberName || '-',
+          type: 'COUNCIL',
+          transaction: 'แจ้งลาออก',
+          requester: log.data.memberName || '-',
+          detailsLabel: 'รายละเอียดลาออก',
+          detailsValue: `วันทำงานสุดท้าย: ${log.data.lastDay}\nเหตุผล: ${log.data.reason}`,
+          amount: '-'
         };
       default:
         return {
