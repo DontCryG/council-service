@@ -26,6 +26,12 @@ export default function TransactionHistory() {
     isLoading: false
   });
 
+  const [approveModal, setApproveModal] = useState({
+    isOpen: false,
+    logId: null,
+    isLoading: false
+  });
+
   useEffect(() => {
     setLoading(true);
     const unsubscribe = listenTransactionLogs((data) => {
@@ -36,12 +42,27 @@ export default function TransactionHistory() {
     return () => unsubscribe();
   }, []);
 
-  const handleApprove = async (logId) => {
+  const handleApprove = (logId) => {
+    if (user?.role !== 'admin') {
+      showAlert('error', 'คุณไม่มีสิทธิ์ในการอนุมัติ');
+      return;
+    }
+    setApproveModal({
+      isOpen: true,
+      logId,
+      isLoading: false
+    });
+  };
+
+  const confirmApprove = async () => {
+    setApproveModal(prev => ({ ...prev, isLoading: true }));
     try {
-      await updateTransactionLogStatus(logId, 'approved', user);
+      await updateTransactionLogStatus(approveModal.logId, 'approved', user);
       showAlert('success', 'อนุมัติคำร้องเรียบร้อยแล้ว');
+      setApproveModal({ isOpen: false, logId: null, isLoading: false });
     } catch (err) {
       showAlert('error', 'เกิดข้อผิดพลาดในการอนุมัติ');
+      setApproveModal(prev => ({ ...prev, isLoading: false }));
     }
   };
 
@@ -486,6 +507,17 @@ ${detailsLines}
         title="ยืนยันการลบคำร้อง"
         message="คุณต้องการลบคำร้องนี้ออกจากระบบใช่หรือไม่? ข้อมูลที่ถูกลบจะไม่สามารถกู้คืนได้"
         isLoading={confirmModal.isLoading}
+        confirmText="ลบข้อมูล"
+      />
+
+      <ConfirmationModal
+        isOpen={approveModal.isOpen}
+        onClose={() => setApproveModal({ isOpen: false, logId: null, isLoading: false })}
+        onConfirm={confirmApprove}
+        title="ยืนยันการอนุมัติ"
+        message="คุณตรวจสอบข้อมูลครบถ้วนแล้ว และต้องการอนุมัติคำร้องนี้ใช่หรือไม่?"
+        isLoading={approveModal.isLoading}
+        confirmText="ยืนยันการอนุมัติ"
       />
     </div>
   );
