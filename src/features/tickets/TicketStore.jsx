@@ -289,10 +289,10 @@ export default function TicketStore() {
               onChange={val => setFormData({...formData, requester: val})}
             />
             
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium text-slate-300 ml-1">สภาผู้ทำรายการ</label>
+            <div className="space-y-3">
+              <label className="text-sm font-bold text-slate-400 uppercase tracking-wide">สภาผู้ทำรายการ</label>
               <select 
-                className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition-colors"
+                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors"
                 value={formData.councilStaffId}
                 onChange={e => setFormData({...formData, councilStaffId: e.target.value})}
                 required
