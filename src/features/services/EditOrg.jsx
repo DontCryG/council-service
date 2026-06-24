@@ -178,25 +178,21 @@ export default function EditOrg() {
 
             {/* 2 & 3. ชื่อสังกัด & ผู้ทำรายการ */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-              <GroupSelect 
+              <AutocompleteInput 
                 label="2. ชื่อสังกัด (GROUP NAME)"
+                placeholder="พิมพ์เพื่อค้นหาชื่อสังกัด..."
+                type="group"
                 orgType={formData.orgType}
                 value={formData.orgName}
                 onChange={val => setFormData({...formData, orgName: val})}
               />
-              <div className="space-y-3">
-                <label className="text-xs font-black text-slate-500 uppercase tracking-widest">
-                  3. ผู้ทำรายการ (REQUESTER)
-                </label>
-                <input 
-                  type="text"
-                  required
-                  placeholder="ชื่อ-นามสกุล (IC)"
-                  className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-4 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all font-medium"
-                  value={formData.requester}
-                  onChange={e => setFormData({...formData, requester: e.target.value})}
-                />
-              </div>
+              <AutocompleteInput 
+                label="3. ผู้ทำรายการ (REQUESTER)"
+                placeholder="พิมพ์เพื่อค้นหาชื่อ-นามสกุล (IC)..."
+                type="text"
+                value={formData.requester}
+                onChange={val => setFormData({...formData, requester: val})}
+              />
             </div>
 
             {/* 4. เลือกรายการธุรกรรม */}
