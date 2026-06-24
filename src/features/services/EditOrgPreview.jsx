@@ -58,8 +58,8 @@ export default function EditOrgPreview() {
     
     try {
       const dataUrl = await toJpeg(captureRef.current, { 
-        quality: 0.6,
-        pixelRatio: 1.5, 
+        quality: 1.0,
+        pixelRatio: 2.5, 
         backgroundColor: '#020617', // Match dark background
         cacheBust: true 
       });

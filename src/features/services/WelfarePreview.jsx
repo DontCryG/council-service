@@ -27,8 +27,8 @@ export default function WelfarePreview() {
     
     try {
       const blob = await toBlob(captureRef.current, { 
-        pixelRatio: 2, 
-        backgroundColor: '#0f172a',
+        pixelRatio: 2.5, 
+        backgroundColor: '#020617',
         cacheBust: true
       });
       if (!blob) throw new Error("Failed to generate image");

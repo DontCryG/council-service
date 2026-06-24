@@ -28,9 +28,9 @@ export default function RegisterOrgPreview() {
     
     try {
       const dataUrl = await toJpeg(captureRef.current, { 
-        quality: 0.6,
-        pixelRatio: 1.5, 
-        backgroundColor: '#0f172a',
+        quality: 1.0,
+        pixelRatio: 2.5, 
+        backgroundColor: '#020617',
         cacheBust: true 
       });
       if (!dataUrl) throw new Error("Failed to generate image");
