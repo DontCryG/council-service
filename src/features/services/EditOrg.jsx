@@ -5,6 +5,7 @@ import { db } from '../../core/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
 
 import Button from '../../components/ui/Button';
+import GroupSelect from '../../components/ui/GroupSelect';
 import AutocompleteInput from '../../components/ui/AutocompleteInput';
 import { Skull, House, User, PencilSimple, ArrowLeft, FileText, Check, Link as LinkIcon, ArrowRight, CaretDown } from '@phosphor-icons/react';
 
@@ -178,13 +179,12 @@ export default function EditOrg() {
 
             {/* 2 & 3. ชื่อสังกัด & ผู้ทำรายการ */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-              <AutocompleteInput 
+              <GroupSelect 
                 label="2. ชื่อสังกัด (GROUP NAME)"
-                placeholder="พิมพ์เพื่อค้นหาชื่อสังกัด..."
-                type="group"
                 orgType={formData.orgType}
                 value={formData.orgName}
                 onChange={val => setFormData({...formData, orgName: val})}
+                placeholder="ค้นหาชื่อสังกัด..."
               />
               <AutocompleteInput 
                 label="3. ผู้ทำรายการ (REQUESTER)"
