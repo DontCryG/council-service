@@ -140,7 +140,7 @@ export default function WelfarePreview() {
         </div>
 
         {/* Parties Info */}
-        <div className="grid grid-cols-2 gap-6 mb-10 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 relative z-10">
           <div className="bg-slate-950/50 border border-slate-800 rounded-xl p-5">
             <p className="text-[11px] font-bold text-slate-500 tracking-wider uppercase mb-2">Representative (ผู้ลงนาม)</p>
             <div className="flex items-center gap-3">
@@ -148,6 +148,15 @@ export default function WelfarePreview() {
                 {formData.requester ? formData.requester.charAt(0).toUpperCase() : '?'}
               </div>
               <p className="text-lg font-bold text-white">{formData.requester || 'UNSPECIFIED'}</p>
+            </div>
+          </div>
+          <div className="bg-slate-950/50 border border-slate-800 rounded-xl p-5">
+            <p className="text-[11px] font-bold text-slate-500 tracking-wider uppercase mb-2">Phone (เบอร์โทรศัพท์)</p>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-emerald-400 font-bold">
+                <i className="ph-fill ph-phone"></i>
+              </div>
+              <p className="text-lg font-bold text-white">{formData.phoneNumber || 'UNSPECIFIED'}</p>
             </div>
           </div>
           <div className="bg-slate-950/50 border border-slate-800 rounded-xl p-5">

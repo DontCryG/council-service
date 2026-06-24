@@ -130,9 +130,15 @@ export default function WelfareTradePreview() {
       </div>
 
       <div className="flex flex-col gap-6 relative z-10 bg-slate-950/80 p-6 sm:p-8 rounded-2xl border border-slate-800/80 shadow-inner">
-        <div className="flex flex-col pb-6 border-b border-slate-800 border-dashed">
-          <span className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2 whitespace-nowrap">Organization (ชื่อองค์กร)</span>
-          <span className="font-black text-white text-2xl sm:text-3xl tracking-wide truncate">{formData.orgName || '...'}</span>
+        <div className="grid grid-cols-2 gap-4 pb-6 border-b border-slate-800 border-dashed">
+          <div className="flex flex-col">
+            <span className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2 whitespace-nowrap">Organization (ชื่อองค์กร)</span>
+            <span className="font-black text-white text-2xl sm:text-3xl tracking-wide truncate">{formData.orgName || '...'}</span>
+          </div>
+          <div className="flex flex-col text-right">
+            <span className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2 whitespace-nowrap">Phone (เบอร์โทรศัพท์)</span>
+            <span className="font-black text-emerald-400 text-2xl sm:text-3xl tracking-wide truncate">{formData.phoneNumber || '...'}</span>
+          </div>
         </div>
         
         <div className="grid grid-cols-2 gap-4 sm:gap-8 pb-6 border-b border-slate-800 border-dashed">

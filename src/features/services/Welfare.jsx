@@ -17,6 +17,7 @@ export default function Welfare() {
     orgType: 'GANG',
     orgName: '',
     requester: '',
+    phoneNumber: '',
     hasWeaponM9: false,
     hasWeaponHeavyRevolver: false,
     hasWeaponPoolCue: false,
@@ -38,8 +39,12 @@ export default function Welfare() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.orgName || !formData.requester) {
+    if (!formData.orgName || !formData.requester || !formData.phoneNumber) {
       showAlert('error', 'กรุณากรอกข้อมูลให้ครบถ้วน');
+      return;
+    }
+    if (formData.phoneNumber.length !== 6 || isNaN(formData.phoneNumber)) {
+      showAlert('error', 'กรุณาระบุเบอร์โทรศัพท์เป็นตัวเลข 6 หลัก');
       return;
     }
     // Navigate to preview page and pass the form data
@@ -106,7 +111,7 @@ export default function Welfare() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="space-y-3">
               <GroupSelect 
                 label="2. ชื่อ GANG / FAMILY"
@@ -125,10 +130,24 @@ export default function Welfare() {
                 onChange={val => setFormData({...formData, requester: val})}
               />
             </div>
+            <div className="space-y-3">
+              <label className="text-[13px] font-bold text-slate-400 tracking-wide">4. เบอร์โทรศัพท์ (6 หลัก)</label>
+              <input
+                type="text"
+                maxLength="6"
+                placeholder="000000"
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 transition-colors"
+                value={formData.phoneNumber}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/[^0-9]/g, '');
+                  setFormData({...formData, phoneNumber: val});
+                }}
+              />
+            </div>
           </div>
 
           <div className="space-y-3">
-            <label className="text-[13px] font-bold text-slate-400 tracking-wide">4. เลือกสวัสดิการที่ได้รับ</label>
+            <label className="text-[13px] font-bold text-slate-400 tracking-wide">5. เลือกสวัสดิการที่ได้รับ</label>
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
               {/* Vehicles Card */}
               <div className="bg-slate-800/30 border-2 border-slate-700/50 rounded-2xl p-6 flex flex-col min-h-[240px]">
