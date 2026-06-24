@@ -101,7 +101,9 @@ export default function AutocompleteInput({
                 <div className="text-slate-400 font-medium text-sm">
                   {type === 'group' ? 'ไม่พบข้อมูลสังกัดที่ค้นหา' : 'ไม่พบข้อมูลประชากร'}
                 </div>
-                <div className="text-amber-500 text-xs mt-1">*ระบบจะบันทึกให้อัตโนมัติเมื่อกดยืนยัน</div>
+                {type === 'text' && (
+                  <div className="text-amber-500 text-xs mt-1">*ระบบจะบันทึกให้อัตโนมัติเมื่อกดยืนยัน</div>
+                )}
               </div>
             ) : (
               filteredItems.map(item => (

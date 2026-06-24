@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
-import { saveTransactionLog, saveTransactionImage, ensureCitizenExists, ensureGroupExists } from '../../core/api';
+import { saveTransactionLog, saveTransactionImage, ensureCitizenExists } from '../../core/api';
 import { toJpeg } from 'html-to-image';
 import Button from '../../components/ui/Button';
 import { PaperPlaneTilt, ArrowLeft } from '@phosphor-icons/react';
@@ -68,9 +68,8 @@ export default function RegisterOrgPreview() {
         }]
       };
 
-      // Auto-save group and citizen if they don't exist
+      // Auto-save citizen if they don't exist
       await Promise.all([
-        ensureGroupExists(formData.name, formData.orgType),
         ensureCitizenExists(formData.leader)
       ]);
 
