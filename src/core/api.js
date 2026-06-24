@@ -224,3 +224,7 @@ export const ensureCitizenExists = async (name) => {
         createdAt: Timestamp.now()
       });
     }
+  } catch (err) {
+    console.error("Failed to ensure citizen exists:", err);
+  }
+};
