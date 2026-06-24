@@ -128,7 +128,7 @@ export default function CouncilReceiptView() {
 
           {/* Background Watermark */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03]">
-            <ShieldStar size={400} weight="fill" />
+            <img src="/logo.png" alt="Council Logo Background" className="w-[400px] h-[400px] object-contain grayscale" />
           </div>
 
           <div className="p-12 sm:p-14 relative z-10 flex-grow">

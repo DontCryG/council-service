@@ -222,7 +222,7 @@ export default function CouncilLoanView() {
           >
             {/* Background Watermark */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] pointer-events-none">
-              <SealCheck size={600} weight="fill" />
+              <img src="/logo.png" alt="Council Logo Background" className="w-[600px] h-[600px] object-contain grayscale" />
             </div>
 
             {/* Inner Border Frame */}
