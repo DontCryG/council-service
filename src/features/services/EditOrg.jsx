@@ -212,7 +212,7 @@ export default function EditOrg() {
                      </div>
                   </div>
                   <div className="flex-1">
-                    <div className={`font-bold text-[15px] ${formData.changeInfo ? 'text-white' : 'text-slate-300'}`}>เปลี่ยนข้อมูล Gang</div>
+                    <div className={`font-bold text-[15px] ${formData.changeInfo ? 'text-white' : 'text-slate-300'}`}>เปลี่ยนข้อมูล {formData.orgType === 'FAMILY' ? 'Family' : 'Gang'}</div>
                     <div className="text-amber-500 font-bold text-sm mt-0.5">500,000 $</div>
                   </div>
                   <input type="checkbox" className="hidden" checked={formData.changeInfo} onChange={e => setFormData({...formData, changeInfo: e.target.checked})} />
@@ -251,7 +251,7 @@ export default function EditOrg() {
                      </div>
                   </div>
                   <div className="flex-1">
-                    <div className={`font-bold text-[15px] ${formData.bulkChange ? 'text-white' : 'text-slate-300'}`}>เหมาเปลี่ยนข้อมูล Gang</div>
+                    <div className={`font-bold text-[15px] ${formData.bulkChange ? 'text-white' : 'text-slate-300'}`}>เหมาเปลี่ยนข้อมูล {formData.orgType === 'FAMILY' ? 'Family' : 'Gang'}</div>
                     <div className="text-amber-500 font-bold text-sm mt-0.5">1,500,000 $</div>
                   </div>
                   <input type="checkbox" className="hidden" checked={formData.bulkChange} onChange={e => setFormData({...formData, bulkChange: e.target.checked})} />
@@ -314,7 +314,7 @@ export default function EditOrg() {
               {/* Notes */}
               <div className="space-y-3">
                  <div className="text-[11px] font-black text-slate-500 uppercase tracking-widest">รายละเอียดสิ่งที่ต้องการแก้ (NOTES)</div>
-                 <textarea className="w-full bg-slate-950 border border-slate-700 rounded-xl p-4 text-white placeholder-slate-600 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none min-h-[120px] transition-all font-medium" placeholder="เช่น เพิ่มลายเสื้อด้านหลัง, เปลี่ยนโลโก้แก๊ง..." value={formData.extraDetails} onChange={e => setFormData({...formData, extraDetails: e.target.value})}></textarea>
+                 <textarea className="w-full bg-slate-950 border border-slate-700 rounded-xl p-4 text-white placeholder-slate-600 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none min-h-[120px] transition-all font-medium" placeholder={`เช่น เพิ่มลายเสื้อด้านหลัง, เปลี่ยนโลโก้${formData.orgType === 'FAMILY' ? 'ครอบครัว' : 'แก๊ง'}...`} value={formData.extraDetails} onChange={e => setFormData({...formData, extraDetails: e.target.value})}></textarea>
               </div>
             </div>
 
