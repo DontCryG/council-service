@@ -22,10 +22,15 @@ export const useAppStore = create((set) => ({
   toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
   
   // Notification / Alert
-  alert: null, // { type: 'success'|'error'|'info', message: '' }
+  alerts: [], // Array of { id, type, message }
   showAlert: (type, message) => {
-    set({ alert: { type, message } });
-    setTimeout(() => set({ alert: null }), 3000);
+    const id = Date.now() + Math.random();
+    set((state) => ({ alerts: [...state.alerts, { id, type, message }] }));
+    setTimeout(() => {
+      set((state) => ({ alerts: state.alerts.filter(a => a.id !== id) }));
+    }, 5000); // 5 seconds duration
   },
-  hideAlert: () => set({ alert: null }),
+  hideAlert: (id) => set((state) => ({ 
+    alerts: id ? state.alerts.filter(a => a.id !== id) : [] 
+  })),
 }));

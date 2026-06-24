@@ -41,35 +41,39 @@ const CouncilReceiptView = lazy(() => import('./features/council/CouncilReceiptV
 const LoanPublic = lazy(() => import('./features/services/LoanPublic'));
 
 function GlobalAlert() {
-  const { alert, hideAlert } = useAppStore();
-  if (!alert) return null;
-
-  const isError = alert.type === 'error';
-  const isSuccess = alert.type === 'success';
-  const isInfo = alert.type === 'info';
+  const { alerts, hideAlert } = useAppStore();
+  if (!alerts || alerts.length === 0) return null;
 
   return (
-    <div className="fixed top-8 left-1/2 -translate-x-1/2 z-[9999] animate-in fade-in slide-in-from-top-12 duration-500 ease-out">
-      <div className={`flex items-center gap-3 px-6 py-3 rounded-full shadow-2xl border backdrop-blur-xl bg-slate-900/90 ${
-        isError ? 'border-red-500/50 text-red-400 shadow-[0_10px_40px_rgba(239,68,68,0.25)]' :
-        isSuccess ? 'border-emerald-500/50 text-emerald-400 shadow-[0_10px_40px_rgba(16,185,129,0.25)]' :
-        'border-[#5865F2]/50 text-[#5865F2] shadow-[0_10px_40px_rgba(88,101,242,0.25)]'
-      }`}>
-        <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
-          isError ? 'bg-red-500/20' : 
-          isSuccess ? 'bg-emerald-500/20' : 
-          'bg-[#5865F2]/20'
-        }`}>
-          {isError && <XCircle size={20} weight="fill" />}
-          {isSuccess && <CheckCircle size={20} weight="fill" />}
-          {isInfo && <BellRinging size={20} weight="duotone" className="animate-pulse" />}
-          {!isError && !isSuccess && !isInfo && <Info size={20} weight="fill" />}
-        </div>
-        <p className="font-bold text-sm tracking-wide text-white">{alert.message}</p>
-        <button onClick={hideAlert} className="ml-4 opacity-50 hover:opacity-100 transition-opacity bg-white/5 rounded-full p-1 hover:bg-white/10">
-          <X size={14} weight="bold" />
-        </button>
-      </div>
+    <div className="fixed top-8 left-1/2 -translate-x-1/2 z-[9999] flex flex-col gap-3 pointer-events-none">
+      {alerts.map((alert) => {
+        const isError = alert.type === 'error';
+        const isSuccess = alert.type === 'success';
+        const isInfo = alert.type === 'info';
+
+        return (
+          <div key={alert.id} className={`flex items-center gap-3 px-6 py-3 rounded-full shadow-2xl border backdrop-blur-xl bg-slate-900/90 pointer-events-auto animate-in fade-in slide-in-from-top-4 duration-300 ease-out ${
+            isError ? 'border-red-500/50 text-red-400 shadow-[0_10px_40px_rgba(239,68,68,0.25)]' :
+            isSuccess ? 'border-emerald-500/50 text-emerald-400 shadow-[0_10px_40px_rgba(16,185,129,0.25)]' :
+            'border-[#5865F2]/50 text-[#5865F2] shadow-[0_10px_40px_rgba(88,101,242,0.25)]'
+          }`}>
+            <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+              isError ? 'bg-red-500/20' : 
+              isSuccess ? 'bg-emerald-500/20' : 
+              'bg-[#5865F2]/20'
+            }`}>
+              {isError && <XCircle size={20} weight="fill" />}
+              {isSuccess && <CheckCircle size={20} weight="fill" />}
+              {isInfo && <BellRinging size={20} weight="duotone" className="animate-pulse" />}
+              {!isError && !isSuccess && !isInfo && <Info size={20} weight="fill" />}
+            </div>
+            <p className="font-bold text-sm tracking-wide text-white">{alert.message}</p>
+            <button onClick={() => hideAlert(alert.id)} className="ml-4 opacity-50 hover:opacity-100 transition-opacity bg-white/5 rounded-full p-1 hover:bg-white/10">
+              <X size={14} weight="bold" />
+            </button>
+          </div>
+        );
+      })}
     </div>
   );
 }
