@@ -8,7 +8,7 @@ import AutocompleteInput from '../../components/ui/AutocompleteInput';
 
 import Button from '../../components/ui/Button';
 import GroupSelect from '../../components/ui/GroupSelect';
-import { Users, House, Plus, Trash, ArrowRight, WarningCircle, UserPlus, FileText, ArrowLeft } from '@phosphor-icons/react';
+import { Users, House, Plus, Trash, ArrowRight, WarningCircle, UserPlus, FileText, ArrowLeft, Skull } from '@phosphor-icons/react';
 
 export default function GeneralService() {
   const navigate = useNavigate();
@@ -88,26 +88,38 @@ export default function GeneralService() {
             <label className="text-[15px] font-bold text-slate-200 tracking-wide flex items-center gap-2">
               <span className="text-blue-500">1.</span> ประเภทสังกัด (GROUP TYPE)
             </label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <button
                 type="button"
-                className={`py-5 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all border-2 ${formData.groupType === 'GANG' ? 'bg-amber-500/10 border-amber-500/30 text-amber-500' : 'bg-slate-800/50 border-slate-700 text-slate-400 hover:border-slate-600'}`}
                 onClick={() => setFormData({...formData, groupType: 'GANG'})}
+                className={`flex flex-col items-center justify-center gap-4 py-8 rounded-2xl border-2 transition-all group relative overflow-hidden
+                  ${formData.groupType === 'GANG' 
+                    ? 'border-amber-500 bg-amber-500/5' 
+                    : 'border-slate-800 bg-slate-900/50 hover:border-slate-700 hover:bg-slate-800/50'}`}
               >
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${formData.groupType === 'GANG' ? 'bg-amber-500/20 text-amber-500' : 'bg-slate-800 text-slate-500'}`}>
-                   <Users size={20} weight="fill" />
+                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-colors shadow-inner ${formData.groupType === 'GANG' ? 'bg-amber-500/20 text-amber-500' : 'bg-slate-800 text-slate-400 group-hover:bg-slate-700'}`}>
+                  <Skull size={32} weight={formData.groupType === 'GANG' ? 'fill' : 'regular'} />
                 </div>
-                GANG (แก๊ง)
+                <div className="text-center relative z-10">
+                  <div className={`text-lg font-black tracking-wide ${formData.groupType === 'GANG' ? 'text-white' : 'text-slate-300'}`}>GANG (แก๊ง)</div>
+                  <div className="text-xs text-slate-500 mt-1 font-medium px-4">สำหรับทำรายการซื้อขายและบริการต่างๆ ของแก๊ง</div>
+                </div>
               </button>
               <button
                 type="button"
-                className={`py-5 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all border-2 ${formData.groupType === 'FAMILY' ? 'bg-blue-500/10 border-blue-500/30 text-blue-400' : 'bg-slate-800/50 border-slate-700 text-slate-400 hover:border-slate-600'}`}
                 onClick={() => setFormData({...formData, groupType: 'FAMILY'})}
+                className={`flex flex-col items-center justify-center gap-4 py-8 rounded-2xl border-2 transition-all group relative overflow-hidden
+                  ${formData.groupType === 'FAMILY' 
+                    ? 'border-amber-500 bg-amber-500/5' 
+                    : 'border-slate-800 bg-slate-900/50 hover:border-slate-700 hover:bg-slate-800/50'}`}
               >
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${formData.groupType === 'FAMILY' ? 'bg-blue-500/20 text-blue-400' : 'bg-slate-800 text-slate-500'}`}>
-                   <House size={20} weight="fill" />
+                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-colors shadow-inner ${formData.groupType === 'FAMILY' ? 'bg-blue-500/20 text-blue-500' : 'bg-slate-800 text-slate-400 group-hover:bg-slate-700'}`}>
+                  <House size={32} weight={formData.groupType === 'FAMILY' ? 'fill' : 'regular'} />
                 </div>
-                FAMILY (ครอบครัว)
+                <div className="text-center relative z-10">
+                  <div className={`text-lg font-black tracking-wide ${formData.groupType === 'FAMILY' ? 'text-white' : 'text-slate-300'}`}>FAMILY (ครอบครัว)</div>
+                  <div className="text-xs text-slate-500 mt-1 font-medium px-4">สำหรับทำรายการซื้อขายและบริการต่างๆ ของครอบครัว</div>
+                </div>
               </button>
             </div>
           </div>
