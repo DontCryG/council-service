@@ -5,8 +5,8 @@ import { db } from '../../core/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
 
 import Button from '../../components/ui/Button';
-import GroupSelect from '../../components/ui/GroupSelect';
-import { Skull, House, Calculator, User, PencilSimple, ArrowLeft } from '@phosphor-icons/react';
+import AutocompleteInput from '../../components/ui/AutocompleteInput';
+import { Skull, House, User, PencilSimple, ArrowLeft, FileText, Check, Link as LinkIcon, ArrowRight, CaretDown } from '@phosphor-icons/react';
 
 export default function EditOrg() {
   const navigate = useNavigate();
@@ -108,75 +108,91 @@ export default function EditOrg() {
   };
 
   return (
-    <div className="max-w-[800px] mx-auto py-4 px-2 md:px-0 animate-in fade-in slide-in-from-right-16 duration-700 ease-out">
+    <div className="max-w-[800px] mx-auto py-4 px-2 md:px-0 animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out">
       
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-pink-500/10 text-pink-500 flex items-center justify-center">
-            <PencilSimple size={28} weight="duotone" />
-          </div>
-          <div>
-            <h2 className="text-2xl font-bold text-white">แจ้งแก้ไขข้อมูลองค์กร</h2>
-            <p className="text-slate-400 text-sm">แบบฟอร์มแจ้งเปลี่ยนชื่อ สี โลโก้ หรือชุดประจำ Gang/Family</p>
-          </div>
-        </div>
-        <Button variant="ghost" onClick={() => navigate('/home')} className="text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl">
-          <ArrowLeft size={20} /> <span className="hidden sm:inline">กลับไปศูนย์บัญชาการ</span>
+      {/* Top Header */}
+      <div className="text-center mb-10 relative mt-4">
+        <Button variant="ghost" onClick={() => navigate('/home')} className="absolute left-0 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl hidden sm:flex">
+          <ArrowLeft size={20} /> <span className="hidden md:inline">กลับ</span>
         </Button>
+        <h1 className="text-3xl sm:text-4xl font-black text-white tracking-widest uppercase">
+          MODIFICATION <span className="text-amber-500">SERVICE</span>
+        </h1>
+        <p className="text-xs sm:text-sm text-slate-400 mt-3 font-medium tracking-wide">ระบบแจ้งแก้ไขข้อมูลสังกัดและออกใบเสร็จรับเงินอย่างเป็นทางการ</p>
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden text-white">
-        <div className="p-8 md:p-10">
-          <form onSubmit={handleSubmit} className="space-y-8">
+      <div className="bg-slate-900 border border-slate-800 rounded-[2rem] shadow-2xl overflow-hidden text-white relative">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500/0 via-amber-500/50 to-amber-500/0"></div>
+        
+        <div className="p-6 sm:p-10">
+          
+          <div className="flex items-center gap-4 border-b border-slate-800 pb-6 mb-8">
+            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center">
+              <FileText size={24} weight="duotone" />
+            </div>
+            <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">บันทึกรายละเอียดการขอแก้ไขข้อมูล</h2>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-10">
             
             {/* 1. ประเภทสังกัด */}
-            <div className="space-y-3">
-              <label className="text-sm font-bold text-slate-400 uppercase tracking-wide">
+            <div className="space-y-4">
+              <label className="text-xs font-black text-slate-500 uppercase tracking-widest">
                 1. ประเภทสังกัด (GROUP TYPE)
               </label>
-              <div className="flex gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 <button
                   type="button"
                   onClick={() => setFormData({...formData, orgType: 'GANG'})}
-                  className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-xl border-2 transition-all font-bold text-lg
+                  className={`flex flex-col items-center justify-center gap-4 py-8 rounded-2xl border-2 transition-all group relative overflow-hidden
                     ${formData.orgType === 'GANG' 
-                      ? 'border-amber-500 bg-amber-500/10 text-amber-500' 
-                      : 'border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-slate-300'}`}
+                      ? 'border-amber-500 bg-amber-500/5' 
+                      : 'border-slate-800 bg-slate-900/50 hover:border-slate-700 hover:bg-slate-800/50'}`}
                 >
-                  <Skull size={24} weight={formData.orgType === 'GANG' ? 'fill' : 'regular'} /> GANG (แก๊ง)
+                  <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-colors shadow-inner ${formData.orgType === 'GANG' ? 'bg-amber-500/20 text-amber-500' : 'bg-slate-800 text-slate-400 group-hover:bg-slate-700'}`}>
+                    <Skull size={32} weight={formData.orgType === 'GANG' ? 'fill' : 'regular'} />
+                  </div>
+                  <div className="text-center relative z-10">
+                    <div className={`text-lg font-black tracking-wide ${formData.orgType === 'GANG' ? 'text-white' : 'text-slate-300'}`}>GANG (แก๊ง)</div>
+                    <div className="text-xs text-slate-500 mt-1 font-medium px-4">สำหรับแจ้งแก้ไขข้อมูลและจัดการธุรกรรมของแก๊ง</div>
+                  </div>
                 </button>
                 <button
                   type="button"
                   onClick={() => setFormData({...formData, orgType: 'FAMILY'})}
-                  className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-xl border-2 transition-all font-bold text-lg
+                  className={`flex flex-col items-center justify-center gap-4 py-8 rounded-2xl border-2 transition-all group relative overflow-hidden
                     ${formData.orgType === 'FAMILY' 
-                      ? 'border-amber-500 bg-amber-500/10 text-amber-500' 
-                      : 'border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-slate-300'}`}
+                      ? 'border-amber-500 bg-amber-500/5' 
+                      : 'border-slate-800 bg-slate-900/50 hover:border-slate-700 hover:bg-slate-800/50'}`}
                 >
-                  <House size={24} weight={formData.orgType === 'FAMILY' ? 'fill' : 'regular'} /> FAMILY (ครอบครัว)
+                  <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-colors shadow-inner ${formData.orgType === 'FAMILY' ? 'bg-amber-500/20 text-amber-500' : 'bg-slate-800 text-slate-400 group-hover:bg-slate-700'}`}>
+                    <House size={32} weight={formData.orgType === 'FAMILY' ? 'fill' : 'regular'} />
+                  </div>
+                  <div className="text-center relative z-10">
+                    <div className={`text-lg font-black tracking-wide ${formData.orgType === 'FAMILY' ? 'text-white' : 'text-slate-300'}`}>FAMILY (ครอบครัว)</div>
+                    <div className="text-xs text-slate-500 mt-1 font-medium px-4">สำหรับแจ้งแก้ไขข้อมูลและจัดการธุรกรรมของครอบครัว</div>
+                  </div>
                 </button>
               </div>
             </div>
 
             {/* 2 & 3. ชื่อสังกัด & ผู้ทำรายการ */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+              <GroupSelect 
+                label="2. ชื่อสังกัด (GROUP NAME)"
+                orgType={formData.orgType}
+                value={formData.orgName}
+                onChange={val => setFormData({...formData, orgName: val})}
+              />
               <div className="space-y-3">
-                <GroupSelect 
-                  label="2. ชื่อสังกัด (GROUP NAME)"
-                  orgType={formData.orgType}
-                  value={formData.orgName}
-                  onChange={val => setFormData({...formData, orgName: val})}
-                />
-              </div>
-              <div className="space-y-3">
-                <label className="text-sm font-bold text-slate-400 uppercase tracking-wide">
+                <label className="text-xs font-black text-slate-500 uppercase tracking-widest">
                   3. ผู้ทำรายการ (REQUESTER)
                 </label>
                 <input 
                   type="text"
                   required
                   placeholder="ชื่อ-นามสกุล (IC)"
-                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
+                  className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-4 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all font-medium"
                   value={formData.requester}
                   onChange={e => setFormData({...formData, requester: e.target.value})}
                 />
@@ -184,69 +200,6 @@ export default function EditOrg() {
             </div>
 
             {/* 4. เลือกรายการธุรกรรม */}
-            <div className="space-y-3">
-              <div className="flex items-end gap-2">
-                <label className="text-sm font-bold text-slate-400 uppercase tracking-wide">
-                  4. เลือกรายการธุรกรรม (TRANSACTIONS)
-                </label>
-                <span className="text-xs text-slate-500 mb-[2px]">*สามารถเลือกได้มากกว่า 1 รายการ</span>
-              </div>
-              
-              <div className="space-y-3">
-                <label className={`flex items-center gap-4 cursor-pointer p-4 border rounded-xl transition-all ${formData.changeInfo ? 'border-amber-500/50 bg-amber-500/10' : 'border-slate-700 hover:border-slate-600 hover:bg-slate-800/50'}`}>
-                  <input type="checkbox" className="w-5 h-5 rounded border-slate-600 bg-slate-950 text-amber-500 focus:ring-amber-500" checked={formData.changeInfo} onChange={e => setFormData({...formData, changeInfo: e.target.checked})} />
-                  <span className={`font-bold flex-1 text-lg ${formData.changeInfo ? 'text-white' : 'text-slate-300'}`}>เปลี่ยนข้อมูล Gang</span>
-                  <span className="bg-amber-500/20 text-amber-400 font-black px-3 py-1 rounded-full text-sm">500,000 $</span>
-                </label>
-
-                <label className={`flex items-center gap-4 cursor-pointer p-4 border rounded-xl transition-all ${formData.editTexture ? 'border-amber-500/50 bg-amber-500/10' : 'border-slate-700 hover:border-slate-600 hover:bg-slate-800/50'}`}>
-                  <input type="checkbox" className="w-5 h-5 rounded border-slate-600 bg-slate-950 text-amber-500 focus:ring-amber-500" checked={formData.editTexture} onChange={e => setFormData({...formData, editTexture: e.target.checked})} />
-                  <span className={`font-bold flex-1 text-lg ${formData.editTexture ? 'text-white' : 'text-slate-300'}`}>แก้ไข Texture เสื้อผ้า</span>
-                  <span className="bg-amber-500/20 text-amber-400 font-black px-3 py-1 rounded-full text-sm">500,000 $ / ชุด</span>
-                </label>
-
-                <label className={`flex items-center gap-4 cursor-pointer p-4 border rounded-xl transition-all ${formData.addCloth ? 'border-amber-500/50 bg-amber-500/10' : 'border-slate-700 hover:border-slate-600 hover:bg-slate-800/50'}`}>
-                  <input type="checkbox" className="w-5 h-5 rounded border-slate-600 bg-slate-950 text-amber-500 focus:ring-amber-500" checked={formData.addCloth} onChange={e => setFormData({...formData, addCloth: e.target.checked})} />
-                  <span className={`font-bold flex-1 text-lg ${formData.addCloth ? 'text-white' : 'text-slate-300'}`}>ลงชุดเพิ่ม</span>
-                  <span className="bg-amber-500/20 text-amber-400 font-black px-3 py-1 rounded-full text-sm">500,000 $ / ชุด</span>
-                </label>
-
-                <label className={`flex items-center gap-4 cursor-pointer p-4 border rounded-xl transition-all ${formData.bulkChange ? 'border-amber-500/50 bg-amber-500/10' : 'border-slate-700 hover:border-slate-600 hover:bg-slate-800/50'}`}>
-                  <input type="checkbox" className="w-5 h-5 rounded border-slate-600 bg-slate-950 text-amber-500 focus:ring-amber-500" checked={formData.bulkChange} onChange={e => setFormData({...formData, bulkChange: e.target.checked})} />
-                  <span className={`font-bold flex-1 text-lg ${formData.bulkChange ? 'text-white' : 'text-slate-300'}`}>เหมาเปลี่ยนข้อมูล Gang</span>
-                  <span className="bg-amber-500/20 text-amber-400 font-black px-3 py-1 rounded-full text-sm">1,500,000 $</span>
-                </label>
-
-                <label className={`flex items-center gap-4 cursor-pointer p-4 border rounded-xl transition-all ${formData.addAccessory ? 'border-amber-500/50 bg-amber-500/10' : 'border-slate-700 hover:border-slate-600 hover:bg-slate-800/50'}`}>
-                  <input type="checkbox" className="w-5 h-5 rounded border-slate-600 bg-slate-950 text-amber-500 focus:ring-amber-500" checked={formData.addAccessory} onChange={e => setFormData({...formData, addAccessory: e.target.checked})} />
-                  <span className={`font-bold flex-1 text-lg ${formData.addAccessory ? 'text-white' : 'text-slate-300'}`}>ลง Accessories Adons เสริม</span>
-                  <span className="bg-amber-500/20 text-amber-400 font-black px-3 py-1 rounded-full text-sm">1,000,000 $</span>
-                </label>
-              </div>
-            </div>
-
-            {/* 5. รายละเอียดเพิ่มเติม */}
-            <div className="bg-slate-800/30 border border-slate-700 rounded-xl p-6 space-y-6">
-              <label className="text-sm font-bold text-slate-400 uppercase tracking-wide flex items-center gap-2">
-                <Calculator size={18} /> 5. ระบุรายละเอียดการแก้ไข (ถ้ามี)
-              </label>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <div className="flex items-end gap-1 mb-2">
-                    <span className="text-xs font-bold text-slate-300">จำนวนชุด (Texture)</span>
-                    <span className="text-[10px] text-slate-500">*มีผลกับราคาเมื่อเลือกแก้ Texture หรือลงชุดเพิ่ม</span>
-                  </div>
-                  <div className="inline-flex border border-slate-700 rounded-lg overflow-hidden bg-slate-950 h-10">
-                    <button type="button" className="px-4 hover:bg-slate-800 font-bold border-r border-slate-700 text-slate-400" onClick={() => setFormData(prev => ({...prev, textureCount: Math.max(1, prev.textureCount - 1)}))}>-</button>
-                    <input type="number" className="w-16 text-center font-bold focus:outline-none bg-transparent text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" min="1" value={formData.textureCount} onChange={e => setFormData({...formData, textureCount: parseInt(e.target.value) || 1})} />
-                    <button type="button" className="px-4 hover:bg-slate-800 font-bold border-l border-slate-700 text-slate-400" onClick={() => setFormData(prev => ({...prev, textureCount: prev.textureCount + 1}))}>+</button>
-                  </div>
-                </div>
-                
-                <div>
-                  <div className="flex items-end gap-1 mb-2">
-                    <span className="text-xs font-bold text-slate-300">รหัสสี (HEX Color)</span>
                     <span className="text-[10px] text-slate-500">*ถ้ามีการเปลี่ยนสี</span>
                   </div>
                   <div className="flex gap-2 h-10">
