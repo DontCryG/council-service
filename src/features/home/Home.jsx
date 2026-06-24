@@ -81,9 +81,9 @@ export default function Home() {
           <div className="absolute -bottom-[20%] -right-[10%] w-[50%] h-[50%] rounded-full bg-blue-500/10 blur-[100px]"></div>
         </div>
 
-        {/* Floating Shield Background */}
-        <div className="absolute right-[-5%] top-[-10%] opacity-[0.02] scale-[1.8] pointer-events-none rotate-12">
-          <ShieldStar weight="fill" className="w-[400px] h-[400px] text-white" />
+        {/* Floating Logo Background */}
+        <div className="absolute right-[-5%] top-[-10%] opacity-5 scale-[1.5] pointer-events-none rotate-12">
+          <img src="/logo.png" alt="Council Logo Background" className="w-[400px] h-[400px] object-contain drop-shadow-2xl grayscale" />
         </div>
         
         <div className="relative z-10 flex flex-col items-center text-center">
