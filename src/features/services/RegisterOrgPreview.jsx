@@ -195,9 +195,9 @@ export default function RegisterOrgPreview() {
         </div>
 
         <div className="pt-6 border-t border-slate-800 space-y-4 mt-8 relative z-10">
-          <div className="flex justify-between items-center">
-            <span className="text-slate-400 font-medium">ค่าธรรมเนียมลงทะเบียน</span>
-            <span className="text-2xl font-black text-white">200,000 <span className="text-sm text-slate-500 font-medium">THB</span></span>
+          <div className="flex justify-between items-center gap-4">
+            <span className="text-slate-400 font-medium whitespace-nowrap">ค่าธรรมเนียมลงทะเบียน</span>
+            <span className="text-2xl font-black text-white text-right">200,000 <span className="text-sm text-slate-500 font-medium">THB</span></span>
           </div>
           <div className="flex justify-between items-center pt-4 border-t border-slate-800/50">
             <span className="text-slate-500 font-medium text-sm whitespace-nowrap">เจ้าหน้าที่ผู้รับเรื่อง (สภา)</span>
