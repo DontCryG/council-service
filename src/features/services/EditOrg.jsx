@@ -5,6 +5,7 @@ import { db } from '../../core/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
 
 import Button from '../../components/ui/Button';
+import GroupSelect from '../../components/ui/GroupSelect';
 import { Skull, House, Calculator, User, PencilSimple, ArrowLeft } from '@phosphor-icons/react';
 
 export default function EditOrg() {
@@ -160,19 +161,11 @@ export default function EditOrg() {
             {/* 2 & 3. ชื่อสังกัด & ผู้ทำรายการ */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-3">
-                <label className="text-sm font-bold text-slate-400 uppercase tracking-wide">
-                  2. ชื่อสังกัด (GROUP NAME)
-                </label>
-                <input 
-                  type="text"
-                  required
-                  placeholder="ระบุชื่อแก๊ง หรือ ครอบครัว"
-                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
+                <GroupSelect 
+                  label="2. ชื่อสังกัด (GROUP NAME)"
+                  orgType={formData.orgType}
                   value={formData.orgName}
-                  onChange={e => {
-                    const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.]/g, '').toUpperCase();
-                    setFormData({...formData, orgName: val});
-                  }}
+                  onChange={val => setFormData({...formData, orgName: val})}
                 />
               </div>
               <div className="space-y-3">

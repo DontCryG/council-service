@@ -6,6 +6,7 @@ import { collection, onSnapshot } from 'firebase/firestore';
 import { transactions } from '../../data/models';
 
 import Button from '../../components/ui/Button';
+import GroupSelect from '../../components/ui/GroupSelect';
 import { Users, House, Plus, Trash, ArrowRight, WarningCircle, UserPlus, FileText, ArrowLeft } from '@phosphor-icons/react';
 
 export default function GeneralService() {
@@ -111,21 +112,13 @@ export default function GeneralService() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-3">
-              <label className="text-[15px] font-bold text-slate-200 tracking-wide flex items-center gap-2">
-                <span className="text-blue-500">2.</span> ชื่อสังกัด (GROUP NAME)
-              </label>
-              <input 
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-200 font-medium focus:outline-none focus:border-blue-500 focus:bg-slate-900 focus:ring-1 focus:ring-blue-500 transition-colors placeholder:text-slate-600"
-                placeholder="ระบุชื่อแก๊ง หรือ ครอบครัว"
+              <GroupSelect 
+                label={<><span className="text-blue-500">2.</span> ชื่อสังกัด (GROUP NAME)</>}
+                orgType={formData.groupType}
                 value={formData.groupName}
-                onChange={e => {
-                  const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.]/g, '').toUpperCase();
-                  setFormData({...formData, groupName: val});
-                }}
-                required
+                onChange={val => setFormData({...formData, groupName: val})}
+                placeholder="ระบุชื่อแก๊ง หรือ ครอบครัว"
               />
-            </div>
 
             <div className="space-y-3">
               <label className="text-[15px] font-bold text-slate-200 tracking-wide flex items-center gap-2">

@@ -5,6 +5,7 @@ import { db } from '../../core/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
 
 import Button from '../../components/ui/Button';
+import GroupSelect from '../../components/ui/GroupSelect';
 import { Trash, ArrowRight, ArrowsLeftRight, Car, Crosshair, ArrowLeft, Users, House } from '@phosphor-icons/react';
 
 export default function WelfareTrade() {
@@ -153,18 +154,12 @@ export default function WelfareTrade() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-3">
-              <label className="text-[14px] font-bold text-slate-300 tracking-wide">
-                {formData.tradeType === 'WEAPON' ? '3' : '2'}. ชื่อ GANG / FAMILY
-              </label>
-              <input 
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-200 font-medium focus:outline-none focus:border-violet-500 focus:bg-slate-900 focus:ring-1 focus:ring-violet-500 transition-colors placeholder:text-slate-600"
-                placeholder="ระบุชื่อสังกัด"
+              <GroupSelect 
+                label={`${formData.tradeType === 'WEAPON' ? '3' : '2'}. ชื่อ GANG / FAMILY`}
+                orgType={formData.orgType}
                 value={formData.orgName}
-                onChange={e => {
-                  const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.]/g, '').toUpperCase();
-                  setFormData({...formData, orgName: val});
-                }}
-                required
+                onChange={val => setFormData({...formData, orgName: val})}
+                placeholder="ระบุชื่อสังกัด"
               />
             </div>
             <div className="space-y-3">

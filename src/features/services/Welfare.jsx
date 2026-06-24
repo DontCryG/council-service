@@ -4,6 +4,7 @@ import { useAppStore } from '../../store';
 
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
+import GroupSelect from '../../components/ui/GroupSelect';
 import { PaperPlaneTilt, Trash, Gift, Car, Users, House, Sword, ArrowLeft } from '@phosphor-icons/react';
 
 export default function Welfare() {
@@ -86,16 +87,12 @@ export default function Welfare() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-3">
-              <label className="text-[13px] font-bold text-slate-400 tracking-wide">2. ชื่อ GANG / FAMILY</label>
-              <input 
-                className="w-full bg-slate-900 border-2 border-slate-800 rounded-xl px-4 py-3 text-slate-200 font-bold focus:outline-none focus:border-blue-500/50 focus:bg-slate-800 transition-colors placeholder:text-slate-600"
-                placeholder="ระบุชื่อ..."
+              <GroupSelect 
+                label="2. ชื่อ GANG / FAMILY"
+                orgType={formData.orgType}
                 value={formData.orgName}
-                onChange={e => {
-                  const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.]/g, '').toUpperCase();
-                  setFormData({...formData, orgName: val});
-                }}
-                required
+                onChange={val => setFormData({...formData, orgName: val})}
+                placeholder="ระบุชื่อ..."
               />
             </div>
             <div className="space-y-3">
