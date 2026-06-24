@@ -93,15 +93,15 @@ export default function Home() {
             <span className="text-xs font-bold text-slate-300 tracking-wider">COUNCIL SYSTEM V2</span>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-black mb-4 tracking-tight leading-[1.1] uppercase drop-shadow-sm">
+          <h1 className="text-5xl md:text-7xl font-black mb-4 tracking-normal leading-[1.1] uppercase drop-shadow-sm">
             <span className="text-transparent bg-clip-text bg-gradient-to-br from-white via-slate-200 to-slate-500">
               COUNCIL
             </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 ml-3 md:ml-4">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 ml-4 md:ml-6">
               SECRETARY
             </span>
             <br/>
-            <span className="text-3xl md:text-5xl text-slate-100 font-extrabold mt-2 block">
+            <span className="text-3xl md:text-5xl text-slate-100 font-extrabold mt-3 block tracking-wide">
               E - SERVICE SYSTEM
             </span>
           </h1>
