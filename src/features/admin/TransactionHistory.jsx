@@ -419,7 +419,7 @@ export default function TransactionHistory() {
                     onClick={() => setActiveCategory(item.id)}
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
                       isActive 
-                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/20' 
+                        ? 'bg-[#5865F2] text-white shadow-lg shadow-[#5865F2]/20 border border-white/5' 
                         : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'
                     }`}
                   >

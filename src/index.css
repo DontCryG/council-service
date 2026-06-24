@@ -5,35 +5,35 @@
 @layer base {
   :root {
     /* LIGHT MODE MAPPING (Inverted Slate) */
-    --tw-color-slate-50: 2 6 23;      /* slate-950 */
-    --tw-color-slate-100: 15 23 42;    /* slate-900 */
-    --tw-color-slate-200: 30 41 59;    /* slate-800 */
-    --tw-color-slate-300: 51 65 85;    /* slate-700 */
-    --tw-color-slate-400: 71 85 105;   /* slate-600 */
-    --tw-color-slate-500: 100 116 139; /* slate-500 */
-    --tw-color-slate-600: 148 163 184; /* slate-400 */
-    --tw-color-slate-700: 203 213 225; /* slate-300 */
-    --tw-color-slate-800: 226 232 240; /* slate-200 */
-    --tw-color-slate-900: 241 245 249; /* slate-100 */
-    --tw-color-slate-950: 248 250 252; /* slate-50 */
+    --tw-color-slate-50: 30 31 34;      /* slate-950 */
+    --tw-color-slate-100: 43 45 49;    /* slate-900 */
+    --tw-color-slate-200: 49 51 56;    /* slate-800 */
+    --tw-color-slate-300: 63 65 71;    /* slate-700 */
+    --tw-color-slate-400: 128 132 142;   /* slate-600 */
+    --tw-color-slate-500: 148 155 164; /* slate-500 */
+    --tw-color-slate-600: 181 186 193; /* slate-400 */
+    --tw-color-slate-700: 219 222 225; /* slate-300 */
+    --tw-color-slate-800: 227 229 232; /* slate-200 */
+    --tw-color-slate-900: 242 243 245; /* slate-100 */
+    --tw-color-slate-950: 255 255 255; /* slate-50 */
     
-    --tw-color-white: 15 23 42;        /* Dark text instead of white */
+    --tw-color-white: 43 45 49;        /* Dark text instead of white */
     --tw-color-black: 255 255 255;     /* White bg instead of black */
   }
 
   .dark {
-    /* DARK MODE MAPPING (Original Slate) */
-    --tw-color-slate-50: 248 250 252;
-    --tw-color-slate-100: 241 245 249;
-    --tw-color-slate-200: 226 232 240;
-    --tw-color-slate-300: 203 213 225;
-    --tw-color-slate-400: 148 163 184;
-    --tw-color-slate-500: 100 116 139;
-    --tw-color-slate-600: 71 85 105;
-    --tw-color-slate-700: 51 65 85;
-    --tw-color-slate-800: 30 41 59;
-    --tw-color-slate-900: 15 23 42;
-    --tw-color-slate-950: 2 6 23;
+    /* SOFT MIDNIGHT MAPPING (Discord Style) */
+    --tw-color-slate-50: 255 255 255;
+    --tw-color-slate-100: 242 243 245;
+    --tw-color-slate-200: 227 229 232;
+    --tw-color-slate-300: 219 222 225;
+    --tw-color-slate-400: 181 186 193;
+    --tw-color-slate-500: 148 155 164;
+    --tw-color-slate-600: 128 132 142;
+    --tw-color-slate-700: 63 65 71;
+    --tw-color-slate-800: 49 51 56;
+    --tw-color-slate-900: 43 45 49;
+    --tw-color-slate-950: 30 31 34;
 
     --tw-color-white: 255 255 255;
     --tw-color-black: 0 0 0;
@@ -41,30 +41,35 @@
   
   body {
     @apply bg-slate-950 text-slate-100;
-    font-family: 'Inter', 'Sarabun', sans-serif;
+    font-family: 'Noto Sans Thai', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Prompt', sans-serif;
+    font-weight: 500;
   }
 }
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all duration-200 gap-2 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center px-4 py-2.5 rounded-xl font-medium transition-all duration-200 gap-2 disabled:opacity-50 disabled:cursor-not-allowed;
   }
   .btn-primary {
-    @apply bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 shadow-md hover:shadow-lg shadow-blue-900/20;
+    @apply bg-[#5865F2] text-white hover:bg-[#4752C4] active:bg-[#3C45A5] shadow-md hover:shadow-lg shadow-[#5865F2]/20 border border-white/5;
   }
   .btn-outline {
     @apply border border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white active:bg-slate-900;
   }
   .btn-danger {
-    @apply bg-red-600 text-white hover:bg-red-700 active:bg-red-800 shadow-md hover:shadow-lg shadow-red-900/20;
+    @apply bg-red-600 text-white hover:bg-red-700 active:bg-red-800 shadow-md hover:shadow-lg shadow-red-900/20 border border-white/5;
   }
   
   .card {
-    @apply bg-slate-800 rounded-xl border border-slate-700 p-6 shadow-xl shadow-black/20;
+    @apply bg-slate-800 rounded-2xl border border-slate-700/50 p-6 shadow-lg shadow-black/10;
   }
   
   .input-field {
-    @apply w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors;
+    @apply w-full bg-slate-900 border border-slate-700/50 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#5865F2] focus:ring-1 focus:ring-[#5865F2] transition-colors;
   }
   
   .glass-panel {

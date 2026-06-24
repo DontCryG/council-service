@@ -23,6 +23,19 @@ export default {
         },
         white: 'rgb(var(--tw-color-white) / <alpha-value>)',
         black: 'rgb(var(--tw-color-black) / <alpha-value>)',
+        blue: {
+          50: '#eef0fe',
+          100: '#e0e4fe',
+          200: '#c5ccfc',
+          300: '#9eaaf8',
+          400: '#727df3',
+          500: '#5865f2', // Primary Blurple
+          600: '#4752c4',
+          700: '#3c45a5',
+          800: '#323985',
+          900: '#23265a',
+          950: '#1d1e46',
+        },
       },
       keyframes: {
         shimmer: {
