@@ -117,10 +117,10 @@ export default function Home() {
               <div className="pl-4 pr-2 text-slate-400">
                 <MagnifyingGlass size={24} weight="bold" />
               </div>
-              <Input 
+              <input 
                 type="text" 
                 placeholder="ค้นหาบริการที่ต้องการ..." 
-                className="w-full bg-transparent border-none text-lg text-white placeholder:text-slate-500 focus:ring-0 px-2 py-3 shadow-none"
+                className="w-full bg-transparent border-none outline-none text-lg text-white placeholder:text-slate-500 px-2 py-3 shadow-none focus:ring-0 focus:outline-none"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
