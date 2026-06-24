@@ -150,6 +150,7 @@ export default function WelfareTrade() {
               <h2 className="text-2xl font-black text-white tracking-widest">โอนย้ายอาวุธ (WEAPON)</h2>
             </button>
           </div>
+        </div>
       )}
       
       {step === 3 && (
