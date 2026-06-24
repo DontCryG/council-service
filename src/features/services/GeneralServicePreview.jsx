@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
-import { saveTransactionLog, saveTransactionImage } from '../../core/api';
+import { saveTransactionLog, saveTransactionImage, ensureCitizenExists, ensureGroupExists } from '../../core/api';
 import { toJpeg } from 'html-to-image';
 import Button from '../../components/ui/Button';
 import { PaperPlaneTilt, ArrowLeft, Receipt, SealCheck, CircleDashed, User, UserCircle } from '@phosphor-icons/react';
@@ -64,6 +64,12 @@ export default function GeneralServicePreview() {
           timestamp: new Date().toISOString()
         }]
       };
+
+      // Auto-save group and citizen if they don't exist
+      await Promise.all([
+        ensureGroupExists(formData.groupName, formData.groupType),
+        ensureCitizenExists(formData.requester)
+      ]);
 
       const logId = await saveTransactionLog('general_service', {
         refNumber: refNumber,

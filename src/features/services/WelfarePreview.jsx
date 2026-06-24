@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
-import { sendWebhook, saveTransactionLog } from '../../core/api';
+import { sendWebhook, saveTransactionLog, ensureCitizenExists, ensureGroupExists } from '../../core/api';
 import { toBlob } from 'html-to-image';
 import Button from '../../components/ui/Button';
 import { PaperPlaneTilt, ArrowLeft } from '@phosphor-icons/react';
@@ -65,6 +65,13 @@ export default function WelfarePreview() {
       }));
 
       await sendWebhook('welfare', fd);
+
+      // Auto-save group and citizen if they don't exist
+      await Promise.all([
+        ensureGroupExists(formData.orgName, formData.orgType),
+        ensureCitizenExists(formData.requester)
+      ]);
+
       await saveTransactionLog('welfare', {
         refNumber: refNumber,
         orgType: formData.orgType,

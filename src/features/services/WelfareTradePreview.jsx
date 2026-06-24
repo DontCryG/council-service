@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
-import { saveTransactionLog, saveTransactionImage } from '../../core/api';
+import { saveTransactionLog, saveTransactionImage, ensureCitizenExists, ensureGroupExists } from '../../core/api';
 import { buildWelfareTradeWebhook } from '../../services/discordFormatters';
 import { toJpeg } from 'html-to-image';
 
@@ -75,6 +75,12 @@ export default function WelfareTradePreview() {
       const payload = buildWelfareTradeWebhook(formData, items, getTotalPrice(), councilName, refNumber);
 
       payload.embeds[0].image = { url: "attachment://receipt.jpg" };
+
+      // Auto-save group and citizen if they don't exist
+      await Promise.all([
+        ensureGroupExists(formData.orgName, formData.orgType),
+        ensureCitizenExists(formData.requester)
+      ]);
 
       const logId = await saveTransactionLog('welfare_trade', {
         refNumber: refNumber,

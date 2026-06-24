@@ -206,3 +206,66 @@ export const deleteTransactionImage = async (imageDocId) => {
     console.error("Failed to delete transaction image:", err);
   }
 };
+
+/**
+ * Ensures a citizen exists in the database, adds if not
+ */
+export const ensureCitizenExists = async (name) => {
+  if (!name || typeof name !== 'string' || !name.trim()) return;
+  const trimmedName = name.trim();
+  
+  try {
+    const q = query(collection(db, 'citizens'), where('name', '==', trimmedName));
+    const snapshot = await getDocs(q);
+    
+    if (snapshot.empty) {
+      await addDoc(collection(db, 'citizens'), {
+        name: trimmedName,
+        createdAt: Timestamp.now()
+      });
+    }
+  } catch (err) {
+    console.error("Failed to ensure citizen exists:", err);
+  }
+};
+
+/**
+ * Ensures a group exists in the app_state, adds if not
+ */
+export const ensureGroupExists = async (name, type) => {
+  if (!name || typeof name !== 'string' || !name.trim()) return;
+  const trimmedName = name.trim();
+  
+  try {
+    const docRef = doc(db, 'app_state', 'groups');
+    const docSnap = await getDoc(docRef);
+    
+    if (docSnap.exists()) {
+      const groups = docSnap.data().groups || [];
+      const exists = groups.some(g => g.name.toLowerCase() === trimmedName.toLowerCase() && g.type === type);
+      
+      if (!exists) {
+        const newGroup = {
+          id: Date.now().toString(),
+          name: trimmedName,
+          type: type || 'GANG',
+          memberCount: 0
+        };
+        await updateDoc(docRef, {
+          groups: [...groups, newGroup]
+        });
+      }
+    } else {
+      const { setDoc } = await import('firebase/firestore');
+      const newGroup = {
+        id: Date.now().toString(),
+        name: trimmedName,
+        type: type || 'GANG',
+        memberCount: 0
+      };
+      await setDoc(docRef, { groups: [newGroup] });
+    }
+  } catch (err) {
+    console.error("Failed to ensure group exists:", err);
+  }
+};
