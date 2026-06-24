@@ -150,7 +150,7 @@ export default function EditOrg() {
                       ? 'border-amber-500 bg-amber-500/5' 
                       : 'border-slate-800 bg-slate-900/50 hover:border-slate-700 hover:bg-slate-800/50'}`}
                 >
-                  <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-colors shadow-inner ${formData.orgType === 'GANG' ? 'bg-amber-500/20 text-amber-500' : 'bg-slate-800 text-slate-400 group-hover:bg-slate-700'}`}>
+                  <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:-translate-y-1 shadow-inner ${formData.orgType === 'GANG' ? 'bg-amber-500/20 text-amber-500' : 'bg-slate-800 text-slate-400 group-hover:bg-slate-700'}`}>
                     <Skull size={32} weight={formData.orgType === 'GANG' ? 'fill' : 'regular'} />
                   </div>
                   <div className="text-center relative z-10">
@@ -166,7 +166,7 @@ export default function EditOrg() {
                       ? 'border-amber-500 bg-amber-500/5' 
                       : 'border-slate-800 bg-slate-900/50 hover:border-slate-700 hover:bg-slate-800/50'}`}
                 >
-                  <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-colors shadow-inner ${formData.orgType === 'FAMILY' ? 'bg-amber-500/20 text-amber-500' : 'bg-slate-800 text-slate-400 group-hover:bg-slate-700'}`}>
+                  <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:-translate-y-1 shadow-inner ${formData.orgType === 'FAMILY' ? 'bg-amber-500/20 text-amber-500' : 'bg-slate-800 text-slate-400 group-hover:bg-slate-700'}`}>
                     <House size={32} weight={formData.orgType === 'FAMILY' ? 'fill' : 'regular'} />
                   </div>
                   <div className="text-center relative z-10">
