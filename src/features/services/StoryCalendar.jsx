@@ -198,56 +198,61 @@ export default function StoryCalendar() {
         </div>
 
         {/* Calendar Grid */}
-        <div className="grid grid-cols-7 bg-slate-900/50">
-          {['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'].map((d, i) => (
-            <div key={i} className="py-2 text-center text-xs font-bold text-slate-500 uppercase tracking-wider border-b border-slate-800">
-              {d}
-            </div>
-          ))}
-          
-          {days.map((day, idx) => {
-            if (!day) return <div key={`empty-${idx}`} className="h-32 border-b border-r border-slate-800/50 bg-slate-900/20"></div>;
-            
-            const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-            const dayEvents = events.filter(e => e.date === dateStr);
-            const isToday = todayStr === dateStr;
-
-            return (
-              <div 
-                key={day} 
-                onClick={() => handleDayClick(dateStr)}
-                className={`h-32 p-2 border-b border-r border-slate-800/50 overflow-y-auto custom-scrollbar relative transition-colors cursor-pointer ${isToday ? 'bg-amber-500/5' : 'hover:bg-slate-800/30'} group`}
-              >
-                <div className={`text-xs font-bold mb-1 ${isToday ? 'text-amber-500 bg-amber-500/10 inline-block px-2 rounded-full' : 'text-slate-400'}`}>
-                  {day}
-                </div>
-                
-                {/* Visual indicator that it's clickable (for admins) */}
-                {user && (
-                  <div className="absolute top-2 right-2 text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Plus size={14} />
-                  </div>
-                )}
-
-                <div className="space-y-1">
-                  {dayEvents.map(evt => (
-                    <div 
-                      key={evt.id} 
-                      className={`text-xs p-1.5 rounded cursor-pointer border-l-2 transition-transform hover:scale-[1.02] ${
-                        evt.type?.includes('Gang') ? 'bg-red-500/10 border-red-500 text-red-200' : 'bg-blue-500/10 border-blue-500 text-blue-200'
-                      }`}
-                    >
-                      <div className="font-bold truncate">{evt.team1} <span className="text-slate-400 mx-1">vs</span> {evt.team2}</div>
-                      <div className="flex justify-between items-center mt-1 opacity-70">
-                        <span>{evt.time}</span>
-                        {evt.type?.includes('Gang') ? <Sword size={12} /> : <MapPin size={12} />}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+        <div className="p-4 bg-slate-900/30">
+          <div className="grid grid-cols-7 gap-2 mb-2">
+            {['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'].map((d, i) => (
+              <div key={i} className="py-2 text-center text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-slate-900/50 rounded-lg">
+                {d}
               </div>
-            );
-          })}
+            ))}
+          </div>
+          
+          <div className="grid grid-cols-7 gap-2">
+            {days.map((day, idx) => {
+              if (!day) return <div key={`empty-${idx}`} className="h-28 rounded-2xl bg-slate-800/10 border border-slate-800/30 border-dashed"></div>;
+              
+              const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+              const dayEvents = events.filter(e => e.date === dateStr);
+              const isToday = todayStr === dateStr;
+
+              return (
+                <div 
+                  key={day} 
+                  onClick={() => handleDayClick(dateStr)}
+                  className={`h-28 p-2 rounded-2xl overflow-y-auto custom-scrollbar relative transition-all cursor-pointer border group flex flex-col ${isToday ? 'bg-amber-500/10 border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.1)] hover:bg-amber-500/20' : 'bg-slate-900/80 border-slate-800/50 hover:border-amber-500/30 hover:bg-slate-800/80 hover:-translate-y-0.5 hover:shadow-lg'}`}
+                >
+                  <div className="flex justify-between items-start mb-1 shrink-0">
+                    <div className={`text-xs font-black flex items-center justify-center w-6 h-6 rounded-full ${isToday ? 'bg-amber-500 text-slate-900' : 'text-slate-400 group-hover:text-white'}`}>
+                      {day}
+                    </div>
+                    {/* Visual indicator that it's clickable (for admins) */}
+                    {user && (
+                      <div className="text-amber-500 opacity-0 group-hover:opacity-100 transition-opacity bg-amber-500/10 p-1 rounded-md">
+                        <Plus size={10} weight="bold" />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-1.5 flex-1 mt-1">
+                    {dayEvents.map(evt => (
+                      <div 
+                        key={evt.id} 
+                        className={`text-[10px] p-1.5 rounded-lg cursor-pointer transition-transform hover:scale-[1.02] flex flex-col gap-1 ${
+                          evt.type?.includes('Gang') ? 'bg-red-500/10 text-red-200 border border-red-500/20' : 'bg-blue-500/10 text-blue-200 border border-blue-500/20'
+                        }`}
+                      >
+                        <div className="font-bold truncate leading-tight">{evt.team1} <span className="opacity-50 mx-0.5">v</span> {evt.team2}</div>
+                        <div className="flex justify-between items-center opacity-70 text-[9px] font-mono">
+                          <span>{evt.time}</span>
+                          {evt.type?.includes('Gang') ? <Sword size={10} /> : <MapPin size={10} />}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </Card>
 

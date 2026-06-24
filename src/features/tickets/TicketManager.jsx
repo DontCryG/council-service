@@ -394,54 +394,48 @@ export default function TicketManager() {
                 </div>
               </div>
 
-              <Card className="p-0 overflow-hidden">
-                <div className="overflow-x-auto custom-scrollbar">
-                  <table className="w-full text-left text-sm text-slate-300">
-                    <thead className="bg-slate-900/50 text-xs uppercase text-slate-400 border-b border-slate-700">
-                      <tr>
-                        <th className="px-6 py-4">วันที่/เวลา</th>
-                        <th className="px-6 py-4">ชื่อองค์กร</th>
-                        <th className="px-6 py-4">ผู้ติดต่อ</th>
-                        <th className="px-6 py-4 text-right">จำนวน Ticket</th>
-                        <th className="px-6 py-4 text-right">ยอดเงินแดง</th>
-                        <th className="px-6 py-4 text-center">สถานะ</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-800">
-                      {filteredHistory.length === 0 ? (
-                        <tr><td colSpan="6" className="px-6 py-8 text-center text-slate-500">ไม่มีประวัติ</td></tr>
-                      ) : (
-                        filteredHistory.map(h => (
-                          <tr key={h.id} className="hover:bg-slate-800/30 transition-colors">
-                            <td className="px-6 py-4 whitespace-nowrap text-xs">
-                              {new Date(h.processedAt || h.timestamp).toLocaleString('th-TH')}
-                            </td>
-                            <td className="px-6 py-4 font-bold text-white">{h.groupName}</td>
-                            <td className="px-6 py-4 text-slate-400">{h.requester}</td>
-                            <td className="px-6 py-4 text-right font-mono text-amber-400">
-                              {parseInt(h.amount).toLocaleString()}
-                            </td>
-                            <td className="px-6 py-4 text-right font-mono text-red-400">
-                              ${parseInt(h.totalPrice).toLocaleString()}
-                            </td>
-                            <td className="px-6 py-4 text-center">
-                              {h.status === 'APPROVED' ? (
-                                <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded border border-emerald-500/20">
-                                  <CheckCircle size={14} weight="fill" /> APPROVED
-                                </span>
-                              ) : (
-                                <span className="inline-flex items-center gap-1 text-xs font-bold text-red-400 bg-red-400/10 px-2 py-1 rounded border border-red-500/20">
-                                  <XCircle size={14} weight="fill" /> REJECTED
-                                </span>
-                              )}
-                            </td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </Card>
+              <div className="space-y-4">
+                {filteredHistory.length === 0 ? (
+                  <Card className="py-20 text-center text-slate-500 border-dashed border-slate-700">ไม่มีประวัติ</Card>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {filteredHistory.map(h => (
+                      <div key={h.id} className="bg-slate-900 border border-slate-800 rounded-xl p-4 hover:border-slate-700 transition-colors">
+                        <div className="flex justify-between items-start mb-3">
+                          <div>
+                            <div className="font-bold text-white text-base">{h.groupName}</div>
+                            <div className="text-xs text-slate-400 mt-0.5">ติดต่อ: {h.requester}</div>
+                          </div>
+                          {h.status === 'APPROVED' ? (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded border border-emerald-500/20">
+                              <CheckCircle size={12} weight="fill" /> APPROVED
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-red-400 bg-red-400/10 px-2 py-1 rounded border border-red-500/20">
+                              <XCircle size={12} weight="fill" /> REJECTED
+                            </span>
+                          )}
+                        </div>
+                        
+                        <div className="bg-slate-950 rounded-lg p-3 grid grid-cols-2 gap-2 border border-slate-800/50 mb-3">
+                          <div>
+                            <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Ticket</div>
+                            <div className="font-mono text-amber-400 font-bold">{parseInt(h.amount).toLocaleString()}</div>
+                          </div>
+                          <div className="text-right border-l border-slate-800">
+                            <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Red Money</div>
+                            <div className="font-mono text-red-400 font-bold">${parseInt(h.totalPrice).toLocaleString()}</div>
+                          </div>
+                        </div>
+
+                        <div className="text-[10px] text-slate-500 text-right">
+                          {new Date(h.processedAt || h.timestamp).toLocaleString('th-TH')}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
@@ -528,57 +522,59 @@ export default function TicketManager() {
                 />
               </div>
 
-              <Card className="p-0 overflow-hidden">
-                <div className="overflow-x-auto custom-scrollbar">
-                  <table className="w-full text-left text-sm text-slate-300">
-                    <thead className="bg-slate-900/50 text-xs uppercase text-slate-400 border-b border-slate-700">
-                      <tr>
-                        <th className="px-6 py-4">องค์กร</th>
-                        <th className="px-6 py-4 text-center">ประเภท</th>
-                        <th className="px-6 py-4 text-right">โควต้าสูงสุด / รอบ</th>
-                        <th className="px-6 py-4 text-right">ใช้ไปแล้ว</th>
-                        <th className="px-6 py-4 text-right">คงเหลือ</th>
-                        <th className="px-6 py-4">สถานะ</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-800">
-                      {filteredGroups.length === 0 ? (
-                        <tr><td colSpan="6" className="px-6 py-8 text-center text-slate-500">ไม่มีข้อมูลองค์กรที่ค้นหา</td></tr>
-                      ) : (
-                        filteredGroups.map(g => {
-                          const used = getUsedQuota(g.name);
-                          const max = g.type === 'GANG' ? ticketsData.settings.quotaGang : ticketsData.settings.quotaFamily;
-                          const remaining = Math.max(0, max - used);
-                          const percent = Math.min(100, (used / max) * 100);
+              <div className="space-y-4">
+                {filteredGroups.length === 0 ? (
+                  <Card className="py-20 text-center text-slate-500 border-dashed border-slate-700">ไม่มีข้อมูลองค์กรที่ค้นหา</Card>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {filteredGroups.map(g => {
+                      const used = getUsedQuota(g.name);
+                      const max = g.type === 'GANG' ? ticketsData.settings.quotaGang : ticketsData.settings.quotaFamily;
+                      const remaining = Math.max(0, max - used);
+                      const percent = Math.min(100, (used / max) * 100);
 
-                          return (
-                            <tr key={g.id} className="hover:bg-slate-800/30 transition-colors">
-                              <td className="px-6 py-4 font-bold text-white flex items-center gap-2">
-                                <div className="w-3 h-3 rounded-full" style={{backgroundColor: g.color}}></div>
-                                {g.name}
-                              </td>
-                              <td className="px-6 py-4 text-center">
-                                <span className="text-xs bg-slate-800 px-2 py-1 rounded uppercase">{g.type}</span>
-                              </td>
-                              <td className="px-6 py-4 text-right font-mono text-slate-400">{parseInt(max).toLocaleString()}</td>
-                              <td className="px-6 py-4 text-right font-mono text-amber-400">{parseInt(used).toLocaleString()}</td>
-                              <td className="px-6 py-4 text-right font-mono text-emerald-400 font-bold">{parseInt(remaining).toLocaleString()}</td>
-                              <td className="px-6 py-4">
-                                <div className="w-24 h-2 bg-slate-800 rounded-full overflow-hidden">
-                                  <div 
-                                    className={`h-full ${percent > 90 ? 'bg-red-500' : percent > 70 ? 'bg-amber-500' : 'bg-emerald-500'}`} 
-                                    style={{ width: `${percent}%` }}
-                                  ></div>
-                                </div>
-                              </td>
-                            </tr>
-                          );
-                        })
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </Card>
+                      return (
+                        <div key={g.id} className="bg-slate-900 border border-slate-800 rounded-xl p-4 hover:border-amber-500/30 transition-colors relative overflow-hidden group">
+                          {/* Top Border Accent */}
+                          <div className={`absolute top-0 left-0 right-0 h-1 ${g.type === 'GANG' ? 'bg-amber-500' : 'bg-blue-500'}`}></div>
+                          
+                          <div className="flex items-center gap-3 mb-4 mt-1">
+                            <div className="w-8 h-8 rounded-full border border-slate-700 flex-shrink-0" style={{backgroundColor: g.color || '#334155'}}></div>
+                            <div className="min-w-0">
+                              <h3 className="font-bold text-white text-base truncate">{g.name}</h3>
+                              <div className="text-[10px] text-slate-500 uppercase tracking-wider">{g.type}</div>
+                            </div>
+                          </div>
+
+                          <div className="bg-slate-950 rounded-lg p-3 grid grid-cols-2 gap-3 border border-slate-800/50 mb-3">
+                            <div className="text-center">
+                              <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">ใช้ไปแล้ว</div>
+                              <div className="font-mono text-amber-400 font-bold">{parseInt(used).toLocaleString()}</div>
+                            </div>
+                            <div className="text-center border-l border-slate-800">
+                              <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">คงเหลือ</div>
+                              <div className="font-mono text-emerald-400 font-bold">{parseInt(remaining).toLocaleString()}</div>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center justify-between text-xs mb-1">
+                            <span className="text-slate-500">โควต้าสูงสุด: {parseInt(max).toLocaleString()}</span>
+                            <span className={`font-bold ${percent > 90 ? 'text-red-400' : percent > 70 ? 'text-amber-400' : 'text-emerald-400'}`}>
+                              {percent.toFixed(0)}%
+                            </span>
+                          </div>
+                          <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                            <div 
+                              className={`h-full ${percent > 90 ? 'bg-red-500' : percent > 70 ? 'bg-amber-500' : 'bg-emerald-500'}`} 
+                              style={{ width: `${percent}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             </div>
           )}
 

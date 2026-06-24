@@ -257,136 +257,112 @@ export default function CouncilLoanHub() {
                 รายการสัญญาล่าสุด
               </h2>
             </div>
-            <div className="p-6 overflow-x-auto">
-              <table className="w-full text-left border-collapse whitespace-nowrap">
-                <thead>
-                  <tr>
-                    <th className="pb-4 pt-2 pr-3 text-xs font-bold text-slate-400 tracking-wider uppercase w-[15%]">เลขที่สัญญา</th>
-                    <th className="pb-4 pt-2 px-3 text-xs font-bold text-slate-400 tracking-wider uppercase w-[30%]">ผู้กู้ยืม</th>
-                    <th className="pb-4 pt-2 px-3 text-xs font-bold text-slate-400 tracking-wider uppercase w-[20%]">ยอดคงค้าง</th>
-                    <th className="pb-4 pt-2 px-3 text-xs font-bold text-slate-400 tracking-wider uppercase text-center w-[15%]">สถานะ</th>
-                    <th className="pb-4 pt-2 pl-3 text-xs font-bold text-slate-400 tracking-wider uppercase text-right w-[20%] min-w-[220px]">จัดการ</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {loading ? (
-                    <tr>
-                      <td colSpan="5" className="py-12 text-center text-slate-500">
-                        <CircleNotch size={32} className="animate-spin mx-auto mb-3 text-amber-500/50" />
-                        <span className="font-medium tracking-wide">กำลังดึงข้อมูลสัญญา...</span>
-                      </td>
-                    </tr>
-                  ) : contracts.length === 0 ? (
-                    <tr>
-                      <td colSpan="5" className="py-12 text-center text-slate-500">
-                        <div className="w-16 h-16 bg-slate-800/50 rounded-full flex items-center justify-center mx-auto mb-3 border border-slate-700/50">
-                          <FileText size={28} className="text-slate-600" />
-                        </div>
-                        <span className="font-medium tracking-wide">ยังไม่มีข้อมูล</span>
-                      </td>
-                    </tr>
-                  ) : (
-                    contracts.map((contract) => (
-                      <tr key={contract.id} className="border-t border-slate-800 hover:bg-slate-800/30 transition-all group">
-                        <td className="py-4 pr-3">
-                          <div className="flex items-center gap-2 whitespace-nowrap">
+            <div className="p-6">
+              {loading ? (
+                <div className="py-12 text-center text-slate-500">
+                  <CircleNotch size={32} className="animate-spin mx-auto mb-3 text-amber-500/50" />
+                  <span className="font-medium tracking-wide">กำลังดึงข้อมูลสัญญา...</span>
+                </div>
+              ) : contracts.length === 0 ? (
+                <div className="py-12 text-center text-slate-500 border-2 border-dashed border-slate-700/50 rounded-2xl">
+                  <div className="w-16 h-16 bg-slate-800/50 rounded-full flex items-center justify-center mx-auto mb-3 border border-slate-700/50">
+                    <FileText size={28} className="text-slate-600" />
+                  </div>
+                  <span className="font-medium tracking-wide">ยังไม่มีข้อมูลสัญญา</span>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {contracts.map((contract) => (
+                    <div key={contract.id} className="bg-slate-900 border border-slate-800 rounded-2xl p-5 hover:border-amber-500/30 transition-all group flex flex-col justify-between">
+                      <div>
+                        <div className="flex justify-between items-start mb-3">
+                          <div className="flex items-center gap-2">
                             <span className="w-2 h-2 rounded-full bg-amber-500/50 group-hover:bg-amber-400 transition-colors shrink-0"></span>
-                            <span className="font-black text-amber-500/90 group-hover:text-amber-400 transition-colors tracking-wide">{contract.contractId}</span>
+                            <span className="font-black text-amber-500/90 group-hover:text-amber-400 transition-colors tracking-wide text-xs">{contract.contractId}</span>
                           </div>
-                        </td>
-                        <td className="py-4 px-3 font-bold text-white">
-                          <div className="flex items-center gap-3 whitespace-nowrap">
-                            <span className="text-[15px]">{contract.borrowerName}</span>
-                          </div>
-                        </td>
-                        <td className="py-4 px-3">
-                          <div className="flex items-center gap-1.5 whitespace-nowrap">
-                            <span className="font-black text-emerald-400 text-[15px]">{(contract.remainingAmount || 0).toLocaleString()}</span>
-                            <span className="font-black text-emerald-500/50 text-[15px]">฿</span>
-                          </div>
-                        </td>
-                        <td className="py-4 px-3 text-center">
-                          <div className="flex justify-center whitespace-nowrap">
+                          <div className="flex justify-end">
                             {contract.status === 'pending_signature' && (
-                              <span className="inline-flex items-center justify-center bg-blue-500/10 text-blue-400 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider border border-blue-500/20 w-32">
-                                รอผู้กู้เซ็น
-                              </span>
+                              <span className="bg-blue-500/10 text-blue-400 px-2 py-1 rounded-md text-[10px] font-black uppercase tracking-wider border border-blue-500/20">รอผู้กู้เซ็น</span>
                             )}
                             {contract.status === 'pending_council_signature' && (
-                              <span className="inline-flex items-center justify-center bg-purple-500/10 text-purple-400 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider border border-purple-500/20 w-32">
-                                รอสภาเซ็น
-                              </span>
+                              <span className="bg-purple-500/10 text-purple-400 px-2 py-1 rounded-md text-[10px] font-black uppercase tracking-wider border border-purple-500/20">รอสภาเซ็น</span>
                             )}
                             {contract.status === 'active' && (
-                              <span className="inline-flex items-center justify-center bg-amber-500/10 text-amber-400 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider border border-amber-500/20 w-32">
-                                กำลังผ่อนชำระ
-                              </span>
+                              <span className="bg-amber-500/10 text-amber-400 px-2 py-1 rounded-md text-[10px] font-black uppercase tracking-wider border border-amber-500/20">กำลังผ่อนชำระ</span>
                             )}
                             {contract.status === 'completed' && (
-                              <span className="inline-flex items-center justify-center bg-emerald-500/10 text-emerald-400 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider border border-emerald-500/20 w-32">
-                                ชำระครบแล้ว
-                              </span>
+                              <span className="bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded-md text-[10px] font-black uppercase tracking-wider border border-emerald-500/20">ชำระครบแล้ว</span>
                             )}
                             {contract.status === 'defaulted' && (
-                              <span className="inline-flex items-center justify-center bg-red-500/10 text-red-400 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider border border-red-500/20 w-32">
-                                ผิดนัดชำระ
-                              </span>
+                              <span className="bg-red-500/10 text-red-400 px-2 py-1 rounded-md text-[10px] font-black uppercase tracking-wider border border-red-500/20">ผิดนัดชำระ</span>
                             )}
                           </div>
-                        </td>
-                        <td className="py-4 pl-3">
-                          <div className="flex items-center justify-end gap-2 whitespace-nowrap">
-                            {contract.status === 'active' && (
-                              <button 
-                                onClick={() => handleUpdateBalance(contract.id, contract.contractId, contract.remainingAmount)}
-                                className="bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-white px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-bold transition-all border border-emerald-500/20 hover:border-emerald-500 shadow-sm shrink-0"
-                              >
-                                <UploadSimple size={14} weight="bold" />
-                                อัพเดทยอด
-                              </button>
-                            )}
-                            
-                            <div className="flex items-center gap-1 bg-slate-900/80 p-1 rounded-xl border border-slate-700/50 shadow-inner shrink-0">
-                              <button 
-                                className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-all" 
-                                title="ดูรายละเอียด"
-                                onClick={() => navigate(`/council_loan/view/${contract.id}`)}
-                              >
-                                <FileText size={16} weight="fill" />
-                              </button>
-                              <button 
-                                className="p-1.5 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-all" 
-                                title="คัดลอกลิงก์สัญญา"
-                                onClick={() => {
-                                  const textToCopy = `กรุณาเซ็นสัญญากู้ยืมเลขที่: ${contract.contractId} ได้ที่\n${window.location.origin}/loan_public?id=${contract.contractId}`;
-                                  navigator.clipboard.writeText(textToCopy);
-                                  showAlert('success', 'คัดลอกข้อความสำหรับส่งให้ผู้กู้สำเร็จ');
-                                }}
-                              >
-                                <Copy size={16} weight="fill" />
-                              </button>
-                              <button 
-                                className="p-1.5 text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 rounded-lg transition-all" 
-                                title="แก้ไข"
-                                onClick={() => navigate(`/council_loan/edit/${contract.id}`)}
-                              >
-                                <PencilSimple size={16} weight="fill" />
-                              </button>
-                              <button 
-                                className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all" 
-                                title="ลบสัญญา"
-                                onClick={() => handleDeleteContract(contract.contractId, contract.id)}
-                              >
-                                <Trash size={16} weight="fill" />
-                              </button>
-                            </div>
+                        </div>
+
+                        <div className="mb-4">
+                          <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">ผู้กู้ยืม</div>
+                          <div className="text-white font-bold text-base">{contract.borrowerName}</div>
+                        </div>
+
+                        <div className="bg-slate-950 rounded-xl p-3 border border-slate-800/50 mb-4 flex items-center justify-between">
+                          <div className="text-[10px] text-slate-500 uppercase tracking-wider">ยอดคงค้าง</div>
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-black text-emerald-400 text-lg">{(contract.remainingAmount || 0).toLocaleString()}</span>
+                            <span className="font-black text-emerald-500/50 text-sm">฿</span>
                           </div>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-800/50">
+                        {contract.status === 'active' ? (
+                          <button 
+                            onClick={() => handleUpdateBalance(contract.id, contract.contractId, contract.remainingAmount)}
+                            className="bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-white px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-bold transition-all border border-emerald-500/20 hover:border-emerald-500 shadow-sm shrink-0"
+                          >
+                            <UploadSimple size={14} weight="bold" />
+                            อัพเดทยอด
+                          </button>
+                        ) : <div></div>}
+                        
+                        <div className="flex items-center gap-1 bg-slate-900/80 p-1 rounded-xl border border-slate-700/50 shadow-inner">
+                          <button 
+                            className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-all" 
+                            title="ดูรายละเอียด"
+                            onClick={() => navigate(`/council_loan/view/${contract.id}`)}
+                          >
+                            <FileText size={16} weight="fill" />
+                          </button>
+                          <button 
+                            className="p-1.5 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-all" 
+                            title="คัดลอกลิงก์สัญญา"
+                            onClick={() => {
+                              const textToCopy = `กรุณาเซ็นสัญญากู้ยืมเลขที่: ${contract.contractId} ได้ที่\n${window.location.origin}/loan_public?id=${contract.contractId}`;
+                              navigator.clipboard.writeText(textToCopy);
+                              showAlert('success', 'คัดลอกข้อความสำหรับส่งให้ผู้กู้สำเร็จ');
+                            }}
+                          >
+                            <Copy size={16} weight="fill" />
+                          </button>
+                          <button 
+                            className="p-1.5 text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 rounded-lg transition-all" 
+                            title="แก้ไข"
+                            onClick={() => navigate(`/council_loan/edit/${contract.id}`)}
+                          >
+                            <PencilSimple size={16} weight="fill" />
+                          </button>
+                          <button 
+                            className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all" 
+                            title="ลบสัญญา"
+                            onClick={() => handleDeleteContract(contract.contractId, contract.id)}
+                          >
+                            <Trash size={16} weight="fill" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
