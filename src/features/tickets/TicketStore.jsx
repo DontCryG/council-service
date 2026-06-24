@@ -7,6 +7,7 @@ import { Ticket, ShoppingCart, WarningCircle, Buildings, ArrowLeft } from '@phos
 
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
+import AutocompleteInput from '../../components/ui/AutocompleteInput';
 import { Card } from '../../components/ui/Card';
 
 export default function TicketStore() {
@@ -280,12 +281,12 @@ export default function TicketStore() {
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input 
+            <AutocompleteInput 
               label="ผู้ติดต่อ (ชื่อในเกม)" 
               placeholder="ระบุชื่อผู้เบิก..." 
-              required
+              type="text"
               value={formData.requester}
-              onChange={e => setFormData({...formData, requester: e.target.value})}
+              onChange={val => setFormData({...formData, requester: val})}
             />
             
             <div className="space-y-1.5">

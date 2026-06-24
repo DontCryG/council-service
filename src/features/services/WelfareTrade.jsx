@@ -6,6 +6,7 @@ import { collection, onSnapshot } from 'firebase/firestore';
 
 import Button from '../../components/ui/Button';
 import GroupSelect from '../../components/ui/GroupSelect';
+import AutocompleteInput from '../../components/ui/AutocompleteInput';
 import { Trash, ArrowRight, ArrowsLeftRight, Car, Crosshair, ArrowLeft, Users, House } from '@phosphor-icons/react';
 
 export default function WelfareTrade() {
@@ -185,24 +186,22 @@ export default function WelfareTrade() {
               <label className="text-[14px] font-bold text-slate-300 tracking-wide">
                 {formData.tradeType === 'WEAPON' ? '5' : '4'}. {formData.tradeType === 'WEAPON' ? 'ผู้ส่งมอบ (คนเก่า)' : 'ผู้ถือรถ (คนเก่า)'}
               </label>
-              <input 
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-200 font-medium focus:outline-none focus:border-violet-500 focus:bg-slate-900 focus:ring-1 focus:ring-violet-500 transition-colors placeholder:text-slate-600"
+              <AutocompleteInput 
                 placeholder={formData.tradeType === 'WEAPON' ? 'ชื่อผู้ถืออาวุธเดิม' : 'ชื่อเจ้าของรถเดิม'}
+                type="text"
                 value={formData.oldOwner}
-                onChange={e => setFormData({...formData, oldOwner: e.target.value})}
-                required
+                onChange={val => setFormData({...formData, oldOwner: val})}
               />
             </div>
             <div className="space-y-3">
               <label className="text-[14px] font-bold text-slate-300 tracking-wide">
                 {formData.tradeType === 'WEAPON' ? '6' : '5'}. {formData.tradeType === 'WEAPON' ? 'ผู้รับมอบ (คนใหม่)' : 'ผู้รับรถ (คนใหม่)'}
               </label>
-              <input 
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-200 font-medium focus:outline-none focus:border-violet-500 focus:bg-slate-900 focus:ring-1 focus:ring-violet-500 transition-colors placeholder:text-slate-600"
+              <AutocompleteInput 
                 placeholder={formData.tradeType === 'WEAPON' ? 'ชื่อผู้รับอาวุธ' : 'ชื่อผู้รับรถ'}
+                type="text"
                 value={formData.newOwner}
-                onChange={e => setFormData({...formData, newOwner: e.target.value})}
-                required
+                onChange={val => setFormData({...formData, newOwner: val})}
               />
             </div>
           </div>

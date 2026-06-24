@@ -5,6 +5,7 @@ import { useAppStore } from '../../store';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import GroupSelect from '../../components/ui/GroupSelect';
+import AutocompleteInput from '../../components/ui/AutocompleteInput';
 import { PaperPlaneTilt, Trash, Gift, Car, Users, House, Sword, ArrowLeft } from '@phosphor-icons/react';
 
 export default function Welfare() {
@@ -97,12 +98,11 @@ export default function Welfare() {
             </div>
             <div className="space-y-3">
               <label className="text-[13px] font-bold text-slate-400 tracking-wide">3. ชื่อผู้กรอกข้อมูล</label>
-              <input 
-                className="w-full bg-slate-900 border-2 border-slate-800 rounded-xl px-4 py-3 text-slate-200 font-bold focus:outline-none focus:border-blue-500/50 focus:bg-slate-800 transition-colors placeholder:text-slate-600"
+              <AutocompleteInput 
                 placeholder="ชื่อในเกม..."
+                type="text"
                 value={formData.requester}
-                onChange={e => setFormData({...formData, requester: e.target.value})}
-                required
+                onChange={val => setFormData({...formData, requester: val})}
               />
             </div>
           </div>

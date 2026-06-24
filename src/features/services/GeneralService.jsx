@@ -4,6 +4,7 @@ import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { transactions } from '../../data/models';
+import AutocompleteInput from '../../components/ui/AutocompleteInput';
 
 import Button from '../../components/ui/Button';
 import GroupSelect from '../../components/ui/GroupSelect';
@@ -124,12 +125,11 @@ export default function GeneralService() {
               <label className="text-[15px] font-bold text-slate-200 tracking-wide flex items-center gap-2">
                 <span className="text-blue-500">3.</span> ผู้ทำรายการ (REQUESTER)
               </label>
-              <input 
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-200 font-medium focus:outline-none focus:border-blue-500 focus:bg-slate-900 focus:ring-1 focus:ring-blue-500 transition-colors placeholder:text-slate-600"
+              <AutocompleteInput 
                 placeholder="ชื่อ-นามสกุล (IC)"
+                type="text"
                 value={formData.requester}
-                onChange={e => setFormData({...formData, requester: e.target.value})}
-                required
+                onChange={val => setFormData({...formData, requester: val})}
               />
             </div>
           </div>
@@ -167,8 +167,12 @@ export default function GeneralService() {
               {members.map(item => (
                 <div key={item.id} className="flex gap-3">
                   <div className="flex-1 relative">
-                    <UserPlus size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
-                    <input placeholder="ระบุชื่อสมาชิก..." className="w-full pl-12 bg-slate-950 border border-slate-800 rounded-xl pr-4 py-3.5 text-slate-200 focus:border-blue-500 focus:bg-slate-900 focus:ring-1 focus:ring-blue-500 transition-colors placeholder:text-slate-600" value={item.value} onChange={e => handleMemberChange(item.id, e.target.value)} required />
+                    <AutocompleteInput 
+                      placeholder="ระบุชื่อสมาชิก..." 
+                      type="text"
+                      value={item.value} 
+                      onChange={val => handleMemberChange(item.id, val)} 
+                    />
                   </div>
                   <button type="button" className={`px-4 border rounded-xl transition-colors bg-slate-900 ${members.length > 1 ? 'border-slate-700 text-red-400 hover:border-red-500 hover:bg-red-500/10' : 'border-slate-800 text-slate-600 cursor-not-allowed'}`} onClick={() => handleRemoveMember(item.id)} disabled={members.length === 1}><Trash size={20}/></button>
                 </div>
