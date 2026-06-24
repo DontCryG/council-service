@@ -140,8 +140,8 @@ export default function CouncilReceiptView() {
                   <Receipt size={32} className="text-emerald-400" weight="duotone" />
                 </div>
                 <div>
-                  <h1 className="text-4xl font-black text-white tracking-tight text-shadow-glow">ใบเสร็จรับเงิน</h1>
-                  <p className="text-emerald-400 font-bold tracking-[0.2em] text-xs mt-2 uppercase text-shadow-glow">OFFICIAL RECEIPT</p>
+                  <h1 className="text-4xl font-black text-white tracking-tight text-shadow-glow whitespace-nowrap">ใบเสร็จรับเงิน</h1>
+                  <p className="text-emerald-400 font-bold tracking-[0.2em] text-xs mt-2 uppercase text-shadow-glow whitespace-nowrap">OFFICIAL RECEIPT</p>
                 </div>
               </div>
             </div>
@@ -183,8 +183,14 @@ export default function CouncilReceiptView() {
             {/* Payment Details Table */}
             <div className="mb-auto">
               <div className="flex justify-between items-end border-b border-slate-700 pb-3 mb-6">
-                <h3 className="font-black text-white text-lg tracking-wide">รายการชำระเงิน <span className="text-slate-500 font-medium text-xs ml-2 uppercase tracking-widest">Description</span></h3>
-                <h3 className="font-black text-white text-lg tracking-wide">จำนวนเงิน <span className="text-slate-500 font-medium text-xs ml-2 uppercase tracking-widest">Amount</span></h3>
+                <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">
+                  <h3 className="font-black text-white text-lg tracking-wide whitespace-nowrap">รายการชำระเงิน</h3>
+                  <span className="text-slate-500 font-medium text-xs uppercase tracking-widest">Description</span>
+                </div>
+                <div className="flex items-baseline gap-2">
+                  <h3 className="font-black text-white text-lg tracking-wide whitespace-nowrap">จำนวนเงิน</h3>
+                  <span className="text-slate-500 font-medium text-xs uppercase tracking-widest">Amount</span>
+                </div>
               </div>
 
               <div className="flex justify-between items-center mb-6 px-2">
