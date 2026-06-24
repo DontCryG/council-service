@@ -73,31 +73,64 @@ export default function Home() {
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
       
-      {/* Welcome Banner */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 md:p-12 relative overflow-hidden shadow-xl">
-        <div className="absolute right-[-5%] top-[-20%] opacity-[0.03] scale-150 pointer-events-none">
-          {/* Mock Logo or Icon */}
+      {/* Welcome Banner - Premium Modern Design */}
+      <div className="relative overflow-hidden rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl p-8 md:p-16">
+        {/* Abstract Glowing Background Orbs */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+          <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-amber-500/10 blur-[100px]"></div>
+          <div className="absolute -bottom-[20%] -right-[10%] w-[50%] h-[50%] rounded-full bg-blue-500/10 blur-[100px]"></div>
+        </div>
+
+        {/* Floating Shield Background */}
+        <div className="absolute right-[-5%] top-[-10%] opacity-[0.02] scale-[1.8] pointer-events-none rotate-12">
           <ShieldStar weight="fill" className="w-[400px] h-[400px] text-white" />
         </div>
         
-        <div className="relative z-10 text-center flex flex-col items-center">
-          <h1 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tight leading-tight uppercase">
-            COUNCIL <span className="text-amber-500">SECRETARY</span><br/>
-            E - SERVICE SYSTEM
+        <div className="relative z-10 flex flex-col items-center text-center">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/80 border border-slate-700/50 backdrop-blur-md mb-6 shadow-sm">
+            <span className="flex h-2 w-2 rounded-full bg-amber-500 animate-pulse"></span>
+            <span className="text-xs font-bold text-slate-300 tracking-wider">COUNCIL SYSTEM V2</span>
+          </div>
+
+          <h1 className="text-5xl md:text-7xl font-black mb-4 tracking-tight leading-[1.1] uppercase drop-shadow-sm">
+            <span className="text-transparent bg-clip-text bg-gradient-to-br from-white via-slate-200 to-slate-500">
+              COUNCIL
+            </span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 ml-3 md:ml-4">
+              SECRETARY
+            </span>
+            <br/>
+            <span className="text-3xl md:text-5xl text-slate-100 font-extrabold mt-2 block">
+              E - SERVICE SYSTEM
+            </span>
           </h1>
-          <p className="text-sm md:text-base text-slate-400 mb-10 tracking-[0.2em] font-bold uppercase">
-            ALL-IN-ONE GANG & FAMILY SERVICE PLATFORM
+          
+          <p className="text-sm md:text-base text-slate-400 mb-12 tracking-[0.2em] font-bold uppercase max-w-2xl mx-auto">
+            ALL-IN-ONE <span className="text-slate-300">GANG</span> & <span className="text-slate-300">FAMILY</span> SERVICE PLATFORM
           </p>
           
-          <div className="w-full max-w-2xl relative">
-            <MagnifyingGlass size={24} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
-            <Input 
-              type="text" 
-              placeholder="ค้นหาบริการ..." 
-              className="pl-12 py-4 text-lg rounded-xl shadow-lg"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+          {/* Search Bar - Glassmorphism */}
+          <div className="w-full max-w-2xl relative group">
+            <div className="absolute inset-0 bg-gradient-to-r from-amber-500/20 to-blue-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+            <div className="relative bg-slate-950/50 backdrop-blur-xl border border-slate-700/50 hover:border-slate-600 rounded-2xl flex items-center p-2 shadow-2xl transition-all duration-300 focus-within:border-amber-500/50 focus-within:ring-2 focus-within:ring-amber-500/20">
+              <div className="pl-4 pr-2 text-slate-400">
+                <MagnifyingGlass size={24} weight="bold" />
+              </div>
+              <Input 
+                type="text" 
+                placeholder="ค้นหาบริการที่ต้องการ..." 
+                className="w-full bg-transparent border-none text-lg text-white placeholder:text-slate-500 focus:ring-0 px-2 py-3 shadow-none"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              {/* Fake Shortcut Hint */}
+              <div className="pr-4 hidden sm:flex items-center gap-1 opacity-50">
+                <kbd className="bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs font-mono text-slate-300">Ctrl</kbd>
+                <span className="text-xs text-slate-500">+</span>
+                <kbd className="bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs font-mono text-slate-300">K</kbd>
+              </div>
+            </div>
           </div>
         </div>
       </div>
