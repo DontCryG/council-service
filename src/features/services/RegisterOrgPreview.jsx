@@ -197,7 +197,7 @@ export default function RegisterOrgPreview() {
         <div className="pt-6 border-t border-slate-800 space-y-4 mt-8 relative z-10">
           <div className="flex justify-between items-center gap-4">
             <span className="text-slate-400 font-medium whitespace-nowrap">ค่าธรรมเนียมลงทะเบียน</span>
-            <div className="flex items-baseline gap-2 shrink-0">
+            <div className="flex items-baseline gap-3 shrink-0">
               <span className="text-2xl font-black text-white">200,000</span>
               <span className="text-sm text-slate-500 font-medium">THB</span>
             </div>

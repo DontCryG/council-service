@@ -4,6 +4,27 @@ import { db } from './firebase';
 import { collection, addDoc, query, orderBy, where, getDocs, Timestamp, doc, updateDoc, onSnapshot, getDoc, deleteDoc } from 'firebase/firestore';
 
 /**
+ * Recursively removes undefined fields from an object to prevent Firestore errors
+ */
+const sanitizeForFirestore = (obj) => {
+  if (obj === undefined) return null;
+  if (obj === null) return null;
+  if (obj instanceof Date) return obj;
+  if (obj && typeof obj.toDate === 'function') return obj; // Firestore Timestamp
+  if (Array.isArray(obj)) return obj.map(sanitizeForFirestore);
+  if (typeof obj === 'object') {
+    const result = {};
+    for (const key in obj) {
+      if (obj[key] !== undefined) {
+        result[key] = sanitizeForFirestore(obj[key]);
+      }
+    }
+    return result;
+  }
+  return obj;
+};
+
+/**
  * Saves a transaction log to Firestore
  * @param {string} type - Transaction type (e.g., 'EditOrg', 'WelfareTrade')
  * @param {Object} data - The payload
@@ -13,7 +34,7 @@ export const saveTransactionLog = async (type, data, user = null) => {
   try {
     const logData = {
       type,
-      data,
+      data: sanitizeForFirestore(data),
       createdAt: Timestamp.now(),
       createdBy: user ? { uid: user.uid, email: user.email } : null
     };
