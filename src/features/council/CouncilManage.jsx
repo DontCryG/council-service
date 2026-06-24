@@ -126,73 +126,81 @@ export default function CouncilManage() {
         )}
       </div>
 
-      <Card className="overflow-hidden p-0 border-slate-700/50">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-slate-300">
-            <thead className="bg-slate-900/50 text-xs uppercase text-slate-400 border-b border-slate-700/50">
-              <tr>
-                <th className="px-6 py-4 font-semibold">USERNAME</th>
-                <th className="px-6 py-4 font-semibold">เบอร์โทรศัพท์</th>
-                <th className="px-6 py-4 font-semibold">EMAIL</th>
-                <th className="px-6 py-4 font-semibold">Password</th>
-                <th className="px-6 py-4 font-semibold">ยศ (Rank)</th>
-                <th className="px-6 py-4 font-semibold">ตำแหน่ง</th>
-                {user?.role === 'admin' && <th className="px-6 py-4 font-semibold text-right">จัดการ</th>}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-800">
-              {loading ? (
-                <tr><td colSpan={user?.role === 'admin' ? 6 : 5} className="px-6 py-8 text-center">กำลังโหลดข้อมูล...</td></tr>
-              ) : members.length === 0 ? (
-                <tr><td colSpan={user?.role === 'admin' ? 6 : 5} className="px-6 py-8 text-center text-slate-500">ยังไม่มีข้อมูลสมาชิก</td></tr>
+      {loading ? (
+        <div className="py-12 text-center text-slate-500">กำลังโหลดข้อมูล...</div>
+      ) : members.length === 0 ? (
+        <div className="py-12 text-center text-slate-500">ยังไม่มีข้อมูลสมาชิก</div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {members.map((m) => (
+            <div key={m.id} className="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-amber-500/30 hover:shadow-lg hover:shadow-amber-500/5 transition-all group relative overflow-hidden">
+              {/* Rank decorative background */}
+              {m.role === 'admin' ? (
+                <div className="absolute -top-10 -right-10 w-32 h-32 bg-red-500/10 rounded-full blur-2xl group-hover:bg-red-500/20 transition-all pointer-events-none"></div>
               ) : (
-                members.map((m) => (
-                  <tr key={m.id} className="hover:bg-slate-800/30 transition-colors">
-                    <td className="px-6 py-4 font-medium text-white">{m.name}</td>
-                    <td className="px-6 py-4 text-slate-400">{m.phone || '-'}</td>
-                    <td className="px-6 py-4 text-emerald-400 font-mono">{m.username}</td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-amber-400 bg-amber-400/10 px-2 py-1 rounded">
-                          {user?.role === 'admin' && showPasswordMap[m.id] ? m.password : '••••••••'}
-                        </span>
-                        {user?.role === 'admin' && (
-                          <button 
-                            onClick={() => togglePasswordVisibility(m.id)}
-                            className="text-slate-500 hover:text-white transition-colors"
-                          >
-                            {showPasswordMap[m.id] ? <EyeClosed size={18} /> : <Eye size={18} />}
-                          </button>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 font-bold text-amber-500 text-sm">
-                      {m.rank || 'สภาฝึกหัด'}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`px-2.5 py-1 text-xs font-semibold rounded-full border ${m.role === 'admin' ? 'bg-red-500/10 text-red-400 border-red-500/20' : 'bg-blue-500/10 text-blue-400 border-blue-500/20'}`}>
-                        {m.role === 'admin' ? 'Admin' : 'Staff'}
-                      </span>
-                    </td>
-                    {user?.role === 'admin' && (
-                      <td className="px-6 py-4 text-right">
-                        <div className="flex justify-end gap-2">
-                          <Button variant="outline" size="icon" onClick={() => handleOpenModal(m)}>
-                            <PencilSimple size={16} />
-                          </Button>
-                          <Button variant="danger" size="icon" onClick={() => triggerDelete(m.id)}>
-                            <Trash size={16} />
-                          </Button>
-                        </div>
-                      </td>
-                    )}
-                  </tr>
-                ))
+                <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-all pointer-events-none"></div>
               )}
-            </tbody>
-          </table>
+
+              <div className="flex items-start justify-between mb-4 relative z-10">
+                <div className="flex items-center gap-3">
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-xl ${
+                    m.role === 'admin' ? 'bg-red-500/20 text-red-400' : 'bg-blue-500/20 text-blue-400'
+                  }`}>
+                    {m.name.charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-white">{m.name}</h3>
+                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border inline-block mt-1 ${
+                      m.role === 'admin' ? 'bg-red-500/10 text-red-400 border-red-500/20' : 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                    }`}>
+                      {m.role === 'admin' ? 'Admin' : 'Staff'}
+                    </span>
+                  </div>
+                </div>
+                {user?.role === 'admin' && (
+                  <div className="flex gap-2">
+                    <button onClick={() => handleOpenModal(m)} className="p-2 text-slate-400 hover:text-white bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors">
+                      <PencilSimple size={16} />
+                    </button>
+                    <button onClick={() => triggerDelete(m.id)} className="p-2 text-red-400/70 hover:text-red-400 bg-red-500/10 rounded-lg hover:bg-red-500/20 transition-colors">
+                      <Trash size={16} />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-3 relative z-10">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-slate-500">ยศ (Rank)</span>
+                  <span className="font-bold text-amber-500">{m.rank || 'สภาฝึกหัด'}</span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-slate-500">เบอร์โทร</span>
+                  <span className="text-slate-300 font-mono">{m.phone || '-'}</span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-slate-500">Email</span>
+                  <span className="text-emerald-400 font-mono">{m.username}</span>
+                </div>
+                
+                <div className="flex items-center justify-between text-sm pt-3 border-t border-slate-800">
+                  <span className="text-slate-500">Password</span>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded text-xs">
+                      {user?.role === 'admin' && showPasswordMap[m.id] ? m.password : '••••••••'}
+                    </span>
+                    {user?.role === 'admin' && (
+                      <button onClick={() => togglePasswordVisibility(m.id)} className="text-slate-500 hover:text-white">
+                        {showPasswordMap[m.id] ? <EyeClosed size={16} /> : <Eye size={16} />}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-      </Card>
+      )}
 
       <Modal 
         isOpen={isModalOpen} 

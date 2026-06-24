@@ -225,87 +225,87 @@ export default function AdminDutyHistory() {
           {/* Duty History Table */}
           <div className="space-y-3">
             <h3 className="text-base font-black text-white">ประวัติการลงเวลา (เข้า-ออกงาน)</h3>
-            <Card className="p-0 overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm text-left text-slate-300">
-                  <thead className="bg-slate-900/50 border-b border-slate-800 text-xs text-slate-500 uppercase">
-                    <tr>
-                      <th className="px-5 py-3">วันที่ / ชื่อ</th>
-                      <th className="px-5 py-3 text-center">เข้า</th>
-                      <th className="px-5 py-3 text-center">ออก</th>
-                      <th className="px-5 py-3 text-right">เวลาสุทธิ (พักเบรค)</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-800">
-                    {filteredHistory.length === 0 ? (
-                      <tr><td colSpan="4" className="px-5 py-8 text-center text-slate-500">ไม่มีข้อมูลในช่วงวันที่เลือก</td></tr>
-                    ) : (
-                      filteredHistory.map(s => (
-                        <tr key={s.id} className="hover:bg-slate-800/30">
-                          <td className="px-5 py-4">
-                            <div className="font-bold text-white text-xs">{formatThaiDate(s.checkIn)}</div>
-                            <div className="text-slate-400 text-xs mt-0.5">{s.memberName}</div>
-                          </td>
-                          <td className="px-5 py-4 text-center font-mono text-emerald-400">{formatTime(s.checkIn)}</td>
-                          <td className="px-5 py-4 text-center font-mono text-red-400">
+            {/* Duty History Feed */}
+            <div className="space-y-4">
+              {filteredHistory.length === 0 ? (
+                <Card className="p-8 text-center text-slate-500">ไม่มีข้อมูลในช่วงวันที่เลือก</Card>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {filteredHistory.map(s => (
+                    <div key={s.id} className="bg-slate-900 border border-slate-800 rounded-2xl p-5 hover:border-amber-500/30 transition-all">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center font-bold text-white">
+                            {s.memberName.charAt(0).toUpperCase()}
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-white text-sm">{s.memberName}</h4>
+                            <span className="text-xs text-slate-400">{formatThaiDate(s.checkIn)}</span>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="font-black text-amber-400 text-lg leading-none">{formatDuration(s.netMinutes)}</div>
+                          {s.totalBreakMinutes > 0 && <span className="text-[10px] text-slate-500 font-bold">พัก {formatDuration(s.totalBreakMinutes)}</span>}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between bg-slate-950 rounded-xl p-3 border border-slate-800/50">
+                        <div className="text-center flex-1 border-r border-slate-800">
+                          <span className="block text-[10px] text-slate-500 uppercase font-bold mb-1">IN</span>
+                          <span className="font-mono text-emerald-400 font-bold text-sm">{formatTime(s.checkIn)}</span>
+                        </div>
+                        <div className="text-center flex-1 relative">
+                          {s.autoCheckOut && <span className="absolute -top-1 -right-1 flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span></span>}
+                          <span className="block text-[10px] text-slate-500 uppercase font-bold mb-1">OUT</span>
+                          <span className={`font-mono font-bold text-sm ${s.autoCheckOut ? 'text-red-500' : 'text-red-400'}`}>
                             {formatTime(s.checkOut)}
-                            {s.autoCheckOut && <span className="block text-[10px] text-slate-500 font-sans mt-1 leading-none">(Auto)</span>}
-                          </td>
-                          <td className="px-5 py-4 text-right font-bold text-amber-400">
-                            {formatDuration(s.netMinutes)}
-                            {s.totalBreakMinutes > 0 && (
-                              <div className="text-xs text-slate-500 font-normal">พัก {formatDuration(s.totalBreakMinutes)}</div>
-                            )}
-                          </td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </Card>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Leave History Table */}
           <div className="space-y-3 pt-6">
             <h3 className="text-base font-black text-white">ประวัติการลา</h3>
-            <Card className="p-0 overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm text-left text-slate-300">
-                  <thead className="bg-slate-900/50 border-b border-slate-800 text-xs text-slate-500 uppercase">
-                    <tr>
-                      <th className="px-5 py-3">ประเภท / ชื่อ</th>
-                      <th className="px-5 py-3">วันที่</th>
-                      <th className="px-5 py-3 text-right">สถานะ</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-800">
-                    {!filteredLeaves.length ? (
-                      <tr><td colSpan="3" className="px-5 py-8 text-center text-slate-500">ไม่มีประวัติการลา</td></tr>
-                    ) : (
-                      filteredLeaves.map(lv => (
-                        <tr key={lv.id} className="hover:bg-slate-800/30">
-                          <td className="px-5 py-4">
-                            <div className="font-bold text-white text-xs">{lv.type}</div>
-                            <div className="text-slate-400 text-xs mt-0.5">{lv.memberName}</div>
-                          </td>
-                          <td className="px-5 py-4 text-slate-400 text-xs">{lv.dateFrom} — {lv.dateTo}</td>
-                          <td className="px-5 py-4 text-right">
-                            <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${
-                              lv.status === 'approved' ? 'bg-emerald-500/10 text-emerald-400' :
-                              lv.status === 'rejected' ? 'bg-red-500/10 text-red-400' :
-                              'bg-amber-500/10 text-amber-400'
-                            }`}>
-                              {lv.status === 'approved' ? 'อนุมัติ' : lv.status === 'rejected' ? 'ปฏิเสธ' : 'รออนุมัติ'}
-                            </span>
-                          </td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </Card>
+            {/* Leave History Feed */}
+            <div className="space-y-3">
+              {!filteredLeaves.length ? (
+                <Card className="p-8 text-center text-slate-500">ไม่มีประวัติการลา</Card>
+              ) : (
+                filteredLeaves.map(lv => (
+                  <div key={lv.id} className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between hover:border-slate-700 transition-colors">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold ${
+                        lv.status === 'approved' ? 'bg-emerald-500/20 text-emerald-400' :
+                        lv.status === 'rejected' ? 'bg-red-500/20 text-red-400' :
+                        'bg-amber-500/20 text-amber-400'
+                      }`}>
+                        {lv.type.charAt(0)}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-white text-sm">{lv.type}</span>
+                          <span className="text-xs text-slate-500">{lv.memberName}</span>
+                        </div>
+                        <span className="text-xs font-mono text-slate-400 mt-0.5 block">{lv.dateFrom} — {lv.dateTo}</span>
+                      </div>
+                    </div>
+                    <span className={`text-xs font-bold px-3 py-1 rounded-full border ${
+                      lv.status === 'approved' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                      lv.status === 'rejected' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
+                      'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                    }`}>
+                      {lv.status === 'approved' ? 'อนุมัติ' : lv.status === 'rejected' ? 'ปฏิเสธ' : 'รออนุมัติ'}
+                    </span>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
           
         </div>
