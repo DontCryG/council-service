@@ -7,7 +7,7 @@ import { collection, onSnapshot } from 'firebase/firestore';
 import Button from '../../components/ui/Button';
 import GroupSelect from '../../components/ui/GroupSelect';
 import AutocompleteInput from '../../components/ui/AutocompleteInput';
-import { Trash, ArrowRight, ArrowsLeftRight, Car, Crosshair, ArrowLeft, Users, House, Skull } from '@phosphor-icons/react';
+import { Trash, ArrowRight, ArrowsLeftRight, Car, Crosshair, ArrowLeft, Users, House, Skull, Buildings } from '@phosphor-icons/react';
 
 export default function WelfareTrade() {
   const navigate = useNavigate();
@@ -84,17 +84,53 @@ export default function WelfareTrade() {
             <p className="text-slate-400 text-sm">บริการแลกเปลี่ยนและจัดการสวัสดิการขององค์กร</p>
           </div>
         </div>
-        <Button variant="ghost" onClick={() => step === 2 ? setStep(1) : navigate('/home')} className="text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl">
+        <Button variant="ghost" onClick={() => step > 1 ? setStep(step - 1) : navigate('/home')} className="text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl">
           <ArrowLeft size={20} /> <span className="hidden sm:inline">กลับไปศูนย์บัญชาการ</span>
         </Button>
       </div>
 
-      {step === 1 ? (
+      {step === 1 && (
         <div className="max-w-4xl mx-auto w-full mt-12">
+          <div className="text-center mb-10">
+            <h1 className="text-3xl font-black text-white tracking-widest">เลือกประเภทสังกัด</h1>
+            <p className="text-slate-400 mt-2">กรุณาเลือกประเภทสังกัดที่คุณต้องการดำเนินการ</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <button
+                type="button"
+                onClick={() => { setFormData({...formData, orgType: 'GANG'}); setStep(2); }}
+                className="bg-slate-900 border border-slate-800 rounded-[24px] p-12 flex flex-col items-center justify-center gap-6 hover:border-amber-500/50 hover:bg-slate-800/50 transition-all group"
+              >
+                <div className="w-24 h-24 rounded-full bg-slate-800/80 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-lg shadow-black/20">
+                  <Buildings size={40} weight="fill" className="text-amber-500" />
+                </div>
+                <h2 className="text-2xl font-black text-white tracking-widest">GANG</h2>
+              </button>
+              
+              <button
+                type="button"
+                onClick={() => { setFormData({...formData, orgType: 'FAMILY'}); setStep(2); }}
+                className="bg-slate-900 border border-slate-800 rounded-[24px] p-12 flex flex-col items-center justify-center gap-6 hover:border-blue-500/50 hover:bg-slate-800/50 transition-all group"
+              >
+                <div className="w-24 h-24 rounded-full bg-blue-900/20 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-lg shadow-black/20">
+                  <Buildings size={40} weight="fill" className="text-blue-500" />
+                </div>
+                <h2 className="text-2xl font-black text-white tracking-widest">FAMILY</h2>
+              </button>
+          </div>
+        </div>
+      )}
+
+      {step === 2 && (
+        <div className="max-w-4xl mx-auto w-full mt-12">
+          <div className="text-center mb-10">
+            <h1 className="text-3xl font-black text-white tracking-widest">เลือกประเภทการเทรด</h1>
+            <p className="text-slate-400 mt-2">กรุณาเลือกสิ่งที่คุณต้องการแลกเปลี่ยนสวัสดิการ</p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <button
               type="button"
-              onClick={() => { setFormData({...formData, tradeType: 'VEHICLE', pricingType: '300,000'}); setStep(2); }}
+              onClick={() => { setFormData({...formData, tradeType: 'VEHICLE', pricingType: '300,000'}); setStep(3); }}
               className="bg-slate-900 border border-slate-800 rounded-[24px] p-12 flex flex-col items-center justify-center gap-6 hover:border-blue-500/50 hover:bg-slate-800/50 transition-all group"
             >
               <div className="w-24 h-24 rounded-full bg-blue-900/20 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-black/20">
@@ -105,7 +141,7 @@ export default function WelfareTrade() {
             
             <button
               type="button"
-              onClick={() => { setFormData({...formData, tradeType: 'WEAPON', pricingType: 'ออกปกติ (1.5M / ชิ้น)'}); setStep(2); }}
+              onClick={() => { setFormData({...formData, tradeType: 'WEAPON', pricingType: 'ออกปกติ (1.5M / ชิ้น)'}); setStep(3); }}
               className="bg-slate-900 border border-slate-800 rounded-[24px] p-12 flex flex-col items-center justify-center gap-6 hover:border-red-500/50 hover:bg-slate-800/50 transition-all group"
             >
               <div className="w-24 h-24 rounded-full bg-red-900/20 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-black/20">
@@ -114,55 +150,17 @@ export default function WelfareTrade() {
               <h2 className="text-2xl font-black text-white tracking-widest">โอนย้ายอาวุธ (WEAPON)</h2>
             </button>
           </div>
-        </div>
-      ) : (
+      )}
+      
+      {step === 3 && (
       <div className="max-w-4xl mx-auto w-full bg-slate-900 rounded-[24px] p-8 md:p-10 shadow-2xl border border-slate-800">
         <form onSubmit={handleSubmit} className="space-y-8">
           
-          <div className="space-y-4">
-            <label className="text-xs font-black text-slate-500 uppercase tracking-widest">
-              1. สังกัด (AFFILIATION)
-            </label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-              <button
-                type="button"
-                onClick={() => setFormData({...formData, orgType: 'GANG'})}
-                className={`flex flex-col items-center justify-center gap-4 py-8 rounded-2xl border-2 transition-all group relative overflow-hidden
-                  ${formData.orgType === 'GANG' 
-                    ? 'border-amber-500 bg-amber-500/5' 
-                    : 'border-slate-800 bg-slate-900/50 hover:border-slate-700 hover:bg-slate-800/50'}`}
-              >
-                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-inner ${formData.orgType === 'GANG' ? 'bg-amber-500/20 text-amber-500' : 'bg-slate-800 text-slate-400 group-hover:bg-slate-700'}`}>
-                  <Skull size={32} weight={formData.orgType === 'GANG' ? 'fill' : 'regular'} />
-                </div>
-                <div className="text-center relative z-10">
-                  <div className={`text-lg font-black tracking-wide ${formData.orgType === 'GANG' ? 'text-white' : 'text-slate-300'}`}>GANG (แก๊ง)</div>
-                  <div className="text-xs text-slate-500 mt-1 font-medium px-4">สำหรับทำรายการสวัสดิการซื้อขายของแก๊ง</div>
-                </div>
-              </button>
-              <button
-                type="button"
-                onClick={() => setFormData({...formData, orgType: 'FAMILY'})}
-                className={`flex flex-col items-center justify-center gap-4 py-8 rounded-2xl border-2 transition-all group relative overflow-hidden
-                  ${formData.orgType === 'FAMILY' 
-                    ? 'border-amber-500 bg-amber-500/5' 
-                    : 'border-slate-800 bg-slate-900/50 hover:border-slate-700 hover:bg-slate-800/50'}`}
-              >
-                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-inner ${formData.orgType === 'FAMILY' ? 'bg-blue-500/20 text-blue-500' : 'bg-slate-800 text-slate-400 group-hover:bg-slate-700'}`}>
-                  <House size={32} weight={formData.orgType === 'FAMILY' ? 'fill' : 'regular'} />
-                </div>
-                <div className="text-center relative z-10">
-                  <div className={`text-lg font-black tracking-wide ${formData.orgType === 'FAMILY' ? 'text-white' : 'text-slate-300'}`}>FAMILY (ครอบครัว)</div>
-                  <div className="text-xs text-slate-500 mt-1 font-medium px-4">สำหรับทำรายการสวัสดิการซื้อขายของครอบครัว</div>
-                </div>
-              </button>
-            </div>
-          </div>
 
           {formData.tradeType === 'WEAPON' && (
             <div className="space-y-3">
               <label className="text-[14px] font-bold text-slate-300 tracking-wide">
-                2. รูปแบบการออก (PRICING TYPE)
+                1. รูปแบบการออก (PRICING TYPE)
               </label>
               <select 
                 className="w-full bg-slate-950 border border-red-500/30 rounded-xl px-4 py-3.5 text-slate-200 font-bold focus:outline-none focus:border-red-500 focus:bg-slate-900 transition-colors"
@@ -179,7 +177,7 @@ export default function WelfareTrade() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="space-y-3">
               <GroupSelect 
-                label={`${formData.tradeType === 'WEAPON' ? '3' : '2'}. ชื่อ GANG / FAMILY`}
+                label={`${formData.tradeType === 'WEAPON' ? '2' : '1'}. ชื่อ GANG / FAMILY`}
                 orgType={formData.orgType}
                 value={formData.orgName}
                 onChange={val => setFormData({...formData, orgName: val})}
@@ -188,7 +186,7 @@ export default function WelfareTrade() {
             </div>
             <div className="space-y-3">
               <label className="text-[14px] font-bold text-slate-300 tracking-wide">
-                {formData.tradeType === 'WEAPON' ? '4' : '3'}. สภาที่รับเรื่อง
+                {formData.tradeType === 'WEAPON' ? '3' : '2'}. สภาที่รับเรื่อง
               </label>
               <select 
                 className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-200 font-medium focus:outline-none focus:border-violet-500 focus:bg-slate-900 focus:ring-1 focus:ring-violet-500 transition-colors appearance-none"
@@ -204,7 +202,7 @@ export default function WelfareTrade() {
             </div>
             <div className="space-y-3">
               <label className="text-[14px] font-bold text-slate-300 tracking-wide">
-                {formData.tradeType === 'WEAPON' ? '5' : '4'}. เบอร์โทรศัพท์ (6 หลัก)
+                {formData.tradeType === 'WEAPON' ? '4' : '3'}. เบอร์โทรศัพท์ (6 หลัก)
               </label>
               <input
                 type="text"
@@ -223,7 +221,7 @@ export default function WelfareTrade() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-3">
               <label className="text-[14px] font-bold text-slate-300 tracking-wide">
-                {formData.tradeType === 'WEAPON' ? '6' : '5'}. {formData.tradeType === 'WEAPON' ? 'ผู้ส่งมอบ (คนเก่า)' : 'ผู้ถือรถ (คนเก่า)'}
+                {formData.tradeType === 'WEAPON' ? '5' : '4'}. {formData.tradeType === 'WEAPON' ? 'ผู้ส่งมอบ (คนเก่า)' : 'ผู้ถือรถ (คนเก่า)'}
               </label>
               <AutocompleteInput 
                 placeholder={formData.tradeType === 'WEAPON' ? 'ชื่อผู้ถืออาวุธเดิม' : 'ชื่อเจ้าของรถเดิม'}
@@ -234,7 +232,7 @@ export default function WelfareTrade() {
             </div>
             <div className="space-y-3">
               <label className="text-[14px] font-bold text-slate-300 tracking-wide">
-                {formData.tradeType === 'WEAPON' ? '7' : '6'}. {formData.tradeType === 'WEAPON' ? 'ผู้รับมอบ (คนใหม่)' : 'ผู้รับรถ (คนใหม่)'}
+                {formData.tradeType === 'WEAPON' ? '6' : '5'}. {formData.tradeType === 'WEAPON' ? 'ผู้รับมอบ (คนใหม่)' : 'ผู้รับรถ (คนใหม่)'}
               </label>
               <AutocompleteInput 
                 placeholder={formData.tradeType === 'WEAPON' ? 'ชื่อผู้รับอาวุธ' : 'ชื่อผู้รับรถ'}
@@ -248,7 +246,7 @@ export default function WelfareTrade() {
           <div className="bg-slate-950/50 rounded-2xl p-6 border border-slate-800/80">
             <div className="flex items-center justify-between mb-4">
               <label className="text-[14px] font-bold text-slate-300 tracking-wide">
-                {formData.tradeType === 'WEAPON' ? '8' : '7'}. {formData.tradeType === 'WEAPON' ? 'รายการอาวุธ (WEAPON LIST)' : 'ข้อมูลรถที่เทรด (300,000 ต่อคัน)'}
+                {formData.tradeType === 'WEAPON' ? '7' : '6'}. {formData.tradeType === 'WEAPON' ? 'รายการอาวุธ (WEAPON LIST)' : 'ข้อมูลรถที่เทรด (300,000 ต่อคัน)'}
               </label>
               <button type="button" onClick={handleAddItem} className="px-4 py-2 text-sm font-bold text-red-500 border border-red-500/30 rounded-lg hover:bg-red-500/10 transition-colors flex items-center gap-2">
                 + {formData.tradeType === 'WEAPON' ? 'เพิ่มรายการ' : 'เพิ่มคัน'}

@@ -15,6 +15,7 @@ export default function EditOrg() {
   const { showAlert } = useAppStore();
   
   const [councilMembers, setCouncilMembers] = useState([]);
+  const [step, setStep] = useState(location.state?.step || 1);
   
   const [formData, setFormData] = useState(location.state?.formData || {
     orgType: 'GANG', // GANG | FAMILY
@@ -113,15 +114,42 @@ export default function EditOrg() {
       
       {/* Top Header */}
       <div className="text-center mb-10 relative mt-4">
-        <Button variant="ghost" onClick={() => navigate('/home')} className="absolute left-0 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl hidden sm:flex">
-          <ArrowLeft size={20} /> <span className="hidden md:inline">กลับ</span>
+        <Button variant="ghost" onClick={() => step === 2 ? setStep(1) : navigate('/home')} className="text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl">
+          <ArrowLeft size={20} className="mr-2" /> <span className="hidden sm:inline">กลับไปศูนย์บัญชาการ</span>
         </Button>
-        <h1 className="text-3xl sm:text-4xl font-black text-white tracking-widest uppercase">
-          MODIFICATION <span className="text-amber-500">SERVICE</span>
-        </h1>
-        <p className="text-xs sm:text-sm text-slate-400 mt-3 font-medium tracking-wide">ระบบแจ้งแก้ไขข้อมูลสังกัดและออกใบเสร็จรับเงินอย่างเป็นทางการ</p>
       </div>
 
+      {step === 1 ? (
+        <div className="max-w-4xl mx-auto w-full pt-10">
+          <div className="text-center mb-10">
+            <h1 className="text-3xl font-black text-white tracking-widest">เลือกประเภทสังกัด</h1>
+            <p className="text-slate-400 mt-2">กรุณาเลือกประเภทสังกัดที่คุณต้องการดำเนินการแก้ไข</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <button
+                type="button"
+                onClick={() => { setFormData({...formData, orgType: 'GANG'}); setStep(2); }}
+                className="bg-slate-900 border border-slate-800 rounded-[24px] p-12 flex flex-col items-center justify-center gap-6 hover:border-amber-500/50 hover:bg-slate-800/50 transition-all group"
+              >
+                <div className="w-24 h-24 rounded-full bg-slate-800/80 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-lg shadow-black/20">
+                  <Buildings size={40} weight="fill" className="text-amber-500" />
+                </div>
+                <h2 className="text-2xl font-black text-white tracking-widest">GANG</h2>
+              </button>
+              
+              <button
+                type="button"
+                onClick={() => { setFormData({...formData, orgType: 'FAMILY'}); setStep(2); }}
+                className="bg-slate-900 border border-slate-800 rounded-[24px] p-12 flex flex-col items-center justify-center gap-6 hover:border-blue-500/50 hover:bg-slate-800/50 transition-all group"
+              >
+                <div className="w-24 h-24 rounded-full bg-blue-900/20 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-lg shadow-black/20">
+                  <Buildings size={40} weight="fill" className="text-blue-500" />
+                </div>
+                <h2 className="text-2xl font-black text-white tracking-widest">FAMILY</h2>
+              </button>
+          </div>
+        </div>
+      ) : (
       <div className="bg-slate-900 border border-slate-800 rounded-[2rem] shadow-2xl overflow-hidden text-white relative">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500/0 via-amber-500/50 to-amber-500/0"></div>
         
@@ -136,58 +164,17 @@ export default function EditOrg() {
 
           <form onSubmit={handleSubmit} className="space-y-10">
             
-            {/* 1. ประเภทสังกัด */}
-            <div className="space-y-4">
-              <label className="text-xs font-black text-slate-500 uppercase tracking-widest">
-                1. ประเภทสังกัด (GROUP TYPE)
-              </label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                <button
-                  type="button"
-                  onClick={() => setFormData({...formData, orgType: 'GANG'})}
-                  className={`flex flex-col items-center justify-center gap-4 py-8 rounded-2xl border-2 transition-all group relative overflow-hidden
-                    ${formData.orgType === 'GANG' 
-                      ? 'border-amber-500 bg-amber-500/5' 
-                      : 'border-slate-800 bg-slate-900/50 hover:border-slate-700 hover:bg-slate-800/50'}`}
-                >
-                  <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-inner ${formData.orgType === 'GANG' ? 'bg-amber-500/20 text-amber-500' : 'bg-slate-800 text-slate-400 group-hover:bg-slate-700'}`}>
-                    <Skull size={32} weight={formData.orgType === 'GANG' ? 'fill' : 'regular'} />
-                  </div>
-                  <div className="text-center relative z-10">
-                    <div className={`text-lg font-black tracking-wide ${formData.orgType === 'GANG' ? 'text-white' : 'text-slate-300'}`}>GANG (แก๊ง)</div>
-                    <div className="text-xs text-slate-500 mt-1 font-medium px-4">สำหรับแจ้งแก้ไขข้อมูลและจัดการธุรกรรมของแก๊ง</div>
-                  </div>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setFormData({...formData, orgType: 'FAMILY'})}
-                  className={`flex flex-col items-center justify-center gap-4 py-8 rounded-2xl border-2 transition-all group relative overflow-hidden
-                    ${formData.orgType === 'FAMILY' 
-                      ? 'border-amber-500 bg-amber-500/5' 
-                      : 'border-slate-800 bg-slate-900/50 hover:border-slate-700 hover:bg-slate-800/50'}`}
-                >
-                  <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-inner ${formData.orgType === 'FAMILY' ? 'bg-blue-500/20 text-blue-500' : 'bg-slate-800 text-slate-400 group-hover:bg-slate-700'}`}>
-                    <House size={32} weight={formData.orgType === 'FAMILY' ? 'fill' : 'regular'} />
-                  </div>
-                  <div className="text-center relative z-10">
-                    <div className={`text-lg font-black tracking-wide ${formData.orgType === 'FAMILY' ? 'text-white' : 'text-slate-300'}`}>FAMILY (ครอบครัว)</div>
-                    <div className="text-xs text-slate-500 mt-1 font-medium px-4">สำหรับแจ้งแก้ไขข้อมูลและจัดการธุรกรรมของครอบครัว</div>
-                  </div>
-                </button>
-              </div>
-            </div>
-
-            {/* 2 & 3. ชื่อสังกัด & ผู้ทำรายการ */}
+            {/* 1 & 2. ชื่อสังกัด & ผู้ทำรายการ */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
               <GroupSelect 
-                label="2. ชื่อสังกัด (GROUP NAME)"
+                label="1. ชื่อสังกัด (GROUP NAME)"
                 orgType={formData.orgType}
                 value={formData.orgName}
                 onChange={val => setFormData({...formData, orgName: val})}
                 placeholder="ค้นหาชื่อสังกัด..."
               />
               <AutocompleteInput 
-                label="3. ผู้ทำรายการ (REQUESTER)"
+                label="2. ชื่อผู้ทำรายการ (REQUESTER)"
                 placeholder="พิมพ์เพื่อค้นหาชื่อ-นามสกุล (IC)..."
                 type="text"
                 value={formData.requester}
@@ -198,9 +185,7 @@ export default function EditOrg() {
             {/* 4. เลือกรายการธุรกรรม */}
             <div className="space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
-                <label className="text-xs font-black text-slate-500 uppercase tracking-widest">
-                  4. เลือกรายการธุรกรรมที่ต้องการแก้ไข
-                </label>
+                <h3 className="font-bold text-lg">4. เลือกรายการที่ต้องการแก้ไข</h3>
                 <span className="text-xs text-slate-500 font-medium">*เลือกได้มากกว่า 1 รายการ</span>
               </div>
               
@@ -362,6 +347,7 @@ export default function EditOrg() {
           </form>
         </div>
       </div>
+      )}
     </div>
   );
 }

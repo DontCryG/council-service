@@ -6,12 +6,13 @@ import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import GroupSelect from '../../components/ui/GroupSelect';
 import AutocompleteInput from '../../components/ui/AutocompleteInput';
-import { PaperPlaneTilt, Trash, Gift, Car, Users, House, Sword, ArrowLeft, Skull } from '@phosphor-icons/react';
+import { PaperPlaneTilt, Trash, Gift, Car, Users, Sword, ArrowLeft, Skull, House, Buildings } from '@phosphor-icons/react';
 
 export default function Welfare() {
   const navigate = useNavigate();
   const location = useLocation();
   const { showAlert } = useAppStore();
+  const [step, setStep] = useState(location.state?.step || 1);
   
   const [formData, setFormData] = useState(() => location.state?.formData || {
     orgType: 'GANG',
@@ -63,58 +64,50 @@ export default function Welfare() {
             <p className="text-slate-400 text-sm">ยื่นแบบฟอร์มขอเบิกสวัสดิการสำหรับ GANG / FAMILY</p>
           </div>
         </div>
-        <Button variant="ghost" onClick={() => navigate('/home')} className="text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl">
-          <ArrowLeft size={20} /> <span className="hidden sm:inline">กลับไปศูนย์บัญชาการ</span>
+        <Button variant="ghost" onClick={() => step === 2 ? setStep(1) : navigate('/home')} className="text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl">
+          <ArrowLeft size={20} className="mr-2" /> <span className="hidden sm:inline">กลับไปศูนย์บัญชาการ</span>
         </Button>
       </div>
 
+      {step === 1 ? (
+        <div className="max-w-4xl mx-auto w-full pt-10">
+          <div className="text-center mb-10">
+            <h1 className="text-3xl font-black text-white tracking-widest">เลือกประเภทสังกัด</h1>
+            <p className="text-slate-400 mt-2">กรุณาเลือกประเภทสังกัดที่คุณต้องการเบิกสวัสดิการ</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <button
+                type="button"
+                onClick={() => { setFormData({...formData, orgType: 'GANG'}); setStep(2); }}
+                className="bg-slate-900 border border-slate-800 rounded-[24px] p-12 flex flex-col items-center justify-center gap-6 hover:border-amber-500/50 hover:bg-slate-800/50 transition-all group"
+              >
+                <div className="w-24 h-24 rounded-full bg-slate-800/80 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-lg shadow-black/20">
+                  <Buildings size={40} weight="fill" className="text-amber-500" />
+                </div>
+                <h2 className="text-2xl font-black text-white tracking-widest">GANG</h2>
+              </button>
+              
+              <button
+                type="button"
+                onClick={() => { setFormData({...formData, orgType: 'FAMILY'}); setStep(2); }}
+                className="bg-slate-900 border border-slate-800 rounded-[24px] p-12 flex flex-col items-center justify-center gap-6 hover:border-blue-500/50 hover:bg-slate-800/50 transition-all group"
+              >
+                <div className="w-24 h-24 rounded-full bg-blue-900/20 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-lg shadow-black/20">
+                  <Buildings size={40} weight="fill" className="text-blue-500" />
+                </div>
+                <h2 className="text-2xl font-black text-white tracking-widest">FAMILY</h2>
+              </button>
+          </div>
+        </div>
+      ) : (
       <div className="bg-slate-900/80 border border-slate-800 rounded-[24px] p-8 shadow-xl backdrop-blur-sm">
         <form onSubmit={handleSubmit} className="space-y-8">
           
-          <div className="space-y-4">
-            <label className="text-xs font-black text-slate-500 uppercase tracking-widest">
-              1. ประเภทสังกัดของคุณ (GROUP TYPE)
-            </label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-              <button
-                type="button"
-                onClick={() => setFormData({...formData, orgType: 'GANG'})}
-                className={`flex flex-col items-center justify-center gap-4 py-8 rounded-2xl border-2 transition-all group relative overflow-hidden
-                  ${formData.orgType === 'GANG' 
-                    ? 'border-amber-500 bg-amber-500/5' 
-                    : 'border-slate-800 bg-slate-900/50 hover:border-slate-700 hover:bg-slate-800/50'}`}
-              >
-                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-inner ${formData.orgType === 'GANG' ? 'bg-amber-500/20 text-amber-500' : 'bg-slate-800 text-slate-400 group-hover:bg-slate-700'}`}>
-                  <Skull size={32} weight={formData.orgType === 'GANG' ? 'fill' : 'regular'} />
-                </div>
-                <div className="text-center relative z-10">
-                  <div className={`text-lg font-black tracking-wide ${formData.orgType === 'GANG' ? 'text-white' : 'text-slate-300'}`}>GANG (แก๊ง)</div>
-                  <div className="text-xs text-slate-500 mt-1 font-medium px-4">สำหรับทำรายการขอรับสวัสดิการของแก๊ง</div>
-                </div>
-              </button>
-              <button
-                type="button"
-                onClick={() => setFormData({...formData, orgType: 'FAMILY'})}
-                className={`flex flex-col items-center justify-center gap-4 py-8 rounded-2xl border-2 transition-all group relative overflow-hidden
-                  ${formData.orgType === 'FAMILY' 
-                    ? 'border-amber-500 bg-amber-500/5' 
-                    : 'border-slate-800 bg-slate-900/50 hover:border-slate-700 hover:bg-slate-800/50'}`}
-              >
-                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-inner ${formData.orgType === 'FAMILY' ? 'bg-blue-500/20 text-blue-500' : 'bg-slate-800 text-slate-400 group-hover:bg-slate-700'}`}>
-                  <House size={32} weight={formData.orgType === 'FAMILY' ? 'fill' : 'regular'} />
-                </div>
-                <div className="text-center relative z-10">
-                  <div className={`text-lg font-black tracking-wide ${formData.orgType === 'FAMILY' ? 'text-white' : 'text-slate-300'}`}>FAMILY (ครอบครัว)</div>
-                  <div className="text-xs text-slate-500 mt-1 font-medium px-4">สำหรับทำรายการขอรับสวัสดิการของครอบครัว</div>
-                </div>
-              </button>
-            </div>
-          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="space-y-3">
               <GroupSelect 
-                label="2. ชื่อ GANG / FAMILY"
+                label="1. ชื่อ GANG / FAMILY"
                 orgType={formData.orgType}
                 value={formData.orgName}
                 onChange={val => setFormData({...formData, orgName: val})}
@@ -122,7 +115,7 @@ export default function Welfare() {
               />
             </div>
             <div className="space-y-3">
-              <label className="text-[13px] font-bold text-slate-400 tracking-wide">3. ชื่อผู้กรอกข้อมูล</label>
+              <label className="text-[13px] font-bold text-slate-400 tracking-wide">2. ชื่อผู้กรอกข้อมูล</label>
               <AutocompleteInput 
                 placeholder="ชื่อในเกม..."
                 type="text"
@@ -131,7 +124,7 @@ export default function Welfare() {
               />
             </div>
             <div className="space-y-3">
-              <label className="text-[13px] font-bold text-slate-400 tracking-wide">4. เบอร์โทรศัพท์ (6 หลัก)</label>
+              <label className="text-[13px] font-bold text-slate-400 tracking-wide">3. เบอร์โทรศัพท์ (6 หลัก)</label>
               <input
                 type="text"
                 maxLength="6"
@@ -147,7 +140,7 @@ export default function Welfare() {
           </div>
 
           <div className="space-y-3">
-            <label className="text-[13px] font-bold text-slate-400 tracking-wide">5. เลือกสวัสดิการที่ได้รับ</label>
+            <label className="text-[13px] font-bold text-slate-400 tracking-wide">4. เลือกสวัสดิการที่ได้รับ</label>
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
               {/* Vehicles Card */}
               <div className="bg-slate-800/30 border-2 border-slate-700/50 rounded-2xl p-6 flex flex-col min-h-[240px]">
@@ -260,6 +253,7 @@ export default function Welfare() {
           </Button>
         </form>
       </div>
+      )}
     </div>
   );
 }
