@@ -62,17 +62,19 @@ export default function GeneralService() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 py-6">
-      <div className="mb-6 flex items-start justify-between">
-        <div className="flex items-center gap-3">
-          <FileText size={32} weight="duotone" className="text-blue-500" />
+    <div className="max-w-4xl mx-auto py-4 px-2 md:px-0 animate-in fade-in slide-in-from-right-16 duration-700 ease-out">
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-[#5865F2]/10 text-[#5865F2] flex items-center justify-center">
+            <FileText size={28} weight="duotone" />
+          </div>
           <div>
-            <h2 className="text-2xl font-bold text-white mb-1">ระบบให้บริการทั่วไป</h2>
-            <p className="text-slate-400">ระบบบันทึกการทำธุรกรรมทั่วไปของแก๊งและครอบครัว</p>
+            <h2 className="text-2xl font-bold text-white">ระบบให้บริการทั่วไป</h2>
+            <p className="text-slate-400 text-sm">บันทึกการทำธุรกรรมทั่วไปของแก๊งและครอบครัว</p>
           </div>
         </div>
-        <Button type="button" variant="ghost" onClick={() => navigate('/home')} className="text-slate-400 hover:text-white px-2">
-          <ArrowLeft size={20} className="mr-2" /> ย้อนกลับ
+        <Button variant="ghost" onClick={() => navigate('/home')} className="text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl">
+          <ArrowLeft size={20} /> <span className="hidden sm:inline">กลับไปศูนย์บัญชาการ</span>
         </Button>
       </div>
       

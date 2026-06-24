@@ -29,28 +29,44 @@ export default function Home() {
   });
   const filteredWebsites = filterServices(relatedWebsites);
 
-  const renderServiceCard = (service, index = 0, isDanger = false, isExternal = false) => (
+  const renderBentoCard = (service, spanClass, isDanger = false, isExternal = false, isFeatured = false) => (
     <Card 
       key={service.id}
-      style={{ animationDelay: `${index * 100}ms` }}
-      className={`cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl animate-fade-in-up opacity-0 [animation-fill-mode:forwards] ${isDanger ? 'hover:border-red-500/50 hover:shadow-[0_0_20px_rgba(239,68,68,0.3)]' : 'hover:border-blue-500/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)]'}`}
+      className={`group cursor-pointer transition-all duration-500 overflow-hidden relative border ${spanClass} ${
+        isDanger ? 'hover:border-red-500/50 hover:shadow-[0_0_30px_rgba(239,68,68,0.2)] border-white/5' 
+        : 'hover:border-[#5865F2]/50 hover:shadow-[0_0_30px_rgba(88,101,242,0.2)] border-white/5'
+      }`}
       onClick={() => {
         if (service.id === 'council_manage' && user?.role !== 'admin') {
           showAlert('error', 'ไม่มีสิทธิ์เข้าถึง: เฉพาะระดับ Admin เท่านั้น');
           return;
         }
-        if (isExternal) {
-          window.open(service.url, '_blank');
-        } else {
-          navigate(`/${service.id}`);
-        }
+        if (isExternal) window.open(service.url, '_blank');
+        else navigate(`/${service.id}`);
       }}
     >
-      <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 group-hover:rotate-3 ${isDanger ? 'bg-red-500/10 text-red-500' : 'bg-slate-700/50 text-blue-400'}`}>
-        <i className={`ph-duotone ${service.icon} text-2xl`}></i>
+      {/* Background Gradient/Pattern */}
+      <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 ${isDanger ? 'bg-gradient-to-br from-red-500 to-transparent' : 'bg-gradient-to-br from-[#5865F2] to-transparent'}`} />
+      
+      <div className={`flex ${isFeatured ? 'flex-col h-full justify-between' : 'flex-col md:flex-row items-start md:items-center gap-4'} relative z-10 p-2`}>
+        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6 ${
+          isDanger ? 'bg-red-500/10 text-red-500' : 'bg-[#5865F2]/10 text-[#5865F2]'
+        }`}>
+          <i className={`ph-duotone ${service.icon} text-3xl`}></i>
+        </div>
+        
+        <div className={`${isFeatured ? 'mt-4' : ''}`}>
+          <h3 className={`font-bold text-white mb-1 ${isFeatured ? 'text-2xl' : 'text-lg'}`}>{service.title}</h3>
+          <p className="text-sm text-slate-400 leading-relaxed line-clamp-2">{service.desc}</p>
+        </div>
       </div>
-      <h3 className="text-lg font-bold text-white mb-2">{service.title}</h3>
-      <p className="text-sm text-slate-400 leading-relaxed">{service.desc}</p>
+      
+      {/* Interactive indicator */}
+      <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${isDanger ? 'bg-red-500/20 text-red-400' : 'bg-[#5865F2]/20 text-[#5865F2]'}`}>
+          <i className="ph-bold ph-arrow-right"></i>
+        </div>
+      </div>
     </Card>
   );
 
@@ -86,28 +102,55 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Public Services */}
+      {/* Public Services - Bento Grid */}
       {(filteredPublic.length > 0) && (
         <section>
           <div className="flex items-center gap-3 mb-6">
-            <Users size={28} weight="duotone" className="text-blue-500" />
-            <h2 className="text-2xl font-bold text-white">บริการประชาชน</h2>
+            <Users size={28} weight="duotone" className="text-[#5865F2]" />
+            <h2 className="text-2xl font-bold text-white">Public Sector (ประชาชน)</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {filteredPublic.map((s, i) => renderServiceCard(s, i))}
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 auto-rows-[minmax(120px,auto)]">
+            {filteredPublic.map((s, i) => {
+              // Create dynamic bento grid spans based on index
+              let spanClass = "col-span-1 md:col-span-1 xl:col-span-1";
+              let isFeatured = false;
+              
+              if (i === 0) {
+                spanClass = "col-span-1 md:col-span-2 xl:col-span-2 row-span-2"; // Large feature block
+                isFeatured = true;
+              } else if (i === 1 || i === 2) {
+                spanClass = "col-span-1 md:col-span-1 xl:col-span-2 row-span-1"; // Wide block
+              } else {
+                spanClass = "col-span-1 md:col-span-1 xl:col-span-1 row-span-1"; // Standard block
+              }
+              
+              return renderBentoCard(s, spanClass, false, false, isFeatured);
+            })}
           </div>
         </section>
       )}
 
-      {/* Council Services (Auth Required) */}
-      {user && (filteredCouncil.length > 0) && (
+      {/* Council Services - Bento Grid */}
+      {(user && filteredCouncil.length > 0) && (
         <section>
-          <div className="flex items-center gap-3 mb-6">
-            <ShieldStar size={28} weight="duotone" className="text-red-500" />
-            <h2 className="text-2xl font-bold text-white">ระบบจัดการสำหรับสภา</h2>
+          <div className="flex items-center gap-3 mb-6 mt-10">
+            <ShieldStar size={28} weight="duotone" className="text-amber-500" />
+            <h2 className="text-2xl font-bold text-white">Council Sector (เจ้าหน้าที่สภา)</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {filteredCouncil.map((s, i) => renderServiceCard(s, i, true))}
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 auto-rows-[minmax(120px,auto)]">
+            {filteredCouncil.map((s, i) => {
+              let spanClass = "col-span-1 md:col-span-1 xl:col-span-1";
+              let isFeatured = false;
+              
+              if (i === 0) {
+                spanClass = "col-span-1 md:col-span-2 xl:col-span-2 row-span-2";
+                isFeatured = true;
+              } else if (i === 1) {
+                spanClass = "col-span-1 md:col-span-1 xl:col-span-2 row-span-1";
+              }
+              
+              return renderBentoCard(s, spanClass, true, false, isFeatured);
+            })}
           </div>
         </section>
       )}
@@ -115,12 +158,12 @@ export default function Home() {
       {/* Related Websites */}
       {(filteredWebsites.length > 0) && (
         <section>
-          <div className="flex items-center gap-3 mb-6">
+          <div className="flex items-center gap-3 mb-6 mt-10">
             <BookOpen size={28} weight="duotone" className="text-emerald-500" />
-            <h2 className="text-2xl font-bold text-white">เว็บไซต์ที่เกี่ยวข้อง</h2>
+            <h2 className="text-2xl font-bold text-white">เอกสารอ้างอิง</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {filteredWebsites.map((s, i) => renderServiceCard(s, i, false, true))}
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+            {filteredWebsites.map((s) => renderBentoCard(s, "col-span-1 md:col-span-2 xl:col-span-2", false, true, false))}
           </div>
         </section>
       )}
