@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
-import { doc, onSnapshot, setDoc } from 'firebase/firestore';
-import { Plus, PencilSimple, Trash, Eye, EyeClosed, ShieldStar, Users } from '@phosphor-icons/react';
+import { doc, onSnapshot, setDoc, collection, getDocs } from 'firebase/firestore';
+import { Plus, PencilSimple, Trash, Eye, EyeClosed, ShieldStar, Users, DownloadSimple } from '@phosphor-icons/react';
 
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
@@ -33,6 +33,9 @@ export default function CouncilManage() {
   // Confirm Delete Modal
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [memberToDelete, setMemberToDelete] = useState(null);
+
+  // Backup System State
+  const [isBackingUp, setIsBackingUp] = useState(false);
 
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'app_state', 'council_members'), (docSnap) => {
@@ -105,6 +108,47 @@ export default function CouncilManage() {
     setShowPasswordMap(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
+  const handleBackup = async () => {
+    setIsBackingUp(true);
+    showAlert('info', 'กำลังดึงข้อมูลทั้งหมดจาก Database กรุณารอสักครู่...');
+    try {
+      const collectionsToBackup = [
+        'app_state',
+        'transaction_logs',
+        'transactionImages',
+        'loan_contracts',
+        'transactions'
+      ];
+      const backupData = {};
+      
+      for (const colName of collectionsToBackup) {
+        const querySnapshot = await getDocs(collection(db, colName));
+        backupData[colName] = {};
+        querySnapshot.forEach((doc) => {
+          backupData[colName][doc.id] = doc.data();
+        });
+      }
+
+      const jsonString = JSON.stringify(backupData, null, 2);
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `council_service_backup_${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      showAlert('success', 'ดาวน์โหลดข้อมูล Backup สำเร็จ!');
+    } catch (error) {
+      console.error('Backup failed:', error);
+      showAlert('error', 'เกิดข้อผิดพลาดในการ Backup ข้อมูล: ' + error.message);
+    } finally {
+      setIsBackingUp(false);
+    }
+  };
+
   // Assuming user with email 'admin@...' or specific role is Admin. For now, everyone logged in has access.
   // We can refine this later.
 
@@ -120,9 +164,15 @@ export default function CouncilManage() {
         </div>
         
         {user?.role === 'admin' && (
-          <Button onClick={() => handleOpenModal()} className="sm:w-auto w-full">
-            <Plus size={20} weight="bold" /> เพิ่มสมาชิก
-          </Button>
+          <div className="flex gap-3 w-full sm:w-auto">
+            <Button onClick={handleBackup} disabled={isBackingUp} className="flex-1 sm:flex-none bg-slate-700 hover:bg-slate-600 text-white border border-slate-600">
+              <DownloadSimple size={20} weight="bold" className={isBackingUp ? "animate-bounce" : ""} /> 
+              {isBackingUp ? 'กำลังดึงข้อมูล...' : 'Backup Database'}
+            </Button>
+            <Button onClick={() => handleOpenModal()} className="flex-1 sm:flex-none">
+              <Plus size={20} weight="bold" /> เพิ่มสมาชิก
+            </Button>
+          </div>
         )}
       </div>
 
