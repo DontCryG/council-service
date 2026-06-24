@@ -45,7 +45,7 @@ export default function Sidebar({ className }) {
   ];
 
   return (
-    <aside className={cn("w-64 bg-slate-900 border-r border-slate-800 flex flex-col", className)}>
+    <aside className={cn("flex flex-col h-full bg-slate-900", className)}>
         <div className="p-6 border-b border-slate-800 flex items-center justify-center">
           <img src="/logo.png" alt="COUNCIL SYSTEM" className="h-20 object-contain drop-shadow-md" />
         </div>

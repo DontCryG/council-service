@@ -22,7 +22,7 @@ export default function Header() {
   };
 
   return (
-    <header className="h-16 border-b border-slate-800 flex items-center justify-between px-4 lg:px-8 bg-slate-900/80 backdrop-blur-md sticky top-0 z-30">
+    <header className="h-16 flex items-center justify-between px-4 lg:px-8 relative z-30">
       <div className="flex items-center gap-4">
         <button 
           onClick={toggleSidebar}
