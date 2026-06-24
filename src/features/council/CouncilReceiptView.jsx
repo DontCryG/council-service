@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { ArrowLeft, DownloadSimple, CircleNotch, ShieldStar, SealCheck, Barcode, Receipt } from '@phosphor-icons/react';
+import { ArrowLeft, DownloadSimple, CircleNotch, SealCheck, Barcode, Receipt } from '@phosphor-icons/react';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../core/firebase';
 import { useAppStore } from '../../store';
@@ -71,7 +71,7 @@ export default function CouncilReceiptView() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <CircleNotch size={48} className="animate-spin text-amber-500" />
+        <CircleNotch size={48} className="animate-spin text-emerald-500" />
       </div>
     );
   }
@@ -105,7 +105,7 @@ export default function CouncilReceiptView() {
         </button>
         <button 
           onClick={handleDownloadImage}
-          className="bg-emerald-500 hover:bg-emerald-400 text-white px-5 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-lg shadow-emerald-500/20"
+          className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-5 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-lg shadow-emerald-500/20"
         >
           <DownloadSimple size={20} weight="bold" />
           บันทึกรูปภาพใบเสร็จ
@@ -116,117 +116,128 @@ export default function CouncilReceiptView() {
       <div className="mx-auto w-fit relative group">
         
         {/* Glow effect */}
-        <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition duration-1000 group-hover:duration-200"></div>
+        <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 rounded-[2.5rem] blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
 
         <div 
           ref={receiptRef}
-          className="bg-slate-950 ring-1 ring-white/10 rounded-2xl text-slate-200 relative overflow-hidden flex flex-col justify-between"
+          className="bg-slate-900 rounded-[2rem] text-slate-200 relative overflow-hidden flex flex-col justify-between shadow-2xl ring-1 ring-white/10"
           style={{ minHeight: '850px', width: '650px' }}
         >
-          {/* Top Decorative Bar */}
-          <div className="h-3 w-full bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500"></div>
+          {/* Top Decorative Neon Bar */}
+          <div className="h-2 w-full bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 shadow-[0_0_15px_rgba(52,211,153,0.5)]"></div>
 
           {/* Background Watermark */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03]">
-            <img src="/logo.png" alt="Council Logo Background" className="w-[400px] h-[400px] object-contain grayscale" />
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.02]">
+            <img src="/logo.png" alt="Council Logo Background" className="w-[500px] h-[500px] object-contain grayscale" />
           </div>
 
-          <div className="p-12 sm:p-14 relative z-10 flex-grow">
+          <div className="p-10 sm:p-14 relative z-10 flex-grow flex flex-col">
             
             {/* Header Section */}
-            <div className="flex justify-between items-start mb-12">
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700/50 flex items-center justify-center shadow-inner">
+            <div className="flex justify-between items-start mb-14">
+              <div className="flex items-center gap-5">
+                <div className="w-16 h-16 rounded-2xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center shadow-lg shadow-black/50 backdrop-blur-md">
                   <Receipt size={32} className="text-emerald-400" weight="duotone" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-black text-white tracking-tight">ใบเสร็จรับเงิน</h1>
-                  <p className="text-emerald-400 font-bold tracking-widest text-sm mt-1 uppercase">OFFICIAL RECEIPT</p>
+                  <h1 className="text-4xl font-black text-white tracking-tight text-shadow-glow">ใบเสร็จรับเงิน</h1>
+                  <p className="text-emerald-400 font-bold tracking-[0.2em] text-xs mt-2 uppercase text-shadow-glow">OFFICIAL RECEIPT</p>
                 </div>
               </div>
-              <div className="text-right">
-                <h2 className="text-xl font-black text-slate-300">สภา WIP TOWN</h2>
-                <p className="text-slate-500 font-mono text-sm mt-1">COUNCIL SERVICE</p>
+            </div>
+
+            {/* PAID Stamp Badge - Animated */}
+            <div className="absolute top-10 right-10 opacity-90 pointer-events-none z-20">
+              <div className="animate-pop-in border-[3px] border-emerald-500 text-emerald-500 rounded-xl px-5 py-2 flex items-center gap-3 bg-slate-950/40 backdrop-blur-sm shadow-[0_0_30px_rgba(16,185,129,0.3)]">
+                <SealCheck size={28} weight="fill" />
+                <div className="flex flex-col">
+                  <span className="font-black text-2xl tracking-widest leading-none">ชำระแล้ว</span>
+                </div>
+              </div>
+              <div className="absolute top-14 right-1 text-right mt-1 rotate-12 opacity-0 animate-[popIn_0.6s_0.2s_forwards]">
+                <p className="text-emerald-500/80 font-bold text-[10px] tracking-widest uppercase">สภา WIP TOWN</p>
+                <p className="text-emerald-500/60 font-mono text-[8px] tracking-[0.3em] uppercase">COUNCIL SERVICE</p>
               </div>
             </div>
 
-            {/* PAID Stamp Badge */}
-            <div className="absolute top-10 right-10 rotate-12 opacity-80 pointer-events-none">
-              <div className="border-4 border-emerald-500 text-emerald-500 rounded-xl px-6 py-2 flex items-center gap-3 bg-slate-950/50 backdrop-blur-sm">
-                <SealCheck size={32} weight="fill" />
-                <span className="font-black text-2xl tracking-widest">ชำระแล้ว</span>
-              </div>
-            </div>
-
-            {/* Info Grid */}
-            <div className="grid grid-cols-2 gap-6 mb-10 p-6 bg-slate-800/20 rounded-2xl border border-slate-700/30">
+            {/* Info Grid - Glassmorphism */}
+            <div className="grid grid-cols-2 gap-y-8 gap-x-6 mb-12 p-8 bg-slate-800/30 backdrop-blur-md rounded-[1.5rem] border border-slate-700/50 shadow-inner">
               <div>
-                <p className="text-slate-500 text-[13px] mb-1 font-medium uppercase tracking-wider">No. / เลขที่ใบเสร็จ</p>
-                <p className="font-mono text-lg font-bold text-white">{receiptId}</p>
+                <p className="text-slate-500 text-[11px] mb-1 font-bold uppercase tracking-[0.1em]">NO. / เลขที่ใบเสร็จ</p>
+                <p className="font-mono text-lg font-bold text-slate-100">{receiptId}</p>
               </div>
               <div className="text-right">
-                <p className="text-slate-500 text-[13px] mb-1 font-medium uppercase tracking-wider">Date / วันที่ชำระ</p>
-                <p className="font-mono text-lg font-bold text-white">{dateStr} <span className="text-slate-400 text-sm ml-1">{timeStr}</span></p>
+                <p className="text-slate-500 text-[11px] mb-1 font-bold uppercase tracking-[0.1em]">DATE / วันที่ชำระ</p>
+                <p className="font-mono text-lg font-bold text-slate-100">{dateStr} <span className="text-slate-400 text-sm ml-1">{timeStr}</span></p>
               </div>
               <div>
-                <p className="text-slate-500 text-[13px] mb-1 font-medium uppercase tracking-wider">Ref / อ้างอิงสัญญา</p>
-                <p className="font-mono text-lg font-bold text-white">{contract.contractId}</p>
+                <p className="text-slate-500 text-[11px] mb-1 font-bold uppercase tracking-[0.1em]">REF / อ้างอิงสัญญา</p>
+                <p className="font-mono text-lg font-bold text-slate-100">{contract.contractId}</p>
               </div>
               <div className="text-right">
-                <p className="text-slate-500 text-[13px] mb-1 font-medium uppercase tracking-wider">Received From / ได้รับเงินจาก</p>
-                <p className="text-lg font-bold text-white">{contract.borrowerName || '[CC] COUNCIL'}</p>
+                <p className="text-slate-500 text-[11px] mb-1 font-bold uppercase tracking-[0.1em]">RECEIVED FROM / ได้รับเงินจาก</p>
+                <p className="text-lg font-bold text-white text-shadow-glow">{contract.borrowerName || '[CC] COUNCIL'}</p>
               </div>
             </div>
 
             {/* Payment Details Table */}
-            <div className="mb-10">
-              <div className="flex justify-between items-end border-b-2 border-slate-700/50 pb-4 mb-6">
-                <h3 className="font-bold text-slate-300 text-lg">รายการชำระเงิน <span className="text-slate-500 font-normal text-sm ml-2">Description</span></h3>
-                <h3 className="font-bold text-slate-300 text-lg">จำนวนเงิน <span className="text-slate-500 font-normal text-sm ml-2">Amount</span></h3>
+            <div className="mb-auto">
+              <div className="flex justify-between items-end border-b border-slate-700 pb-3 mb-6">
+                <h3 className="font-black text-white text-lg tracking-wide">รายการชำระเงิน <span className="text-slate-500 font-medium text-xs ml-2 uppercase tracking-widest">Description</span></h3>
+                <h3 className="font-black text-white text-lg tracking-wide">จำนวนเงิน <span className="text-slate-500 font-medium text-xs ml-2 uppercase tracking-widest">Amount</span></h3>
               </div>
 
-              <div className="flex justify-between items-center mb-6">
+              <div className="flex justify-between items-center mb-6 px-2">
                 <div className="flex items-center gap-4">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-                  <span className="text-white text-lg">ชำระหนี้ตามสัญญา (คืนเงินกู้)</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"></div>
+                  <span className="text-slate-200 font-medium text-lg">ชำระหนี้ตามสัญญา (คืนเงินกู้)</span>
                 </div>
-                <span className="font-mono text-xl font-bold text-white">{tx.amount?.toLocaleString()}.-</span>
+                <span className="font-mono text-xl font-bold text-white tracking-wider">{tx.amount?.toLocaleString()}.-</span>
               </div>
             </div>
 
-            {/* Total Box */}
-            <div className="bg-gradient-to-br from-emerald-950/40 to-slate-900/40 border border-emerald-900/30 rounded-2xl p-8 mb-12 flex justify-between items-center shadow-inner relative overflow-hidden">
-              <div className="absolute left-0 top-0 bottom-0 w-2 bg-emerald-500"></div>
-              <div>
-                <p className="text-emerald-500/80 font-bold mb-1 uppercase tracking-wider text-sm">Total Paid / ยอดรวมที่ชำระ</p>
-                <p className="text-slate-400 text-sm">ชำระเงินเสร็จสมบูรณ์</p>
+            {/* Total Box - Cyberpunk Style */}
+            <div className="mt-12 bg-[#0d131a] border border-slate-800/80 rounded-[1.5rem] p-8 flex justify-between items-center shadow-inner relative overflow-hidden group/total">
+              <div className="absolute left-0 top-0 bottom-0 w-2 bg-gradient-to-b from-emerald-400 to-teal-600 rounded-l-[1.5rem]"></div>
+              {/* Subtle grid background */}
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none"></div>
+              
+              <div className="relative z-10">
+                <p className="text-emerald-500/80 font-bold mb-1 uppercase tracking-widest text-[11px]">Total Paid / ยอดรวมที่ชำระ</p>
+                <p className="text-slate-400 text-sm font-medium">ชำระเงินเสร็จสมบูรณ์</p>
               </div>
-              <div className="text-right flex items-baseline gap-2">
-                <span className="font-mono text-4xl font-black text-emerald-400">{tx.amount?.toLocaleString()}</span>
-                <span className="text-emerald-500 font-bold text-xl">THB</span>
+              <div className="relative z-10 text-right flex items-baseline gap-2">
+                <span className="font-mono text-4xl font-black text-emerald-400 text-shadow-glow tracking-tight">{tx.amount?.toLocaleString()}</span>
+                <span className="text-emerald-500 font-black text-xl tracking-wider">THB</span>
               </div>
             </div>
 
             {/* Remaining Balance & Signatures */}
-            <div className="flex justify-between items-end">
-              <div className="bg-rose-950/20 border border-rose-900/30 px-5 py-3 rounded-xl">
-                <p className="text-rose-400/80 text-xs font-bold uppercase tracking-wider mb-1">Remaining Balance / ยอดหนี้คงเหลือ</p>
-                <p className="font-mono text-lg font-bold text-rose-400">{balanceAfter?.toLocaleString()} THB</p>
+            <div className="flex justify-between items-end mt-8">
+              <div className="bg-rose-950/30 border border-rose-900/40 px-6 py-4 rounded-2xl shadow-inner relative overflow-hidden">
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-rose-500/50"></div>
+                <p className="text-rose-400/80 text-[10px] font-black uppercase tracking-widest mb-1">Remaining Balance / ยอดหนี้คงเหลือ</p>
+                <p className="font-mono text-xl font-bold text-rose-400 text-shadow-glow-rose tracking-wide">{balanceAfter?.toLocaleString()} THB</p>
               </div>
 
               <div className="text-center w-64 pt-4">
-                <div className="border-b-2 border-dashed border-slate-600 mb-3 w-48 mx-auto"></div>
-                <p className="font-bold text-white text-lg">( เจ้าหน้าที่ตัวแทนสภา )</p>
-                <p className="text-slate-500 text-sm mt-1">ผู้รับเงิน / Authorized Signature</p>
+                <div className="border-b-[1.5px] border-dashed border-slate-600 mb-4 w-48 mx-auto"></div>
+                <p className="font-bold text-white text-base tracking-wide">( เจ้าหน้าที่ตัวแทนสภา )</p>
+                <p className="text-slate-500 text-xs mt-1 uppercase tracking-wider">ผู้รับเงิน / Authorized Signature</p>
               </div>
             </div>
             
           </div>
 
-          {/* Footer Barcode Section */}
-          <div className="bg-slate-900 border-t border-slate-800 p-6 flex flex-col items-center justify-center relative z-10">
-            <Barcode size={48} weight="light" className="text-slate-600 mb-2" />
-            <p className="font-mono text-[10px] text-slate-600 tracking-[0.2em]">{tx.id.toUpperCase()}</p>
+          {/* Footer Barcode Section with Scanner Line */}
+          <div className="bg-slate-950 border-t border-slate-800/80 p-8 flex flex-col items-center justify-center relative z-10 receipt-cutout overflow-hidden">
+            {/* Animated Scanner Line */}
+            <div className="absolute inset-0 flex justify-center pointer-events-none">
+              <div className="w-48 h-0.5 bg-emerald-500 shadow-[0_0_15px_2px_rgba(16,185,129,0.8)] animate-scan-line"></div>
+            </div>
+            
+            <Barcode size={56} weight="thin" className="text-slate-500 mb-3" />
+            <p className="font-mono text-[9px] text-slate-500 font-bold tracking-[0.3em]">{tx.id.toUpperCase()}</p>
           </div>
           
         </div>
