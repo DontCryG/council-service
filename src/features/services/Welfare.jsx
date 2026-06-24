@@ -15,7 +15,9 @@ export default function Welfare() {
     orgType: 'GANG',
     orgName: '',
     requester: '',
-    hasWeaponWelfare: false,
+    hasWeaponM9: false,
+    hasWeaponHeavyRevolver: false,
+    hasWeaponPoolCue: false,
     otherWelfare: ''
   });
   const [vehicles, setVehicles] = useState(() => location.state?.vehicles || []);
@@ -163,15 +165,37 @@ export default function Welfare() {
                   <h3 className="font-bold text-slate-200 text-base whitespace-nowrap">สวัสดิการอาวุธ</h3>
                 </div>
                 
-                <label className="flex items-center gap-3 cursor-pointer p-4 border border-slate-700 rounded-xl hover:border-red-500/50 hover:bg-slate-800/50 transition-colors mb-4">
-                  <input 
-                    type="checkbox" 
-                    className="w-5 h-5 cursor-pointer accent-red-500 shrink-0"
-                    checked={formData.hasWeaponWelfare}
-                    onChange={e => setFormData({...formData, hasWeaponWelfare: e.target.checked})}
-                  />
-                  <span className="font-bold text-slate-300 text-sm">สวัสดิการอาวุธไม้พูล</span>
-                </label>
+                <div className="space-y-3 mb-6">
+                  <label className="flex items-center gap-3 cursor-pointer p-3 border border-slate-700 rounded-xl hover:border-red-500/50 hover:bg-slate-800/50 transition-colors">
+                    <input 
+                      type="checkbox" 
+                      className="w-5 h-5 cursor-pointer accent-red-500 shrink-0"
+                      checked={formData.hasWeaponM9}
+                      onChange={e => setFormData({...formData, hasWeaponM9: e.target.checked})}
+                    />
+                    <span className="font-bold text-slate-300 text-sm">มีด M9</span>
+                  </label>
+
+                  <label className="flex items-center gap-3 cursor-pointer p-3 border border-slate-700 rounded-xl hover:border-red-500/50 hover:bg-slate-800/50 transition-colors">
+                    <input 
+                      type="checkbox" 
+                      className="w-5 h-5 cursor-pointer accent-red-500 shrink-0"
+                      checked={formData.hasWeaponHeavyRevolver}
+                      onChange={e => setFormData({...formData, hasWeaponHeavyRevolver: e.target.checked})}
+                    />
+                    <span className="font-bold text-slate-300 text-sm">ปืน Heavy Revolver Mk II</span>
+                  </label>
+
+                  <label className="flex items-center gap-3 cursor-pointer p-3 border border-slate-700 rounded-xl hover:border-red-500/50 hover:bg-slate-800/50 transition-colors">
+                    <input 
+                      type="checkbox" 
+                      className="w-5 h-5 cursor-pointer accent-red-500 shrink-0"
+                      checked={formData.hasWeaponPoolCue}
+                      onChange={e => setFormData({...formData, hasWeaponPoolCue: e.target.checked})}
+                    />
+                    <span className="font-bold text-slate-300 text-sm">ไม้ Pool Cue</span>
+                  </label>
+                </div>
 
                 <div className="flex-1 flex flex-col">
                   <label className="text-[10px] font-bold text-slate-400 mb-2">สวัสดิการอื่นๆ</label>
@@ -192,7 +216,7 @@ export default function Welfare() {
             disabled={
               !formData.orgName.trim() || 
               !formData.requester.trim() || 
-              (vehicles.length === 0 && !formData.hasWeaponWelfare && !formData.otherWelfare.trim()) ||
+              (vehicles.length === 0 && !formData.hasWeaponM9 && !formData.hasWeaponHeavyRevolver && !formData.hasWeaponPoolCue && !formData.otherWelfare.trim()) ||
               (vehicles.length > 0 && vehicles.some(v => !v.model.trim() || !v.plate.trim()))
             }
           >

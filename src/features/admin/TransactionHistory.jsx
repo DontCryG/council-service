@@ -366,7 +366,9 @@ export default function TransactionHistory() {
           detailsLabel: 'รายการเบิก',
           detailsValue: [
             ...(log.data.vehicles ? log.data.vehicles.map(v => `รถ: ${v.name} (ทะเบียน: ${v.plate})`) : []),
-            log.data.hasWeaponWelfare ? 'เบิกอาวุธ: ใช่' : '',
+            log.data.hasWeaponM9 ? 'เบิกอาวุธ: มีด M9' : '',
+            log.data.hasWeaponHeavyRevolver ? 'เบิกอาวุธ: ปืน Heavy Revolver Mk II' : '',
+            log.data.hasWeaponPoolCue ? 'เบิกอาวุธ: ไม้ Pool Cue' : '',
             log.data.otherWelfare ? `อื่นๆ: ${log.data.otherWelfare}` : ''
           ].filter(Boolean).join('\n') || '-',
           amount: '-',

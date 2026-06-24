@@ -34,7 +34,9 @@ export default function WelfarePreview() {
       if (!blob) throw new Error("Failed to generate image");
       
       let welfareItems = [];
-      if (formData.hasWeaponWelfare) welfareItems.push("รถ: อาวุธไม้พูล");
+      if (formData.hasWeaponM9) welfareItems.push("อาวุธ: มีด M9");
+      if (formData.hasWeaponHeavyRevolver) welfareItems.push("อาวุธ: ปืน Heavy Revolver Mk II");
+      if (formData.hasWeaponPoolCue) welfareItems.push("อาวุธ: ไม้ Pool Cue");
       if (vehicles && vehicles.length > 0) {
         vehicles.forEach(v => welfareItems.push(`รถ: ${v.plate || '-'} (${v.model || '-'})`));
       }
@@ -69,7 +71,9 @@ export default function WelfarePreview() {
         orgName: formData.orgName,
         requester: formData.requester,
         vehicles: vehicles,
-        hasWeaponWelfare: formData.hasWeaponWelfare,
+        hasWeaponM9: formData.hasWeaponM9,
+        hasWeaponHeavyRevolver: formData.hasWeaponHeavyRevolver,
+        hasWeaponPoolCue: formData.hasWeaponPoolCue,
         otherWelfare: formData.otherWelfare
       }, user);
       showAlert('success', 'ส่งคำขอเบิกสวัสดิการเรียบร้อยแล้ว !');
@@ -163,12 +167,32 @@ export default function WelfarePreview() {
           </div>
 
           <div className="grid grid-cols-1 gap-3">
-            {formData.hasWeaponWelfare && (
+            {formData.hasWeaponM9 && (
               <div className="flex items-center gap-4 bg-slate-800/30 border border-slate-700/50 rounded-lg p-4">
                 <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center text-red-400 text-lg">⚔️</div>
                 <div>
                   <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Weapon Welfare</p>
-                  <p className="text-base font-bold text-white">อาวุธ: ไม้พูล</p>
+                  <p className="text-base font-bold text-white">อาวุธ: มีด M9</p>
+                </div>
+              </div>
+            )}
+            
+            {formData.hasWeaponHeavyRevolver && (
+              <div className="flex items-center gap-4 bg-slate-800/30 border border-slate-700/50 rounded-lg p-4">
+                <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center text-red-400 text-lg">🔫</div>
+                <div>
+                  <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Weapon Welfare</p>
+                  <p className="text-base font-bold text-white">อาวุธ: ปืน Heavy Revolver Mk II</p>
+                </div>
+              </div>
+            )}
+            
+            {formData.hasWeaponPoolCue && (
+              <div className="flex items-center gap-4 bg-slate-800/30 border border-slate-700/50 rounded-lg p-4">
+                <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center text-red-400 text-lg">🎱</div>
+                <div>
+                  <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Weapon Welfare</p>
+                  <p className="text-base font-bold text-white">อาวุธ: ไม้ Pool Cue</p>
                 </div>
               </div>
             )}
@@ -199,7 +223,7 @@ export default function WelfarePreview() {
               </div>
             )}
 
-            {!formData.hasWeaponWelfare && vehicles.length === 0 && !formData.otherWelfare && (
+            {!formData.hasWeaponM9 && !formData.hasWeaponHeavyRevolver && !formData.hasWeaponPoolCue && vehicles.length === 0 && !formData.otherWelfare && (
               <div className="text-center py-8 bg-slate-900/50 border border-slate-800 rounded-lg border-dashed">
                 <p className="text-slate-500 italic font-medium">No welfare items specified</p>
               </div>
