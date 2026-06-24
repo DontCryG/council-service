@@ -93,7 +93,7 @@ export default function RegisterOrg() {
                 onClick={() => { setFormData({...formData, orgType: 'GANG'}); setStep(2); }}
                 className="bg-slate-900 border border-slate-800 rounded-[24px] p-12 flex flex-col items-center justify-center gap-6 hover:border-amber-500/50 hover:bg-slate-800/50 transition-all group"
               >
-                <div className="w-24 h-24 rounded-full bg-slate-800/80 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-black/20">
+                <div className="w-24 h-24 rounded-full bg-slate-800/80 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-lg shadow-black/20">
                   <Buildings size={40} weight="fill" className="text-amber-500" />
                 </div>
                 <h2 className="text-2xl font-black text-white tracking-widest">GANG</h2>
@@ -104,7 +104,7 @@ export default function RegisterOrg() {
                 onClick={() => { setFormData({...formData, orgType: 'FAMILY'}); setStep(2); }}
                 className="bg-slate-900 border border-slate-800 rounded-[24px] p-12 flex flex-col items-center justify-center gap-6 hover:border-blue-500/50 hover:bg-slate-800/50 transition-all group"
               >
-                <div className="w-24 h-24 rounded-full bg-blue-900/20 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-black/20">
+                <div className="w-24 h-24 rounded-full bg-blue-900/20 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-lg shadow-black/20">
                   <Buildings size={40} weight="fill" className="text-blue-500" />
                 </div>
                 <h2 className="text-2xl font-black text-white tracking-widest">FAMILY</h2>
