@@ -181,14 +181,14 @@ export default function WelfareTradePreview() {
   );
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 py-6 w-full max-w-4xl mx-auto px-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
+    <div className="max-w-4xl mx-auto py-4 px-2 md:px-0 animate-in fade-in slide-in-from-right-16 duration-700 ease-out">
+      <div className="flex items-center justify-between mb-8">
         <div>
           <h2 className="text-2xl font-bold text-white mb-1">ตรวจสอบข้อมูลก่อนส่ง</h2>
-          <p className="text-slate-400">โปรดตรวจสอบรูปภาพนี้ให้แน่ใจก่อนทำการส่งข้อมูล</p>
+          <p className="text-slate-400 text-sm">โปรดตรวจสอบรูปภาพนี้ให้แน่ใจก่อนทำการส่งข้อมูล</p>
         </div>
-        <Button variant="ghost" onClick={() => navigate('/welfare_trade', { state: { formData, items, step: 2 } })} className="text-slate-400 hover:text-white shrink-0 self-start sm:self-auto">
-          <ArrowLeft size={20} className="mr-2" /> ย้อนกลับเพื่อแก้ไข
+        <Button variant="ghost" onClick={() => navigate('/welfare_trade', { state: { formData, items, step: 2 } })} className="text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl shrink-0 self-start sm:self-auto">
+          <ArrowLeft size={20} className="mr-2" /> <span className="hidden sm:inline">ย้อนกลับเพื่อแก้ไข</span>
         </Button>
       </div>
 

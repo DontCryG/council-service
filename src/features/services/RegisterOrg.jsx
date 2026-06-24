@@ -69,17 +69,19 @@ export default function RegisterOrg() {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 py-6">
-      <div className="mb-6 flex items-start justify-between max-w-4xl mx-auto w-full">
-        <div className="flex items-center gap-3">
-          <Buildings size={32} weight="duotone" className="text-amber-500" />
+    <div className="max-w-4xl mx-auto py-4 px-2 md:px-0 animate-in fade-in slide-in-from-right-16 duration-700 ease-out">
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center">
+            <Buildings size={28} weight="duotone" />
+          </div>
           <div>
-            <h2 className="text-2xl font-bold text-white mb-1">ลงทะเบียนองค์กรใหม่</h2>
-            <p className="text-slate-400">ระบบบันทึกการขึ้นทะเบียนแก๊งและครอบครัว</p>
+            <h2 className="text-2xl font-bold text-white">ลงทะเบียนองค์กรใหม่</h2>
+            <p className="text-slate-400 text-sm">ระบบบันทึกการขึ้นทะเบียนแก๊งและครอบครัว</p>
           </div>
         </div>
-        <Button type="button" variant="ghost" onClick={() => step === 2 ? setStep(1) : navigate('/home')} className="text-slate-400 hover:text-white px-2">
-          <ArrowLeft size={20} className="mr-2" /> ย้อนกลับ
+        <Button variant="ghost" onClick={() => step === 2 ? setStep(1) : navigate('/home')} className="text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl">
+          <ArrowLeft size={20} /> <span className="hidden sm:inline">กลับไปศูนย์บัญชาการ</span>
         </Button>
       </div>
       

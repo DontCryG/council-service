@@ -107,18 +107,20 @@ export default function EditOrg() {
   };
 
   return (
-    <div className="max-w-[800px] mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 py-6">
+    <div className="max-w-[800px] mx-auto py-4 px-2 md:px-0 animate-in fade-in slide-in-from-right-16 duration-700 ease-out">
       
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div className="flex items-center gap-3">
-          <PencilSimple size={32} weight="duotone" className="text-pink-500" />
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-pink-500/10 text-pink-500 flex items-center justify-center">
+            <PencilSimple size={28} weight="duotone" />
+          </div>
           <div>
-            <h1 className="text-2xl font-bold text-white">แจ้งแก้ไขข้อมูลองค์กร</h1>
-            <p className="text-slate-400">แบบฟอร์มแจ้งเปลี่ยนชื่อ สี โลโก้ หรือชุดประจำ Gang/Family</p>
+            <h2 className="text-2xl font-bold text-white">แจ้งแก้ไขข้อมูลองค์กร</h2>
+            <p className="text-slate-400 text-sm">แบบฟอร์มแจ้งเปลี่ยนชื่อ สี โลโก้ หรือชุดประจำ Gang/Family</p>
           </div>
         </div>
-        <Button variant="ghost" onClick={() => navigate('/home')} className="text-slate-400 hover:text-white px-0 self-start sm:self-auto">
-          <ArrowLeft size={18} className="mr-2" /> ย้อนกลับ
+        <Button variant="ghost" onClick={() => navigate('/home')} className="text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl">
+          <ArrowLeft size={20} /> <span className="hidden sm:inline">กลับไปศูนย์บัญชาการ</span>
         </Button>
       </div>
 

@@ -136,14 +136,25 @@ export default function LoanPublic() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 pt-8 pb-12">
-      <button 
-        onClick={() => navigate('/home')}
-        className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-8 ml-2"
-      >
-        <ArrowLeft size={20} />
-        <span>กลับหน้าหลัก</span>
-      </button>
+    <div className="max-w-4xl mx-auto py-4 px-2 md:px-0 animate-in fade-in slide-in-from-right-16 duration-700 ease-out">
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center">
+            <MagnifyingGlass size={28} weight="duotone" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-white">ตรวจสอบข้อมูลสัญญากู้ยืม</h2>
+            <p className="text-slate-400 text-sm">บริการตรวจสอบและเซ็นสัญญากู้ยืมเงิน</p>
+          </div>
+        </div>
+        <button 
+          onClick={() => navigate('/home')}
+          className="flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800 transition-colors rounded-xl px-4 py-2"
+        >
+          <ArrowLeft size={20} />
+          <span className="hidden sm:inline">กลับไปศูนย์บัญชาการ</span>
+        </button>
+      </div>
 
       <div className="bg-slate-800/40 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden border border-slate-700/50">
         {/* Background decorative elements */}

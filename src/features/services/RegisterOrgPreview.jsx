@@ -98,13 +98,15 @@ export default function RegisterOrgPreview() {
   };
 
   return (
-    <div className="max-w-[800px] mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 py-6">
-      <div className="mb-6 flex items-center justify-between">
-        <Button type="button" variant="ghost" onClick={() => navigate('/register_org', { state: { formData, coLeaders, members, step: 2 } })} className="text-slate-400 hover:text-white px-0">
-          <ArrowLeft size={20} className="mr-2" /> ย้อนกลับไปแก้ไข
+    <div className="max-w-[800px] mx-auto py-4 px-2 md:px-0 animate-in fade-in slide-in-from-right-16 duration-700 ease-out">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h2 className="text-2xl font-bold text-white mb-1">ตรวจสอบข้อมูลลงทะเบียนองค์กรใหม่</h2>
+          <p className="text-slate-400 text-sm">ตรวจสอบแบบฟอร์มให้ถูกต้องก่อนทำการบันทึกข้อมูลเข้าสู่สภา</p>
+        </div>
+        <Button variant="ghost" onClick={() => navigate('/register_org', { state: { formData, coLeaders, members, step: 2 } })} className="text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl">
+          <ArrowLeft size={20} className="mr-2" /> <span className="hidden sm:inline">ย้อนกลับไปแก้ไข</span>
         </Button>
-        <h2 className="text-xl font-bold text-white">ตรวจสอบข้อมูลลงทะเบียนองค์กรใหม่</h2>
-        <div className="w-[100px]"></div>
       </div>
 
       <div ref={captureRef} className="bg-slate-900 rounded-xl p-8 border-2 border-slate-800 shadow-2xl relative overflow-hidden mb-8">
