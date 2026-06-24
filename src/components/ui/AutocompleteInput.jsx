@@ -16,6 +16,8 @@ export default function AutocompleteInput({
   const [groups, setGroups] = useState([]);
   const wrapperRef = useRef(null);
 
+  const [citizens, setCitizens] = useState([]);
+
   // Fetch groups if type is 'group'
   useEffect(() => {
     if (type !== 'group') return;
@@ -25,6 +27,17 @@ export default function AutocompleteInput({
       }
     });
     return () => unsub();
+  }, [type]);
+
+  // Fetch citizens if type is 'text'
+  useEffect(() => {
+    if (type !== 'text') return;
+    import('firebase/firestore').then(({ collection, onSnapshot }) => {
+      const unsub = onSnapshot(collection(db, 'citizens'), (snapshot) => {
+        setCitizens(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      });
+      return () => unsub();
+    });
   }, [type]);
 
   // Close dropdown on click outside
@@ -38,13 +51,16 @@ export default function AutocompleteInput({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const filteredGroups = type === 'group' 
+  const filteredItems = type === 'group' 
     ? groups.filter(g => {
         if (orgType && g.type !== orgType) return false;
         if (value.trim() && !g.name.toLowerCase().includes(value.toLowerCase())) return false;
         return true;
       })
-    : [];
+    : citizens.filter(c => {
+        if (value.trim() && !c.name.toLowerCase().includes(value.toLowerCase())) return false;
+        return true;
+      });
 
   return (
     <div className="space-y-3 relative" ref={wrapperRef}>
@@ -79,33 +95,29 @@ export default function AutocompleteInput({
 
       {isOpen && value.length > 0 && (
         <div className="absolute z-50 w-full mt-2 bg-slate-800 border border-slate-700 rounded-lg shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2">
-          {type === 'group' ? (
-            <div className="max-h-60 overflow-y-auto custom-scrollbar">
-              {filteredGroups.length === 0 ? (
-                <div className="px-4 py-3 text-sm text-slate-400 text-center">
-                  ไม่พบข้อมูลสังกัดที่ค้นหา
+          <div className="max-h-60 overflow-y-auto custom-scrollbar">
+            {filteredItems.length === 0 ? (
+              <div className="px-4 py-4 text-center">
+                <div className="text-slate-400 font-medium text-sm">
+                  {type === 'group' ? 'ไม่พบข้อมูลสังกัดที่ค้นหา' : 'ไม่พบข้อมูลประชากร'}
                 </div>
-              ) : (
-                filteredGroups.map(g => (
-                  <div 
-                    key={g.id} 
-                    className="px-4 py-2.5 text-sm text-slate-200 hover:bg-amber-500 hover:text-white cursor-pointer transition-colors"
-                    onMouseDown={() => {
-                      onChange(g.name);
-                      setIsOpen(false);
-                    }}
-                  >
-                    {g.name}
-                  </div>
-                ))
-              )}
-            </div>
-          ) : (
-            <div className="px-4 py-4 text-center">
-              <div className="text-slate-400 font-medium text-sm">ไม่พบข้อมูลประชากร</div>
-              <div className="text-amber-500 text-xs mt-1">*ระบบจะบันทึกให้อัตโนมัติเมื่อกดยืนยัน</div>
-            </div>
-          )}
+                <div className="text-amber-500 text-xs mt-1">*ระบบจะบันทึกให้อัตโนมัติเมื่อกดยืนยัน</div>
+              </div>
+            ) : (
+              filteredItems.map(item => (
+                <div 
+                  key={item.id} 
+                  className="px-4 py-2.5 text-sm text-slate-200 hover:bg-amber-500 hover:text-white cursor-pointer transition-colors"
+                  onMouseDown={() => {
+                    onChange(item.name);
+                    setIsOpen(false);
+                  }}
+                >
+                  {item.name}
+                </div>
+              ))
+            )}
+          </div>
         </div>
       )}
     </div>
