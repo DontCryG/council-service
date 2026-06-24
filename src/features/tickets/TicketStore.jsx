@@ -170,34 +170,38 @@ export default function TicketStore() {
             <p className="text-slate-400 text-sm">ส่งคำขอซื้อ Ticket สำหรับซื้อของสวัสดิการสภา</p>
           </div>
         </div>
-        {!selectedType && (
-          <Button variant="ghost" onClick={() => navigate('/home')} className="text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl">
-            <ArrowLeft size={20} /> <span className="hidden sm:inline">กลับไปศูนย์บัญชาการ</span>
-          </Button>
-        )}
+        <Button variant="ghost" onClick={() => selectedType ? setSelectedType(null) : navigate('/home')} className="text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl">
+          <ArrowLeft size={20} className="mr-2" /> <span className="hidden sm:inline">กลับไปศูนย์บัญชาการ</span>
+        </Button>
       </div>
 
       {!selectedType ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-          <button
-            onClick={() => setSelectedType('GANG')}
-            className="bg-slate-900 border border-slate-800 rounded-[24px] p-12 flex flex-col items-center justify-center gap-6 hover:border-amber-500/50 hover:bg-slate-800/50 transition-all group"
-          >
-            <div className="w-24 h-24 rounded-full bg-slate-800/80 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Buildings size={40} weight="fill" className="text-amber-500" />
-            </div>
-            <h2 className="text-2xl font-black text-white tracking-widest">GANG</h2>
-          </button>
-          
-          <button
-            onClick={() => setSelectedType('FAMILY')}
-            className="bg-slate-900 border border-slate-800 rounded-[24px] p-12 flex flex-col items-center justify-center gap-6 hover:border-blue-500/50 hover:bg-slate-800/50 transition-all group"
-          >
-            <div className="w-24 h-24 rounded-full bg-blue-900/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Buildings size={40} weight="fill" className="text-blue-500" />
-            </div>
-            <h2 className="text-2xl font-black text-white tracking-widest">FAMILY</h2>
-          </button>
+        <div className="max-w-4xl mx-auto w-full pt-10">
+          <div className="text-center mb-10">
+            <h1 className="text-3xl font-black text-white tracking-widest">เลือกประเภทสังกัด</h1>
+            <p className="text-slate-400 mt-2">กรุณาเลือกประเภทสังกัดที่คุณต้องการเบิก Ticket</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <button
+              onClick={() => setSelectedType('GANG')}
+              className="bg-slate-900 border border-slate-800 rounded-[24px] p-12 flex flex-col items-center justify-center gap-6 hover:border-amber-500/50 hover:bg-slate-800/50 transition-all group"
+            >
+              <div className="w-24 h-24 rounded-full bg-slate-800/80 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-lg shadow-black/20">
+                <Buildings size={40} weight="fill" className="text-amber-500" />
+              </div>
+              <h2 className="text-2xl font-black text-white tracking-widest">GANG</h2>
+            </button>
+            
+            <button
+              onClick={() => setSelectedType('FAMILY')}
+              className="bg-slate-900 border border-slate-800 rounded-[24px] p-12 flex flex-col items-center justify-center gap-6 hover:border-blue-500/50 hover:bg-slate-800/50 transition-all group"
+            >
+              <div className="w-24 h-24 rounded-full bg-blue-900/20 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-lg shadow-black/20">
+                <Buildings size={40} weight="fill" className="text-blue-500" />
+              </div>
+              <h2 className="text-2xl font-black text-white tracking-widest">FAMILY</h2>
+            </button>
+          </div>
         </div>
       ) : (
         <div className="space-y-4">

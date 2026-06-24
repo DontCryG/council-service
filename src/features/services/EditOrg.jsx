@@ -7,7 +7,7 @@ import { collection, onSnapshot } from 'firebase/firestore';
 import Button from '../../components/ui/Button';
 import GroupSelect from '../../components/ui/GroupSelect';
 import AutocompleteInput from '../../components/ui/AutocompleteInput';
-import { Skull, House, User, PencilSimple, ArrowLeft, FileText, Check, Link as LinkIcon, ArrowRight, CaretDown } from '@phosphor-icons/react';
+import { Skull, House, User, PencilSimple, ArrowLeft, FileText, Check, Link as LinkIcon, ArrowRight, CaretDown, Buildings } from '@phosphor-icons/react';
 
 export default function EditOrg() {
   const navigate = useNavigate();
