@@ -10,6 +10,7 @@ import {
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../core/firebase';
 import { useAppStore } from '../../store';
+import GroupSelect from '../../components/ui/GroupSelect';
 
 export default function CouncilLoanEdit() {
   const navigate = useNavigate();
@@ -157,15 +158,11 @@ export default function CouncilLoanEdit() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-slate-300 text-sm font-bold mb-2">
-                ชื่อ-นามสกุล ผู้กู้ยืม <span className="text-red-500">*</span>
-              </label>
-              <input 
-                type="text"
-                required
+              <GroupSelect 
+                label={<>ชื่อ Gang / Family <span className="text-red-500">*</span></>}
                 value={borrowerName}
-                onChange={(e) => setBorrowerName(e.target.value)}
-                className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/10 transition-all outline-none"
+                onChange={setBorrowerName}
+                placeholder="ระบุชื่อแก๊ง หรือ ครอบครัว"
               />
             </div>
             <div>
