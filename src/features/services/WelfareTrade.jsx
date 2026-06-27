@@ -7,7 +7,7 @@ import { doc, collection, onSnapshot } from 'firebase/firestore';
 import Button from '../../components/ui/Button';
 import GroupSelect from '../../components/ui/GroupSelect';
 import AutocompleteInput from '../../components/ui/AutocompleteInput';
-import { Trash, ArrowRight, ArrowsLeftRight, Car, Crosshair, ArrowLeft, Users, House, Skull, Buildings } from '@phosphor-icons/react';
+import { Trash, ArrowRight, ArrowsLeftRight, Car, Crosshair, ArrowLeft, Users, House, Skull, Buildings, Phone } from '@phosphor-icons/react';
 
 export default function WelfareTrade() {
   const navigate = useNavigate();
