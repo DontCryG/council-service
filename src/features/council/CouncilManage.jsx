@@ -27,8 +27,7 @@ export default function CouncilManage() {
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
-  const [formData, setFormData] = useState({ name: '', phone: '', username: '', password: '', role: 'staff', rank: 'สภาฝึกหัด' });
-  const [showPasswordMap, setShowPasswordMap] = useState({});
+  const [formData, setFormData] = useState({ name: '', phone: '', username: '', role: 'staff', rank: 'สภาฝึกหัด' });
 
   // Confirm Delete Modal
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -67,7 +66,7 @@ export default function CouncilManage() {
       setFormData({ ...member, rank: member.rank || 'สภาฝึกหัด' });
     } else {
       setEditingId(null);
-      setFormData({ name: '', phone: '', username: '', password: '', role: 'staff', rank: 'สภาฝึกหัด' });
+      setFormData({ name: '', phone: '', username: '', role: 'staff', rank: 'สภาฝึกหัด' });
     }
     setIsModalOpen(true);
   };
@@ -101,9 +100,6 @@ export default function CouncilManage() {
     }
   };
 
-  const togglePasswordVisibility = (id) => {
-    setShowPasswordMap(prev => ({ ...prev, [id]: !prev[id] }));
-  };
 
   // Assuming user with email 'admin@...' or specific role is Admin. For now, everyone logged in has access.
   // We can refine this later.
@@ -182,20 +178,6 @@ export default function CouncilManage() {
                   <span className="text-slate-500">Email</span>
                   <span className="text-emerald-400 font-mono">{m.username}</span>
                 </div>
-                
-                <div className="flex items-center justify-between text-sm pt-3 border-t border-slate-800">
-                  <span className="text-slate-500">Password</span>
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded text-xs">
-                      {user?.role === 'admin' && showPasswordMap[m.id] ? m.password : '••••••••'}
-                    </span>
-                    {user?.role === 'admin' && (
-                      <button onClick={() => togglePasswordVisibility(m.id)} className="text-slate-500 hover:text-white">
-                        {showPasswordMap[m.id] ? <EyeClosed size={16} /> : <Eye size={16} />}
-                      </button>
-                    )}
-                  </div>
-                </div>
               </div>
             </div>
           ))}
@@ -224,12 +206,6 @@ export default function CouncilManage() {
             required 
             value={formData.username}
             onChange={e => setFormData({...formData, username: e.target.value})}
-          />
-          <Input 
-            label="Password (รหัสผ่าน)" 
-            required 
-            value={formData.password}
-            onChange={e => setFormData({...formData, password: e.target.value})}
           />
           
           <div className="grid grid-cols-2 gap-4">
@@ -279,7 +255,7 @@ export default function CouncilManage() {
             คุณต้องการ <strong className="text-red-400">ลบสมาชิกคนนี้</strong> ออกจากระบบใช่หรือไม่?
           </p>
           <p className="text-sm text-slate-400">
-            สมาชิกคนนี้จะไม่สามารถล็อคอินเข้าระบบได้อีกต่อไป
+            *คุณจำเป็นต้องลบสมาชิกใน Firebase Authentication ด้วยตนเอง
           </p>
           <div className="pt-4 border-t border-slate-800 flex justify-end gap-3">
             <Button variant="outline" onClick={() => setShowConfirmDelete(false)} className="px-6">
