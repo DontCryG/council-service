@@ -214,21 +214,24 @@ export default function WelfareTrade() {
                   onChange={val => setFormData({...formData, oldOwner: val})}
                 />
               </div>
-              <div className="space-y-3">
+              <div className="space-y-3 pt-2">
                 <label className="text-[14px] font-bold text-slate-300 tracking-wide">
                   เบอร์โทรศัพท์คนเก่า (6 หลัก)
                 </label>
-                <input
-                  type="text"
-                  maxLength="6"
-                  placeholder="000000"
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-violet-500 transition-colors"
-                  value={formData.oldOwnerPhone}
-                  onChange={(e) => {
-                    const val = e.target.value.replace(/[^0-9]/g, '');
-                    setFormData({...formData, oldOwnerPhone: val});
-                  }}
-                />
+                <div className="flex items-center bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 transition-all focus-within:border-violet-500 focus-within:ring-1 focus-within:ring-violet-500">
+                  <Phone size={20} className="text-slate-500 mr-3 shrink-0" />
+                  <input
+                    type="text"
+                    maxLength="6"
+                    placeholder="000000"
+                    className="w-full bg-transparent text-white placeholder-slate-500 focus:outline-none font-medium"
+                    value={formData.oldOwnerPhone}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/[^0-9]/g, '');
+                      setFormData({...formData, oldOwnerPhone: val});
+                    }}
+                  />
+                </div>
               </div>
             </div>
             <div className="space-y-4 bg-slate-950/40 p-5 rounded-2xl border border-slate-800">
@@ -243,21 +246,24 @@ export default function WelfareTrade() {
                   onChange={val => setFormData({...formData, newOwner: val})}
                 />
               </div>
-              <div className="space-y-3">
+              <div className="space-y-3 pt-2">
                 <label className="text-[14px] font-bold text-slate-300 tracking-wide">
                   เบอร์โทรศัพท์คนใหม่ (6 หลัก)
                 </label>
-                <input
-                  type="text"
-                  maxLength="6"
-                  placeholder="000000"
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-violet-500 transition-colors"
-                  value={formData.newOwnerPhone}
-                  onChange={(e) => {
-                    const val = e.target.value.replace(/[^0-9]/g, '');
-                    setFormData({...formData, newOwnerPhone: val});
-                  }}
-                />
+                <div className="flex items-center bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 transition-all focus-within:border-violet-500 focus-within:ring-1 focus-within:ring-violet-500">
+                  <Phone size={20} className="text-slate-500 mr-3 shrink-0" />
+                  <input
+                    type="text"
+                    maxLength="6"
+                    placeholder="000000"
+                    className="w-full bg-transparent text-white placeholder-slate-500 focus:outline-none font-medium"
+                    value={formData.newOwnerPhone}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/[^0-9]/g, '');
+                      setFormData({...formData, newOwnerPhone: val});
+                    }}
+                  />
+                </div>
               </div>
             </div>
           </div>

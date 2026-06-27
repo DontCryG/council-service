@@ -6,7 +6,7 @@ import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import GroupSelect from '../../components/ui/GroupSelect';
 import AutocompleteInput from '../../components/ui/AutocompleteInput';
-import { PaperPlaneTilt, Trash, Gift, Car, Users, Sword, ArrowLeft, Skull, House, Buildings } from '@phosphor-icons/react';
+import { PaperPlaneTilt, Trash, Gift, Car, Users, Sword, ArrowLeft, Skull, House, Buildings, Phone } from '@phosphor-icons/react';
 
 export default function Welfare() {
   const navigate = useNavigate();
@@ -123,19 +123,22 @@ export default function Welfare() {
                 onChange={val => setFormData({...formData, requester: val})}
               />
             </div>
-            <div className="space-y-3">
+            <div className="space-y-3 pt-2">
               <label className="text-[13px] font-bold text-slate-400 tracking-wide">3. เบอร์โทรศัพท์ (6 หลัก)</label>
-              <input
-                type="text"
-                maxLength="6"
-                placeholder="000000"
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 transition-colors"
-                value={formData.phoneNumber}
-                onChange={(e) => {
-                  const val = e.target.value.replace(/[^0-9]/g, '');
-                  setFormData({...formData, phoneNumber: val});
-                }}
-              />
+              <div className="flex items-center bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 transition-all focus-within:border-amber-500 focus-within:ring-1 focus-within:ring-amber-500">
+                <Phone size={20} className="text-slate-500 mr-3 shrink-0" />
+                <input
+                  type="text"
+                  maxLength="6"
+                  placeholder="000000"
+                  className="w-full bg-transparent text-white placeholder-slate-500 focus:outline-none font-medium"
+                  value={formData.phoneNumber}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/[^0-9]/g, '');
+                    setFormData({...formData, phoneNumber: val});
+                  }}
+                />
+              </div>
             </div>
           </div>
 
