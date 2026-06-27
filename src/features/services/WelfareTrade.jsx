@@ -61,8 +61,8 @@ export default function WelfareTrade() {
       showAlert('error', 'กรุณาระบุเบอร์โทรศัพท์เป็นตัวเลข 6 หลักทั้งสองเบอร์');
       return;
     }
-    if (items.some(i => !i.name.trim())) {
-      showAlert('error', 'กรุณาระบุข้อมูลสิ่งของที่จะแลกเปลี่ยนให้ครบ');
+    if (items.some(i => !i.name.trim() || !i.detail.trim())) {
+      showAlert('error', 'กรุณาระบุชื่อสิ่งของและรายละเอียด/ทะเบียนให้ครบทุกรายการ');
       return;
     }
     navigate('/welfare_trade_preview', {

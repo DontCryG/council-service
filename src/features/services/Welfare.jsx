@@ -48,6 +48,10 @@ export default function Welfare() {
       showAlert('error', 'กรุณาระบุเบอร์โทรศัพท์เป็นตัวเลข 6 หลัก');
       return;
     }
+    if (vehicles.length > 0 && vehicles.some(v => !v.model.trim() || !v.plate.trim())) {
+      showAlert('error', 'กรุณาระบุรุ่นรถและป้ายทะเบียนให้ครบทุกคัน');
+      return;
+    }
     // Navigate to preview page and pass the form data
     navigate('/welfare_preview', { state: { formData, vehicles } });
   };
