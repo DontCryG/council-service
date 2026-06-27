@@ -4,7 +4,7 @@ import { useAppStore } from '../../store';
 import { sendWebhook, saveTransactionLog, ensureCitizenExists } from '../../core/api';
 import { toBlob } from 'html-to-image';
 import Button from '../../components/ui/Button';
-import { PaperPlaneTilt, ArrowLeft } from '@phosphor-icons/react';
+import { PaperPlaneTilt, ArrowLeft, Phone } from '@phosphor-icons/react';
 
 export default function WelfarePreview() {
   const location = useLocation();
@@ -154,7 +154,7 @@ export default function WelfarePreview() {
             <p className="text-[11px] font-bold text-slate-500 tracking-wider uppercase mb-2">Phone (เบอร์โทรศัพท์)</p>
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-emerald-400 font-bold">
-                <i className="ph-fill ph-phone"></i>
+                <Phone size={16} weight="fill" />
               </div>
               <p className="text-lg font-bold text-white">{formData.phoneNumber || 'UNSPECIFIED'}</p>
             </div>
