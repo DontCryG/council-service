@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
-import { collection, onSnapshot } from 'firebase/firestore';
+import { doc, collection, onSnapshot } from 'firebase/firestore';
 import { saveTransactionLog, saveTransactionImage, ensureCitizenExists } from '../../core/api';
 import { buildWelfareTradeWebhook } from '../../services/discordFormatters';
 import { toJpeg } from 'html-to-image';

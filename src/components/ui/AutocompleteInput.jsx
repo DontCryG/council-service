@@ -9,7 +9,8 @@ export default function AutocompleteInput({
   label, 
   placeholder,
   type = 'text', // 'text' or 'group'
-  orgType = null // 'GANG' | 'FAMILY'
+  orgType = null, // 'GANG' | 'FAMILY'
+  disabled = false
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -70,13 +71,14 @@ export default function AutocompleteInput({
         </label>
       )}
       
-      <div className={`flex items-center bg-slate-950 border ${isFocused || isOpen ? 'border-amber-500 ring-1 ring-amber-500' : 'border-slate-700'} rounded-lg px-4 py-3 transition-all`}>
+      <div className={`flex items-center bg-slate-950 border ${isFocused || isOpen ? 'border-amber-500 ring-1 ring-amber-500' : 'border-slate-700'} rounded-lg px-4 py-3 transition-all ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}>
         <MagnifyingGlass size={20} className="text-slate-500 mr-3 shrink-0" />
         <input 
           type="text"
           placeholder={placeholder}
-          className="w-full bg-transparent text-white placeholder-slate-500 focus:outline-none font-medium"
+          className="w-full bg-transparent text-white placeholder-slate-500 focus:outline-none font-medium disabled:cursor-not-allowed"
           value={value}
+          disabled={disabled}
           onChange={(e) => {
             onChange(e.target.value);
             setIsOpen(true);

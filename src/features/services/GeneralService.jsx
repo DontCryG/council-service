@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
-import { collection, onSnapshot } from 'firebase/firestore';
+import { doc, collection, onSnapshot } from 'firebase/firestore';
 import { transactions } from '../../data/models';
 import AutocompleteInput from '../../components/ui/AutocompleteInput';
 
@@ -27,15 +27,12 @@ export default function GeneralService() {
   const [members, setMembers] = useState(() => location.state?.members || [{ id: 1, value: '' }]);
 
   useEffect(() => {
-    const unsub = onSnapshot(collection(db, 'app_state'), (snapshot) => {
-      let loaded = false;
-      snapshot.forEach(doc => {
-        if (doc.id === 'council_members') {
-          setCouncilMembers(doc.data().members || []);
-          loaded = true;
-        }
-      });
-      if (!loaded) setCouncilMembers([]);
+    const unsub = onSnapshot(doc(db, 'app_state', 'council_members'), (docSnap) => {
+      if (docSnap.exists()) {
+        setCouncilMembers(docSnap.data().members || []);
+      } else {
+        setCouncilMembers([]);
+      }
     });
     return () => unsub();
   }, []);

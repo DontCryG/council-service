@@ -7,7 +7,8 @@ export default function GroupSelect({
   onChange, 
   orgType, 
   label = "ชื่อสังกัด (GROUP NAME)", 
-  placeholder = "ระบุชื่อแก๊ง หรือ ครอบครัว" 
+  placeholder = "ระบุชื่อแก๊ง หรือ ครอบครัว",
+  disabled = false
 }) {
   const [groups, setGroups] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -50,8 +51,8 @@ export default function GroupSelect({
         </label>
       )}
       <div 
-        className={`w-full bg-slate-950 border ${isDropdownOpen ? 'border-amber-500 ring-1 ring-amber-500' : 'border-slate-700'} rounded-lg px-4 py-3 text-white cursor-pointer flex justify-between items-center transition-all`}
-        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+        className={`w-full bg-slate-950 border ${isDropdownOpen ? 'border-amber-500 ring-1 ring-amber-500' : 'border-slate-700'} rounded-lg px-4 py-3 text-white ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} flex justify-between items-center transition-all`}
+        onClick={() => !disabled && setIsDropdownOpen(!isDropdownOpen)}
       >
         <span className={value ? 'text-white' : 'text-slate-500'}>
           {value || placeholder}
