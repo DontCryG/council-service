@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
-import { CalendarCheck, Plus, PencilSimple, Trash, MapPin, Sword, CaretLeft, CaretRight, Folder, Clock, Coins, Heartbeat, NotePencil, UserCircle, Files, Star } from '@phosphor-icons/react';
+import { CalendarCheck, Plus, PencilSimple, Trash, MapPin, Sword, CaretLeft, CaretRight, Folder, Clock, Coins, Heartbeat, NotePencil, UserCircle, Files, Star, FloppyDisk } from '@phosphor-icons/react';
 
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
@@ -159,115 +159,152 @@ export default function StoryCalendar() {
       .slice(0, 5); // Show next 5 events
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-              <CalendarCheck className="text-amber-500" />
-              STORY CALENDAR
-            </h1>
-            <p className="text-slate-400 mt-1">ปฏิทินเดินสตอรี่และวอร์ประจำเดือน</p>
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out pb-20 max-w-7xl mx-auto px-2 md:px-0">
+      
+      {/* Premium Header */}
+      <div className="relative overflow-hidden bg-slate-900/50 backdrop-blur-xl border border-slate-800/60 rounded-3xl p-6 sm:p-8 shadow-2xl">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-[80px] pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-[80px] pointer-events-none translate-y-1/2 -translate-x-1/3"></div>
+        
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div className="flex items-center gap-5">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/20 relative group">
+              <div className="absolute inset-0 bg-white/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <CalendarCheck size={32} className="text-white drop-shadow-md" weight="fill" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 tracking-tight">STORY CALENDAR</h1>
+              <p className="text-slate-400 text-sm mt-1 font-medium flex items-center gap-2">
+                <Star size={16} className="text-amber-500" />
+                ปฏิทินเดินสตอรี่และวอร์ประจำเดือน
+              </p>
+            </div>
           </div>
           
           <div className="flex flex-col sm:flex-row items-center gap-4">
-            <div className="flex items-center gap-2.5 bg-slate-900/80 px-4 py-2.5 rounded-xl border border-slate-700/50 shadow-inner">
-              <Clock size={20} weight="bold" className="text-amber-500" />
-              <span className="text-white font-black text-xl tracking-wider font-mono">
-                {realTime.toLocaleTimeString('en-GB')}
-              </span>
-              <span className="text-slate-400 font-bold text-sm">BKK</span>
+            <div className="flex items-center gap-3 bg-slate-950/80 backdrop-blur-md px-5 py-3 rounded-2xl border border-slate-700/50 shadow-inner">
+              <Clock size={24} weight="duotone" className="text-amber-500 animate-pulse" />
+              <div className="flex flex-col">
+                <span className="text-white font-black text-xl tracking-widest font-mono leading-none">
+                  {realTime.toLocaleTimeString('en-GB')}
+                </span>
+                <span className="text-amber-500/80 font-bold text-[10px] tracking-widest uppercase mt-0.5">Bangkok Time</span>
+              </div>
             </div>
             {user && (
-              <Button onClick={() => handleOpenForm(null)} className="w-full sm:w-auto">
-                <Plus size={20} weight="bold" /> เพิ่มกิจกรรม (Admin)
+              <Button 
+                onClick={() => handleOpenForm(null)} 
+                className="w-full sm:w-auto h-[48px] rounded-2xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-600 hover:border-slate-400 transition-all shadow-lg"
+              >
+                <Plus size={20} weight="bold" className="mr-2" /> เพิ่มกิจกรรม
               </Button>
             )}
           </div>
         </div>
+      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Main Calendar */}
-        <Card className="p-0 overflow-hidden lg:col-span-3 border-slate-800 bg-slate-900/50">
-        {/* Calendar Header */}
-        <div className="bg-slate-900 border-b border-slate-800 p-4 flex items-center justify-between">
-          <Button variant="ghost" size="icon" onClick={prevMonth}><CaretLeft size={24} /></Button>
-          <h2 className="text-xl font-bold text-white">
-            {monthNames[month]} <span className="text-amber-500">{year}</span>
-          </h2>
-          <Button variant="ghost" size="icon" onClick={nextMonth}><CaretRight size={24} /></Button>
-        </div>
-
-        {/* Calendar Grid */}
-        <div className="p-4 bg-slate-900/30">
-          <div className="grid grid-cols-7 gap-2 mb-2">
-            {['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'].map((d, i) => (
-              <div key={i} className="py-2 text-center text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-slate-900/50 rounded-lg">
-                {d}
-              </div>
-            ))}
-          </div>
+        <div className="lg:col-span-3 bg-slate-900/60 backdrop-blur-xl border border-slate-700/50 rounded-3xl overflow-hidden shadow-2xl flex flex-col relative">
+          <div className="absolute -top-40 -left-40 w-96 h-96 bg-blue-500/5 rounded-full blur-[100px] pointer-events-none"></div>
           
-          <div className="grid grid-cols-7 gap-2">
-            {days.map((day, idx) => {
-              if (!day) return <div key={`empty-${idx}`} className="h-28 rounded-2xl bg-slate-800/10 border border-slate-800/30 border-dashed"></div>;
-              
-              const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-              const dayEvents = events.filter(e => e.date === dateStr);
-              const isToday = todayStr === dateStr;
+          {/* Calendar Header */}
+          <div className="bg-slate-950/50 border-b border-slate-800/80 p-5 flex items-center justify-between relative z-10">
+            <Button variant="ghost" className="h-10 w-10 rounded-full hover:bg-slate-800 hover:text-white" onClick={prevMonth}><CaretLeft size={20} weight="bold" /></Button>
+            <h2 className="text-2xl font-black text-white tracking-wide">
+              {monthNames[month]} <span className="text-amber-500 font-mono ml-2">{year}</span>
+            </h2>
+            <Button variant="ghost" className="h-10 w-10 rounded-full hover:bg-slate-800 hover:text-white" onClick={nextMonth}><CaretRight size={20} weight="bold" /></Button>
+          </div>
 
-              return (
-                <div 
-                  key={day} 
-                  onClick={() => handleDayClick(dateStr)}
-                  className={`h-28 p-2 rounded-2xl overflow-y-auto custom-scrollbar relative transition-all cursor-pointer border group flex flex-col ${isToday ? 'bg-amber-500/10 border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.1)] hover:bg-amber-500/20' : 'bg-slate-900/80 border-slate-800/50 hover:border-amber-500/30 hover:bg-slate-800/80 hover:-translate-y-0.5 hover:shadow-lg'}`}
-                >
-                  <div className="flex justify-between items-start mb-1 shrink-0">
-                    <div className={`text-xs font-black flex items-center justify-center w-6 h-6 rounded-full ${isToday ? 'bg-amber-500 text-slate-900' : 'text-slate-400 group-hover:text-white'}`}>
-                      {day}
-                    </div>
-                    {/* Visual indicator that it's clickable (for admins) */}
-                    {user && (
-                      <div className="text-amber-500 opacity-0 group-hover:opacity-100 transition-opacity bg-amber-500/10 p-1 rounded-md">
-                        <Plus size={10} weight="bold" />
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="space-y-1.5 flex-1 mt-1">
-                    {dayEvents.map(evt => (
-                      <div 
-                        key={evt.id} 
-                        className={`text-[10px] p-1.5 rounded-lg cursor-pointer transition-transform hover:scale-[1.02] flex flex-col gap-1 ${
-                          evt.type?.includes('Gang') ? 'bg-red-500/10 text-red-200 border border-red-500/20' : 'bg-blue-500/10 text-blue-200 border border-blue-500/20'
-                        }`}
-                      >
-                        <div className="font-bold truncate leading-tight">{evt.team1} <span className="opacity-50 mx-0.5">v</span> {evt.team2}</div>
-                        <div className="flex justify-between items-center opacity-70 text-[9px] font-mono">
-                          <span>{evt.time}</span>
-                          {evt.type?.includes('Gang') ? <Sword size={10} /> : <MapPin size={10} />}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+          {/* Calendar Grid */}
+          <div className="p-5 flex-1 relative z-10">
+            <div className="grid grid-cols-7 gap-3 mb-3">
+              {['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสฯ', 'ศุกร์', 'เสาร์'].map((d, i) => (
+                <div key={i} className="py-2.5 text-center text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-950/40 rounded-xl border border-slate-800/50 shadow-inner">
+                  <span className="hidden sm:inline">{d}</span>
+                  <span className="sm:hidden">{d.charAt(0)}</span>
                 </div>
-              );
-            })}
+              ))}
+            </div>
+            
+            <div className="grid grid-cols-7 gap-2 sm:gap-3">
+              {days.map((day, idx) => {
+                if (!day) return <div key={`empty-${idx}`} className="h-28 sm:h-32 rounded-2xl bg-slate-800/5 border border-slate-800/20"></div>;
+                
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayEvents = events.filter(e => e.date === dateStr);
+                const isToday = todayStr === dateStr;
+
+                return (
+                  <div 
+                    key={day} 
+                    onClick={() => handleDayClick(dateStr)}
+                    className={`h-28 sm:h-32 p-2 sm:p-3 rounded-2xl overflow-y-auto custom-scrollbar relative transition-all duration-300 cursor-pointer border group flex flex-col
+                      ${isToday 
+                        ? 'bg-gradient-to-b from-amber-500/10 to-amber-900/10 border-amber-500/40 shadow-[0_0_20px_rgba(245,158,11,0.15)] hover:shadow-[0_0_25px_rgba(245,158,11,0.25)] hover:border-amber-400' 
+                        : 'bg-slate-900/40 border-slate-700/40 hover:border-slate-500/60 hover:bg-slate-800/60 hover:-translate-y-1 hover:shadow-xl'
+                      }`}
+                  >
+                    <div className="flex justify-between items-start mb-2 shrink-0">
+                      <div className={`text-sm sm:text-base font-black flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full transition-colors
+                        ${isToday ? 'bg-amber-500 text-slate-900 shadow-md' : 'text-slate-400 group-hover:text-white group-hover:bg-slate-700'}`}>
+                        {day}
+                      </div>
+                      {/* Visual indicator that it's clickable (for admins) */}
+                      {user && (
+                        <div className="text-amber-500 opacity-0 group-hover:opacity-100 transition-opacity bg-amber-500/10 p-1.5 rounded-lg">
+                          <Plus size={12} weight="bold" />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="space-y-2 flex-1 mt-1">
+                      {dayEvents.map(evt => {
+                        const isGang = evt.type?.includes('Gang');
+                        return (
+                          <div 
+                            key={evt.id} 
+                            className={`text-xs p-2 rounded-xl cursor-pointer transition-all duration-200 hover:scale-[1.03] flex flex-col gap-1 shadow-sm border
+                              ${isGang 
+                                ? 'bg-gradient-to-r from-red-950/40 to-red-900/20 text-red-100 border-red-500/30 hover:border-red-400/60 hover:shadow-red-500/10' 
+                                : 'bg-gradient-to-r from-blue-950/40 to-blue-900/20 text-blue-100 border-blue-500/30 hover:border-blue-400/60 hover:shadow-blue-500/10'
+                              }`}
+                          >
+                            <div className="font-black truncate leading-tight tracking-tight">
+                              {evt.team1} <span className="opacity-50 mx-0.5 text-[10px] font-medium">v</span> {evt.team2}
+                            </div>
+                            <div className="flex justify-between items-center opacity-80 text-[10px] font-mono">
+                              <span className="bg-black/30 px-1.5 py-0.5 rounded-md">{evt.time}</span>
+                              {isGang ? <Sword size={12} weight="fill" className="text-red-400" /> : <MapPin size={12} weight="fill" className="text-blue-400" />}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
-      </Card>
 
       {/* Upcoming Stories Sidebar */}
-      <Card className="p-5 bg-slate-900/50 border border-slate-800 lg:col-span-1 h-fit shadow-sm">
-        <h3 className="text-[17px] font-black text-white flex items-center gap-2.5 mb-5 tracking-tight">
-          <div className="p-1.5 bg-amber-500/10 text-amber-500 rounded-full">
-            <Clock size={16} weight="fill" />
+      <div className="lg:col-span-1 bg-slate-900/60 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-6 shadow-2xl relative overflow-hidden h-fit">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-bl-full pointer-events-none"></div>
+        
+        <h3 className="text-xl font-black text-white flex items-center gap-3 mb-6 tracking-wide relative z-10">
+          <div className="p-2 bg-gradient-to-br from-amber-500/20 to-orange-500/10 text-amber-500 rounded-xl border border-amber-500/20 shadow-inner">
+            <Clock size={20} weight="fill" />
           </div>
-          Upcoming Stories
+          Upcoming
         </h3>
         
-        <div className="space-y-4">
+        <div className="space-y-4 relative z-10">
           {upcomingEvents.length === 0 ? (
-            <div className="text-center py-6 text-slate-500 text-sm font-medium">ไม่มีกิจกรรมที่กำลังจะมาถึง</div>
+            <div className="text-center py-10 bg-slate-950/50 rounded-2xl border border-slate-800 border-dashed text-slate-500 text-sm font-medium">
+              ไม่มีกิจกรรมที่กำลังจะมาถึง
+            </div>
           ) : upcomingEvents.map(evt => {
             const isToday = evt.date === todayStr;
             const shortDate = evt.date.split('-').reverse().join('/');
@@ -276,36 +313,36 @@ export default function StoryCalendar() {
               <div 
                 key={evt.id} 
                 onClick={() => handleDayClick(evt.date)}
-                className="border border-slate-800 rounded-2xl p-4 shadow-sm hover:border-amber-500/50 transition-all bg-slate-800/30 cursor-pointer group"
+                className="bg-slate-950/40 border border-slate-700/50 rounded-2xl p-4 shadow-sm hover:border-amber-500/50 hover:bg-slate-800/60 hover:-translate-y-1 transition-all cursor-pointer group"
               >
                 <div className="flex justify-between items-center mb-3">
                   {isToday ? (
-                    <div className="border border-amber-500/30 text-amber-500 font-bold px-2 py-0.5 rounded flex items-center gap-1 text-[10px] bg-amber-500/10">
-                      <Star size={10} weight="fill" /> TODAY
+                    <div className="border border-amber-500/40 text-amber-400 font-black px-2.5 py-1 rounded-lg flex items-center gap-1.5 text-[10px] bg-amber-500/10 shadow-[0_0_10px_rgba(245,158,11,0.2)] tracking-widest uppercase">
+                      <Star size={12} weight="fill" /> TODAY
                     </div>
                   ) : (
-                    <div className="border border-slate-700 text-slate-400 font-bold px-2 py-0.5 rounded flex items-center gap-1 text-[10px] bg-slate-800">
+                    <div className="border border-slate-700/80 text-slate-400 font-bold px-2.5 py-1 rounded-lg flex items-center gap-1 text-[10px] bg-slate-900 shadow-inner">
                       {shortDate}
                     </div>
                   )}
-                  <div className="bg-slate-950 text-amber-500 font-bold px-2 py-0.5 rounded flex items-center gap-1 text-[10px]">
-                    <Clock size={10} weight="fill" /> {evt.time || '--:--'}
+                  <div className="bg-slate-900/80 text-amber-500 font-black px-2.5 py-1 rounded-lg flex items-center gap-1.5 text-[10px] shadow-inner border border-slate-800">
+                    <Clock size={12} weight="bold" /> {evt.time || '--:--'}
                   </div>
                 </div>
                 
-                <h4 className="font-black text-white text-sm truncate mb-3 group-hover:text-amber-500 transition-colors">
-                  {evt.team1} <span className="text-slate-500 font-medium mx-0.5 text-xs">vs</span> {evt.team2}
+                <h4 className="font-black text-white text-[15px] truncate mb-3 group-hover:text-amber-400 transition-colors tracking-tight">
+                  {evt.team1} <span className="text-slate-500 font-medium mx-1 text-xs">vs</span> {evt.team2}
                 </h4>
                 
-                <div className="flex items-center gap-2.5 text-[11px] font-bold text-slate-400 truncate">
+                <div className="flex items-center gap-2 text-[11px] font-bold text-slate-400 truncate">
                   {evt.radio && (
-                    <span className="border border-amber-500/50 text-amber-400 bg-amber-500/5 px-2 py-0.5 rounded-full shrink-0">
-                      ว.{evt.radio}
+                    <span className="border border-slate-600/50 text-slate-300 bg-slate-800/50 px-2.5 py-1 rounded-lg shrink-0 flex items-center gap-1">
+                      ว. {evt.radio}
                     </span>
                   )}
                   {evt.location && (
-                    <span className="truncate flex items-center gap-1">
-                      <MapPin size={12} weight="fill" className="text-amber-500 shrink-0" /> {evt.location}
+                    <span className="truncate flex items-center gap-1.5 text-slate-400">
+                      <MapPin size={14} weight="fill" className="text-amber-500 shrink-0" /> {evt.location}
                     </span>
                   )}
                 </div>
@@ -313,47 +350,66 @@ export default function StoryCalendar() {
             );
           })}
         </div>
-      </Card>
+      </div>
       </div>
 
       <Modal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)}
-        className="max-w-3xl"
+        className="max-w-3xl bg-slate-900/90 backdrop-blur-2xl border-slate-700/50 shadow-2xl overflow-hidden"
         title={null}
       >
         {modalView === 'DAY_VIEW' ? (
-          <div className="flex flex-col min-h-[350px]">
+          <div className="flex flex-col min-h-[350px] relative">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/5 rounded-full blur-[80px] pointer-events-none"></div>
+            
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-800/60 relative z-10">
+              <CalendarCheck size={28} weight="duotone" className="text-amber-500" />
+              <h2 className="text-2xl font-black text-white tracking-wide">
+                กิจกรรมวันที่ <span className="text-amber-500">{selectedDateForView?.split('-').reverse().join('/')}</span>
+              </h2>
+            </div>
+
             {events.filter(e => e.date === selectedDateForView).length === 0 ? (
-              <div className="flex-1 flex flex-col items-center justify-center text-slate-500 py-12">
-                <Folder size={64} weight="duotone" className="opacity-20 mb-4" />
-                <p className="font-medium text-lg opacity-60">ไม่มีตารางในวันนี้</p>
+              <div className="flex-1 flex flex-col items-center justify-center text-slate-500 py-16 relative z-10">
+                <div className="w-24 h-24 rounded-full bg-slate-800/30 flex items-center justify-center mb-4 border border-slate-700/30 shadow-inner">
+                  <Folder size={48} weight="duotone" className="text-slate-600" />
+                </div>
+                <p className="font-bold text-lg text-slate-400">ไม่มีตารางในวันนี้</p>
+                <p className="text-sm text-slate-500 mt-1">ยังไม่มีการนัดหมายใดๆ ถูกบันทึกไว้</p>
               </div>
             ) : (
-              <div className="flex-1 space-y-4 mb-6 overflow-y-auto pr-2 custom-scrollbar max-h-[60vh] pt-4">
-                {events.filter(e => e.date === selectedDateForView).map(evt => (
-                  <div key={evt.id} className="bg-slate-800/50 rounded-xl border border-slate-700 p-5 shadow-sm text-slate-300">
+              <div className="flex-1 space-y-5 mb-6 overflow-y-auto pr-2 custom-scrollbar max-h-[60vh] pt-2 relative z-10">
+                {events.filter(e => e.date === selectedDateForView).map(evt => {
+                  const isGang = evt.type?.includes('Gang');
+                  return (
+                  <div key={evt.id} className="bg-slate-950/60 rounded-2xl border border-slate-700/50 p-6 shadow-lg relative overflow-hidden group hover:border-slate-500/50 transition-all">
+                    {/* Background glow based on type */}
+                    <div className={`absolute -top-10 -right-10 w-32 h-32 rounded-full blur-[50px] opacity-20 pointer-events-none transition-opacity group-hover:opacity-40
+                      ${isGang ? 'bg-red-500' : 'bg-blue-500'}`}></div>
+
                     {/* Card Header */}
-                    <div className="flex justify-between items-start mb-4">
+                    <div className="flex justify-between items-start mb-5 relative z-10">
                       <div className="flex flex-wrap gap-2 items-center">
-                        <div className="bg-slate-950 text-amber-500 font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-sm shadow-sm">
-                          <Clock size={16} weight="fill" /> {evt.time || '--:--'}
+                        <div className="bg-slate-900 border border-amber-500/30 text-amber-500 font-black px-3 py-1.5 rounded-lg flex items-center gap-2 text-sm shadow-[0_0_10px_rgba(245,158,11,0.1)]">
+                          <Clock size={16} weight="bold" /> {evt.time || '--:--'}
                         </div>
                         {evt.radio && (
-                          <div className="bg-slate-800 border border-slate-700 text-slate-300 font-bold px-3 py-1.5 rounded-lg text-sm shadow-sm">
-                            ว. {evt.radio}
+                          <div className="bg-slate-800/80 border border-slate-600/50 text-slate-300 font-bold px-3 py-1.5 rounded-lg text-sm shadow-sm flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span> ว. {evt.radio}
                           </div>
                         )}
                       </div>
                       
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-3">
                         {evt.type && (
-                          <div className="border border-amber-500/50 text-amber-500 font-bold px-3 py-1 rounded-full text-xs bg-amber-500/10">
+                          <div className={`border font-black px-3 py-1 rounded-lg text-xs uppercase tracking-wider
+                            ${isGang ? 'border-red-500/50 text-red-400 bg-red-500/10' : 'border-blue-500/50 text-blue-400 bg-blue-500/10'}`}>
                             {evt.type}
                           </div>
                         )}
                         {user && (
-                          <button onClick={() => handleOpenForm(evt)} className="bg-slate-800 border border-slate-700 p-2 rounded-full text-slate-400 hover:text-white hover:bg-slate-700 transition-colors">
+                          <button onClick={() => handleOpenForm(evt)} className="bg-slate-800 border border-slate-600 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-amber-600 hover:border-amber-500 transition-all shadow-sm">
                             <PencilSimple size={16} weight="bold" />
                           </button>
                         )}
@@ -361,124 +417,134 @@ export default function StoryCalendar() {
                     </div>
 
                     {/* Teams & Location */}
-                    <div className="mb-4">
-                      <h3 className="text-[26px] font-black uppercase tracking-tight text-white mb-1">
-                        {evt.team1} <span className="text-slate-500 font-medium text-xl mx-2">vs</span> {evt.team2}
+                    <div className="mb-6 relative z-10">
+                      <h3 className="text-3xl font-black uppercase tracking-tight text-white mb-2 drop-shadow-md">
+                        {evt.team1} <span className="text-slate-500 font-bold text-xl mx-2 bg-slate-900 px-2 py-0.5 rounded-md">VS</span> {evt.team2}
                       </h3>
                       {evt.location && (
-                        <div className="flex items-center gap-1.5 text-slate-400 font-medium">
-                          <MapPin size={16} weight="fill" className="text-amber-500" /> {evt.location}
+                        <div className="flex items-center gap-2 text-slate-400 font-bold bg-slate-900/50 w-fit px-3 py-1.5 rounded-lg border border-slate-800/50">
+                          <MapPin size={16} weight="fill" className={isGang ? 'text-red-400' : 'text-blue-400'} /> {evt.location}
                         </div>
                       )}
                     </div>
 
                     {/* Grid Stats */}
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4 bg-slate-900/50 rounded-xl p-4 mb-4 border border-slate-800">
-                      <div className="col-span-2 md:col-span-1">
-                        <div className="text-[10px] font-bold text-slate-500 mb-1 uppercase">SCORE</div>
-                        <div className="text-sm font-bold text-white">{evt.score || '-'}</div>
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-3 bg-slate-900/80 rounded-xl p-4 border border-slate-700/50 relative z-10 shadow-inner">
+                      <div className="col-span-2 md:col-span-1 bg-slate-950/50 p-2.5 rounded-lg border border-slate-800/50">
+                        <div className="text-[10px] font-black text-slate-500 mb-1 uppercase tracking-widest">SCORE</div>
+                        <div className="text-lg font-black text-white">{evt.score || '-'}</div>
                       </div>
-                      <div>
-                        <div className="text-[10px] font-bold text-slate-500 mb-1 uppercase">STYLE</div>
-                        <div className="text-sm font-bold text-white">{evt.style || '-'}</div>
+                      <div className="bg-slate-950/50 p-2.5 rounded-lg border border-slate-800/50">
+                        <div className="text-[10px] font-black text-slate-500 mb-1 uppercase tracking-widest">STYLE</div>
+                        <div className="text-sm font-bold text-slate-200 mt-1">{evt.style || '-'}</div>
                       </div>
-                      <div>
-                        <div className="text-[10px] font-bold text-slate-500 mb-1 uppercase">BET / REWARD</div>
-                        <div className="text-sm font-bold text-amber-500">{evt.bet || '-'}</div>
+                      <div className="bg-amber-950/20 p-2.5 rounded-lg border border-amber-500/20 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-8 h-8 bg-amber-500/20 blur-md rounded-full -mt-2 -mr-2"></div>
+                        <div className="text-[10px] font-black text-amber-500/70 mb-1 uppercase tracking-widest relative z-10">BET / REWARD</div>
+                        <div className="text-sm font-black text-amber-400 mt-1 relative z-10">{evt.bet || '-'}</div>
                       </div>
-                      <div>
-                        <div className="text-[10px] font-bold text-slate-500 mb-1 uppercase">FIGHTS</div>
-                        <div className="text-sm font-bold text-white">{evt.fights || '-'}</div>
+                      <div className="bg-slate-950/50 p-2.5 rounded-lg border border-slate-800/50">
+                        <div className="text-[10px] font-black text-slate-500 mb-1 uppercase tracking-widest">FIGHTS</div>
+                        <div className="text-sm font-bold text-slate-200 mt-1">{evt.fights || '-'}</div>
                       </div>
-                      <div>
-                        <div className="text-[10px] font-bold text-slate-500 mb-1 uppercase">MEDIC COOLDOWN</div>
-                        <div className="text-sm font-bold text-white flex items-center gap-1">
-                          <Heartbeat size={14} weight="fill" className="text-amber-500" /> {evt.medic || '-'}
+                      <div className="bg-slate-950/50 p-2.5 rounded-lg border border-slate-800/50">
+                        <div className="text-[10px] font-black text-slate-500 mb-1 uppercase tracking-widest">MEDIC CD</div>
+                        <div className="text-sm font-bold text-slate-200 flex items-center gap-1.5 mt-1">
+                          <Heartbeat size={14} weight="fill" className="text-rose-500" /> {evt.medic || '-'}
                         </div>
                       </div>
                     </div>
 
                     {/* Extended Details */}
                     {evt.description && (
-                      <div className="border-l-4 border-amber-500 pl-4 py-1 mt-6">
-                        <div className="whitespace-pre-wrap text-[13px] font-medium text-slate-300 leading-relaxed">
+                      <div className="relative mt-5 pt-5 border-t border-slate-800 z-10">
+                        <div className="absolute left-0 top-5 bottom-0 w-1 bg-gradient-to-b from-amber-500 to-transparent rounded-full"></div>
+                        <div className="pl-4 whitespace-pre-wrap text-sm font-medium text-slate-300 leading-relaxed">
                           {evt.description}
                         </div>
                       </div>
                     )}
                   </div>
-                ))}
+                  );
+                })}
               </div>
             )}
 
             {user && (
-              <div className="mt-auto pt-4 border-t border-slate-800">
+              <div className="mt-auto pt-5 border-t border-slate-800/60 relative z-10">
                 <Button 
-                  className="w-full py-4 text-amber-500 hover:text-amber-400 bg-slate-900 hover:bg-slate-800 border border-slate-800 flex justify-center gap-2 items-center text-lg font-bold rounded-xl shadow-inner"
+                  className="w-full py-4 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-amber-600 hover:to-orange-600 text-amber-500 hover:text-white border border-slate-700 hover:border-amber-500 flex justify-center gap-2 items-center text-lg font-black rounded-2xl shadow-lg transition-all duration-300 group overflow-hidden relative"
                   onClick={() => handleOpenForm(null, selectedDateForView)}
                 >
-                  <Plus size={24} weight="bold" /> เพิ่ม Event ในวันนี้
+                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
+                  <Plus size={24} weight="bold" className="relative z-10 group-hover:rotate-90 transition-transform duration-300" /> 
+                  <span className="relative z-10">เพิ่มกิจกรรมลงในวันนี้</span>
                 </Button>
               </div>
             )}
           </div>
         ) : (
-          <div className="pt-2">
-            <div className="mb-6">
-              <div className="text-[28px] font-black text-white tracking-tight flex items-center gap-2">Story Event 👑</div>
-              <div className="text-[13px] font-medium text-slate-400 mt-0.5">เพิ่มหรือแก้ไขข้อมูลไทม์ไลน์ (รองรับการขึ้นบรรทัดใหม่)</div>
+          <div className="relative pt-2">
+            <div className="absolute -top-20 -right-20 w-64 h-64 bg-amber-500/10 rounded-full blur-[80px] pointer-events-none"></div>
+            
+            <div className="mb-8 border-b border-slate-800/60 pb-4 relative z-10">
+              <div className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500 flex items-center gap-3">
+                {editingId ? <PencilSimple weight="bold" className="text-amber-500" /> : <Plus weight="bold" className="text-amber-500" />}
+                {editingId ? 'แก้ไขข้อมูลกิจกรรม' : 'เพิ่มกิจกรรมใหม่'}
+              </div>
+              <div className="text-sm font-medium text-slate-400 mt-2 flex items-center gap-2">
+                <NotePencil size={16} /> ระบุรายละเอียดของเหตุการณ์เพื่อแจ้งให้ทุกคนทราบ
+              </div>
             </div>
             
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="bg-slate-800/50 rounded-xl p-6 shadow-sm border border-slate-700 relative overflow-hidden">
-                {/* Decorative blob like in design */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-bl-full -z-0"></div>
-                
-                <div className="relative z-10">
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold text-slate-400">Date (วันที่) <span className="text-amber-500">*</span></label>
+            <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
+              <div className="grid grid-cols-2 gap-5 mb-6">
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Date (วันที่) <span className="text-amber-500">*</span></label>
                   <input 
                     type="date"
                     required 
                     value={formData.date}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-amber-500 font-medium"
+                    className="w-full bg-slate-950/80 border border-slate-700/50 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 font-medium shadow-inner transition-colors"
                     onChange={e => setFormData({...formData, date: e.target.value})}
                   />
                 </div>
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold text-slate-400">Time (เวลา) <span className="text-amber-500">*</span></label>
-                  <input 
-                    type="time"
-                    required 
-                    value={formData.time}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-amber-500 font-medium"
-                    onChange={e => setFormData({...formData, time: e.target.value})}
-                  />
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Time (เวลา) <span className="text-amber-500">*</span></label>
+                  <div className="relative">
+                    <Clock size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                    <input 
+                      type="time"
+                      required 
+                      value={formData.time}
+                      className="w-full bg-slate-950/80 border border-slate-700/50 rounded-xl pl-10 pr-4 py-3 text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 font-medium shadow-inner transition-colors"
+                      onChange={e => setFormData({...formData, time: e.target.value})}
+                    />
+                  </div>
                 </div>
               </div>
 
-              <div className="bg-slate-900/50 rounded-xl p-5 border border-slate-700 space-y-5">
+              <div className="bg-slate-900/60 rounded-2xl p-6 border border-slate-700/50 shadow-inner space-y-6">
                 
                 <div>
-                  <label className="text-xs font-bold text-slate-400 mb-2 block">Matchup (คู่กรณี) <span className="text-amber-500">*</span></label>
+                  <label className="text-xs font-black text-slate-400 mb-3 block uppercase tracking-widest">Matchup (คู่กรณี) <span className="text-amber-500">*</span></label>
                   <div className="flex items-center gap-3">
                     <input 
                       type="text"
                       placeholder="Team A"
                       required
-                      className="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-center font-bold text-white focus:outline-none focus:border-amber-500"
+                      className="flex-1 bg-slate-950/80 border border-slate-700/50 rounded-xl px-4 py-3.5 text-center font-black text-white text-lg focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 shadow-inner transition-colors uppercase placeholder:normal-case"
                       value={formData.team1}
                       onChange={e => {
                         const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.[\]]/g, '').toUpperCase();
                         setFormData({...formData, team1: val});
                       }}
                     />
-                    <div className="bg-slate-950 text-amber-500 font-black px-3 py-2 rounded-lg text-sm border border-slate-800 shadow-sm">VS</div>
+                    <div className="bg-slate-800 text-amber-500 font-black px-4 py-3.5 rounded-xl border border-slate-700 shadow-md">VS</div>
                     <input 
                       type="text"
                       placeholder="Team B"
-                      className="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-center font-bold text-white focus:outline-none focus:border-amber-500"
+                      className="flex-1 bg-slate-950/80 border border-slate-700/50 rounded-xl px-4 py-3.5 text-center font-black text-white text-lg focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 shadow-inner transition-colors uppercase placeholder:normal-case"
                       value={formData.team2}
                       onChange={e => {
                         const val = e.target.value.replace(/[^A-Za-z0-9\s\-_.[\]]/g, '').toUpperCase();
@@ -488,72 +554,89 @@ export default function StoryCalendar() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-400">Type (ประเภท)</label>
-                    <select 
-                      className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-amber-500 font-medium"
-                      value={formData.type}
-                      onChange={e => setFormData({...formData, type: e.target.value})}
-                    >
-                      <option value="">- เลือกประเภท -</option>
-                      <option value="Gang">Gang</option>
-                      <option value="Family">Family</option>
-                      <option value="Gang - Family">Gang - Family</option>
-                      <option value="Gang - Citizen">Gang - Citizen</option>
-                      <option value="Family - Citizen">Family - Citizen</option>
-                    </select>
+                <div className="grid grid-cols-2 gap-5">
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Type (ประเภท)</label>
+                    <div className="relative">
+                      <select 
+                        className="w-full bg-slate-950/80 border border-slate-700/50 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 font-medium shadow-inner transition-colors appearance-none"
+                        value={formData.type}
+                        onChange={e => setFormData({...formData, type: e.target.value})}
+                      >
+                        <option value="">- เลือกประเภท -</option>
+                        <option value="Gang">Gang</option>
+                        <option value="Family">Family</option>
+                        <option value="Gang - Family">Gang - Family</option>
+                        <option value="Gang - Citizen">Gang - Citizen</option>
+                        <option value="Family - Citizen">Family - Citizen</option>
+                      </select>
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-400">Location (สถานที่)</label>
-                    <input 
-                      type="text"
-                      placeholder="เช่น Red Garage"
-                      className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-amber-500 font-medium"
-                      value={formData.location}
-                      onChange={e => setFormData({...formData, location: e.target.value})}
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-400">Fights (จำนวนไฟต์)</label>
-                    <input 
-                      type="number"
-                      placeholder="0"
-                      className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-amber-500 font-medium"
-                      value={formData.fights}
-                      onChange={e => setFormData({...formData, fights: e.target.value})}
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-400">Radio (ว. ที่ใช้)</label>
-                    <select 
-                      className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-amber-500 font-medium"
-                      value={formData.radio}
-                      onChange={e => setFormData({...formData, radio: e.target.value})}
-                    >
-                      <option value="">- เลือกวิทยุ -</option>
-                      <option value="4">ว.4</option>
-                      <option value="5">ว.5</option>
-                      <option value="6">ว.6</option>
-                      <option value="7">ว.7</option>
-                      <option value="8">ว.8</option>
-                      <option value="9">ว.9</option>
-                    </select>
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Location (สถานที่)</label>
+                    <div className="relative">
+                      <MapPin size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                      <input 
+                        type="text"
+                        placeholder="เช่น Red Garage"
+                        className="w-full bg-slate-950/80 border border-slate-700/50 rounded-xl pl-10 pr-4 py-3 text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 font-medium shadow-inner transition-colors"
+                        value={formData.location}
+                        onChange={e => setFormData({...formData, location: e.target.value})}
+                      />
+                    </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-400">Bet / Reward (เดิมพัน / รางวัล)</label>
+                <div className="grid grid-cols-2 gap-5">
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Fights (จำนวนไฟต์)</label>
+                    <div className="relative">
+                      <Sword size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                      <input 
+                        type="number"
+                        placeholder="0"
+                        className="w-full bg-slate-950/80 border border-slate-700/50 rounded-xl pl-10 pr-4 py-3 text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 font-medium shadow-inner transition-colors"
+                        value={formData.fights}
+                        onChange={e => setFormData({...formData, fights: e.target.value})}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Radio (ว. ที่ใช้)</label>
+                    <div className="relative">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">ว.</span>
+                      <select 
+                        className="w-full bg-slate-950/80 border border-slate-700/50 rounded-xl pl-10 pr-4 py-3 text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 font-medium shadow-inner transition-colors appearance-none"
+                        value={formData.radio}
+                        onChange={e => setFormData({...formData, radio: e.target.value})}
+                      >
+                        <option value="">- เลือกวิทยุ -</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                      </select>
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-5">
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Bet / Reward (เดิมพัน)</label>
                     <div className="relative">
                       <Coins size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-amber-500" />
                       <input 
                         type="text"
                         placeholder="เช่น 50,000"
-                        className="w-full bg-slate-900 border border-slate-700 rounded-lg pl-10 pr-4 py-2.5 text-white focus:outline-none focus:border-amber-500 font-medium"
+                        className="w-full bg-slate-950/80 border border-amber-500/30 rounded-xl pl-10 pr-4 py-3 text-amber-400 font-bold focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 shadow-inner transition-colors placeholder:text-amber-700/30"
                         value={formData.bet}
                         onChange={e => {
                           const numStr = e.target.value.replace(/\D/g, '');
@@ -563,14 +646,14 @@ export default function StoryCalendar() {
                       />
                     </div>
                   </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-400">Medic Cooldown (คูลดาวน์หมอ)</label>
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Medic Cooldown (คูลดาวน์หมอ)</label>
                     <div className="relative">
-                      <Heartbeat size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-amber-500" />
+                      <Heartbeat size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-rose-500" />
                       <input 
                         type="text"
                         placeholder="เช่น 10 นาที"
-                        className="w-full bg-slate-900 border border-slate-700 rounded-lg pl-10 pr-4 py-2.5 text-white focus:outline-none focus:border-amber-500 font-medium"
+                        className="w-full bg-slate-950/80 border border-slate-700/50 rounded-xl pl-10 pr-4 py-3 text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 font-medium shadow-inner transition-colors"
                         value={formData.medic}
                         onChange={e => setFormData({...formData, medic: e.target.value})}
                       />
@@ -578,57 +661,57 @@ export default function StoryCalendar() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-400">Style (รูปแบบ)</label>
+                <div className="grid grid-cols-2 gap-5">
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Style (รูปแบบ)</label>
                     <input 
                       type="text"
                       placeholder="เช่น Melee / Gun"
-                      className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-amber-500 font-medium"
+                      className="w-full bg-slate-950/80 border border-slate-700/50 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 font-medium shadow-inner transition-colors"
                       value={formData.style}
                       onChange={e => setFormData({...formData, style: e.target.value})}
                     />
                   </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-400">Score (ผลคะแนน)</label>
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Score (ผลคะแนน)</label>
                     <input 
                       type="text"
                       placeholder="เช่น 2-1"
-                      className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-amber-500 font-black text-center"
+                      className="w-full bg-slate-950/80 border border-slate-700/50 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 font-black text-center shadow-inner transition-colors"
                       value={formData.score}
                       onChange={e => setFormData({...formData, score: e.target.value})}
                     />
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold text-slate-400">Description (รายละเอียดเพิ่มเติม)</label>
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Description (รายละเอียดเพิ่มเติม)</label>
                   <textarea 
                     rows="4"
                     placeholder="อธิบายสตอรี่คร่าวๆ (รองรับการขึ้นบรรทัดใหม่ตามที่คัดลอกมาวาง)..."
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-amber-500 font-medium resize-y"
+                    className="w-full bg-slate-950/80 border border-slate-700/50 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 font-medium resize-y shadow-inner transition-colors custom-scrollbar"
                     value={formData.description}
                     onChange={e => setFormData({...formData, description: e.target.value})}
                   ></textarea>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-700">
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-400 flex items-center gap-1"><UserCircle size={14} className="text-amber-500" /> Council Staff (สภาผู้ดูแล)</label>
+                <div className="grid grid-cols-2 gap-5 pt-6 border-t border-slate-800/80">
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5"><UserCircle size={16} className="text-amber-500" /> Council Staff (สภาผู้ดูแล)</label>
                     <input 
                       type="text"
                       placeholder="ชื่อสภา"
-                      className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-400 font-medium cursor-not-allowed"
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-slate-500 font-bold cursor-not-allowed shadow-inner"
                       value={formData.staff}
                       readOnly
                     />
                   </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-400 flex items-center gap-1"><Files size={14} className="text-slate-500" /> Note (หมายเหตุภายใน)</label>
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5"><Files size={16} className="text-slate-500" /> Note (หมายเหตุภายใน)</label>
                     <input 
                       type="text"
                       placeholder="หมายเหตุ..."
-                      className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-amber-500 font-medium"
+                      className="w-full bg-slate-950/80 border border-slate-700/50 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 font-medium shadow-inner transition-colors"
                       value={formData.note}
                       onChange={e => setFormData({...formData, note: e.target.value})}
                     />
@@ -636,19 +719,37 @@ export default function StoryCalendar() {
                 </div>
 
               </div>
-            </div>
-            </div>
 
-            <div className="flex justify-between items-center bg-slate-900 p-4 rounded-xl shadow-lg mt-4 border border-slate-800">
+            <div className="flex justify-between items-center bg-slate-950/50 p-5 rounded-2xl shadow-lg mt-8 border border-slate-800/80 backdrop-blur-md">
               {editingId ? (
-                <Button type="button" variant="danger" className="bg-transparent border border-red-500/50 text-red-500 hover:bg-red-500 hover:text-white" onClick={() => triggerDelete(editingId)}>ลบกิจกรรม</Button>
+                <Button 
+                  type="button" 
+                  variant="danger" 
+                  className="bg-red-950/30 border border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white hover:border-red-500 font-bold rounded-xl px-6 h-[44px]" 
+                  onClick={() => triggerDelete(editingId)}
+                >
+                  <Trash size={18} className="mr-2" /> ลบกิจกรรม
+                </Button>
               ) : <div></div>}
+              
               <div className="flex gap-3">
-                <Button type="button" variant="ghost" className="text-slate-400 hover:text-white" onClick={() => setModalView('DAY_VIEW')}>ยกเลิก</Button>
-                <Button type="submit" className="bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-8">บันทึกข้อมูล</Button>
+                <Button 
+                  type="button" 
+                  variant="ghost" 
+                  className="text-slate-400 hover:text-white font-bold rounded-xl px-6 h-[44px]" 
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  ยกเลิก
+                </Button>
+                <Button 
+                  type="submit" 
+                  className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-black rounded-xl px-8 h-[44px] shadow-[0_0_15px_rgba(245,158,11,0.3)] border border-amber-500/50"
+                >
+                  <FloppyDisk size={20} weight="fill" className="mr-2" /> บันทึกข้อมูล
+                </Button>
               </div>
             </div>
-          </form>
+            </form>
           </div>
         )}
       </Modal>
