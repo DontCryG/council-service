@@ -171,6 +171,21 @@ export default function GroupManager() {
         </Button>
       </div>
 
+      <div className="grid grid-cols-3 gap-4 mb-2">
+        <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4 flex flex-col items-center justify-center shadow-inner">
+          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">องค์กรทั้งหมด</span>
+          <span className="text-3xl font-black text-white">{groups.length}</span>
+        </div>
+        <div className="bg-amber-900/10 border border-amber-500/20 rounded-xl p-4 flex flex-col items-center justify-center shadow-inner">
+          <span className="text-xs font-bold text-amber-500/70 uppercase tracking-wider mb-1">GANG</span>
+          <span className="text-3xl font-black text-amber-500">{groups.filter(g => g.type === 'GANG').length}</span>
+        </div>
+        <div className="bg-blue-900/10 border border-blue-500/20 rounded-xl p-4 flex flex-col items-center justify-center shadow-inner">
+          <span className="text-xs font-bold text-blue-500/70 uppercase tracking-wider mb-1">FAMILY</span>
+          <span className="text-3xl font-black text-blue-500">{groups.filter(g => g.type === 'FAMILY').length}</span>
+        </div>
+      </div>
+
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
           <MagnifyingGlass size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
