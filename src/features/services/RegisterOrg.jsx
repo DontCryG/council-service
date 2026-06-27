@@ -61,7 +61,12 @@ export default function RegisterOrg() {
     }
     
     navigate('/register_org_preview', {
-      state: { formData, councilMembers, coLeaders, members: members.filter(m => m.name.trim() !== '') }
+      state: { 
+        formData, 
+        councilMembers, 
+        coLeaders: coLeaders.filter(c => c.name.trim() !== ''), 
+        members: members.filter(m => m.name.trim() !== '') 
+      }
     });
   };
 

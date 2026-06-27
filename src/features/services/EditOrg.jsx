@@ -100,7 +100,7 @@ export default function EditOrg() {
     let total = 0;
     if (formData.changeInfo) total += 500000;
     if (formData.editTexture) total += (500000 * Math.max(1, formData.textureCount));
-    if (formData.addCloth) total += (500000 * Math.max(1, formData.textureCount));
+    if (formData.addCloth) total += (500000 * Math.max(1, formData.clothCount));
     if (formData.bulkChange) total += 1500000;
     if (formData.addAccessory) total += 1000000;
     return total;
@@ -265,14 +265,28 @@ export default function EditOrg() {
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                  {/* Texture Count */}
-                 <div className="space-y-3">
-                   <div className="text-[11px] font-black text-slate-500 uppercase tracking-widest">จำนวนชุด (TEXTURE) <span className="text-slate-400 font-medium normal-case ml-1">*มีผลต่อราคา</span></div>
-                   <div className="flex items-center bg-slate-950/50 border border-slate-700 rounded-xl overflow-hidden h-12 shadow-inner">
-                     <button type="button" onClick={() => setFormData(p => ({...p, textureCount: Math.max(1, p.textureCount - 1)}))} className="w-14 h-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 font-bold transition-colors">-</button>
-                     <div className="flex-1 text-center font-bold text-white text-lg">{formData.textureCount}</div>
-                     <button type="button" onClick={() => setFormData(p => ({...p, textureCount: p.textureCount + 1}))} className="w-14 h-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 font-bold transition-colors">+</button>
+                 {formData.editTexture && (
+                   <div className="space-y-3 animate-in fade-in zoom-in duration-300">
+                     <div className="text-[11px] font-black text-slate-500 uppercase tracking-widest">จำนวนชุด (แก้ TEXTURE) <span className="text-slate-400 font-medium normal-case ml-1">*มีผลต่อราคา</span></div>
+                     <div className="flex items-center bg-slate-950/50 border border-slate-700 rounded-xl overflow-hidden h-12 shadow-inner">
+                       <button type="button" onClick={() => setFormData(p => ({...p, textureCount: Math.max(1, p.textureCount - 1)}))} className="w-14 h-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 font-bold transition-colors">-</button>
+                       <div className="flex-1 text-center font-bold text-white text-lg">{formData.textureCount}</div>
+                       <button type="button" onClick={() => setFormData(p => ({...p, textureCount: p.textureCount + 1}))} className="w-14 h-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 font-bold transition-colors">+</button>
+                     </div>
                    </div>
-                 </div>
+                 )}
+
+                 {/* Cloth Count */}
+                 {formData.addCloth && (
+                   <div className="space-y-3 animate-in fade-in zoom-in duration-300">
+                     <div className="text-[11px] font-black text-slate-500 uppercase tracking-widest">จำนวนชุด (ลงใหม่) <span className="text-slate-400 font-medium normal-case ml-1">*มีผลต่อราคา</span></div>
+                     <div className="flex items-center bg-slate-950/50 border border-slate-700 rounded-xl overflow-hidden h-12 shadow-inner">
+                       <button type="button" onClick={() => setFormData(p => ({...p, clothCount: Math.max(1, p.clothCount - 1)}))} className="w-14 h-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 font-bold transition-colors">-</button>
+                       <div className="flex-1 text-center font-bold text-white text-lg">{formData.clothCount}</div>
+                       <button type="button" onClick={() => setFormData(p => ({...p, clothCount: p.clothCount + 1}))} className="w-14 h-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 font-bold transition-colors">+</button>
+                     </div>
+                   </div>
+                 )}
 
                  {/* HEX Color */}
                  <div className="space-y-3">
