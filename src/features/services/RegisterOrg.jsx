@@ -83,7 +83,11 @@ export default function RegisterOrg() {
       </div>
       
       {step === 1 ? (
-        <div className="max-w-4xl mx-auto w-full">
+        <div className="max-w-4xl mx-auto w-full pt-10">
+          <div className="text-center mb-10">
+            <h1 className="text-3xl font-black text-white tracking-widest">เลือกประเภทสังกัด</h1>
+            <p className="text-slate-400 mt-2">กรุณาเลือกประเภทสังกัดที่คุณต้องการจดทะเบียน</p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <button
                 type="button"
