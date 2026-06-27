@@ -52,7 +52,7 @@ export default function StoryCalendar() {
 
   const saveEventsToDb = async (newEvents) => {
     try {
-      await setDoc(doc(db, 'app_state', 'calendar'), {
+      await setDoc(doc(db, 'app_state', 'stories'), {
         events: newEvents,
         updated_at: new Date().getTime()
       });
