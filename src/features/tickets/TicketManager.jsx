@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { db } from '../../core/firebase';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { useAppStore } from '../../store';
-import { Ticket, Clock, CheckCircle, XCircle, Gear, MagnifyingGlass, FileText, Download, ShieldChevron, House, CalendarBlank, WarningCircle, FloppyDisk, ArrowCounterClockwise, Trash, ChartBar, SpeakerHigh } from '@phosphor-icons/react';
+import { Ticket, Clock, CheckCircle, XCircle, Gear, MagnifyingGlass, FileText, Download, ShieldChevron, House, CalendarBlank, WarningCircle, FloppyDisk, ArrowCounterClockwise, Trash, ChartBar, SpeakerHigh, UserCircle, CurrencyDollar } from '@phosphor-icons/react';
 
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
