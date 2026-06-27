@@ -10,7 +10,7 @@ import Modal from '../../components/ui/Modal';
 import { Card } from '../../components/ui/Card';
 
 export default function GroupManager() {
-  const { user } = useAppStore();
+  const { user, showAlert } = useAppStore();
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
   
@@ -74,7 +74,7 @@ export default function GroupManager() {
       });
     } catch (e) {
       console.error(e);
-      alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+      showAlert('error', 'เกิดข้อผิดพลาดในการบันทึกข้อมูล');
     }
   };
 
@@ -128,6 +128,7 @@ export default function GroupManager() {
     }
     
     handleSaveToDb(updatedGroups);
+    showAlert('success', 'บันทึกข้อมูลองค์กรเรียบร้อยแล้ว');
     setIsModalOpen(false);
   };
 
@@ -142,6 +143,7 @@ export default function GroupManager() {
       handleSaveToDb(updatedGroups);
       setShowConfirmDelete(false);
       setIsModalOpen(false);
+      showAlert('success', 'ลบข้อมูลองค์กรเรียบร้อยแล้ว');
     }
   };
 

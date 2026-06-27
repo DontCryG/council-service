@@ -42,8 +42,20 @@ export default function CouncilLoanCreate() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!borrowerName.trim()) {
+      showAlert('error', 'กรุณาระบุชื่อผู้กู้ยืม');
+      return;
+    }
+    if (!reason.trim()) {
+      showAlert('error', 'กรุณาระบุเหตุผลการกู้');
+      return;
+    }
     if (principalAmount <= 0) {
       showAlert('error', 'เงินต้นต้องมากกว่า 0');
+      return;
+    }
+    if (interestRate === '' || rateAmount < 0) {
+      showAlert('error', 'กรุณาระบุอัตราดอกเบี้ยให้ถูกต้อง (หากไม่มีให้ใส่ 0)');
       return;
     }
     if (!dueDate) {
