@@ -123,7 +123,7 @@ export default function Welfare() {
                 onChange={val => setFormData({...formData, requester: val})}
               />
             </div>
-            <div className="space-y-3 pt-2">
+            <div className="space-y-3">
               <label className="text-[13px] font-bold text-slate-400 tracking-wide">3. เบอร์โทรศัพท์ (6 หลัก)</label>
               <div className="flex items-center bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 transition-all focus-within:border-amber-500 focus-within:ring-1 focus-within:ring-amber-500">
                 <Phone size={20} className="text-slate-500 mr-3 shrink-0" />

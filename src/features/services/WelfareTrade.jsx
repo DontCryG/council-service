@@ -158,11 +158,11 @@ export default function WelfareTrade() {
 
           {formData.tradeType === 'WEAPON' && (
             <div className="space-y-3">
-              <label className="text-[14px] font-bold text-slate-300 tracking-wide">
+              <label className="text-sm font-bold text-slate-400 uppercase tracking-wide">
                 1. รูปแบบการออก (PRICING TYPE)
               </label>
               <select 
-                className="w-full bg-slate-950 border border-red-500/30 rounded-xl px-4 py-3.5 text-slate-200 font-bold focus:outline-none focus:border-red-500 focus:bg-slate-900 transition-colors"
+                className="w-full bg-slate-950 border border-red-500/30 rounded-lg px-4 py-3 text-slate-200 font-bold focus:outline-none focus:border-red-500 focus:bg-slate-900 transition-colors"
                 value={formData.pricingType}
                 onChange={e => setFormData({...formData, pricingType: e.target.value})}
               >
@@ -173,7 +173,7 @@ export default function WelfareTrade() {
             </div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-3">
               <GroupSelect 
                 label={`${formData.tradeType === 'WEAPON' ? '2' : '1'}. ชื่อ GANG / FAMILY`}
@@ -184,11 +184,11 @@ export default function WelfareTrade() {
               />
             </div>
             <div className="space-y-3">
-              <label className="text-[14px] font-bold text-slate-300 tracking-wide">
+              <label className="text-sm font-bold text-slate-400 uppercase tracking-wide">
                 {formData.tradeType === 'WEAPON' ? '3' : '2'}. สภาที่รับเรื่อง
               </label>
               <select 
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-200 font-medium focus:outline-none focus:border-violet-500 focus:bg-slate-900 focus:ring-1 focus:ring-violet-500 transition-colors appearance-none"
+                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 text-slate-200 font-medium focus:outline-none focus:border-amber-500 focus:bg-slate-900 focus:ring-1 focus:ring-amber-500 transition-colors"
                 value={formData.councilStaffId}
                 onChange={e => setFormData({...formData, councilStaffId: e.target.value})}
                 required
