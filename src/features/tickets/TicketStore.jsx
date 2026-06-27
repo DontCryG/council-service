@@ -170,7 +170,7 @@ export default function TicketStore() {
             <p className="text-slate-400 text-sm">ส่งคำขอซื้อ Ticket สำหรับซื้อของสวัสดิการสภา</p>
           </div>
         </div>
-        <Button variant="ghost" onClick={() => selectedType ? setSelectedType(null) : navigate('/home')} className="text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl">
+        <Button variant="ghost" onClick={() => navigate('/home')} className="text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl">
           <ArrowLeft size={20} className="mr-2" /> <span className="hidden sm:inline">กลับไปศูนย์บัญชาการ</span>
         </Button>
       </div>
