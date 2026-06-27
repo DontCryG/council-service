@@ -34,28 +34,6 @@ export default function Login() {
     setLoading(true);
     setError('');
     try {
-      // 1. Try to login with Council Member username & password
-      const docRef = doc(db, 'app_state', 'council_members');
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const members = docSnap.data().members || [];
-        const member = members.find(m => m.username === email && m.password === password);
-        if (member) {
-          const localUser = {
-            uid: member.id,
-            email: member.username, // spoof email to keep UI working
-            displayName: member.name,
-            role: member.role,
-            isCustomAuth: true
-          };
-          localStorage.setItem('council_user', JSON.stringify(localUser));
-          setUser(localUser);
-          navigate('/home');
-          return;
-        }
-      }
-
-      // 2. Fallback to Firebase Email/Password
       await signInWithEmailAndPassword(auth, email, password);
       navigate('/home');
     } catch (err) {

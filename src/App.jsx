@@ -167,6 +167,9 @@ function App() {
             const member = members.find(m => m.username === firebaseUser.email);
             if (member && member.name) {
               setCouncilUsername(member.name);
+              // Attach custom fields
+              firebaseUser.role = member.role;
+              firebaseUser.customName = member.name;
             }
           }
         } catch (e) {
@@ -174,16 +177,7 @@ function App() {
         }
         setUser(firebaseUser);
       } else {
-        const localUserStr = localStorage.getItem('council_user');
-        if (localUserStr) {
-          try {
-            setUser(JSON.parse(localUserStr));
-          } catch(e) {
-            setUser(null);
-          }
-        } else {
-          setUser(null);
-        }
+        setUser(null);
       }
     });
     
