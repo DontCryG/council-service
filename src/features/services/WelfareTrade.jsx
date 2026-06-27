@@ -22,9 +22,10 @@ export default function WelfareTrade() {
     orgType: 'GANG', // GANG | FAMILY
     orgName: '',
     oldOwner: '',
+    oldOwnerPhone: '',
     newOwner: '',
+    newOwnerPhone: '',
     councilStaffId: '',
-    phoneNumber: '',
     pricingType: '300,000'
   });
   
@@ -52,12 +53,12 @@ export default function WelfareTrade() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.orgName || !formData.oldOwner || !formData.newOwner || !formData.councilStaffId || !formData.phoneNumber) {
+    if (!formData.orgName || !formData.oldOwner || !formData.newOwner || !formData.councilStaffId || !formData.oldOwnerPhone || !formData.newOwnerPhone) {
       showAlert('error', 'กรุณากรอกข้อมูลให้ครบถ้วน');
       return;
     }
-    if (formData.phoneNumber.length !== 6 || isNaN(formData.phoneNumber)) {
-      showAlert('error', 'กรุณาระบุเบอร์โทรศัพท์เป็นตัวเลข 6 หลัก');
+    if (formData.oldOwnerPhone.length !== 6 || formData.newOwnerPhone.length !== 6) {
+      showAlert('error', 'กรุณาระบุเบอร์โทรศัพท์เป็นตัวเลข 6 หลักทั้งสองเบอร์');
       return;
     }
     if (items.some(i => !i.name.trim())) {
@@ -198,53 +199,73 @@ export default function WelfareTrade() {
                 ))}
               </select>
             </div>
-            <div className="space-y-3">
-              <label className="text-[14px] font-bold text-slate-300 tracking-wide">
-                {formData.tradeType === 'WEAPON' ? '4' : '3'}. เบอร์โทรศัพท์ (6 หลัก)
-              </label>
-              <input
-                type="text"
-                maxLength="6"
-                placeholder="000000"
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-violet-500 transition-colors"
-                value={formData.phoneNumber}
-                onChange={(e) => {
-                  const val = e.target.value.replace(/[^0-9]/g, '');
-                  setFormData({...formData, phoneNumber: val});
-                }}
-              />
-            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-3">
-              <label className="text-[14px] font-bold text-slate-300 tracking-wide">
-                {formData.tradeType === 'WEAPON' ? '5' : '4'}. {formData.tradeType === 'WEAPON' ? 'ผู้ส่งมอบ (คนเก่า)' : 'ผู้ถือรถ (คนเก่า)'}
-              </label>
-              <AutocompleteInput 
-                placeholder={formData.tradeType === 'WEAPON' ? 'ชื่อผู้ถืออาวุธเดิม' : 'ชื่อเจ้าของรถเดิม'}
-                type="text"
-                value={formData.oldOwner}
-                onChange={val => setFormData({...formData, oldOwner: val})}
-              />
+            <div className="space-y-4 bg-slate-950/40 p-5 rounded-2xl border border-slate-800">
+              <div className="space-y-3">
+                <label className="text-[14px] font-bold text-slate-300 tracking-wide">
+                  {formData.tradeType === 'WEAPON' ? '4' : '3'}. {formData.tradeType === 'WEAPON' ? 'ผู้ส่งมอบ (คนเก่า)' : 'ผู้ถือรถ (คนเก่า)'}
+                </label>
+                <AutocompleteInput 
+                  placeholder={formData.tradeType === 'WEAPON' ? 'ชื่อผู้ถืออาวุธเดิม' : 'ชื่อเจ้าของรถเดิม'}
+                  type="text"
+                  value={formData.oldOwner}
+                  onChange={val => setFormData({...formData, oldOwner: val})}
+                />
+              </div>
+              <div className="space-y-3">
+                <label className="text-[14px] font-bold text-slate-300 tracking-wide">
+                  เบอร์โทรศัพท์คนเก่า (6 หลัก)
+                </label>
+                <input
+                  type="text"
+                  maxLength="6"
+                  placeholder="000000"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-violet-500 transition-colors"
+                  value={formData.oldOwnerPhone}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/[^0-9]/g, '');
+                    setFormData({...formData, oldOwnerPhone: val});
+                  }}
+                />
+              </div>
             </div>
-            <div className="space-y-3">
-              <label className="text-[14px] font-bold text-slate-300 tracking-wide">
-                {formData.tradeType === 'WEAPON' ? '6' : '5'}. {formData.tradeType === 'WEAPON' ? 'ผู้รับมอบ (คนใหม่)' : 'ผู้รับรถ (คนใหม่)'}
-              </label>
-              <AutocompleteInput 
-                placeholder={formData.tradeType === 'WEAPON' ? 'ชื่อผู้รับอาวุธ' : 'ชื่อผู้รับรถ'}
-                type="text"
-                value={formData.newOwner}
-                onChange={val => setFormData({...formData, newOwner: val})}
-              />
+            <div className="space-y-4 bg-slate-950/40 p-5 rounded-2xl border border-slate-800">
+              <div className="space-y-3">
+                <label className="text-[14px] font-bold text-slate-300 tracking-wide">
+                  {formData.tradeType === 'WEAPON' ? '5' : '4'}. {formData.tradeType === 'WEAPON' ? 'ผู้รับมอบ (คนใหม่)' : 'ผู้รับรถ (คนใหม่)'}
+                </label>
+                <AutocompleteInput 
+                  placeholder={formData.tradeType === 'WEAPON' ? 'ชื่อผู้รับอาวุธ' : 'ชื่อผู้รับรถ'}
+                  type="text"
+                  value={formData.newOwner}
+                  onChange={val => setFormData({...formData, newOwner: val})}
+                />
+              </div>
+              <div className="space-y-3">
+                <label className="text-[14px] font-bold text-slate-300 tracking-wide">
+                  เบอร์โทรศัพท์คนใหม่ (6 หลัก)
+                </label>
+                <input
+                  type="text"
+                  maxLength="6"
+                  placeholder="000000"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-violet-500 transition-colors"
+                  value={formData.newOwnerPhone}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/[^0-9]/g, '');
+                    setFormData({...formData, newOwnerPhone: val});
+                  }}
+                />
+              </div>
             </div>
           </div>
 
           <div className="bg-slate-950/50 rounded-2xl p-6 border border-slate-800/80">
             <div className="flex items-center justify-between mb-4">
               <label className="text-[14px] font-bold text-slate-300 tracking-wide">
-                {formData.tradeType === 'WEAPON' ? '7' : '6'}. {formData.tradeType === 'WEAPON' ? 'รายการอาวุธ (WEAPON LIST)' : 'ข้อมูลรถที่เทรด (300,000 ต่อคัน)'}
+                {formData.tradeType === 'WEAPON' ? '6' : '5'}. {formData.tradeType === 'WEAPON' ? 'รายการอาวุธ (WEAPON LIST)' : 'ข้อมูลรถที่เทรด (300,000 ต่อคัน)'}
               </label>
               <button type="button" onClick={handleAddItem} className="px-4 py-2 text-sm font-bold text-red-500 border border-red-500/30 rounded-lg hover:bg-red-500/10 transition-colors flex items-center gap-2">
                 + {formData.tradeType === 'WEAPON' ? 'เพิ่มรายการ' : 'เพิ่มคัน'}

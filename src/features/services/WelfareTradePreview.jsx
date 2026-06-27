@@ -130,28 +130,30 @@ export default function WelfareTradePreview() {
       </div>
 
       <div className="flex flex-col gap-6 relative z-10 bg-slate-950/80 p-6 sm:p-8 rounded-2xl border border-slate-800/80 shadow-inner">
-        <div className="grid grid-cols-2 gap-4 pb-6 border-b border-slate-800 border-dashed">
+        <div className="pb-6 border-b border-slate-800 border-dashed">
           <div className="flex flex-col">
             <span className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2 whitespace-nowrap">Organization (ชื่อองค์กร)</span>
             <span className="font-black text-white text-2xl sm:text-3xl tracking-wide truncate">{formData.orgName || '...'}</span>
-          </div>
-          <div className="flex flex-col text-right">
-            <span className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2 whitespace-nowrap">Phone (เบอร์โทรศัพท์)</span>
-            <span className="font-black text-emerald-400 text-2xl sm:text-3xl tracking-wide truncate">{formData.phoneNumber || '...'}</span>
           </div>
         </div>
         
         <div className="grid grid-cols-2 gap-4 sm:gap-8 pb-6 border-b border-slate-800 border-dashed">
           <div>
             <span className="text-slate-500 text-[10px] sm:text-xs font-bold block mb-2 uppercase tracking-wider whitespace-nowrap">Transfer From (ผู้โอน)</span>
-            <div className="inline-flex items-center gap-2 bg-red-500/10 px-3 sm:px-4 py-2 rounded-lg border border-red-500/20 max-w-full">
-              <span className="font-bold text-red-400 text-sm sm:text-lg truncate">{formData.oldOwner || '...'}</span>
+            <div className="inline-flex flex-col gap-1">
+              <div className="inline-flex items-center gap-2 bg-red-500/10 px-3 sm:px-4 py-2 rounded-lg border border-red-500/20 max-w-full">
+                <span className="font-bold text-red-400 text-sm sm:text-lg truncate">{formData.oldOwner || '...'}</span>
+              </div>
+              <span className="text-slate-400 font-mono text-xs ml-1">📞 {formData.oldOwnerPhone || '...'}</span>
             </div>
           </div>
           <div className="text-right">
             <span className="text-slate-500 text-[10px] sm:text-xs font-bold block mb-2 uppercase tracking-wider whitespace-nowrap">Transfer To (ผู้รับ)</span>
-            <div className="inline-flex items-center gap-2 bg-emerald-500/10 px-3 sm:px-4 py-2 rounded-lg border border-emerald-500/20 max-w-full justify-end">
-              <span className="font-bold text-emerald-400 text-sm sm:text-lg truncate">{formData.newOwner || '...'}</span>
+            <div className="inline-flex flex-col gap-1 items-end">
+              <div className="inline-flex items-center gap-2 bg-emerald-500/10 px-3 sm:px-4 py-2 rounded-lg border border-emerald-500/20 max-w-full justify-end">
+                <span className="font-bold text-emerald-400 text-sm sm:text-lg truncate">{formData.newOwner || '...'}</span>
+              </div>
+              <span className="text-slate-400 font-mono text-xs mr-1">📞 {formData.newOwnerPhone || '...'}</span>
             </div>
           </div>
         </div>

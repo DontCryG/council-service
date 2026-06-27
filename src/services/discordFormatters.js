@@ -25,8 +25,8 @@ export const buildWelfareTradeWebhook = (formData, items, totalPrice, councilNam
         color: 0xfacc15,
         fields: [
           { name: "🏢 สังกัด", value: formData.orgName || '-', inline: true },
-          { name: "👤 ผู้ถือรถ (เดิม)", value: formData.oldOwner || '-', inline: true },
-          { name: "👤 ผู้รับรถ (ใหม่)", value: formData.newOwner || '-', inline: true },
+          { name: "👤 ผู้ถือรถ (เดิม)", value: `${formData.oldOwner || '-'} (📞 ${formData.oldOwnerPhone || '-'})`, inline: false },
+          { name: "👤 ผู้รับรถ (ใหม่)", value: `${formData.newOwner || '-'} (📞 ${formData.newOwnerPhone || '-'})`, inline: false },
           { name: "👮 เจ้าหน้าที่ผู้รับเรื่อง", value: councilName || '-', inline: false },
           { name: "🚙 รายการรถที่เทรด", value: itemList, inline: false },
           { name: "💰 ค่าบริการรวม", value: `**${totalPrice} $**`, inline: false },
@@ -48,8 +48,8 @@ export const buildWelfareTradeWebhook = (formData, items, totalPrice, councilNam
         fields: [
           { name: "📋 รูปแบบการออก", value: pricingStr, inline: true },
           { name: "🏢 สังกัด", value: formData.orgName || '-', inline: true },
-          { name: "👤 ผู้ส่งมอบ (เดิม)", value: formData.oldOwner || '-', inline: true },
-          { name: "👤 ผู้รับมอบ (ใหม่)", value: formData.newOwner || '-', inline: true },
+          { name: "👤 ผู้ส่งมอบ (เดิม)", value: `${formData.oldOwner || '-'} (📞 ${formData.oldOwnerPhone || '-'})`, inline: false },
+          { name: "👤 ผู้รับมอบ (ใหม่)", value: `${formData.newOwner || '-'} (📞 ${formData.newOwnerPhone || '-'})`, inline: false },
           { name: "👮 เจ้าหน้าที่ผู้รับเรื่อง", value: councilName || '-', inline: false },
           { name: "🔫 รายการอาวุธ", value: itemList, inline: false },
           { name: "💰 ค่าบริการรวม", value: `**${totalPrice} $**`, inline: false },
