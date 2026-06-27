@@ -78,7 +78,7 @@ export default function StoryCalendar() {
       const localToday = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
       setFormData({ 
         date: dateStr || selectedDateForView || localToday, 
-        time: '', team1: '', team2: '', type: '', location: '', fights: '', radio: '', bet: '', medic: '', style: '', score: '', description: '', staff: user?.displayName || user?.email?.split('@')[0] || '', note: '' 
+        time: '', team1: '', team2: '', type: '', location: '', fights: '', radio: '', bet: '', medic: '', style: '', score: '', description: '', staff: user?.customName || user?.displayName || user?.email?.split('@')[0] || '', note: '' 
       });
     }
     setModalView('EVENT_FORM');
