@@ -112,6 +112,11 @@ export default function TicketManager() {
   };
 
   const handleResetRound = async () => {
+    if (ticketsData.orders && ticketsData.orders.length > 0) {
+      showAlert('error', 'ไม่สามารถปิดรอบได้ กรุณาตรวจสอบและจัดการคำสั่งซื้อที่ค้างอยู่ (Pending) ให้หมดก่อน');
+      setShowConfirmReset(false);
+      return;
+    }
 
     const newSettings = { ...(ticketsData.settings || {}) };
     
