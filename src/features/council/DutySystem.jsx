@@ -443,7 +443,7 @@ export default function DutySystem() {
                 
                 {/* Profile & Status Card (Left) */}
                 <div className="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-3xl p-6 relative overflow-hidden group">
-                  <div className="absolute -right-10 -top-10 w-40 h-40 bg-amber-500/5 rounded-full blur-3xl group-hover:bg-amber-500/10 transition-colors"></div>
+                  <div className="absolute -right-10 -top-10 w-64 h-64 bg-[radial-gradient(circle,_rgba(245,158,11,0.1)_0%,_transparent_70%)] group-hover:bg-[radial-gradient(circle,_rgba(245,158,11,0.15)_0%,_transparent_70%)] transition-all duration-500"></div>
                   
                   <div className="flex items-center gap-4 mb-6 relative z-10">
                     <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 flex items-center justify-center shadow-inner">
@@ -544,7 +544,7 @@ export default function DutySystem() {
 
               {/* Live Status Board */}
               <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl"></div>
+                <div className="absolute top-0 right-0 w-80 h-80 bg-[radial-gradient(circle,_rgba(59,130,246,0.1)_0%,_transparent_70%)] pointer-events-none"></div>
                 
                 <div className="flex items-center justify-between mb-8 relative z-10">
                   <div className="flex items-center gap-3">
@@ -869,7 +869,7 @@ export default function DutySystem() {
             <div className="animate-in fade-in slide-in-from-right-8 duration-500 max-w-2xl mx-auto">
               <div className="bg-slate-900 border border-red-500/30 rounded-3xl p-8 relative overflow-hidden shadow-2xl shadow-red-500/5">
                 <div className="absolute top-0 left-0 w-full h-1 bg-red-500"></div>
-                <div className="absolute -top-20 -right-20 w-64 h-64 bg-red-500/10 rounded-full blur-3xl"></div>
+                <div className="absolute -top-20 -right-20 w-80 h-80 bg-[radial-gradient(circle,_rgba(239,68,68,0.15)_0%,_transparent_70%)] pointer-events-none"></div>
                 
                 <div className="text-center mb-8 relative z-10">
                   <div className="w-20 h-20 bg-red-500/10 border border-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
