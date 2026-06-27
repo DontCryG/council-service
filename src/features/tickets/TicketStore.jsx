@@ -245,7 +245,7 @@ export default function TicketStore() {
                       />
                     </div>
                     <div className="max-h-60 overflow-y-auto custom-scrollbar">
-                      {!searchQuery.trim() ? null : groups.filter(g => g.type === selectedType && g.name.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 ? (
+                      {groups.filter(g => g.type === selectedType && g.name.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 ? (
                         <div className="px-4 py-3 text-sm text-slate-400 text-center">ไม่พบรายชื่อที่ค้นหา</div>
                       ) : (
                         groups.filter(g => g.type === selectedType && g.name.toLowerCase().includes(searchQuery.toLowerCase())).map(g => (

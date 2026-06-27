@@ -198,9 +198,15 @@ export default function LoanPublic() {
                   </button>
                 </div>
                 {error && (
-                  <p className="text-red-400 text-center mt-4 font-bold flex items-center justify-center gap-2">
-                    <WarningCircle size={20} weight="bold" /> {error}
-                  </p>
+                  <div className="mt-6 bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex items-start gap-4 shadow-lg animate-in fade-in slide-in-from-top-2 max-w-xl mx-auto">
+                    <div className="bg-red-500/20 text-red-500 p-2 rounded-lg shrink-0">
+                      <WarningCircle size={24} weight="fill" />
+                    </div>
+                    <div className="text-left">
+                      <h3 className="text-red-500 font-bold text-lg mb-1">ไม่พบข้อมูล</h3>
+                      <p className="text-red-400/80 text-sm">{error}</p>
+                    </div>
+                  </div>
                 )}
               </form>
             </>
