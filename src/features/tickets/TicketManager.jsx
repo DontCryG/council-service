@@ -247,30 +247,45 @@ export default function TicketManager() {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-            <Ticket className="text-amber-500" />
-            ระบบจัดการ Ticket
-            <button 
-              onClick={playTestSound}
-              className="ml-2 p-1.5 rounded-full bg-slate-800 text-slate-400 hover:text-amber-400 hover:bg-slate-700 transition-colors group relative"
-              title="ทดสอบเสียงแจ้งเตือน (คลิกเพื่อปลดล็อคเสียงให้เบราว์เซอร์)"
-            >
-              <SpeakerHigh size={20} />
-              <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-800 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none transition-opacity">
-                ทดสอบเสียง / เปิดเสียง
-              </span>
-            </button>
-          </h1>
-          <p className="text-slate-400 mt-1">จัดการคำขอซื้อทิคเก็ต โควต้า และตั้งค่าเรทราคา</p>
+    <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500 max-w-7xl mx-auto pb-20">
+      {/* Premium Header */}
+      <div className="relative overflow-hidden bg-slate-900/50 backdrop-blur-xl border border-slate-800/60 rounded-3xl p-6 sm:p-8 shadow-2xl">
+        {/* Glow Effects */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-[80px] pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/10 rounded-full blur-[80px] pointer-events-none translate-y-1/2 -translate-x-1/3"></div>
+        
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/20">
+              <Ticket size={28} className="text-white drop-shadow-md" weight="fill" />
+            </div>
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 flex items-center gap-2">
+                ระบบจัดการ Ticket
+                <button 
+                  onClick={playTestSound}
+                  className="ml-2 p-1.5 rounded-full bg-slate-800/50 text-slate-400 hover:text-amber-400 hover:bg-slate-700 transition-all group relative border border-slate-700/50 hover:border-amber-500/50 hover:shadow-[0_0_10px_rgba(245,158,11,0.2)]"
+                  title="ทดสอบเสียงแจ้งเตือน (คลิกเพื่อปลดล็อคเสียงให้เบราว์เซอร์)"
+                >
+                  <SpeakerHigh size={20} />
+                  <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-800 text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none transition-opacity font-medium">
+                    ทดสอบ / เปิดเสียง
+                  </span>
+                </button>
+              </h1>
+              <p className="text-sm font-medium text-slate-400 mt-1 flex items-center gap-2">
+                <ShieldChevron size={14} className="text-slate-500" />
+                ศูนย์กลางการจัดการคำขอซื้อทิคเก็ต โควต้า และเรทราคาสภา
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="flex gap-2 p-1 bg-slate-900 border border-slate-800 rounded-xl overflow-x-auto custom-scrollbar">
+      {/* Modern Tabs */}
+      <div className="flex gap-2 p-1.5 bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-2xl overflow-x-auto custom-scrollbar shadow-inner relative z-20">
         {[
-          { id: 'orders', label: 'คำขอรออนุมัติ', icon: Clock },
+          { id: 'orders', label: 'คำขอรออนุมัติ', icon: Clock, count: ticketsData.orders.length },
           { id: 'history', label: 'ประวัติการทำรายการ', icon: FileText },
           { id: 'salesHistory', label: 'ประวัติยอดขาย', icon: ChartBar },
           { id: 'quota', label: 'โควต้าแก๊ง/แฟม', icon: Ticket },
@@ -279,16 +294,20 @@ export default function TicketManager() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-6 py-3 rounded-lg font-bold text-sm transition-all whitespace-nowrap ${
+            className={`relative flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 whitespace-nowrap overflow-hidden group flex-1 justify-center ${
               activeTab === tab.id 
-                ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20 shadow-sm' 
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                ? 'text-amber-400 shadow-lg' 
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
             }`}
           >
-            <tab.icon size={18} /> {tab.label}
-            {tab.id === 'orders' && ticketsData.orders.length > 0 && (
-              <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full ml-2">
-                {ticketsData.orders.length}
+            {activeTab === tab.id && (
+              <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 rounded-xl" />
+            )}
+            <tab.icon size={18} className={`relative z-10 ${activeTab === tab.id ? 'drop-shadow-md' : 'group-hover:scale-110 transition-transform'}`} weight={activeTab === tab.id ? "fill" : "regular"} /> 
+            <span className="relative z-10">{tab.label}</span>
+            {tab.id === 'orders' && tab.count > 0 && (
+              <span className="relative z-10 bg-gradient-to-r from-red-500 to-rose-600 text-white text-[10px] px-2 py-0.5 rounded-full ml-1.5 shadow-md shadow-red-500/30 animate-pulse">
+                {tab.count}
               </span>
             )}
           </button>
@@ -317,47 +336,48 @@ export default function TicketManager() {
               ) : (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   {filteredOrders.map(order => (
-                    <Card key={order.id} className="p-0 overflow-hidden border-amber-500/30">
-                      <div className="bg-slate-900 p-4 border-b border-slate-800 flex justify-between items-start">
-                        <div>
-                          <div className="text-xs font-bold text-amber-500 mb-1">
-                            {new Date(order.timestamp).toLocaleString('th-TH')}
+                    <Card key={order.id} className="p-0 overflow-hidden border-slate-700/50 hover:border-amber-500/50 hover:shadow-[0_0_15px_rgba(245,158,11,0.15)] transition-all duration-300 group">
+                      <div className="bg-slate-900/80 backdrop-blur-sm p-5 border-b border-slate-800/80 flex justify-between items-start relative">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl group-hover:bg-amber-500/10 transition-colors pointer-events-none"></div>
+                        <div className="relative z-10">
+                          <div className="text-[10px] font-bold text-amber-500 mb-1 tracking-wider uppercase flex items-center gap-1">
+                            <Clock size={12} weight="bold" /> {new Date(order.timestamp).toLocaleString('th-TH')}
                           </div>
-                          <h3 className="text-lg font-bold text-white">{order.groupName}</h3>
-                          <p className="text-sm text-slate-400">ติดต่อโดย: {order.requester}</p>
+                          <h3 className="text-xl font-black text-white">{order.groupName}</h3>
+                          <p className="text-xs text-slate-400 mt-1 flex items-center gap-1"><UserCircle size={14}/> ติดต่อ: {order.requester}</p>
                         </div>
-                        <div className="text-right">
-                          <div className="text-xs text-slate-500 mb-1">สภาที่รับเรื่อง</div>
-                          <div className="text-sm font-medium text-emerald-400">{order.councilStaffName || order.council}</div>
+                        <div className="text-right relative z-10">
+                          <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1">สภาที่รับเรื่อง</div>
+                          <div className="text-sm font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">{order.councilStaffName || order.council}</div>
                         </div>
                       </div>
                       
-                      <div className="p-4 grid grid-cols-2 gap-4 bg-slate-800/20">
+                      <div className="p-5 grid grid-cols-2 gap-4 bg-slate-950/50">
                         <div>
-                          <div className="text-xs text-slate-500 uppercase tracking-wider mb-1">Ticket Amount</div>
-                          <div className="text-xl font-bold text-amber-400 flex items-center gap-1">
-                            <Ticket size={20} /> {parseInt(order.amount).toLocaleString()}
+                          <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1 font-bold">Ticket Amount</div>
+                          <div className="text-2xl font-black text-amber-400 flex items-center gap-1.5 drop-shadow-md">
+                            <Ticket size={24} weight="fill" /> {parseInt(order.amount).toLocaleString()}
                           </div>
                         </div>
                         <div className="text-right">
-                          <div className="text-xs text-slate-500 uppercase tracking-wider mb-1">Total (Red Money)</div>
-                          <div className="text-xl font-black text-red-500">
+                          <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1 font-bold">Total (Red Money)</div>
+                          <div className="text-2xl font-black text-red-500 drop-shadow-md">
                             ${parseInt(order.totalPrice).toLocaleString()}
                           </div>
                         </div>
                       </div>
 
-                      <div className="p-4 border-t border-slate-800/50 flex gap-3">
+                      <div className="p-4 border-t border-slate-800/80 flex gap-3 bg-slate-900/30">
                         <Button 
                           type="button"
-                          className="flex-1 bg-[#10a365] hover:bg-[#0e8a55] text-white border-none py-3 rounded-xl font-bold text-sm" 
+                          className="flex-1 bg-gradient-to-t from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white border-none py-3 rounded-xl font-bold text-sm shadow-lg shadow-emerald-900/50 hover:shadow-emerald-500/30 transition-all hover:-translate-y-0.5" 
                           onClick={() => handleProcessOrder(order.id, 'APPROVED')}
                         >
-                          <CheckCircle size={20} /> อนุมัติ
+                          <CheckCircle size={20} weight="fill" /> อนุมัติ
                         </Button>
                         <Button 
                           type="button"
-                          className="flex-1 bg-[#dc2626] hover:bg-[#b91c1c] text-white border-none py-3 rounded-xl font-bold text-sm"
+                          className="flex-1 bg-transparent hover:bg-red-500/10 text-red-500 hover:text-red-400 border border-red-500/30 hover:border-red-500/50 py-3 rounded-xl font-bold text-sm transition-all"
                           onClick={() => handleProcessOrder(order.id, 'REJECTED')}
                         >
                           <XCircle size={20} /> ปฏิเสธ
@@ -405,36 +425,37 @@ export default function TicketManager() {
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {filteredHistory.map(h => (
-                      <div key={h.id} className="bg-slate-900 border border-slate-800 rounded-xl p-4 hover:border-slate-700 transition-colors">
-                        <div className="flex justify-between items-start mb-3">
+                      <div key={h.id} className="relative bg-slate-900/60 backdrop-blur-md border border-slate-700/50 rounded-2xl p-5 hover:border-slate-500/50 hover:shadow-lg transition-all duration-300 group overflow-hidden">
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-slate-800/50 rounded-full blur-xl group-hover:bg-slate-700/50 transition-colors pointer-events-none -mr-10 -mt-10"></div>
+                        <div className="relative z-10 flex justify-between items-start mb-4">
                           <div>
-                            <div className="font-bold text-white text-base">{h.groupName}</div>
-                            <div className="text-xs text-slate-400 mt-0.5">ติดต่อ: {h.requester}</div>
+                            <div className="font-black text-white text-lg">{h.groupName}</div>
+                            <div className="text-xs text-slate-400 mt-1 flex items-center gap-1"><UserCircle size={14}/> ติดต่อ: {h.requester}</div>
                           </div>
                           {h.status === 'APPROVED' ? (
-                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded border border-emerald-500/20">
-                              <CheckCircle size={12} weight="fill" /> APPROVED
+                            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-emerald-400 bg-emerald-400/10 px-2.5 py-1 rounded-full border border-emerald-500/30 shadow-[0_0_10px_rgba(52,211,153,0.1)]">
+                              <CheckCircle size={14} weight="fill" /> APPROVED
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-red-400 bg-red-400/10 px-2 py-1 rounded border border-red-500/20">
-                              <XCircle size={12} weight="fill" /> REJECTED
+                            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-red-400 bg-red-400/10 px-2.5 py-1 rounded-full border border-red-500/30 shadow-[0_0_10px_rgba(248,113,113,0.1)]">
+                              <XCircle size={14} weight="fill" /> REJECTED
                             </span>
                           )}
                         </div>
                         
-                        <div className="bg-slate-950 rounded-lg p-3 grid grid-cols-2 gap-2 border border-slate-800/50 mb-3">
+                        <div className="relative z-10 bg-slate-950/80 rounded-xl p-3 grid grid-cols-2 gap-3 border border-slate-800/80 mb-4 shadow-inner">
                           <div>
-                            <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Ticket</div>
-                            <div className="font-mono text-amber-400 font-bold">{parseInt(h.amount).toLocaleString()}</div>
+                            <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1 font-bold">Ticket</div>
+                            <div className="font-mono text-amber-400 font-bold text-lg flex items-center gap-1"><Ticket size={14} weight="fill"/> {parseInt(h.amount).toLocaleString()}</div>
                           </div>
-                          <div className="text-right border-l border-slate-800">
-                            <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Red Money</div>
-                            <div className="font-mono text-red-400 font-bold">${parseInt(h.totalPrice).toLocaleString()}</div>
+                          <div className="text-right border-l border-slate-800/80 pl-2">
+                            <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1 font-bold">Red Money</div>
+                            <div className="font-mono text-red-400 font-bold text-lg">${parseInt(h.totalPrice).toLocaleString()}</div>
                           </div>
                         </div>
 
-                        <div className="text-[10px] text-slate-500 text-right">
-                          {new Date(h.processedAt || h.timestamp).toLocaleString('th-TH')}
+                        <div className="relative z-10 text-[10px] font-medium text-slate-500 text-right flex items-center justify-end gap-1">
+                          <Clock size={12} /> {new Date(h.processedAt || h.timestamp).toLocaleString('th-TH')}
                         </div>
                       </div>
                     ))}
@@ -539,40 +560,48 @@ export default function TicketManager() {
                       const percent = Math.min(100, (used / max) * 100);
 
                       return (
-                        <div key={g.id} className="bg-slate-900 border border-slate-800 rounded-xl p-4 hover:border-amber-500/30 transition-colors relative overflow-hidden group">
-                          {/* Top Border Accent */}
-                          <div className={`absolute top-0 left-0 right-0 h-1 ${g.type === 'GANG' ? 'bg-amber-500' : 'bg-blue-500'}`}></div>
+                        <div key={g.id} className="relative bg-slate-900/60 backdrop-blur-md border border-slate-700/50 rounded-2xl p-5 hover:border-slate-500/50 hover:shadow-xl transition-all duration-300 group overflow-hidden">
+                          <div className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-[40px] pointer-events-none transition-all duration-500 opacity-20 group-hover:opacity-40 -mr-10 -mt-10 ${g.type === 'GANG' ? 'bg-amber-500' : 'bg-blue-500'}`}></div>
+                          {/* Top Border Accent Gradient */}
+                          <div className={`absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r ${g.type === 'GANG' ? 'from-amber-400 to-orange-500' : 'from-blue-400 to-indigo-500'}`}></div>
                           
-                          <div className="flex items-center gap-3 mb-4 mt-1">
-                            <div className="w-8 h-8 rounded-full border border-slate-700 flex-shrink-0" style={{backgroundColor: g.color || '#334155'}}></div>
+                          <div className="relative z-10 flex items-center gap-4 mb-5 mt-1">
+                            <div className="relative w-12 h-12 rounded-xl border-2 border-slate-700/80 flex-shrink-0 shadow-lg" style={{backgroundColor: g.color || '#334155'}}>
+                              <div className="absolute inset-0 bg-gradient-to-tr from-black/40 to-transparent rounded-lg"></div>
+                            </div>
                             <div className="min-w-0">
-                              <h3 className="font-bold text-white text-base truncate">{g.name}</h3>
-                              <div className="text-[10px] text-slate-500 uppercase tracking-wider">{g.type}</div>
+                              <h3 className="font-black text-white text-lg truncate drop-shadow-md">{g.name}</h3>
+                              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+                                {g.type === 'GANG' ? <ShieldChevron size={12} className="text-amber-500" weight="fill" /> : <House size={12} className="text-blue-500" weight="fill" />}
+                                {g.type}
+                              </div>
                             </div>
                           </div>
 
-                          <div className="bg-slate-950 rounded-lg p-3 grid grid-cols-2 gap-3 border border-slate-800/50 mb-3">
+                          <div className="relative z-10 bg-slate-950/80 rounded-xl p-3.5 grid grid-cols-2 gap-3 border border-slate-800/80 mb-4 shadow-inner">
                             <div className="text-center">
-                              <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">ใช้ไปแล้ว</div>
-                              <div className="font-mono text-amber-400 font-bold">{parseInt(used).toLocaleString()}</div>
+                              <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">ใช้ไปแล้ว</div>
+                              <div className="font-mono text-amber-400 font-black text-lg drop-shadow-md">{parseInt(used).toLocaleString()}</div>
                             </div>
-                            <div className="text-center border-l border-slate-800">
-                              <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">คงเหลือ</div>
-                              <div className="font-mono text-emerald-400 font-bold">{parseInt(remaining).toLocaleString()}</div>
+                            <div className="text-center border-l border-slate-800/80">
+                              <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">คงเหลือ</div>
+                              <div className="font-mono text-emerald-400 font-black text-lg drop-shadow-md">{parseInt(remaining).toLocaleString()}</div>
                             </div>
                           </div>
 
-                          <div className="flex items-center justify-between text-xs mb-1">
+                          <div className="relative z-10 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest mb-2">
                             <span className="text-slate-500">โควต้าสูงสุด: {parseInt(max).toLocaleString()}</span>
-                            <span className={`font-bold ${percent > 90 ? 'text-red-400' : percent > 70 ? 'text-amber-400' : 'text-emerald-400'}`}>
+                            <span className={`font-black text-sm drop-shadow-md ${percent > 90 ? 'text-rose-500' : percent > 70 ? 'text-amber-400' : 'text-emerald-400'}`}>
                               {percent.toFixed(0)}%
                             </span>
                           </div>
-                          <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                          <div className="relative z-10 w-full h-2.5 bg-slate-950 rounded-full overflow-hidden border border-slate-800/50 shadow-inner">
                             <div 
-                              className={`h-full ${percent > 90 ? 'bg-red-500' : percent > 70 ? 'bg-amber-500' : 'bg-emerald-500'}`} 
+                              className={`h-full relative overflow-hidden transition-all duration-1000 ease-out bg-gradient-to-r ${percent > 90 ? 'from-red-600 to-rose-400' : percent > 70 ? 'from-orange-600 to-amber-400' : 'from-emerald-600 to-teal-400'}`} 
                               style={{ width: `${percent}%` }}
-                            ></div>
+                            >
+                               <div className="absolute inset-0 bg-white/20 w-full h-full animate-[shimmer_2s_infinite] -skew-x-12"></div>
+                            </div>
                           </div>
                         </div>
                       );
@@ -593,93 +622,105 @@ export default function TicketManager() {
 
               {!isEditingSettings ? (
                 <>
-                  <Card className="p-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                  <Card className="p-8 border-slate-700/50 bg-slate-900/60 backdrop-blur-md shadow-xl">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 relative">
+                      {/* Glow Behind Rates */}
+                      <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-amber-500/10 rounded-full blur-[60px] pointer-events-none -translate-y-1/2"></div>
+                      
                       {/* Rates */}
-                      <div className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700/50">
-                        <div className="text-sm font-bold text-slate-400 mb-4 tracking-wider">เรทแลกเปลี่ยน (1 TICKET)</div>
-                        <div className="space-y-4">
-                          <div className="flex justify-between items-center pb-4 border-b border-slate-700/50">
-                            <div className="flex items-center gap-2 text-red-400 font-bold">
-                              <ShieldChevron size={18} /> แก๊ง
+                      <div className="bg-slate-950/80 rounded-3xl p-7 border border-slate-800/80 shadow-inner relative overflow-hidden group hover:border-amber-500/30 transition-colors">
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl group-hover:bg-amber-500/10 transition-colors pointer-events-none -mr-8 -mt-8"></div>
+                        <div className="text-xs font-black text-slate-500 mb-6 tracking-widest uppercase flex items-center gap-2">
+                          <CurrencyDollar size={16} /> เรทแลกเปลี่ยน (1 TICKET)
+                        </div>
+                        <div className="space-y-6">
+                          <div className="flex justify-between items-center pb-5 border-b border-slate-800/80">
+                            <div className="flex items-center gap-2.5 text-rose-400 font-bold bg-rose-500/10 px-3 py-1.5 rounded-lg border border-rose-500/20">
+                              <ShieldChevron size={18} weight="fill" /> แก๊ง
                             </div>
-                            <div className="text-xl font-black text-white">
-                              {ticketsData.settings.rateGang} <span className="text-xs text-slate-500 font-normal">Cash</span>
+                            <div className="text-2xl font-black text-white drop-shadow-md">
+                              {ticketsData.settings.rateGang} <span className="text-sm text-slate-500 font-bold ml-1">Cash</span>
                             </div>
                           </div>
                           <div className="flex justify-between items-center">
-                            <div className="flex items-center gap-2 text-blue-400 font-bold">
-                              <House size={18} /> ครอบครัว
+                            <div className="flex items-center gap-2.5 text-blue-400 font-bold bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/20">
+                              <House size={18} weight="fill" /> ครอบครัว
                             </div>
-                            <div className="text-xl font-black text-white">
-                              {ticketsData.settings.rateFamily} <span className="text-xs text-slate-500 font-normal">Cash</span>
+                            <div className="text-2xl font-black text-white drop-shadow-md">
+                              {ticketsData.settings.rateFamily} <span className="text-sm text-slate-500 font-bold ml-1">Cash</span>
                             </div>
                           </div>
                         </div>
                       </div>
 
                       {/* Quotas */}
-                      <div className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700/50 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
-                        <div className="text-sm font-bold text-slate-400 mb-4 tracking-wider">โควต้าสูงสุดพื้นฐาน / สัปดาห์</div>
-                        <div className="space-y-4 relative z-10">
-                          <div className="flex justify-between items-center pb-4 border-b border-slate-700/50">
-                            <div className="flex items-center gap-2 text-red-400 font-bold">
-                              <ShieldChevron size={18} /> แก๊ง
+                      <div className="bg-slate-950/80 rounded-3xl p-7 border border-slate-800/80 shadow-inner relative overflow-hidden group hover:border-emerald-500/30 transition-colors">
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-2xl group-hover:bg-emerald-500/10 transition-colors pointer-events-none -mr-8 -mt-8"></div>
+                        <div className="text-xs font-black text-slate-500 mb-6 tracking-widest uppercase flex items-center gap-2">
+                          <ChartBar size={16} /> โควต้าสูงสุดพื้นฐาน / สัปดาห์
+                        </div>
+                        <div className="space-y-6 relative z-10">
+                          <div className="flex justify-between items-center pb-5 border-b border-slate-800/80">
+                            <div className="flex items-center gap-2.5 text-rose-400 font-bold bg-rose-500/10 px-3 py-1.5 rounded-lg border border-rose-500/20">
+                              <ShieldChevron size={18} weight="fill" /> แก๊ง
                             </div>
-                            <div className="text-xl font-black text-white">
-                              {parseInt(ticketsData.settings.quotaGang).toLocaleString()} <span className="text-xs text-slate-500 font-normal">ใบ</span>
+                            <div className="text-2xl font-black text-white drop-shadow-md">
+                              {parseInt(ticketsData.settings.quotaGang).toLocaleString()} <span className="text-sm text-slate-500 font-bold ml-1">ใบ</span>
                             </div>
                           </div>
                           <div className="flex justify-between items-center">
-                            <div className="flex items-center gap-2 text-blue-400 font-bold">
-                              <House size={18} /> ครอบครัว
+                            <div className="flex items-center gap-2.5 text-blue-400 font-bold bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/20">
+                              <House size={18} weight="fill" /> ครอบครัว
                             </div>
-                            <div className="text-xl font-black text-white">
-                              {parseInt(ticketsData.settings.quotaFamily).toLocaleString()} <span className="text-xs text-slate-500 font-normal">ใบ</span>
+                            <div className="text-2xl font-black text-white drop-shadow-md">
+                              {parseInt(ticketsData.settings.quotaFamily).toLocaleString()} <span className="text-sm text-slate-500 font-bold ml-1">ใบ</span>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mt-6">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 pt-6 border-t border-slate-800/50">
                       <div>
-                        <div className="text-sm font-bold text-slate-400 mb-2">รอบเวลาโควต้าปัจจุบัน</div>
-                        <div className="flex items-center gap-3 bg-slate-900 border border-slate-700 px-4 py-2 rounded-lg font-mono text-lg font-bold text-slate-300">
+                        <div className="text-xs font-black text-slate-500 mb-3 uppercase tracking-widest">รอบเวลาโควต้าปัจจุบัน</div>
+                        <div className="flex items-center gap-3 bg-slate-950/80 border border-slate-800 shadow-inner px-5 py-2.5 rounded-xl font-mono text-lg font-bold text-amber-400">
+                          <CalendarBlank size={18} className="text-slate-500" />
                           <span>{ticketsData.settings.roundStartDate || 'N/A'}</span>
-                          <span className="text-slate-600">|</span>
+                          <span className="text-slate-700">|</span>
                           <span>{ticketsData.settings.roundEndDate || 'N/A'}</span>
                         </div>
                       </div>
                       
                       <Button 
                         variant="outline" 
+                        className="border-slate-700 hover:border-amber-500/50 hover:bg-amber-500/10 text-slate-300 hover:text-amber-400 font-bold transition-all h-[52px] px-8 rounded-xl shadow-lg hover:shadow-[0_0_15px_rgba(245,158,11,0.2)]"
                         onClick={() => {
                           setTempSettings(ticketsData.settings);
                           setIsEditingSettings(true);
                         }}
                       >
-                        <Gear size={18} /> แก้ไขการตั้งค่า
+                        <Gear size={20} weight="fill" className="mr-2" /> แก้ไขการตั้งค่า
                       </Button>
                     </div>
                   </Card>
 
-                  <div className="mt-6 bg-red-950/20 border border-red-500/20 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6">
-                    <div>
-                      <h3 className="text-lg font-black text-red-500 flex items-center gap-2 mb-2">
-                        <WarningCircle size={24} weight="fill" /> ปิดรอบการขาย (End of Round)
+                  <div className="mt-8 relative overflow-hidden bg-gradient-to-r from-red-950/40 to-rose-950/40 border border-red-500/20 rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-8 group hover:border-red-500/40 transition-colors shadow-2xl">
+                    <div className="absolute -left-32 -bottom-32 w-64 h-64 bg-red-600/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-red-600/20 transition-all duration-700"></div>
+                    
+                    <div className="relative z-10">
+                      <h3 className="text-xl font-black text-red-500 flex items-center gap-2 mb-3 drop-shadow-md">
+                        <WarningCircle size={28} weight="fill" /> ปิดรอบการขาย (End of Round)
                       </h3>
-                      <p className="text-sm text-slate-400 max-w-2xl leading-relaxed">
-                        เมื่อถึงกำหนดหมดรอบ ให้กดปุ่มนี้เพื่อสรุปยอดขายเก็บไว้ใน "ประวัติยอดขาย" และ <strong className="text-red-400">ล้างรายการคำสั่งซื้อทั้งหมด</strong> เพื่อให้โควต้าทุกแก๊งกลับมาเป็นศูนย์
+                      <p className="text-sm text-slate-300 max-w-2xl leading-relaxed">
+                        เมื่อถึงกำหนดหมดรอบ ให้กดปุ่มนี้เพื่อสรุปยอดขายเก็บไว้ใน "ประวัติยอดขาย" และ <strong className="text-red-400 font-bold">ล้างรายการคำสั่งซื้อที่ประมวลผลแล้ว</strong> เพื่อให้โควต้าทุกกลุ่มกลับมาเป็นศูนย์
                       </p>
                     </div>
                     <Button 
                       type="button"
-                      className="bg-red-600 hover:bg-red-500 whitespace-nowrap px-8 py-3 h-auto text-base"
+                      className="relative z-10 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-black whitespace-nowrap px-10 py-4 h-auto text-lg rounded-2xl shadow-xl shadow-red-900/50 hover:shadow-red-500/40 hover:-translate-y-1 transition-all border border-red-400/20"
                       onClick={() => setShowConfirmReset(true)}
                     >
-                      ปิดรอบการขายและรีเซ็ต
+                      <ArrowCounterClockwise size={22} weight="bold" className="mr-2" /> ปิดรอบและรีเซ็ต
                     </Button>
                   </div>
                 </>
