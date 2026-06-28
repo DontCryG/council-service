@@ -404,14 +404,22 @@ export default function TransactionHistory() {
   const pendingCount = logs.filter(l => l.type === activeCategory && l.status !== 'approved').length;
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 min-h-[calc(100vh-8rem)] animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="flex flex-col lg:flex-row gap-6 min-h-[calc(100vh-8rem)] animate-in fade-in zoom-in-95 duration-700 relative z-10 max-w-[1400px] mx-auto">
       
+      {/* Ambient Glows */}
+      <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none -z-10">
+        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-amber-600/10 rounded-full blur-[120px]"></div>
+      </div>
+
       {/* LEFT SIDEBAR (Menu) */}
-      <div className="w-full lg:w-72 flex-shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col gap-8 h-max">
+      <div className="w-full lg:w-72 flex-shrink-0 bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-6 shadow-2xl flex flex-col gap-8 h-max relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        
         {categories.map((cat, i) => (
-          <div key={i} className="space-y-3">
-            <h3 className="text-xs font-bold text-amber-500 tracking-wider uppercase px-2">{cat.group}</h3>
-            <div className="space-y-1">
+          <div key={i} className="space-y-4 relative z-10">
+            <h3 className="text-[11px] font-black text-slate-500 tracking-widest uppercase px-2">{cat.group}</h3>
+            <div className="space-y-2">
               {cat.items.map(item => {
                 const Icon = item.icon;
                 const isActive = activeCategory === item.id;
@@ -419,14 +427,15 @@ export default function TransactionHistory() {
                   <button
                     key={item.id}
                     onClick={() => setActiveCategory(item.id)}
-                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
+                    className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl font-bold transition-all duration-300 relative group overflow-hidden ${
                       isActive 
-                        ? 'bg-[#5865F2] text-white shadow-lg shadow-[#5865F2]/20 border border-white/5' 
-                        : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'
+                        ? 'bg-blue-500/10 text-blue-400 border border-blue-500/30 shadow-[0_0_20px_rgba(59,130,246,0.15)]' 
+                        : 'bg-transparent text-slate-400 hover:bg-slate-800/80 hover:text-slate-200 border border-transparent hover:border-slate-700/50 hover:shadow-inner'
                     }`}
                   >
-                    <Icon size={20} weight={isActive ? "fill" : "duotone"} />
-                    {item.label}
+                    {isActive && <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 to-blue-500/5 pointer-events-none"></div>}
+                    <Icon size={20} weight={isActive ? "fill" : "duotone"} className={isActive ? "drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]" : "group-hover:scale-110 transition-transform"} />
+                    <span className="relative z-10">{item.label}</span>
                   </button>
                 );
               })}
@@ -436,45 +445,49 @@ export default function TransactionHistory() {
       </div>
 
       {/* RIGHT CONTENT AREA */}
-      <div className="flex-1 bg-slate-900 border border-slate-800 rounded-2xl shadow-xl flex flex-col overflow-hidden relative">
+      <div className="flex-1 bg-slate-900/40 backdrop-blur-md border border-slate-700/50 rounded-3xl shadow-2xl flex flex-col overflow-hidden relative">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-amber-500/5 rounded-full blur-[100px] pointer-events-none -mr-40 -mt-40"></div>
         
         {/* Header */}
-        <div className="px-8 py-6 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="px-8 py-8 border-b border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10 bg-slate-950/20">
           <div>
-            <h1 className="text-2xl font-black text-white">{activeCategoryLabel}</h1>
-            <p className="text-slate-400 text-sm mt-1">รายการคำร้องที่รอตรวจสอบทั้งหมด</p>
+            <h1 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 tracking-tight">{activeCategoryLabel}</h1>
+            <p className="text-slate-400 text-sm font-medium mt-1">รายการคำร้องที่รอตรวจสอบทั้งหมด</p>
           </div>
           <div className="flex flex-wrap items-center gap-3 text-xs font-bold">
-            <div className="bg-amber-500/10 text-amber-500 px-4 py-2 rounded-full flex items-center gap-2 border border-amber-500/20">
-              <Clock size={16} /> รอตรวจสอบ {pendingCount}
+            <div className="bg-amber-500/10 text-amber-500 px-4 py-2.5 rounded-xl flex items-center gap-2 border border-amber-500/20 shadow-inner">
+              <Clock size={16} weight="bold" className="animate-pulse" /> รอตรวจสอบ {pendingCount}
             </div>
-            <div className="bg-emerald-500/10 text-emerald-500 px-4 py-2 rounded-full flex items-center gap-2 border border-emerald-500/20">
-              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div> LIVE SYNC
+            <div className="bg-emerald-500/10 text-emerald-500 px-4 py-2.5 rounded-xl flex items-center gap-2 border border-emerald-500/20 shadow-inner">
+              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div> LIVE SYNC
             </div>
           </div>
         </div>
 
         {/* Toolbar */}
-        <div className="px-8 py-4 border-b border-slate-800 flex flex-col xl:flex-row xl:items-center justify-between gap-4 bg-slate-900/50">
-          <div className="relative w-full xl:w-96">
-            <MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+        <div className="px-8 py-5 border-b border-slate-800/80 flex flex-col xl:flex-row xl:items-center justify-between gap-5 bg-slate-950/40 relative z-10 shadow-inner">
+          <div className="relative group/search w-full xl:w-96">
+            <div className="absolute inset-0 bg-blue-500/20 blur-md opacity-0 group-focus-within/search:opacity-100 rounded-xl transition-opacity pointer-events-none"></div>
+            <MagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within/search:text-blue-500 transition-colors z-10" size={18} />
             <input 
               type="text" 
               placeholder="ค้นหาข้อมูลผู้ร้อง, ชื่อแก๊ง..." 
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-blue-500 transition-colors"
+              className="w-full relative bg-slate-950/80 border border-slate-700/80 rounded-xl pl-12 pr-4 py-3 text-sm font-bold text-white placeholder-slate-600 focus:outline-none focus:border-blue-500/80 focus:ring-2 focus:ring-blue-500/20 transition-all shadow-inner"
             />
           </div>
 
-          <div className="flex items-center gap-3 overflow-x-auto pb-2 xl:pb-0 scrollbar-hide">
-            <div className="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
+          <div className="flex items-center gap-4 overflow-x-auto pb-2 xl:pb-0 scrollbar-hide">
+            <div className="flex bg-slate-950 p-1.5 rounded-2xl border border-slate-800/80 shadow-inner">
               {['ALL', 'GANG', 'FAMILY'].map(g => (
                 <button
                   key={g}
                   onClick={() => setGroupFilter(g)}
-                  className={`px-4 sm:px-6 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
-                    groupFilter === g ? 'bg-slate-800 text-white shadow-sm' : 'text-slate-500 hover:text-slate-300'
+                  className={`px-5 py-2 rounded-xl text-xs font-bold transition-all duration-300 whitespace-nowrap ${
+                    groupFilter === g 
+                      ? 'bg-slate-800/80 text-white shadow-md border border-slate-700/50' 
+                      : 'bg-transparent text-slate-500 hover:text-slate-300 border border-transparent'
                   }`}
                 >
                   {g === 'ALL' ? 'ทั้งหมด (ALL)' : `${g} (${g === 'GANG' ? 'แก๊ง' : 'ครอบครัว'})`}
@@ -484,10 +497,10 @@ export default function TransactionHistory() {
             <button 
               onClick={handleRefresh}
               disabled={loading}
-              className="p-2.5 bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 rounded-xl transition-colors border border-slate-700 flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed" 
+              className="p-3 bg-slate-900/80 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-all border border-slate-700/80 shadow-inner flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed group" 
               title="รีเฟรชข้อมูล"
             >
-              <ArrowsClockwise size={18} className={loading ? 'animate-spin' : ''} />
+              <ArrowsClockwise size={18} weight="bold" className={`${loading ? 'animate-spin text-blue-400' : 'group-hover:rotate-180 transition-transform duration-500'}`} />
             </button>
           </div>
         </div>
@@ -510,56 +523,63 @@ export default function TransactionHistory() {
                 const isApproved = log.status === 'approved';
               
               return (
-                <div key={log.id} className={`bg-slate-950 border rounded-2xl overflow-hidden shadow-lg transition-all ${isApproved ? 'border-emerald-500/30 opacity-75' : 'border-slate-800 hover:border-slate-700'}`}>
+                <div key={log.id} className={`group relative bg-slate-900/60 backdrop-blur-md border rounded-3xl overflow-hidden shadow-2xl transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,0,0,0.5)] hover:-translate-y-1 ${isApproved ? 'border-emerald-500/20 opacity-75' : 'border-slate-700/50 hover:border-slate-500/50'}`}>
                   
+                  {/* Decorative Glow inside Card */}
+                  {!isApproved && <div className={`absolute top-0 right-0 w-48 h-48 rounded-full blur-[60px] pointer-events-none transition-all duration-700 opacity-20 group-hover:opacity-40 -mr-20 -mt-20 ${details.type === 'GANG' ? 'bg-amber-500' : 'bg-blue-500'}`}></div>}
+                  {isApproved && <div className="absolute top-0 right-0 w-48 h-48 rounded-full blur-[60px] pointer-events-none opacity-10 bg-emerald-500 -mr-20 -mt-20"></div>}
+
+                  {/* Top Accent Bar */}
+                  <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${isApproved ? 'from-emerald-600 to-emerald-400' : (details.type === 'GANG' ? 'from-amber-500 to-orange-500' : 'from-blue-500 to-indigo-500')}`}></div>
+
                   {/* Card Header */}
-                  <div className="px-6 py-3 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                  <div className="px-7 py-4 border-b border-slate-800/60 flex justify-between items-center bg-slate-950/40 relative z-10 shadow-inner">
                     <div className="flex items-center gap-3">
                       {log.type !== 'leave' && log.type !== 'resign' && (
-                        <span className={`px-3 py-1 text-xs font-bold rounded-md ${details.type === 'GANG' ? 'bg-amber-500/10 text-amber-500' : 'bg-blue-500/10 text-blue-400'}`}>
+                        <span className={`px-3 py-1 text-[10px] uppercase tracking-widest font-black rounded-lg shadow-inner border ${details.type === 'GANG' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : 'bg-blue-500/10 text-blue-400 border-blue-500/20'}`}>
                           {details.type === 'GANG' ? 'แก๊ง' : 'ครอบครัว'}
                         </span>
                       )}
-                      <span className="text-slate-500 text-xs flex items-center gap-1.5">
-                        <Clock size={14} /> {log.createdAt.toLocaleString('th-TH')}
+                      <span className="text-slate-400 font-bold text-xs flex items-center gap-1.5">
+                        <Clock size={14} weight="bold" /> {log.createdAt.toLocaleString('th-TH')}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <button onClick={() => handleCopy(log, details, isApproved)} className="p-1.5 text-slate-500 hover:text-slate-300 transition-colors" title="คัดลอกข้อมูล">
-                        <Copy size={16} />
+                      <button onClick={() => handleCopy(log, details, isApproved)} className="p-2 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 rounded-xl transition-colors border border-slate-700/50" title="คัดลอกข้อมูล">
+                        <Copy size={16} weight="bold" />
                       </button>
-                      <button onClick={() => handleDelete(log.id)} className="p-1.5 text-slate-500 hover:text-red-400 transition-colors" title="ลบคำร้อง">
-                        <Trash size={16} />
+                      <button onClick={() => handleDelete(log.id)} className="p-2 bg-slate-900 hover:bg-red-500/20 text-slate-400 hover:text-red-400 rounded-xl transition-colors border border-slate-700/50 hover:border-red-500/30" title="ลบคำร้อง">
+                        <Trash size={16} weight="bold" />
                       </button>
                     </div>
                   </div>
 
                   {/* Card Body */}
-                  <div className="p-6 md:p-8">
-                    <h2 className="text-2xl font-black text-white mb-6">{details.title}</h2>
+                  <div className="p-7 relative z-10">
+                    <h2 className="text-2xl font-black text-white mb-6 drop-shadow-md truncate">{details.title}</h2>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                      <div className="space-y-5">
-                        <div>
-                          <p className="text-xs font-bold text-slate-500 mb-1">รายการธุรกรรม</p>
-                          <p className="text-blue-400 font-bold text-lg">{details.transaction}</p>
+                      <div className="space-y-6">
+                        <div className="bg-slate-950/50 p-4 rounded-2xl border border-slate-800/80 shadow-inner">
+                          <p className="text-[10px] uppercase tracking-widest font-black text-slate-500 mb-1.5">รายการธุรกรรม</p>
+                          <p className="text-blue-400 font-black text-lg drop-shadow-sm">{details.transaction}</p>
                         </div>
-                        <div>
-                          <p className="text-xs font-bold text-slate-500 mb-1">ผู้ทำรายการ</p>
-                          <p className="text-slate-200 font-medium">{details.requester}</p>
+                        <div className="bg-slate-950/50 p-4 rounded-2xl border border-slate-800/80 shadow-inner">
+                          <p className="text-[10px] uppercase tracking-widest font-black text-slate-500 mb-1.5">ผู้ทำรายการ</p>
+                          <p className="text-white font-bold">{details.requester}</p>
                         </div>
                       </div>
                       
                       <div className="flex flex-col gap-4">
-                        <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
-                          <p className="text-xs font-bold text-slate-500 mb-2">{details.detailsLabel}</p>
-                          <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 text-slate-300 text-sm max-h-48 overflow-y-auto whitespace-pre-wrap">
+                        <div className="bg-slate-950/50 p-4 rounded-2xl border border-slate-800/80 shadow-inner flex-1 flex flex-col">
+                          <p className="text-[10px] uppercase tracking-widest font-black text-slate-500 mb-3">{details.detailsLabel}</p>
+                          <div className="bg-slate-900/80 p-3 rounded-xl border border-slate-700/50 text-slate-300 text-sm max-h-48 overflow-y-auto whitespace-pre-wrap font-medium shadow-inner flex-1 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
                             {details.detailsNode || details.detailsValue}
                           </div>
                         </div>
 
                         {details.extraNode && (
-                          <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
+                          <div className="bg-slate-950/50 p-4 rounded-2xl border border-slate-800/80 shadow-inner">
                             {details.extraNode}
                           </div>
                         )}
@@ -568,34 +588,37 @@ export default function TransactionHistory() {
 
                     {/* Card Footer */}
                     {log.type !== 'leave' && log.type !== 'resign' && (
-                      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pt-6 border-t border-slate-800">
+                      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pt-6 border-t border-slate-800/80">
                         <div className="w-full md:w-auto">
-                          <p className="text-xs font-bold text-slate-500 mb-1">สภาที่รับเรื่อง</p>
-                          <div className={`bg-slate-900 border px-4 py-2 rounded-lg text-sm flex items-center gap-2 min-w-[200px] ${isApproved ? 'border-emerald-500/50 text-emerald-400' : 'border-slate-700 text-slate-300'}`}>
-                            <UserCircle size={18} className={isApproved ? "text-emerald-500" : "text-blue-500"} />
-                            {isApproved ? (log.approvedBy?.displayName || log.approvedBy?.email || 'Approved') : (log.data.councilMemberName || log.data.councilStaffName || '-- เลือกเจ้าหน้าที่สภา --')}
+                          <p className="text-[10px] uppercase tracking-widest font-black text-slate-500 mb-2">สภาที่รับเรื่อง</p>
+                          <div className={`bg-slate-950/80 border px-4 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 min-w-[200px] shadow-inner ${isApproved ? 'border-emerald-500/30 text-emerald-400' : 'border-slate-700/80 text-slate-300'}`}>
+                            <UserCircle size={20} weight="fill" className={isApproved ? "text-emerald-500" : "text-blue-500"} />
+                            {isApproved ? (log.approvedBy?.displayName || log.approvedBy?.email || 'Approved') : (log.data.councilMemberName || log.data.councilStaffName || '-- รอตรวจสอบ --')}
                           </div>
                         </div>
                         
                         <div className="w-full md:w-auto text-left md:text-right flex flex-col md:items-end">
-                          <p className="text-xs font-bold text-slate-500 mb-1">ยอดรวม</p>
-                          <p className="text-2xl font-black text-amber-500">{details.amount}</p>
+                          <p className="text-[10px] uppercase tracking-widest font-black text-slate-500 mb-1">ยอดรวม</p>
+                          <p className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400 drop-shadow-md">{details.amount}</p>
                         </div>
                       </div>
                     )}
 
                     {/* Action Button */}
-                    <div className="mt-6">
+                    <div className="mt-8">
                       {isApproved ? (
-                        <div className="w-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 py-4 rounded-xl font-bold flex items-center justify-center gap-2 cursor-default">
-                          <CheckCircle size={20} weight="fill" /> ตรวจสอบและอนุมัติเรียบร้อยแล้ว
+                        <div className="w-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 py-4 rounded-2xl font-black flex items-center justify-center gap-2 cursor-default shadow-inner">
+                          <CheckCircle size={22} weight="fill" /> ตรวจสอบและอนุมัติเรียบร้อยแล้ว
                         </div>
                       ) : (
                         <button 
                           onClick={() => handleApprove(log.id)}
-                          className="w-full bg-[#d4af37] hover:bg-[#c5a028] text-slate-900 py-4 rounded-xl font-black transition-all shadow-[0_0_15px_rgba(212,175,55,0.2)] hover:shadow-[0_0_25px_rgba(212,175,55,0.4)] flex items-center justify-center gap-2"
+                          className="relative w-full overflow-hidden bg-slate-800 hover:bg-slate-700 border border-amber-500/30 hover:border-amber-400/80 py-4 rounded-2xl font-black text-amber-400 hover:text-amber-300 transition-all duration-300 group/btn shadow-[0_0_15px_rgba(245,158,11,0.1)] hover:shadow-[0_0_25px_rgba(245,158,11,0.2)] hover:-translate-y-0.5"
                         >
-                          <CheckSquareOffset size={20} weight="bold" /> ตรวจสอบและอนุมัติ
+                          <div className="absolute inset-0 bg-gradient-to-r from-amber-500/0 via-amber-500/10 to-amber-500/0 translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-1000"></div>
+                          <span className="relative z-10 flex items-center justify-center gap-2">
+                            <CheckSquareOffset size={22} weight="bold" /> ยืนยันการตรวจสอบและอนุมัติ
+                          </span>
                         </button>
                       )}
                     </div>
