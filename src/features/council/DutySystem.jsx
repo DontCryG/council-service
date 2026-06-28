@@ -277,6 +277,7 @@ export default function DutySystem() {
 
   const handleCheckOut = async () => {
     if (!selectedMemberId) { showAlert('error', 'กรุณาเลือกชื่อสมาชิกก่อน'); return; }
+    if (!window.confirm('คุณต้องการยืนยันการ "ออกเวร" ใช่หรือไม่?')) return;
     const session = dutyData.activeSessions?.[selectedMemberId];
     if (!session) { showAlert('error', 'สมาชิกคนนี้ยังไม่ได้เข้าเวร'); return; }
 
@@ -382,47 +383,53 @@ export default function DutySystem() {
   const timeString = new Date(nowTs).toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-5xl mx-auto pb-20">
+    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-6xl mx-auto pb-24 relative z-10">
       
+      {/* Background Ambient Lights */}
+      <div className="fixed top-20 right-10 w-[500px] h-[500px] bg-amber-500/10 rounded-full blur-[120px] pointer-events-none -z-10 animate-pulse-slow"></div>
+      <div className="fixed bottom-10 left-10 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[120px] pointer-events-none -z-10 animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+
       {/* 1. Header & Live Clock */}
-      <div className="relative overflow-hidden rounded-[2.5rem] bg-slate-900 border border-slate-800 shadow-2xl p-10 flex flex-col items-center justify-center text-center group transition-all hover:border-slate-700">
-         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 via-yellow-300 to-amber-500 opacity-70 group-hover:opacity-100 transition-opacity"></div>
+      <div className="relative overflow-hidden rounded-[3rem] bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-[0_20px_50px_rgba(0,0,0,0.3)] p-12 flex flex-col items-center justify-center text-center group transition-all duration-700 hover:border-amber-500/30 hover:shadow-[0_0_50px_rgba(245,158,11,0.15)]">
+         <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-amber-500 to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-700"></div>
+         <div className="absolute -top-32 -right-32 w-64 h-64 bg-amber-500/20 rounded-full blur-[60px] pointer-events-none group-hover:bg-amber-500/30 transition-colors duration-700"></div>
+         <div className="absolute -bottom-32 -left-32 w-64 h-64 bg-blue-500/20 rounded-full blur-[60px] pointer-events-none group-hover:bg-blue-500/30 transition-colors duration-700"></div>
          
-         <div className="flex items-center gap-2 text-amber-500 font-bold tracking-[0.2em] text-xs sm:text-sm mb-4 uppercase bg-amber-500/10 px-4 py-1.5 rounded-full border border-amber-500/20">
-           <Circle weight="fill" className="animate-pulse" size={10} />
+         <div className="flex items-center gap-2.5 text-amber-500 font-black tracking-widest text-xs sm:text-sm mb-6 uppercase bg-amber-500/10 px-5 py-2 rounded-full border border-amber-500/20 shadow-inner z-10">
+           <Circle weight="fill" className="animate-pulse drop-shadow-[0_0_5px_rgba(245,158,11,0.8)]" size={12} />
            Council Duty System
          </div>
          
-         <div className="font-mono text-6xl md:text-8xl font-black text-white tracking-tighter drop-shadow-[0_0_15px_rgba(255,255,255,0.1)] mb-3">
+         <div className="font-mono text-7xl md:text-9xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-400 tracking-tighter drop-shadow-[0_0_20px_rgba(255,255,255,0.15)] mb-4 z-10 select-none">
            {timeString}
          </div>
          
-         <div className="text-slate-400 font-medium tracking-wide flex items-center gap-2">
-           <CalendarBlank size={18} />
+         <div className="text-slate-400 font-bold tracking-widest flex items-center gap-2.5 bg-slate-950/50 px-6 py-2.5 rounded-full border border-slate-700/50 shadow-inner z-10">
+           <CalendarBlank size={20} className="text-amber-500/70" />
            {formatThaiDate(nowTs)}
          </div>
       </div>
 
       {/* 2. Modern Pill Tabs */}
-      <div className="flex justify-center">
-        <div className="bg-slate-900 p-1.5 rounded-full border border-slate-800 flex gap-1 shadow-lg backdrop-blur-md">
+      <div className="flex justify-center relative z-10">
+        <div className="bg-slate-900/60 p-2 rounded-full border border-slate-700/50 flex gap-2 shadow-2xl backdrop-blur-xl">
           {[
-            { id: 'duty', label: 'ลงเวลาทำงาน', icon: <ClockClockwise size={18} weight="bold" /> },
-            { id: 'leave', label: 'แจ้งลางาน', icon: <Coffee size={18} weight="bold" /> },
-            { id: 'resign', label: 'แจ้งลาออก', icon: <SignOut size={18} weight="bold" /> }
+            { id: 'duty', label: 'ลงเวลาทำงาน', icon: <ClockClockwise size={20} weight="duotone" /> },
+            { id: 'leave', label: 'แจ้งลางาน', icon: <Coffee size={20} weight="duotone" /> },
+            { id: 'resign', label: 'แจ้งลาออก', icon: <SignOut size={20} weight="duotone" /> }
           ].map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 ${
+              className={`flex items-center gap-2.5 px-7 py-3.5 rounded-full text-sm font-black transition-all duration-500 ${
                 activeTab === tab.id
                   ? (tab.id === 'resign' 
-                      ? 'bg-gradient-to-br from-red-500 to-red-600 text-white shadow-lg shadow-red-500/25 scale-105' 
-                      : 'bg-gradient-to-br from-amber-400 to-amber-500 text-slate-900 shadow-lg shadow-amber-500/25 scale-105')
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800 hover:scale-105'
+                      ? 'bg-gradient-to-r from-red-500 to-rose-600 text-white shadow-[0_0_20px_rgba(239,68,68,0.4)] scale-105 border border-red-400/50' 
+                      : 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-900 shadow-[0_0_20px_rgba(245,158,11,0.4)] scale-105 border border-amber-300/50')
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800/80 hover:shadow-inner border border-transparent'
               }`}
             >
-              {tab.icon} <span className="hidden sm:inline">{tab.label}</span>
+              {tab.icon} <span className="hidden sm:inline tracking-wide">{tab.label}</span>
             </button>
           ))}
         </div>
@@ -439,71 +446,74 @@ export default function DutySystem() {
             <div className="space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
               
               {/* Glassmorphism Action Panel */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10">
                 
                 {/* Profile & Status Card (Left) */}
-                <div className="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-3xl p-6 relative overflow-hidden group">
-                  <div className="absolute -right-10 -top-10 w-64 h-64 bg-[radial-gradient(circle,_rgba(245,158,11,0.1)_0%,_transparent_70%)] group-hover:bg-[radial-gradient(circle,_rgba(245,158,11,0.15)_0%,_transparent_70%)] transition-all duration-500"></div>
+                <div className="lg:col-span-5 bg-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-[2.5rem] p-8 relative overflow-hidden group shadow-2xl">
+                  {/* Sweep Gradient Effect */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/0 via-amber-500/10 to-amber-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+                  <div className="absolute -right-20 -top-20 w-[300px] h-[300px] bg-amber-500/10 rounded-full blur-[80px] group-hover:bg-amber-500/20 group-hover:scale-125 transition-all duration-1000 pointer-events-none"></div>
                   
-                  <div className="flex items-center gap-4 mb-6 relative z-10">
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 flex items-center justify-center shadow-inner">
-                      <UserCircle size={36} className="text-amber-500" />
+                  <div className="flex items-center gap-5 mb-8 relative z-10">
+                    <div className="w-20 h-20 rounded-[1.25rem] bg-slate-950/80 border border-slate-700/80 flex items-center justify-center shadow-inner group-hover:border-amber-500/30 transition-colors">
+                      <UserCircle size={44} className="text-amber-500 drop-shadow-md" />
                     </div>
                     <div>
-                      <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">ผู้ปฏิบัติงาน</div>
-                      <div className="text-xl font-black text-white">{currentMember?.name || user?.displayName || user?.email || 'ไม่พบข้อมูล'}</div>
+                      <div className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-1.5">ผู้ปฏิบัติงาน</div>
+                      <div className="text-2xl font-black text-white drop-shadow-md">{currentMember?.name || user?.displayName || user?.email || 'ไม่พบข้อมูล'}</div>
                     </div>
                   </div>
 
                   {selectedSession ? (
-                    <div className={`relative z-10 rounded-2xl p-5 border backdrop-blur-sm ${
+                    <div className={`relative z-10 rounded-3xl p-6 border backdrop-blur-md shadow-inner transition-colors duration-500 ${
                       selectedSession.status === 'break'
-                        ? 'bg-amber-500/10 border-amber-500/20 shadow-[0_0_30px_rgba(245,158,11,0.1)]'
-                        : 'bg-emerald-500/10 border-emerald-500/20 shadow-[0_0_30px_rgba(16,185,129,0.1)]'
+                        ? 'bg-amber-500/10 border-amber-500/30 shadow-[inset_0_0_20px_rgba(245,158,11,0.1)]'
+                        : 'bg-emerald-500/10 border-emerald-500/30 shadow-[inset_0_0_20px_rgba(16,185,129,0.1)]'
                     }`}>
-                      <div className="flex items-center gap-3 mb-2">
-                        <div className={`w-2.5 h-2.5 rounded-full animate-pulse ${selectedSession.status === 'break' ? 'bg-amber-400' : 'bg-emerald-400'}`} />
-                        <span className={`font-bold ${selectedSession.status === 'break' ? 'text-amber-400' : 'text-emerald-400'}`}>
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className={`w-3 h-3 rounded-full animate-pulse shadow-[0_0_10px_currentColor] ${selectedSession.status === 'break' ? 'bg-amber-400 text-amber-400' : 'bg-emerald-400 text-emerald-400'}`} />
+                        <span className={`font-black text-sm tracking-widest uppercase ${selectedSession.status === 'break' ? 'text-amber-400' : 'text-emerald-400'}`}>
                           {selectedSession.status === 'break' ? 'กำลังพักเบรค' : 'กำลังปฏิบัติหน้าที่'}
                         </span>
                       </div>
-                      <div className="font-mono text-4xl font-black text-white my-2 tracking-tight">
+                      <div className="font-mono text-5xl font-black text-white my-4 tracking-tighter drop-shadow-md">
                         {formatDuration(getElapsed(selectedSession))}
                       </div>
-                      <div className="text-sm text-slate-400 flex items-center gap-2">
-                        <ClockClockwise size={16} /> เข้าเวรตั้งแต่ {formatTime(selectedSession.checkIn)} น.
+                      <div className="text-xs font-bold text-slate-400 flex items-center gap-2 bg-slate-950/40 w-fit px-4 py-2 rounded-xl border border-slate-700/50">
+                        <ClockClockwise size={16} /> เข้าเวรตั้งแต่ <span className="text-white">{formatTime(selectedSession.checkIn)} น.</span>
                       </div>
                     </div>
                   ) : (
-                    <div className="relative z-10 rounded-2xl p-5 border border-slate-700/50 bg-slate-800/20 text-center">
-                      <div className="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center mx-auto mb-3">
-                        <SignIn size={20} className="text-slate-500" />
+                    <div className="relative z-10 rounded-3xl p-8 border border-slate-700/50 bg-slate-950/40 text-center shadow-inner flex flex-col items-center justify-center min-h-[200px]">
+                      <div className="w-16 h-16 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center mx-auto mb-4 shadow-inner group-hover:scale-110 transition-transform duration-500">
+                        <SignIn size={28} className="text-slate-500" />
                       </div>
-                      <div className="font-bold text-slate-300">ยังไม่ได้เข้าเวร</div>
-                      <div className="text-xs text-slate-500 mt-1">กดปุ่ม "เข้าเวร" เพื่อเริ่มนับเวลาทำงาน</div>
+                      <div className="font-black text-slate-300 text-lg mb-1.5 tracking-wide">ยังไม่ได้เข้าเวร</div>
+                      <div className="text-[11px] font-bold text-slate-500 tracking-widest uppercase">กดปุ่ม "เข้าเวร" เพื่อเริ่มนับเวลาทำงาน</div>
                     </div>
                   )}
 
-                  <div className="mt-6 flex gap-2 items-start bg-blue-500/5 border border-blue-500/10 p-3 rounded-xl relative z-10">
-                    <Info size={16} className="text-blue-400 shrink-0 mt-0.5" />
-                    <p className="text-xs text-blue-300/70 leading-relaxed">ระบบ Auto Sweep จะ Check Out ให้อัตโนมัติเวลา <strong className="text-blue-400">18:00 น.</strong> และ <strong className="text-blue-400">23:59 น.</strong> ของทุกวัน</p>
+                  <div className="mt-8 flex gap-3 items-start bg-blue-500/5 border border-blue-500/10 p-4 rounded-2xl relative z-10 shadow-inner backdrop-blur-sm">
+                    <Info size={20} weight="duotone" className="text-blue-400 shrink-0 mt-0.5" />
+                    <p className="text-xs font-medium text-blue-300/80 leading-relaxed">ระบบ Auto Sweep จะ Check Out ให้อัตโนมัติเวลา <strong className="text-blue-400 font-black">18:00 น.</strong> และ <strong className="text-blue-400 font-black">23:59 น.</strong> ของทุกวัน</p>
                   </div>
                 </div>
 
                 {/* Actions Grid (Right) */}
-                <div className="lg:col-span-7 grid grid-cols-2 gap-4">
+                <div className="lg:col-span-7 grid grid-cols-2 gap-6">
                   <button
                     type="button"
                     onClick={handleCheckIn}
                     disabled={!!selectedSession}
-                    className="col-span-2 sm:col-span-1 flex flex-col items-center justify-center gap-4 bg-gradient-to-b from-slate-800 to-slate-900 border border-slate-700 rounded-3xl p-6 hover:border-emerald-500/50 hover:shadow-[0_0_40px_rgba(16,185,129,0.15)] disabled:opacity-40 disabled:hover:border-slate-700 disabled:hover:shadow-none transition-all group"
+                    className="col-span-2 sm:col-span-1 flex flex-col items-center justify-center gap-5 bg-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-[2.5rem] p-8 hover:border-emerald-500/50 hover:shadow-[0_0_40px_rgba(16,185,129,0.2)] disabled:opacity-40 disabled:hover:border-slate-700/50 disabled:hover:shadow-none transition-all duration-300 group shadow-2xl relative overflow-hidden"
                   >
-                    <div className="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <SignIn size={32} weight="fill" className="text-emerald-500" />
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-emerald-500/20 transition-colors duration-500"></div>
+                    <div className="w-20 h-20 rounded-3xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-500 shadow-inner relative z-10">
+                      <SignIn size={36} weight="duotone" className="text-emerald-500 drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
                     </div>
-                    <div className="text-center">
-                      <div className="font-black text-white text-lg tracking-wide">เข้าเวร (CLOCK IN)</div>
-                      <div className="text-xs text-slate-400 mt-1">เริ่มนับชั่วโมงการทำงาน</div>
+                    <div className="text-center relative z-10">
+                      <div className="font-black text-white text-xl tracking-wider mb-1.5">เข้าเวร (CLOCK IN)</div>
+                      <div className="text-[11px] font-bold tracking-widest text-emerald-500/70 uppercase">เริ่มนับชั่วโมงการทำงาน</div>
                     </div>
                   </button>
 
@@ -511,17 +521,18 @@ export default function DutySystem() {
                     type="button"
                     onClick={handleBreakToggle}
                     disabled={!selectedSession}
-                    className="col-span-2 sm:col-span-1 flex flex-col items-center justify-center gap-4 bg-gradient-to-b from-slate-800 to-slate-900 border border-slate-700 rounded-3xl p-6 hover:border-amber-500/50 hover:shadow-[0_0_40px_rgba(245,158,11,0.15)] disabled:opacity-40 disabled:hover:border-slate-700 disabled:hover:shadow-none transition-all group"
+                    className="col-span-2 sm:col-span-1 flex flex-col items-center justify-center gap-5 bg-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-[2.5rem] p-8 hover:border-amber-500/50 hover:shadow-[0_0_40px_rgba(245,158,11,0.2)] disabled:opacity-40 disabled:hover:border-slate-700/50 disabled:hover:shadow-none transition-all duration-300 group shadow-2xl relative overflow-hidden"
                   >
-                    <div className="w-16 h-16 rounded-full bg-amber-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-amber-500/20 transition-colors duration-500"></div>
+                    <div className="w-20 h-20 rounded-3xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-500 shadow-inner relative z-10">
                       {selectedSession?.status === 'break' 
-                        ? <ClockClockwise size={32} weight="fill" className="text-amber-500" />
-                        : <Coffee size={32} weight="fill" className="text-amber-500" />
+                        ? <ClockClockwise size={36} weight="duotone" className="text-amber-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.8)]" />
+                        : <Coffee size={36} weight="duotone" className="text-amber-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.8)]" />
                       }
                     </div>
-                    <div className="text-center">
-                      <div className="font-black text-white text-lg tracking-wide">{selectedSession?.status === 'break' ? 'ทำงานต่อ' : 'พักเบรค'}</div>
-                      <div className="text-xs text-slate-400 mt-1">{selectedSession?.status === 'break' ? 'กลับมาทำงานตามปกติ' : 'หยุดพักนับเวลาชั่วคราว'}</div>
+                    <div className="text-center relative z-10">
+                      <div className="font-black text-white text-xl tracking-wider mb-1.5">{selectedSession?.status === 'break' ? 'ทำงานต่อ' : 'พักเบรค'}</div>
+                      <div className="text-[11px] font-bold tracking-widest text-amber-500/70 uppercase">{selectedSession?.status === 'break' ? 'กลับมาทำงานตามปกติ' : 'หยุดพักนับเวลาชั่วคราว'}</div>
                     </div>
                   </button>
 
@@ -529,62 +540,75 @@ export default function DutySystem() {
                     type="button"
                     onClick={handleCheckOut}
                     disabled={!selectedSession}
-                    className="col-span-2 flex flex-col sm:flex-row items-center justify-center gap-4 bg-gradient-to-r from-red-500/10 to-red-600/5 border border-red-500/20 rounded-3xl p-6 hover:border-red-500/50 hover:bg-red-500/10 hover:shadow-[0_0_40px_rgba(239,68,68,0.2)] disabled:opacity-40 disabled:hover:border-red-500/20 disabled:hover:bg-red-500/5 disabled:hover:shadow-none transition-all group"
+                    className="col-span-2 flex flex-col sm:flex-row items-center justify-center gap-6 bg-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-[2.5rem] p-8 hover:border-red-500/50 hover:bg-red-500/10 hover:shadow-[0_0_40px_rgba(239,68,68,0.2)] disabled:opacity-40 disabled:hover:border-slate-700/50 disabled:hover:bg-slate-900/50 disabled:hover:shadow-none transition-all duration-300 group shadow-2xl relative overflow-hidden"
                   >
-                    <div className="w-14 h-14 rounded-full bg-red-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <SignOut size={28} weight="fill" className="text-red-500" />
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-64 h-32 bg-red-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-red-500/20 transition-colors duration-500"></div>
+                    <div className="w-20 h-20 rounded-3xl bg-red-500/10 border border-red-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-500 shadow-inner relative z-10 shrink-0">
+                      <SignOut size={36} weight="duotone" className="text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
                     </div>
-                    <div className="text-center sm:text-left">
-                      <div className="font-black text-white text-xl tracking-wide">ออกเวร (CLOCK OUT)</div>
-                      <div className="text-sm text-red-400/80 mt-1">สิ้นสุดการทำงานและบันทึกชั่วโมงสุทธิ</div>
+                    <div className="text-center sm:text-left relative z-10">
+                      <div className="font-black text-white text-2xl tracking-wider mb-1.5">ออกเวร (CLOCK OUT)</div>
+                      <div className="text-xs font-bold tracking-widest text-red-400/80 uppercase">สิ้นสุดการทำงานและบันทึกชั่วโมงสุทธิ</div>
                     </div>
                   </button>
                 </div>
               </div>
 
               {/* Live Status Board */}
-              <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-80 h-80 bg-[radial-gradient(circle,_rgba(59,130,246,0.1)_0%,_transparent_70%)] pointer-events-none"></div>
+              <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 rounded-[3rem] p-8 md:p-12 relative overflow-hidden shadow-2xl">
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[radial-gradient(circle,_rgba(59,130,246,0.1)_0%,_transparent_70%)] pointer-events-none"></div>
+                <div className="absolute -bottom-32 -left-32 w-64 h-64 bg-emerald-500/10 rounded-full blur-[80px] pointer-events-none"></div>
                 
-                <div className="flex items-center justify-between mb-8 relative z-10">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 relative z-10">
+                  <div className="flex items-center gap-4">
+                    <div className="w-16 h-16 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shadow-inner shrink-0">
+                      <ClockClockwise size={32} className="text-blue-500" weight="duotone" />
+                    </div>
                     <div>
-                      <h3 className="font-black text-white text-lg">Live Status Board</h3>
-                      <p className="text-sm text-slate-400">กำลังพลที่ปฏิบัติงานอยู่ในขณะนี้ ({activeMemberIds.length} นาย)</p>
+                      <div className="flex items-center gap-3 mb-1">
+                        <div className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_15px_rgba(16,185,129,0.8)]" />
+                        <h3 className="font-black text-white text-2xl drop-shadow-md tracking-wide">Live Status Board</h3>
+                      </div>
+                      <p className="text-sm font-bold text-slate-400 tracking-wide">กำลังพลที่ปฏิบัติงานอยู่ในขณะนี้ <span className="text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20 ml-2 shadow-inner">{activeMemberIds.length} นาย</span></p>
                     </div>
                   </div>
                 </div>
 
                 {activeMemberIds.length === 0 ? (
-                  <div className="py-16 text-center border-2 border-dashed border-slate-800 rounded-2xl bg-slate-900/50 relative z-10">
-                    <div className="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <UserCircle size={32} className="text-slate-600" />
+                  <div className="py-20 text-center border-2 border-dashed border-slate-700/50 rounded-[2rem] bg-slate-950/40 relative z-10 shadow-inner backdrop-blur-sm">
+                    <div className="w-20 h-20 bg-slate-900 border border-slate-800 rounded-[1.25rem] flex items-center justify-center mx-auto mb-5 shadow-inner">
+                      <UserCircle size={40} className="text-slate-600" weight="duotone" />
                     </div>
-                    <div className="text-slate-400 font-bold">ไม่มีสมาชิกปฏิบัติงานในขณะนี้</div>
+                    <div className="text-slate-300 font-black text-xl tracking-wide mb-2">ไม่มีสมาชิกปฏิบัติงานในขณะนี้</div>
+                    <div className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">ระบบจะอัปเดตอัตโนมัติเมื่อมีการเข้าเวร</div>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 relative z-10">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
                     {activeMemberIds.map(id => {
                       const m = councilMembers.find(x => x.id === id);
                       const s = dutyData.activeSessions[id];
                       const isBreak = s.status === 'break';
                       return (
-                        <div key={id} className={`p-5 rounded-2xl flex items-center gap-4 border transition-transform hover:-translate-y-1 ${isBreak ? 'border-amber-500/30 bg-amber-500/10 shadow-[0_4px_20px_rgba(245,158,11,0.05)]' : 'border-emerald-500/30 bg-emerald-500/10 shadow-[0_4px_20px_rgba(16,185,129,0.05)]'}`}>
-                          <div className="relative">
-                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${isBreak ? 'bg-amber-500/20' : 'bg-emerald-500/20'}`}>
-                              <UserCircle size={28} className={isBreak ? 'text-amber-400' : 'text-emerald-400'} />
+                        <div key={id} className={`p-6 rounded-[2rem] flex items-center gap-5 border transition-all duration-300 hover:-translate-y-1.5 group overflow-hidden relative ${isBreak ? 'border-amber-500/30 bg-amber-500/10 hover:shadow-[0_10px_30px_rgba(245,158,11,0.15)] hover:border-amber-500/50' : 'border-emerald-500/30 bg-emerald-500/10 hover:shadow-[0_10px_30px_rgba(16,185,129,0.15)] hover:border-emerald-500/50'}`}>
+                          <div className={`absolute -right-10 -top-10 w-32 h-32 rounded-full blur-[40px] opacity-0 group-hover:opacity-50 transition-opacity duration-500 pointer-events-none ${isBreak ? 'bg-amber-500' : 'bg-emerald-500'}`}></div>
+                          
+                          <div className="relative z-10">
+                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 border shadow-inner group-hover:scale-110 transition-transform ${isBreak ? 'bg-amber-500/20 border-amber-500/30' : 'bg-emerald-500/20 border-emerald-500/30'}`}>
+                              <UserCircle size={32} className={isBreak ? 'text-amber-400' : 'text-emerald-400'} weight="duotone" />
                             </div>
-                            <div className={`absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-slate-900 ${isBreak ? 'bg-amber-400' : 'bg-emerald-400'}`}></div>
+                            <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-slate-900 shadow-[0_0_8px_currentColor] ${isBreak ? 'bg-amber-400 text-amber-400 animate-pulse' : 'bg-emerald-400 text-emerald-400'}`}></div>
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="font-bold text-white text-sm truncate">{m?.name || id}</div>
-                            <div className={`text-xs mt-1 font-mono font-bold ${isBreak ? 'text-amber-400' : 'text-emerald-400'}`}>
+                          
+                          <div className="flex-1 min-w-0 z-10">
+                            <div className="font-black text-white text-base truncate mb-1 drop-shadow-sm">{m?.name || id}</div>
+                            <div className={`text-sm font-mono font-bold tracking-tight bg-slate-950/50 w-fit px-3 py-1 rounded-lg border shadow-inner ${isBreak ? 'text-amber-400 border-amber-500/20' : 'text-emerald-400 border-emerald-500/20'}`}>
                               {isBreak ? '☕ พักเบรค' : `⏱ ${formatDuration(getElapsed(s))}`}
                             </div>
                           </div>
-                          <div className="text-xs text-slate-500 font-mono text-right shrink-0">
-                            IN<br/><span className="text-slate-300 font-bold">{formatTime(s.checkIn)}</span>
+                          
+                          <div className="text-right shrink-0 z-10">
+                            <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">เวลาเข้า</div>
+                            <div className="text-slate-300 font-black font-mono bg-slate-900/80 px-2.5 py-1 rounded-lg border border-slate-700/50 shadow-inner">{formatTime(s.checkIn)}</div>
                           </div>
                         </div>
                       );
@@ -594,104 +618,96 @@ export default function DutySystem() {
               </div>
 
               {/* History Section */}
-              <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
-                  <div>
-                    <h3 className="text-xl font-black text-white">ประวัติการลงเวลา</h3>
-                    <p className="text-sm text-slate-400 mt-1">ตรวจสอบชั่วโมงทำงานของคุณเพื่อเช็คยอดรายสัปดาห์</p>
+              <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 rounded-[3rem] p-8 md:p-12 shadow-2xl relative overflow-hidden">
+                <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-8 mb-10 relative z-10">
+                  <div className="flex items-center gap-5">
+                    <div className="w-16 h-16 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center shadow-inner shrink-0">
+                      <CalendarBlank size={32} className="text-purple-500" weight="duotone" />
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-black text-white drop-shadow-md tracking-wide mb-1.5">ประวัติการลงเวลา</h3>
+                      <p className="text-sm font-bold text-slate-400 tracking-wide">ตรวจสอบชั่วโมงทำงานของคุณเพื่อเช็คยอดรายสัปดาห์</p>
+                    </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-2 bg-slate-950 p-1.5 rounded-xl border border-slate-800">
+                  <div className="flex items-center gap-4">
+                    <div className="flex flex-col sm:flex-row items-center gap-3 bg-slate-950/80 p-2 rounded-[1.25rem] border border-slate-700/80 shadow-inner">
                       <input
                         type="date"
-                        className="bg-transparent text-white text-sm focus:outline-none px-3 py-2 cursor-pointer w-36"
+                        className="bg-slate-900 border border-slate-700/50 text-white font-bold focus:outline-none focus:border-purple-500/50 rounded-xl px-4 py-3 cursor-pointer w-full sm:w-40 transition-colors"
                         value={dateFrom}
                         onChange={e => setDateFrom(e.target.value)}
                       />
-                      <span className="text-slate-600 font-bold">-</span>
+                      <span className="text-slate-500 font-black text-lg hidden sm:block">-</span>
                       <input
                         type="date"
-                        className="bg-transparent text-white text-sm focus:outline-none px-3 py-2 cursor-pointer w-36"
+                        className="bg-slate-900 border border-slate-700/50 text-white font-bold focus:outline-none focus:border-purple-500/50 rounded-xl px-4 py-3 cursor-pointer w-full sm:w-40 transition-colors"
                         value={dateTo}
                         onChange={e => setDateTo(e.target.value)}
                       />
                     </div>
                     <button
                       onClick={handleSearch}
-                      className="bg-amber-500 hover:bg-amber-400 text-slate-900 w-12 h-12 rounded-xl flex items-center justify-center transition-colors shadow-lg shadow-amber-500/20 shrink-0"
+                      className="bg-purple-500 hover:bg-purple-400 text-white w-16 h-16 sm:w-[60px] sm:h-[60px] rounded-[1.25rem] flex items-center justify-center transition-all shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:shadow-[0_0_30px_rgba(168,85,247,0.5)] shrink-0 group border border-purple-400/50 hover:-translate-y-1"
                     >
-                      <MagnifyingGlass size={20} weight="bold" />
+                      <MagnifyingGlass size={28} weight="bold" className="group-hover:scale-110 transition-transform" />
                     </button>
                   </div>
                 </div>
 
                 {/* Summary Metrics */}
                 {filteredHistory.length > 0 && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                    <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-5 flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center">
-                        <ClockClockwise size={24} className="text-blue-400" />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10 relative z-10">
+                    <div className="bg-slate-900/80 border border-blue-500/20 rounded-[2rem] p-6 flex items-center gap-6 shadow-inner group hover:border-blue-500/50 transition-colors">
+                      <div className="w-16 h-16 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
+                        <ClockClockwise size={32} className="text-blue-400" weight="duotone" />
                       </div>
                       <div>
-                        <div className="text-sm text-slate-400 font-bold uppercase">เวลารวม (ช่วงที่เลือก)</div>
-                        <div className="text-2xl font-black text-white tracking-tight">{formatDuration(totalFilteredMinutes)}</div>
+                        <div className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-1.5">เวลารวม (ช่วงที่เลือก)</div>
+                        <div className="text-3xl font-black text-white tracking-tighter drop-shadow-md">{formatDuration(totalFilteredMinutes)}</div>
                       </div>
                     </div>
-                    <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-5 flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center">
-                        <Coffee size={24} className="text-amber-400" />
+                    <div className="bg-slate-900/80 border border-amber-500/20 rounded-[2rem] p-6 flex items-center gap-6 shadow-inner group hover:border-amber-500/50 transition-colors">
+                      <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
+                        <Coffee size={32} className="text-amber-400" weight="duotone" />
                       </div>
                       <div>
-                        <div className="text-sm text-slate-400 font-bold uppercase">เวลาเฉลี่ย/รอบงาน</div>
-                        <div className="text-2xl font-black text-amber-400 tracking-tight">{formatDuration(avgMinutes)}</div>
+                        <div className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-1.5">เวลาเฉลี่ย/รอบงาน</div>
+                        <div className="text-3xl font-black text-amber-400 tracking-tighter drop-shadow-md">{formatDuration(avgMinutes)}</div>
                       </div>
                     </div>
                   </div>
                 )}
 
                 {/* History Feed */}
-                <div className="space-y-4">
+                <div className="space-y-5 relative z-10">
                   {filteredHistory.length === 0 ? (
-                    <div className="py-12 text-center text-slate-500 border-2 border-dashed border-slate-800 rounded-2xl">ไม่มีข้อมูลในช่วงวันที่เลือก</div>
+                    <div className="py-20 text-center text-slate-500 border-2 border-dashed border-slate-700/50 rounded-[2rem] bg-slate-950/40 shadow-inner">
+                      <div className="w-16 h-16 bg-slate-900 border border-slate-800 rounded-[1.25rem] flex items-center justify-center mx-auto mb-4 shadow-inner">
+                        <CalendarBlank size={32} className="text-slate-600" weight="duotone" />
+                      </div>
+                      <div className="font-black text-lg tracking-wide mb-1 text-slate-400">ไม่มีข้อมูลในช่วงวันที่เลือก</div>
+                      <div className="text-[11px] uppercase tracking-widest font-bold">กรุณาลองเปลี่ยนช่วงเวลาค้นหา</div>
+                    </div>
                   ) : (
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                       {filteredHistory.map(s => (
-                        <div key={s.id} className="bg-slate-950/50 border border-slate-800 rounded-2xl p-5 hover:border-amber-500/30 hover:bg-slate-800/50 transition-all group">
-                          <div className="flex items-center justify-between mb-5">
-                            <div className="flex items-center gap-3">
-                              <div className="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center font-black text-white text-lg shadow-inner">
+                        <div key={s.id} className="bg-slate-950/80 border border-slate-700/80 rounded-[2rem] p-6 md:p-8 hover:border-purple-500/40 hover:shadow-[0_0_30px_rgba(168,85,247,0.1)] transition-all duration-300 group relative overflow-hidden flex flex-col justify-between">
+                          <div className="absolute top-0 right-0 w-40 h-40 bg-purple-500/5 rounded-full blur-[40px] group-hover:bg-purple-500/10 pointer-events-none transition-colors duration-500 -mr-10 -mt-10"></div>
+                          
+                          <div className="flex items-center justify-between mb-8 relative z-10">
+                            <div className="flex items-center gap-4">
+                              <div className="w-14 h-14 rounded-2xl bg-slate-900 border border-slate-700/80 flex items-center justify-center font-black text-slate-300 text-xl shadow-inner group-hover:border-purple-500/30 transition-colors">
                                 {s.memberName.charAt(0).toUpperCase()}
                               </div>
                               <div>
-                                <h4 className="font-bold text-white text-base group-hover:text-amber-400 transition-colors">{s.memberName}</h4>
-                                <span className="text-sm text-slate-400">{formatThaiDate(s.checkIn)}</span>
+                                <h4 className="font-black text-white text-lg tracking-wide group-hover:text-purple-400 transition-colors mb-0.5 drop-shadow-sm">{s.memberName}</h4>
+                                <span className="text-xs font-bold text-slate-400 bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-800">{formatThaiDate(s.checkIn)}</span>
                               </div>
                             </div>
                             <div className="text-right">
-                              <div className="font-black text-emerald-400 text-2xl tracking-tight leading-none">{formatDuration(s.netMinutes)}</div>
-                              {s.totalBreakMinutes > 0 && <span className="text-xs text-amber-500/70 font-bold mt-1 block">พักไป {formatDuration(s.totalBreakMinutes)}</span>}
-                            </div>
-                          </div>
-
-                          <div className="flex items-center justify-between bg-slate-900 rounded-xl p-4 border border-slate-800 relative overflow-hidden">
-                            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-slate-800 -translate-x-1/2"></div>
-                            
-                            <div className="text-center flex-1 relative z-10">
-                              <span className="block text-xs text-slate-500 uppercase font-black mb-1 tracking-widest">IN</span>
-                              <span className="font-mono text-white font-bold text-base">{formatTime(s.checkIn)}</span>
-                            </div>
-                            <div className="text-center flex-1 relative z-10">
-                              {s.autoCheckOut && (
-                                <span className="absolute top-1 right-[20%] flex h-2 w-2" title="ระบบตัดรอบอัตโนมัติ">
-                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                                  <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                                </span>
-                              )}
-                              <span className="block text-xs text-slate-500 uppercase font-black mb-1 tracking-widest">OUT</span>
-                              <span className={`font-mono font-bold text-base ${s.autoCheckOut ? 'text-red-400' : 'text-white'}`}>
-                                {formatTime(s.checkOut)}
-                              </span>
+                              <div className="font-black text-emerald-400 text-3xl tracking-tighter leading-none drop-shadow-md">{formatDuration(s.netMinutes)}</div>
+                              {s.totalBreakMinutes > 0 && <span className="text-[10px] text-amber-500 font-black mt-2 inline-block uppercase tracking-widest bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20 shadow-inner">พักไป {formatDuration(s.totalBreakMinutes)}</span>}
                             </div>
                           </div>
                         </div>
@@ -704,67 +720,82 @@ export default function DutySystem() {
           )}
 
           {activeTab === 'leave' && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div className="space-y-10 animate-in fade-in slide-in-from-right-8 duration-500">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10">
                 
                 {/* Leave Form */}
                 <div className="lg:col-span-5 space-y-6">
-                  <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8 shadow-xl relative overflow-hidden">
-                    <div className="absolute top-0 left-0 w-full h-1 bg-blue-500"></div>
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500">
-                        <Coffee size={24} weight="fill" />
+                  <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 rounded-[3rem] p-8 md:p-10 shadow-2xl relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-blue-500/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-blue-500/20 transition-colors duration-700 -mr-20 -mt-20"></div>
+                    <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-blue-500 via-blue-400 to-transparent"></div>
+                    
+                    <div className="flex items-center gap-4 mb-8 relative z-10">
+                      <div className="w-14 h-14 rounded-[1.25rem] bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-500">
+                        <Coffee size={32} weight="duotone" className="text-blue-500 drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]" />
                       </div>
-                      <h2 className="text-xl font-black text-white">แบบฟอร์มแจ้งลา</h2>
+                      <h2 className="text-2xl font-black text-white drop-shadow-md tracking-wide">แบบฟอร์มแจ้งลา</h2>
                     </div>
 
-                    <div className="space-y-4">
-                      <div className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <UserCircle size={22} className="text-slate-400" />
-                          <span className="text-white font-bold">
-                            {currentMember?.name || user?.displayName || user?.email || 'ไม่พบข้อมูล'}
-                          </span>
+                    <div className="space-y-6 relative z-10">
+                      <div className="w-full bg-slate-900/80 border border-slate-700/50 rounded-2xl p-5 flex items-center justify-between shadow-inner">
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center">
+                            <UserCircle size={24} className="text-slate-400" />
+                          </div>
+                          <div>
+                            <span className="text-white font-black block tracking-wide">
+                              {currentMember?.name || user?.displayName || user?.email || 'ไม่พบข้อมูล'}
+                            </span>
+                            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-0.5 block">บัญชีของคุณ</span>
+                          </div>
                         </div>
-                        <span className="text-xs text-slate-500 font-bold">บัญชีของคุณ</span>
                       </div>
 
-                      <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">ประเภทการลา</label>
+                      <div className="space-y-3">
+                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                          <Circle size={8} weight="fill" className="text-blue-500" /> ประเภทการลา
+                        </label>
                         <select
-                          className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-blue-500 transition-colors font-medium appearance-none"
+                          className="w-full bg-slate-950/80 border-2 border-slate-700/80 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-blue-500/80 focus:ring-4 focus:ring-blue-500/10 transition-all font-bold appearance-none shadow-inner cursor-pointer"
                           value={leaveForm.type}
                           onChange={e => setLeaveForm({...leaveForm, type: e.target.value})}
+                          style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1.5em 1.5em' }}
                         >
-                          {LEAVE_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                          {LEAVE_TYPES.map(t => <option key={t} value={t} className="bg-slate-900">{t}</option>)}
                         </select>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">ตั้งแต่วันที่</label>
+                      <div className="grid grid-cols-2 gap-5">
+                        <div className="space-y-3">
+                          <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                            <Circle size={8} weight="fill" className="text-blue-500" /> ตั้งแต่วันที่
+                          </label>
                           <input type="date"
-                            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 font-medium"
+                            className="w-full bg-slate-950/80 border-2 border-slate-700/80 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-blue-500/80 focus:ring-4 focus:ring-blue-500/10 transition-all font-bold shadow-inner"
                             value={leaveForm.dateFrom}
                             onChange={e => setLeaveForm({...leaveForm, dateFrom: e.target.value})}
                           />
                         </div>
-                        <div className="space-y-2">
-                          <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">ถึงวันที่</label>
+                        <div className="space-y-3">
+                          <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                            <Circle size={8} weight="fill" className="text-blue-500" /> ถึงวันที่
+                          </label>
                           <input type="date"
-                            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 font-medium"
+                            className="w-full bg-slate-950/80 border-2 border-slate-700/80 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-blue-500/80 focus:ring-4 focus:ring-blue-500/10 transition-all font-bold shadow-inner"
                             value={leaveForm.dateTo}
                             onChange={e => setLeaveForm({...leaveForm, dateTo: e.target.value})}
                           />
                         </div>
                       </div>
 
-                      <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">เหตุผลการลา</label>
+                      <div className="space-y-3">
+                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                          <Circle size={8} weight="fill" className="text-blue-500" /> เหตุผลการลา
+                        </label>
                         <textarea
                           rows={4}
                           placeholder="ระบุเหตุผลที่ชัดเจน..."
-                          className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 resize-none font-medium"
+                          className="w-full bg-slate-950/80 border-2 border-slate-700/80 rounded-2xl px-5 py-4 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500/80 focus:ring-4 focus:ring-blue-500/10 transition-all font-bold resize-none shadow-inner"
                           value={leaveForm.reason}
                           onChange={e => setLeaveForm({...leaveForm, reason: e.target.value})}
                         />
@@ -776,6 +807,7 @@ export default function DutySystem() {
                           if (!leaveForm.memberId || !leaveForm.dateFrom || !leaveForm.dateTo || !leaveForm.reason) {
                             showAlert('error', 'กรุณากรอกข้อมูลให้ครบถ้วน'); return;
                           }
+                          if (!window.confirm('คุณต้องการยืนยันการ "ส่งใบลา" ใช่หรือไม่?')) return;
                           const memberName = councilMembers.find(m => m.id === leaveForm.memberId)?.name || 'Unknown';
                           const payload = {
                             memberId: leaveForm.memberId,
@@ -789,11 +821,11 @@ export default function DutySystem() {
                                 title: "📝 แจ้งลางาน (Leave Request)",
                                 color: 0x3b82f6,
                                 fields: [
-                                  { name: "👤 สมาชิก", value: memberName, inline: true },
+                                  { name: "👤 ผู้แจ้ง", value: memberName, inline: true },
                                   { name: "📋 ประเภท", value: leaveForm.type, inline: true },
-                                  { name: "📅 ตั้งแต่วันที่", value: leaveForm.dateFrom, inline: true },
-                                  { name: "📅 ถึงวันที่", value: leaveForm.dateTo, inline: true },
-                                  { name: "💬 เหตุผล", value: leaveForm.reason, inline: false }
+                                  { name: "📅 ตั้งแต่วันที่", value: formatThaiDate(new Date(leaveForm.dateFrom).getTime()), inline: true },
+                                  { name: "📅 ถึงวันที่", value: formatThaiDate(new Date(leaveForm.dateTo).getTime()), inline: true },
+                                  { name: "📝 เหตุผล", value: leaveForm.reason, inline: false }
                                 ],
                                 footer: { text: "Council Duty System" },
                                 timestamp: new Date().toISOString()
@@ -866,46 +898,44 @@ export default function DutySystem() {
           )}
 
           {activeTab === 'resign' && (
-            <div className="animate-in fade-in slide-in-from-right-8 duration-500 max-w-2xl mx-auto">
-              <div className="bg-slate-900 border border-red-500/30 rounded-3xl p-8 relative overflow-hidden shadow-2xl shadow-red-500/5">
-                <div className="absolute top-0 left-0 w-full h-1 bg-red-500"></div>
-                <div className="absolute -top-20 -right-20 w-80 h-80 bg-[radial-gradient(circle,_rgba(239,68,68,0.15)_0%,_transparent_70%)] pointer-events-none"></div>
+            <div className="animate-in fade-in slide-in-from-right-8 duration-500 max-w-2xl mx-auto relative z-10">
+              <div className="bg-slate-900/40 backdrop-blur-xl border border-red-500/30 rounded-[3rem] p-8 md:p-12 shadow-[0_0_50px_rgba(239,68,68,0.15)] relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-red-500/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-red-500/20 transition-colors duration-700 -mr-20 -mt-20"></div>
+                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-red-500 via-rose-500 to-transparent"></div>
                 
-                <div className="text-center mb-8 relative z-10">
-                  <div className="w-20 h-20 bg-red-500/10 border border-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <SignOut size={40} className="text-red-500" />
+                <div className="flex flex-col items-center text-center mb-10 relative z-10">
+                  <div className="w-24 h-24 rounded-[2rem] bg-red-500/10 border border-red-500/30 flex items-center justify-center mb-6 shadow-[inset_0_0_20px_rgba(239,68,68,0.2)] group-hover:scale-110 group-hover:rotate-12 transition-all duration-500">
+                    <WarningCircle size={56} weight="duotone" className="text-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.8)] animate-pulse" />
                   </div>
-                  <h2 className="text-2xl font-black text-white mb-2">แจ้งความประสงค์ลาออก</h2>
-                  <p className="text-slate-400">ยื่นเรื่องเพื่อขอยุติบทบาทหน้าที่ในสภาเมือง</p>
+                  <h2 className="text-3xl font-black text-white drop-shadow-md tracking-wide mb-3">แบบฟอร์มแจ้งลาออก</h2>
+                  <p className="text-sm font-bold text-slate-400 bg-red-500/10 px-6 py-3 rounded-2xl border border-red-500/20 shadow-inner">
+                    การกระทำนี้ <span className="text-red-400 font-black underline decoration-red-400/50 underline-offset-4">ไม่สามารถย้อนกลับได้</span> กรุณาตรวจสอบให้แน่ใจก่อนกดยืนยัน
+                  </p>
                 </div>
 
-                <div className="bg-red-500/10 border border-red-500/30 rounded-2xl p-5 flex gap-4 mb-8 relative z-10">
-                  <span className="text-red-400 text-2xl shrink-0">⚠️</span>
-                  <div className="text-sm">
-                    <div className="font-black text-red-400 mb-1 tracking-wide">โปรดอ่านก่อนดำเนินการ</div>
-                    <div className="text-red-200/80 leading-relaxed">
-                      กรุณาแจ้งล่วงหน้าอย่างน้อย 15-30 วัน ตามระเบียบของสภา การส่งแบบฟอร์มนี้จะมีผลทันทีและจะถูกส่งไปยังระบบหลังบ้านเพื่อให้ทีมบริหารพิจารณาอนุมัติ
+                <div className="space-y-6 relative z-10">
+                  <div className="w-full bg-slate-900/80 border border-slate-700/50 rounded-2xl p-6 flex items-center justify-between shadow-inner">
+                    <div className="flex items-center gap-5">
+                      <div className="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center">
+                        <UserCircle size={32} className="text-slate-400" />
+                      </div>
+                      <div>
+                        <span className="text-white font-black text-lg block tracking-wide">
+                          {currentMember?.name || user?.displayName || user?.email || 'ไม่พบข้อมูล'}
+                        </span>
+                        <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1 block">ผู้ยื่นคำร้องขอลาออก</span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="space-y-5 relative z-10">
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">วันทำงานวันสุดท้าย</label>
-                    <input
-                      type="date"
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-red-500 font-medium transition-colors"
-                      value={resignForm.lastDay}
-                      onChange={e => setResignForm({...resignForm, lastDay: e.target.value})}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">เหตุผลที่ลาออก</label>
+                  <div className="space-y-3">
+                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                      <Circle size={8} weight="fill" className="text-red-500" /> เหตุผลที่ขอลาออก
+                    </label>
                     <textarea
-                      rows={4}
-                      placeholder="อธิบายเหตุผลโดยสังเขป..."
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-red-500 resize-none font-medium transition-colors"
+                      rows={5}
+                      placeholder="กรุณาระบุเหตุผลที่ต้องการลาออก..."
+                      className="w-full bg-slate-950/80 border-2 border-slate-700/80 rounded-2xl px-6 py-5 text-white placeholder-slate-600 focus:outline-none focus:border-red-500/80 focus:ring-4 focus:ring-red-500/10 transition-all font-bold resize-none shadow-inner"
                       value={resignForm.reason}
                       onChange={e => setResignForm({...resignForm, reason: e.target.value})}
                     />
@@ -935,6 +965,7 @@ export default function DutySystem() {
                       if (!resignForm.memberId || !resignForm.lastDay || !resignForm.reason) {
                         showAlert('error', 'กรุณากรอกข้อมูลให้ครบถ้วน'); return;
                       }
+                      if (!window.confirm('คุณต้องการยืนยันการ "ลาออก" ใช่หรือไม่? (การกระทำนี้ไม่สามารถย้อนกลับได้)')) return;
                       const memberName = councilMembers.find(m => m.id === resignForm.memberId)?.name || 'Unknown';
                       const payload = {
                         memberId: resignForm.memberId,
