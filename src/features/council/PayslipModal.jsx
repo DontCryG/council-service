@@ -128,7 +128,14 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
             </div>
 
             <div className="pt-4 border-t border-slate-800/80">
-              <Button onClick={handleDownload} className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 border-none py-4 shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] hover:-translate-y-1 text-white font        {/* Payslip Preview */}
+              <Button onClick={handleDownload} className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 border-none py-4 shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] hover:-translate-y-1 text-white font-black rounded-xl transition-all">
+                <DownloadSimple size={20} weight="bold" /> บันทึกใบสลิป (Save PNG)
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Payslip Preview */}
         <div className="flex-1 overflow-x-auto overflow-y-hidden rounded-2xl custom-scrollbar relative border border-slate-700/50 bg-slate-950/80 shadow-[inset_0_0_50px_rgba(0,0,0,0.8)] backdrop-blur-xl">
           
           {/* THE BILL: 850px fixed width for perfect capture */}
