@@ -8,7 +8,7 @@ import AutocompleteInput from '../../components/ui/AutocompleteInput';
 
 import Button from '../../components/ui/Button';
 import GroupSelect from '../../components/ui/GroupSelect';
-import { Users, House, Plus, Trash, ArrowRight, WarningCircle, UserPlus, FileText, ArrowLeft, Skull, Buildings } from '@phosphor-icons/react';
+import { Users, House, Plus, Trash, ArrowRight, WarningCircle, UserPlus, FileText, ArrowLeft, Skull, Buildings, UserCircle } from '@phosphor-icons/react';
 
 export default function GeneralService() {
   const navigate = useNavigate();
