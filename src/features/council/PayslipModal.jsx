@@ -27,28 +27,6 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
   const [bonus, setBonus] = useState(0);
   const [deductions, setDeductions] = useState(0);
   const printRef = useRef(null);
-  const containerRef = useRef(null);
-  const [scale, setScale] = useState(1);
-  const [slipHeight, setSlipHeight] = useState(800);
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const updateScale = () => {
-      if (containerRef.current) {
-        const w = containerRef.current.clientWidth - 24; 
-        setScale(Math.min(w / 1080, 0.9));
-      }
-    };
-
-    updateScale();
-    const timer = setTimeout(updateScale, 50);
-    window.addEventListener('resize', updateScale);
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener('resize', updateScale);
-    };
-  }, [isOpen, bonus, deductions, member]);
 
   if (!isOpen || !member) return null;
 
@@ -152,13 +130,12 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
           </div>
         </div>
 
-        {/* Payslip Preview */}
-        <div ref={containerRef} className="flex-1 rounded-2xl relative border border-slate-700/50 bg-slate-950/80 shadow-[inset_0_0_50px_rgba(0,0,0,0.8)] backdrop-blur-xl flex justify-center py-6 overflow-hidden" style={{ minHeight: `${1080 * scale + 48}px` }}>
-          
-          {/* THE BILL: 1080x1080 fixed width/height for perfect capture, scaled for mobile */}
-          <div style={{ width: `${1080 * scale}px`, height: `${1080 * scale}px` }} className="relative">
-            <div style={{ transform: `scale(${scale})`, transformOrigin: 'top left' }} className="absolute top-0 left-0">
-              <div ref={printRef} style={{ width: '1080px', height: '1080px', minWidth: '1080px', minHeight: '1080px', WebkitTextSizeAdjust: '100%', textSizeAdjust: '100%' }} className="bg-[#020617] p-12 overflow-hidden text-slate-300 border-4 border-[#020617] shadow-2xl rounded-sm flex flex-col justify-between">
+        {/* Payslip Preview (Mobile Scrollable) */}
+        <div className="flex-1 overflow-x-auto pb-4 rounded-2xl border border-slate-700/50 bg-slate-950/80 shadow-[inset_0_0_50px_rgba(0,0,0,0.8)] backdrop-blur-xl">
+          <div className="flex justify-center min-w-max p-6">
+            
+            {/* THE BILL: 1080x1080 absolute fixed size for html-to-image without scale bugs */}
+            <div ref={printRef} style={{ width: '1080px', height: '1080px', minWidth: '1080px', minHeight: '1080px' }} className="bg-[#020617] p-12 overflow-hidden text-slate-300 border-4 border-[#020617] shadow-2xl rounded-sm flex flex-col justify-between relative">
             {/* Ambient Backgrounds & Watermark */}
             <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-[#020617] to-[#020617] pointer-events-none"></div>
             <div className="absolute -top-40 -right-40 w-96 h-96 bg-amber-500/10 rounded-full blur-[100px] pointer-events-none"></div>
@@ -347,7 +324,6 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
 
             </div>
           </div>
-        </div>
         </div>
       </div>
 
