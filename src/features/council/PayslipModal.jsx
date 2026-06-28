@@ -349,5 +349,4 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
     </Modal>
   );
 }
-
-export default PayslipModal;
+}
