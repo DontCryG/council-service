@@ -3,72 +3,70 @@ service cloud.firestore {
   match /databases/{database}/documents {
     
     // ==========================================
-    // 1. APP STATE (กลุ่มข้อมูลระบบพื้นฐาน)
+    // ฟังก์ชันตรวจสอบพื้นฐาน
+    // ==========================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // ==========================================
+    // 1. APP STATE & SYSTEM (ระบบพื้นฐาน)
     // ==========================================
     match /app_state/{docId} {
-      // อ่านและอัปเดตได้ทุกคน แต่ห้าม "ลบ" document ทิ้งเด็ดขาดเพื่อป้องกันข้อมูลระบบหาย
-      allow read, create: if true;
-      allow update: if true;
-      allow delete: if false; 
+      // 🔒 ให้คนทั่วไปอ่านรายชื่อ Admin ได้ แต่ ห้ามเขียน/แก้ไขเด็ดขาด ป้องกัน Privilege Escalation
+      allow read: if true;
+      allow write: if false; 
+    }
+    
+    match /system/{docId} {
+      // ⚠️ การปิด-เปิดระบบใช้ Client-side Password ("wiptownadmin")
+      // บังคับให้แก้ไขได้แค่ฟิลด์ isClosed เท่านั้น ป้องกันการพังระบบ
+      allow read: if true;
+      allow update: if request.resource.data.keys().hasOnly(['isClosed']) 
+                    && request.resource.data.isClosed is bool;
+      allow create, delete: if false;
     }
     
     // ==========================================
-    // 2. TRANSACTION LOGS (ประวัติการทำธุรกรรม)
+    // 2. TRANSACTION LOGS & IMAGES (ประวัติและรูปภาพ)
     // ==========================================
     match /transaction_logs/{logId} {
       allow read: if true;
-      
-      // การสร้าง/แก้ไข ต้องมีข้อมูลที่จำเป็นและชนิดข้อมูลถูกต้อง
-      allow create, update: if 
-        request.resource.data.keys().hasAll(['formType', 'requester', 'totalPrice', 'createdAt']) &&
-        request.resource.data.formType is string &&
-        request.resource.data.requester is string &&
-        request.resource.data.totalPrice is number;
-        
-      allow delete: if true; // ระบบมีปุ่มลบให้ใช้งาน
+      // 🔒 ให้คนทั่วไปสร้าง Log ได้เมื่อส่งฟอร์ม แต่ห้ามแก้ไขหรือลบ
+      allow create: if true;
+      allow update: if isAuthenticated(); // ให้ Admin เท่านั้นที่อัปเดตได้ (เช่น อนุมัติ/ปฏิเสธ)
+      allow delete: if false; // 🛑 ประวัติห้ามลบเด็ดขาด
+    }
+
+    match /transactionImages/{imageId} {
+      allow read, create: if true;
+      allow update, delete: if isAuthenticated();
     }
     
     // ==========================================
     // 3. CITIZENS (ข้อมูลประชาชน)
     // ==========================================
     match /citizens/{citizenId} {
-      allow read, delete: if true;
-      
-      // บังคับว่าต้องมีชื่อ
-      allow create, update: if 
-        request.resource.data.keys().hasAny(['name']) &&
-        request.resource.data.name is string &&
-        request.resource.data.name.size() > 0;
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasAny(['name']) &&
+                    request.resource.data.name is string;
+      allow update, delete: if isAuthenticated(); // 🔒 เฉพาะ Admin ที่แก้ชื่อ/ลบข้อมูลคนได้
     }
     
     // ==========================================
     // 4. LOAN CONTRACTS & TRANSACTIONS (ระบบเงินกู้)
     // ==========================================
     match /loan_contracts/{contractId} {
-      allow read, delete: if true;
-      
-      // บังคับโครงสร้างพื้นฐานของสัญญาเงินกู้
-      allow create, update: if 
-        request.resource.data.keys().hasAll(['citizenName', 'loanAmount', 'interestRate']) &&
-        request.resource.data.loanAmount is number &&
-        request.resource.data.interestRate is number;
+      allow read: if true; // ให้อ่านได้เพื่อเอาไปค้นหาสถานะ
+      allow create, update, delete: if isAuthenticated(); // 🔒 ธุรกรรมการเงินต้องเป็น Admin เท่านั้นที่จัดการได้
     }
     
     match /transactions/{txId} {
-      allow read, delete: if true;
-      // บังคับโครงสร้างการจ่ายเงิน
-      allow create, update: if 
-        request.resource.data.keys().hasAll(['contractId', 'amount']) &&
-        request.resource.data.amount is number;
+      allow read: if true; 
+      allow create, update, delete: if isAuthenticated(); // 🔒 การจ่ายเงินต้องเป็น Admin เท่านั้น
     }
     
-    // ==========================================
-    // 5. OTHERS (คอลเลกชันอื่นๆ ที่เหลือ)
-    // ==========================================
-    match /{document=**} {
-      // เปิดให้อ่านและเขียนได้ทั้งหมด (เนื่องจากไม่ได้บังคับ Login)
-      allow read, write: if true;
-    }
-    
+    // 🛑 ปิด Wildcard ทิ้ง! ไม่อนุญาตให้เข้าถึง Collection อื่นๆ ที่ไม่ได้ระบุ
+    // match /{document=**} { allow read, write: if true; } // ลบทิ้งแล้ว
   }
 }
