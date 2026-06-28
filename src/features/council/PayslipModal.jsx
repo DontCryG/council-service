@@ -37,7 +37,7 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
     const updateScale = () => {
       if (containerRef.current) {
         const w = containerRef.current.clientWidth - 24; 
-        setScale(w < 850 ? w / 850 : 1);
+        setScale(Math.min(w / 850, 0.75));
       }
       if (printRef.current) {
         setSlipHeight(printRef.current.offsetHeight);
@@ -348,5 +348,4 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
       </div>
     </Modal>
   );
-}
 }
