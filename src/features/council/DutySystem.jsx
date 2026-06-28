@@ -280,7 +280,69 @@ export default function DutySystem() {
     saveToDb({ ...dutyData, activeSessions: newActive });
   };
 
+  const handleCheckOut = () => {
+    if (!selectedMemberId) { showAlert('error', 'กรุณาเลือกชื่อสมาชิกก่อน'); return; }
+    const session = dutyData.activeSessions?.[selectedMemberId];
+    if (!session) { showAlert('error', 'สมาชิกคนนี้ยังไม่ได้เข้าเวร'); return; }
 
+    setConfirmConfig({
+      isOpen: true,
+      title: 'ยืนยันการออกเวร',
+      message: 'คุณต้องการยืนยันการ "ออกเวร" ใช่หรือไม่?',
+      onConfirm: async () => {
+        setConfirmConfig(prev => ({ ...prev, isOpen: false }));
+        
+        const checkOut = Date.now();
+        let totalBreak = session.totalBreakMinutes || 0;
+        if (session.status === 'break' && session.breakStart) {
+          totalBreak += (checkOut - session.breakStart) / 60000;
+        }
+        const rawMinutes = (checkOut - session.checkIn) / 60000;
+        const netMinutes = Math.max(0, Math.round(rawMinutes - totalBreak));
+
+        const memberName = councilMembers.find(m => m.id === selectedMemberId)?.name || 'Unknown';
+        const newSession = {
+          id: 'duty_' + session.checkIn,
+          memberId: selectedMemberId,
+          memberName: memberName,
+          checkIn: session.checkIn,
+          checkOut,
+          netMinutes,
+          totalBreakMinutes: Math.round(totalBreak),
+          date: new Date(session.checkIn).toISOString().split('T')[0],
+          status: 'completed'
+        };
+
+        const newActive = { ...dutyData.activeSessions };
+        delete newActive[selectedMemberId];
+        const newSessions = [newSession, ...(dutyData.sessions || [])];
+        saveToDb({ ...dutyData, activeSessions: newActive, sessions: newSessions });
+
+        try {
+          await saveTransactionLog('duty_session', newSession, user);
+          await sendWebhook('duty_end', {
+            embeds: [{
+              title: "🔴 ออกจากหน้าที่ (Clock Out)",
+              color: 0xef4444,
+              fields: [
+                { name: "👤 สมาชิก", value: memberName, inline: true },
+                { name: "⏰ เวลาเข้า", value: formatTime(session.checkIn) + ' น.', inline: true },
+                { name: "⏰ เวลาออก", value: formatTime(checkOut) + ' น.', inline: true },
+                { name: "⏳ เวลาสุทธิ", value: formatDuration(netMinutes), inline: true },
+                { name: "☕ เวลาพักรวม", value: formatDuration(Math.round(totalBreak)), inline: true }
+              ],
+              footer: { text: "Council Duty System" },
+              timestamp: new Date(checkOut).toISOString()
+            }]
+          });
+          showAlert('success', `ออกเวรเรียบร้อย — เวลาสุทธิ ${formatDuration(netMinutes)}`);
+        } catch (e) {
+          console.error(e);
+          showAlert('error', 'เกิดข้อผิดพลาดในการออกเวร');
+        }
+      }
+    });
+  };
 
   const handleSearch = () => {
     const from = new Date(dateFrom).getTime();
