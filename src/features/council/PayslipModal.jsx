@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Modal from '../../components/ui/Modal';
 import Button from '../../components/ui/Button';
 import { 
@@ -27,6 +27,31 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
   const [bonus, setBonus] = useState(0);
   const [deductions, setDeductions] = useState(0);
   const printRef = useRef(null);
+  const containerRef = useRef(null);
+  const [scale, setScale] = useState(1);
+  const [slipHeight, setSlipHeight] = useState(800);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const updateScale = () => {
+      if (containerRef.current) {
+        const w = containerRef.current.clientWidth - 24; 
+        setScale(w < 850 ? w / 850 : 1);
+      }
+      if (printRef.current) {
+        setSlipHeight(printRef.current.offsetHeight);
+      }
+    };
+
+    updateScale();
+    const timer = setTimeout(updateScale, 50);
+    window.addEventListener('resize', updateScale);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', updateScale);
+    };
+  }, [isOpen, bonus, deductions, member]);
 
   if (!isOpen || !member) return null;
 
@@ -136,10 +161,11 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
         </div>
 
         {/* Payslip Preview */}
-        <div className="flex-1 overflow-x-auto overflow-y-hidden rounded-2xl custom-scrollbar relative border border-slate-700/50 bg-slate-950/80 shadow-[inset_0_0_50px_rgba(0,0,0,0.8)] backdrop-blur-xl">
+        <div ref={containerRef} className="flex-1 rounded-2xl relative border border-slate-700/50 bg-slate-950/80 shadow-[inset_0_0_50px_rgba(0,0,0,0.8)] backdrop-blur-xl flex justify-center py-6 overflow-hidden" style={{ minHeight: `${slipHeight * scale + 48}px` }}>
           
-          {/* THE BILL: 850px fixed width for perfect capture */}
-          <div ref={printRef} style={{ width: '850px', minWidth: '850px', maxWidth: '850px' }} className="shrink-0 bg-[#020617] p-12 relative overflow-hidden text-slate-300 mx-auto border-4 border-[#020617]">
+          {/* THE BILL: 850px fixed width for perfect capture, scaled for mobile */}
+          <div style={{ width: `${850 * scale}px`, height: `${slipHeight * scale}px` }} className="relative">
+            <div ref={printRef} style={{ width: '850px', minWidth: '850px', maxWidth: '850px', transform: `scale(${scale})`, transformOrigin: 'top left' }} className="absolute top-0 left-0 bg-[#020617] p-12 overflow-hidden text-slate-300 border-4 border-[#020617] shadow-2xl rounded-sm">
             {/* Ambient Backgrounds & Watermark */}
             <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-[#020617] to-[#020617] pointer-events-none"></div>
             <div className="absolute -top-40 -right-40 w-96 h-96 bg-amber-500/10 rounded-full blur-[100px] pointer-events-none"></div>
