@@ -9,6 +9,7 @@ import {
 } from '@phosphor-icons/react';
 import { Card } from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
+import ConfirmationModal from '../../components/ui/ConfirmationModal';
 import { sendWebhook, saveTransactionLog, listenTransactionLogs } from '../../core/api';
 
 const monthNamesShort = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
@@ -71,6 +72,9 @@ export default function DutySystem() {
 
   // Resign Form State
   const [resignForm, setResignForm] = useState({ memberId: '', lastDay: '', reason: '', confirmed: false });
+
+  // Confirmation Modal State
+  const [confirmConfig, setConfirmConfig] = useState({ isOpen: false, title: '', message: '', onConfirm: null });
 
   // Auto-detect logged-in member by email or displayName
   const currentMember = councilMembers.find(m =>
@@ -276,34 +280,6 @@ export default function DutySystem() {
     saveToDb({ ...dutyData, activeSessions: newActive });
   };
 
-  const handleCheckOut = async () => {
-    if (!selectedMemberId) { showAlert('error', 'กรุณาเลือกชื่อสมาชิกก่อน'); return; }
-    if (!window.confirm('คุณต้องการยืนยันการ "ออกเวร" ใช่หรือไม่?')) return;
-    const session = dutyData.activeSessions?.[selectedMemberId];
-    if (!session) { showAlert('error', 'สมาชิกคนนี้ยังไม่ได้เข้าเวร'); return; }
-
-    const checkOut = Date.now();
-    let totalBreak = session.totalBreakMinutes || 0;
-    if (session.status === 'break' && session.breakStart) {
-      totalBreak += (checkOut - session.breakStart) / 60000;
-    }
-    const rawMinutes = (checkOut - session.checkIn) / 60000;
-    const netMinutes = Math.max(0, Math.round(rawMinutes - totalBreak));
-
-    const memberName = councilMembers.find(m => m.id === selectedMemberId)?.name || 'Unknown';
-    const newSession = {
-      id: 'duty_' + session.checkIn,
-      memberId: selectedMemberId,
-      memberName: memberName,
-      checkIn: session.checkIn,
-      checkOut,
-      netMinutes,
-      totalBreakMinutes: Math.round(totalBreak),
-      date: new Date(session.checkIn).toISOString().split('T')[0],
-      month: new Date(session.checkIn).toISOString().slice(0, 7)
-    };
-
-    const newActive = { ...dutyData.activeSessions };
     delete newActive[selectedMemberId];
     const newSessions = [newSession, ...(dutyData.sessions || [])];
     saveToDb({ ...dutyData, activeSessions: newActive, sessions: newSessions });
@@ -804,44 +780,51 @@ export default function DutySystem() {
 
                       <button
                         type="button"
-                        onClick={async () => {
+                        onClick={() => {
                           if (!leaveForm.memberId || !leaveForm.dateFrom || !leaveForm.dateTo || !leaveForm.reason) {
                             showAlert('error', 'กรุณากรอกข้อมูลให้ครบถ้วน'); return;
                           }
-                          if (!window.confirm('คุณต้องการยืนยันการ "ส่งใบลา" ใช่หรือไม่?')) return;
-                          const memberName = councilMembers.find(m => m.id === leaveForm.memberId)?.name || 'Unknown';
-                          const payload = {
-                            memberId: leaveForm.memberId,
-                            memberName: memberName,
-                            type: leaveForm.type,
-                            dateFrom: leaveForm.dateFrom,
-                            dateTo: leaveForm.dateTo,
-                            reason: leaveForm.reason,
-                            webhookPayload: {
-                              embeds: [{
-                                title: "📝 แจ้งลางาน (Leave Request)",
-                                color: 0x3b82f6,
-                                fields: [
-                                  { name: "👤 ผู้แจ้ง", value: memberName, inline: true },
-                                  { name: "📋 ประเภท", value: leaveForm.type, inline: true },
-                                  { name: "📅 ตั้งแต่วันที่", value: formatThaiDate(new Date(leaveForm.dateFrom).getTime()), inline: true },
-                                  { name: "📅 ถึงวันที่", value: formatThaiDate(new Date(leaveForm.dateTo).getTime()), inline: true },
-                                  { name: "📝 เหตุผล", value: leaveForm.reason, inline: false }
-                                ],
-                                footer: { text: "Council Duty System" },
-                                timestamp: new Date().toISOString()
-                              }]
-                            }
-                          };
+                          setConfirmConfig({
+                            isOpen: true,
+                            title: 'ยืนยันการส่งใบลา',
+                            message: 'คุณต้องการยืนยันการ "ส่งใบลา" ใช่หรือไม่?',
+                            onConfirm: async () => {
+                              setConfirmConfig(prev => ({...prev, isOpen: false}));
+                              const memberName = councilMembers.find(m => m.id === leaveForm.memberId)?.name || 'Unknown';
+                              const payload = {
+                                memberId: leaveForm.memberId,
+                                memberName: memberName,
+                                type: leaveForm.type,
+                                dateFrom: leaveForm.dateFrom,
+                                dateTo: leaveForm.dateTo,
+                                reason: leaveForm.reason,
+                                webhookPayload: {
+                                  embeds: [{
+                                    title: "📝 แจ้งลางาน (Leave Request)",
+                                    color: 0x3b82f6,
+                                    fields: [
+                                      { name: "👤 ผู้แจ้ง", value: memberName, inline: true },
+                                      { name: "📋 ประเภท", value: leaveForm.type, inline: true },
+                                      { name: "📅 ตั้งแต่วันที่", value: formatThaiDate(new Date(leaveForm.dateFrom).getTime()), inline: true },
+                                      { name: "📅 ถึงวันที่", value: formatThaiDate(new Date(leaveForm.dateTo).getTime()), inline: true },
+                                      { name: "📝 เหตุผล", value: leaveForm.reason, inline: false }
+                                    ],
+                                    footer: { text: "Council Duty System" },
+                                    timestamp: new Date().toISOString()
+                                  }]
+                                }
+                              };
 
-                          try {
-                            await saveTransactionLog('leave', payload, user);
-                            setLeaveForm({ memberId: currentMember?.id || '', type: 'ลากิจ (Personal)', dateFrom: '', dateTo: '', reason: '' });
-                            showAlert('success', 'ส่งใบลาเรียบร้อยแล้ว รอแอดมินอนุมัติ');
-                          } catch(e) {
-                            console.error("Save log error:", e);
-                            showAlert('error', 'เกิดข้อผิดพลาดในการส่งใบลา');
-                          }
+                              try {
+                                await saveTransactionLog('leave', payload, user);
+                                setLeaveForm({ memberId: currentMember?.id || '', type: 'ลากิจ (Personal)', dateFrom: '', dateTo: '', reason: '' });
+                                showAlert('success', 'ส่งใบลาเรียบร้อยแล้ว รอแอดมินอนุมัติ');
+                              } catch(e) {
+                                console.error("Save log error:", e);
+                                showAlert('error', 'เกิดข้อผิดพลาดในการส่งใบลา');
+                              }
+                            }
+                          });
                         }}
                         className="w-full mt-4 py-4 bg-blue-500 hover:bg-blue-400 text-white font-black rounded-xl transition-all shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:-translate-y-1"
                       >
@@ -929,17 +912,31 @@ export default function DutySystem() {
                     </div>
                   </div>
 
-                  <div className="space-y-3">
-                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                      <Circle size={8} weight="fill" className="text-red-500" /> เหตุผลที่ขอลาออก
-                    </label>
-                    <textarea
-                      rows={5}
-                      placeholder="กรุณาระบุเหตุผลที่ต้องการลาออก..."
-                      className="w-full bg-slate-950/80 border-2 border-slate-700/80 rounded-2xl px-6 py-5 text-white placeholder-slate-600 focus:outline-none focus:border-red-500/80 focus:ring-4 focus:ring-red-500/10 transition-all font-bold resize-none shadow-inner"
-                      value={resignForm.reason}
-                      onChange={e => setResignForm({...resignForm, reason: e.target.value})}
-                    />
+                  <div className="space-y-4">
+                    <div className="space-y-3">
+                      <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                        <CalendarBlank size={12} weight="fill" className="text-red-500" /> วันทำงานวันสุดท้าย
+                      </label>
+                      <input
+                        type="date"
+                        className="w-full bg-slate-950/80 border-2 border-slate-700/80 rounded-2xl px-6 py-4 text-white placeholder-slate-600 focus:outline-none focus:border-red-500/80 focus:ring-4 focus:ring-red-500/10 transition-all font-bold shadow-inner"
+                        value={resignForm.lastDay}
+                        onChange={e => setResignForm({...resignForm, lastDay: e.target.value})}
+                      />
+                    </div>
+
+                    <div className="space-y-3">
+                      <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                        <Circle size={8} weight="fill" className="text-red-500" /> เหตุผลที่ขอลาออก
+                      </label>
+                      <textarea
+                        rows={5}
+                        placeholder="กรุณาระบุเหตุผลที่ต้องการลาออก..."
+                        className="w-full bg-slate-950/80 border-2 border-slate-700/80 rounded-2xl px-6 py-5 text-white placeholder-slate-600 focus:outline-none focus:border-red-500/80 focus:ring-4 focus:ring-red-500/10 transition-all font-bold resize-none shadow-inner"
+                        value={resignForm.reason}
+                        onChange={e => setResignForm({...resignForm, reason: e.target.value})}
+                      />
+                    </div>
                   </div>
 
                   <label className="flex items-start gap-4 p-4 border border-slate-800 rounded-xl bg-slate-950/50 cursor-pointer group hover:border-red-500/50 transition-colors mt-6">
@@ -962,40 +959,47 @@ export default function DutySystem() {
                   <button
                     type="button"
                     disabled={!resignForm.confirmed}
-                    onClick={async () => {
+                    onClick={() => {
                       if (!resignForm.memberId || !resignForm.lastDay || !resignForm.reason) {
                         showAlert('error', 'กรุณากรอกข้อมูลให้ครบถ้วน'); return;
                       }
-                      if (!window.confirm('คุณต้องการยืนยันการ "ลาออก" ใช่หรือไม่? (การกระทำนี้ไม่สามารถย้อนกลับได้)')) return;
-                      const memberName = councilMembers.find(m => m.id === resignForm.memberId)?.name || 'Unknown';
-                      const payload = {
-                        memberId: resignForm.memberId,
-                        memberName: memberName,
-                        lastDay: resignForm.lastDay,
-                        reason: resignForm.reason,
-                        webhookPayload: {
-                          embeds: [{
-                            title: "🚨 แจ้งลาออก (Resignation)",
-                            color: 0xef4444,
-                            fields: [
-                              { name: "👤 สมาชิก", value: memberName, inline: true },
-                              { name: "📅 วันทำงานวันสุดท้าย", value: resignForm.lastDay, inline: true },
-                              { name: "💬 เหตุผล", value: resignForm.reason, inline: false }
-                            ],
-                            footer: { text: "Council Duty System" },
-                            timestamp: new Date().toISOString()
-                          }]
-                        }
-                      }
+                      setConfirmConfig({
+                        isOpen: true,
+                        title: 'ยืนยันการลาออก',
+                        message: 'คุณต้องการยืนยันการ "ลาออก" ใช่หรือไม่? (การกระทำนี้ไม่สามารถย้อนกลับได้)',
+                        onConfirm: async () => {
+                          setConfirmConfig(prev => ({...prev, isOpen: false}));
+                          const memberName = councilMembers.find(m => m.id === resignForm.memberId)?.name || 'Unknown';
+                          const payload = {
+                            memberId: resignForm.memberId,
+                            memberName: memberName,
+                            lastDay: resignForm.lastDay,
+                            reason: resignForm.reason,
+                            webhookPayload: {
+                              embeds: [{
+                                title: "🚨 แจ้งลาออก (Resignation)",
+                                color: 0xef4444,
+                                fields: [
+                                  { name: "👤 สมาชิก", value: memberName, inline: true },
+                                  { name: "📅 วันทำงานวันสุดท้าย", value: resignForm.lastDay, inline: true },
+                                  { name: "💬 เหตุผล", value: resignForm.reason, inline: false }
+                                ],
+                                footer: { text: "Council Duty System" },
+                                timestamp: new Date().toISOString()
+                              }]
+                            }
+                          }
 
-                      try {
-                        await saveTransactionLog('resign', payload, user);
-                        setResignForm({ memberId: currentMember?.id || '', lastDay: '', reason: '', confirmed: false });
-                        showAlert('success', 'ยื่นเรื่องลาออกเรียบร้อยแล้ว รอทีมบริหารอนุมัติ');
-                      } catch(e) {
-                        console.error("Save log error:", e);
-                        showAlert('error', 'เกิดข้อผิดพลาดในการส่งใบลาออก');
-                      }
+                          try {
+                            await saveTransactionLog('resign', payload, user);
+                            setResignForm({ memberId: currentMember?.id || '', lastDay: '', reason: '', confirmed: false });
+                            showAlert('success', 'ยื่นเรื่องลาออกเรียบร้อยแล้ว รอทีมบริหารอนุมัติ');
+                          } catch(e) {
+                            console.error("Save log error:", e);
+                            showAlert('error', 'เกิดข้อผิดพลาดในการส่งใบลาออก');
+                          }
+                        }
+                      });
                     }}
                     className="w-full mt-4 py-4 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 disabled:from-slate-800 disabled:to-slate-800 disabled:text-slate-500 text-white font-black rounded-xl transition-all shadow-lg shadow-red-500/25 hover:shadow-red-500/40 hover:-translate-y-1"
                   >
@@ -1007,6 +1011,14 @@ export default function DutySystem() {
           )}
         </div>
       )}
+
+      <ConfirmationModal
+        isOpen={confirmConfig.isOpen}
+        onClose={() => setConfirmConfig(prev => ({ ...prev, isOpen: false }))}
+        onConfirm={confirmConfig.onConfirm}
+        title={confirmConfig.title}
+        message={confirmConfig.message}
+      />
     </div>
   );
 }
