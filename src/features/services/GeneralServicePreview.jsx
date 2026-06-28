@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
-import { saveTransactionLog, saveTransactionImage, ensureCitizenExists } from '../../core/api';
+import { submitGeneralService } from '../../services/generalService';
 import { toJpeg } from 'html-to-image';
 import Button from '../../components/ui/Button';
 import { PaperPlaneTilt, ArrowLeft, Receipt, SealCheck, CircleDashed, User, UserCircle } from '@phosphor-icons/react';
@@ -40,50 +40,8 @@ export default function GeneralServicePreview() {
       });
       if (!dataUrl) throw new Error("Failed to generate image");
 
-      const typeDisplay = formData.groupType === 'GANG' ? 'แก๊ง' : 'ครอบครัว';
-      const councilName = councilMembers.find(c => c.id === formData.councilMemberId)?.name || '-';
-      const membersText = members.map(m => m.value).join('\n');
-
-      const webhookPayload = {
-        embeds: [{
-          title: "Council Service Log",
-          description: "Service request submitted",
-          color: 0xf59e0b,
-          fields: [
-            { name: "Type", value: typeDisplay, inline: true },
-            { name: "Group", value: formData.groupName || '-', inline: true },
-            { name: "Requester", value: formData.requester || '-', inline: false },
-            { name: "Transaction", value: selectedTransaction?.name || '-', inline: false },
-            { name: "Members", value: `\`\`\`\n${membersText || '-'}\n\`\`\``, inline: false },
-            { name: "Council", value: councilName, inline: false }
-          ],
-          image: {
-            url: "attachment://receipt.jpg"
-          },
-          footer: { text: `Ref: ${refNumber} | Server System` },
-          timestamp: new Date().toISOString()
-        }]
-      };
-
-      // Auto-save citizen if they don't exist
-      await Promise.all([
-        ensureCitizenExists(formData.requester)
-      ]);
-
-      const logId = await saveTransactionLog('general_service', {
-        refNumber: refNumber,
-        orgType: formData.groupType,
-        groupName: formData.groupName,
-        requester: formData.requester,
-        transactionId: formData.transactionId,
-        transactionName: selectedTransaction?.name || '-',
-        councilMemberId: formData.councilMemberId,
-        councilMemberName: councilName,
-        members: members.map(m => m.value),
-        webhookPayload: webhookPayload
-      }, user);
-      
-      await saveTransactionImage(logId, dataUrl);
+      // Delegate business logic to generalService
+      await submitGeneralService(dataUrl, formData, members, councilMembers, selectedTransaction, refNumber, user);
 
       showAlert('success', 'บันทึกข้อมูลและออกใบเสร็จสำเร็จ !');
       navigate('/home');
