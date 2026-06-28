@@ -4,7 +4,8 @@ import { db } from '../../core/firebase';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import {
   ClockClockwise, SignIn, SignOut, Coffee,
-  MagnifyingGlass, UserCircle, Info, Circle, CalendarBlank
+  MagnifyingGlass, UserCircle, Info, Circle, CalendarBlank,
+  WarningCircle, PaperPlaneTilt, Clock
 } from '@phosphor-icons/react';
 import { Card } from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
