@@ -280,30 +280,7 @@ export default function DutySystem() {
     saveToDb({ ...dutyData, activeSessions: newActive });
   };
 
-    delete newActive[selectedMemberId];
-    const newSessions = [newSession, ...(dutyData.sessions || [])];
-    saveToDb({ ...dutyData, activeSessions: newActive, sessions: newSessions });
 
-    try {
-      await sendWebhook('duty_in', {
-        embeds: [{
-          title: "🔴 ออกจากหน้าที่ (Clock Out)",
-          color: 0xef4444,
-          fields: [
-            { name: "👤 สมาชิก", value: memberName, inline: true },
-            { name: "⏰ เวลาเข้า", value: formatTime(session.checkIn) + ' น.', inline: true },
-            { name: "⏰ เวลาออก", value: formatTime(checkOut) + ' น.', inline: true },
-            { name: "⏳ เวลาสุทธิ", value: formatDuration(netMinutes), inline: true },
-            { name: "☕ เวลาพักรวม", value: formatDuration(Math.round(totalBreak)), inline: true }
-          ],
-          footer: { text: "Council Duty System" },
-          timestamp: new Date(checkOut).toISOString()
-        }]
-      });
-    } catch(e) { console.error("Webhook error:", e); }
-
-    showAlert('success', `ออกเวรเรียบร้อย — เวลาสุทธิ ${formatDuration(netMinutes)}`);
-  };
 
   const handleSearch = () => {
     const from = new Date(dateFrom).getTime();
