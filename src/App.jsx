@@ -5,7 +5,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, collection, query, where, onSnapshot, Timestamp } from 'firebase/firestore';
 import { auth, db } from './core/firebase';
 import { useAppStore } from './store';
-import { CheckCircle, XCircle, Info, X, BellRinging } from '@phosphor-icons/react';
+import { CheckCircle, XCircle, Info, X, BellRinging, Desktop } from '@phosphor-icons/react';
 
 // Layouts
 import MainLayout from './components/layout/MainLayout';
@@ -210,7 +210,36 @@ function App() {
     : ['/'];
 
   return (
-    <Router initialEntries={initialEntries}>
+    <div className="min-h-screen bg-[#020617] font-sans selection:bg-blue-500/30">
+      
+      {/* Mobile Blocker (Visible only on phones < 768px) */}
+      <div className="flex md:hidden flex-col items-center justify-center min-h-[100dvh] p-8 text-center absolute inset-0 z-[10000] overflow-hidden">
+        {/* Background Effects */}
+        <div className="absolute top-1/4 -right-20 w-64 h-64 bg-red-600/10 rounded-full blur-[80px] pointer-events-none"></div>
+        <div className="absolute bottom-1/4 -left-20 w-64 h-64 bg-blue-600/10 rounded-full blur-[80px] pointer-events-none"></div>
+        
+        <div className="relative z-10 flex flex-col items-center">
+          <div className="w-24 h-24 bg-red-500/10 border border-red-500/30 rounded-3xl flex items-center justify-center mb-8 shadow-[0_0_50px_rgba(239,68,68,0.2)]">
+            <Desktop size={48} className="text-red-500" weight="duotone" />
+          </div>
+          
+          <h1 className="text-4xl font-black mb-4 tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600 drop-shadow-lg">
+            NOT SUPPORTED
+          </h1>
+          
+          <p className="text-slate-400 text-sm leading-relaxed max-w-[280px]">
+            ระบบ <strong className="text-white">COUNCIL SERVICE</strong><br/>
+            ไม่อนุญาตให้ใช้งานผ่านโทรศัพท์มือถือ<br/><br/>
+            กรุณาเข้าใช้งานผ่าน<br/>
+            <strong className="text-emerald-400">คอมพิวเตอร์ (PC)</strong> หรือ <strong className="text-emerald-400">iPad</strong><br/>
+            เพื่อประสิทธิภาพสูงสุดครับ
+          </p>
+        </div>
+      </div>
+
+      {/* Main App (Visible only on Desktop/Tablet >= 768px) */}
+      <div className="hidden md:block min-h-screen w-full">
+        <Router initialEntries={initialEntries}>
       <GlobalAlert />
       <LiveNotifications />
       <Suspense fallback={<LoadingScreen message="กำลังโหลดข้อมูล..." />}>
@@ -257,7 +286,9 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
-    </Router>
+        </Router>
+      </div>
+    </div>
   );
 }
 
