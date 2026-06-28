@@ -128,14 +128,7 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
             </div>
 
             <div className="pt-4 border-t border-slate-800/80">
-              <Button onClick={handleDownload} className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 border-none py-4 shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] hover:-translate-y-1 text-white font-black rounded-xl transition-all">
-                <DownloadSimple size={20} weight="bold" /> บันทึกใบสลิป (Save PNG)
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* Payslip Preview */}
+              <Button onClick={handleDownload} className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 border-none py-4 shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] hover:-translate-y-1 text-white font        {/* Payslip Preview */}
         <div className="flex-1 overflow-x-auto overflow-y-hidden rounded-2xl custom-scrollbar relative border border-slate-700/50 bg-slate-950/80 shadow-[inset_0_0_50px_rgba(0,0,0,0.8)] backdrop-blur-xl">
           
           {/* THE BILL: 850px fixed width for perfect capture */}
@@ -159,17 +152,17 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
                     <ShieldCheck size={48} weight="fill" className="text-slate-900 drop-shadow-md" />
                   </div>
                   <div>
-                    <h1 className="text-3xl font-black text-white tracking-tight drop-shadow-lg whitespace-nowrap">สำนักงานสภาเมือง</h1>
-                    <p className="text-sm text-amber-500 font-black tracking-[0.3em] uppercase mt-1 drop-shadow-[0_0_5px_rgba(245,158,11,0.8)] whitespace-nowrap">The Council Office</p>
+                    <h1 className="text-3xl font-black text-white tracking-tight drop-shadow-lg">สำนักงานสภาเมือง</h1>
+                    <p className="text-sm text-amber-500 font-black tracking-[0.3em] uppercase mt-1 drop-shadow-[0_0_5px_rgba(245,158,11,0.8)]">The Council Office</p>
                     <p className="text-xs text-slate-500 mt-2 font-mono">ID: {Math.random().toString(36).substr(2, 9).toUpperCase()}-{Date.now().toString().slice(-4)}</p>
                   </div>
                 </div>
                 <div className="text-right flex flex-col items-end">
-                  <h2 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-300 to-slate-500 tracking-normal uppercase mb-4 drop-shadow-2xl pr-1">
+                  <h2 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-300 to-slate-500 tracking-normal uppercase mb-4 drop-shadow-2xl pr-4 pb-1">
                     PAYSLIP
                   </h2>
                   <div className="flex items-center gap-3">
-                    <QrCode size={36} className="text-slate-600" />
+                    <QrCode size={36} className="text-slate-600 shrink-0" />
                     <div className="text-xs font-black text-slate-400 bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700 shadow-inner">
                       วันที่ออก: <span className="text-white ml-2">{new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                     </div>
@@ -185,11 +178,11 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
                     <UserCircle size={20} className="text-blue-400 drop-shadow-[0_0_5px_rgba(96,165,250,0.8)]" /> ข้อมูลพนักงาน
                   </div>
                   <div className="grid grid-cols-[100px_minmax(0,1fr)] gap-y-4 text-sm relative z-10">
-                    <div className="text-slate-500 font-bold uppercase tracking-wider text-[10px]">รหัสประจำตัว</div>
+                    <div className="text-slate-500 font-bold uppercase tracking-wider text-[10px] flex items-center">รหัสประจำตัว</div>
                     <div className="font-black text-white font-mono text-base bg-slate-950/50 px-2 py-0.5 rounded w-full truncate" title={member.username || 'UNKNOWN'}>{member.username || 'UNKNOWN'}</div>
-                    <div className="text-slate-500 font-bold uppercase tracking-wider text-[10px]">ชื่อ-สกุล</div>
+                    <div className="text-slate-500 font-bold uppercase tracking-wider text-[10px] flex items-center">ชื่อ-สกุล</div>
                     <div className="font-black text-white text-lg">{member.name}</div>
-                    <div className="text-slate-500 font-bold uppercase tracking-wider text-[10px]">ตำแหน่ง</div>
+                    <div className="text-slate-500 font-bold uppercase tracking-wider text-[10px] flex items-center">ตำแหน่ง</div>
                     <div className="font-black text-amber-400 bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-lg inline-flex w-fit drop-shadow-[0_0_5px_rgba(245,158,11,0.2)]">{member.rank || 'สภาฝึกหัด'}</div>
                   </div>
                 </div>
@@ -199,12 +192,12 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
                   <div className="flex items-center gap-3 text-slate-400 font-black text-xs uppercase tracking-widest mb-4">
                     <Calculator size={20} className="text-emerald-400 drop-shadow-[0_0_5px_rgba(52,211,153,0.8)]" /> ข้อมูลรอบการจ่าย
                   </div>
-                  <div className="grid grid-cols-[110px_1fr] gap-y-4 text-sm relative z-10">
-                    <div className="text-slate-500 font-bold uppercase tracking-wider text-[10px]">งวดการจ่าย</div>
+                  <div className="grid grid-cols-[110px_minmax(0,1fr)] gap-y-4 text-sm relative z-10">
+                    <div className="text-slate-500 font-bold uppercase tracking-wider text-[10px] flex items-center">งวดการจ่าย</div>
                     <div className="font-black text-white text-base bg-slate-950/50 px-3 py-1 rounded-lg w-fit">{period}</div>
-                    <div className="text-slate-500 font-bold uppercase tracking-wider text-[10px]">ชั่วโมงสุทธิ</div>
+                    <div className="text-slate-500 font-bold uppercase tracking-wider text-[10px] flex items-center">ชั่วโมงสุทธิ</div>
                     <div className="font-black text-emerald-400 text-xl drop-shadow-[0_0_5px_rgba(52,211,153,0.4)]">{formatDuration(member.totalMinutes)}</div>
-                    <div className="text-slate-500 font-bold uppercase tracking-wider text-[10px]">อัตรา/ชั่วโมง</div>
+                    <div className="text-slate-500 font-bold uppercase tracking-wider text-[10px] flex items-center">อัตรา/ชั่วโมง</div>
                     <div className="font-black text-white text-lg">{formatMoney(icRate)} <span className="text-xs text-slate-500 font-bold uppercase">บาท/ชม.</span></div>
                   </div>
                 </div>
@@ -214,10 +207,10 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
               <div className="bg-slate-900/60 border border-slate-700/50 rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-xl relative">
                 <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50"></div>
                 <div className="bg-slate-800/60 px-8 py-5 border-b border-slate-700/80 flex items-center justify-between">
-                  <div className="font-black text-white flex items-center gap-3 whitespace-nowrap text-lg tracking-wide">
+                  <div className="font-black text-white flex items-center gap-3 text-lg tracking-wide">
                     <Receipt size={24} className="text-amber-500 shrink-0 drop-shadow-[0_0_8px_rgba(245,158,11,0.8)]" /> <span>รายละเอียดรายรับ-รายจ่าย</span>
                   </div>
-                  <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap shrink-0 bg-slate-950/50 px-3 py-1 rounded-full border border-slate-800">จำนวนเงิน (บาท)</div>
+                  <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest shrink-0 bg-slate-950/50 px-3 py-1 rounded-full border border-slate-800">จำนวนเงิน (บาท)</div>
                 </div>
                 
                 <div className="p-4 space-y-2">
@@ -227,7 +220,7 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
                       <div className="font-black text-white text-base">ค่าตอบแทนพื้นฐาน <span className="text-slate-500 font-bold ml-2 text-xs uppercase tracking-wider">(Base Salary)</span></div>
                       <div className="text-sm font-bold text-slate-500 mt-1">{formatDuration(member.totalMinutes)} <span className="mx-1 text-slate-600">×</span> {formatMoney(icRate)} บ./ชม.</div>
                     </div>
-                    <div className="text-xl font-mono font-black text-white tracking-tight">{formatMoney(baseSalary)}</div>
+                    <div className="text-xl font-mono font-black text-white tracking-tight shrink-0">{formatMoney(baseSalary)}</div>
                   </div>
 
                   {/* Story Bonus */}
@@ -236,13 +229,13 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
                       <div className="font-black text-white text-base">ค่าตรวจดูสตอรี่ <span className="text-slate-500 font-bold ml-2 text-xs uppercase tracking-wider">(Story Views)</span></div>
                       <div className="text-sm font-bold text-slate-500 mt-1">{storyViews} ครั้ง <span className="mx-1 text-slate-600">×</span> 200,000 บ.</div>
                     </div>
-                    <div className="text-xl font-mono font-black text-blue-400 tracking-tight drop-shadow-[0_0_5px_rgba(96,165,250,0.3)]">{storyViews > 0 ? formatMoney(storyBonus) : '-'}</div>
+                    <div className="text-xl font-mono font-black text-blue-400 tracking-tight drop-shadow-[0_0_5px_rgba(96,165,250,0.3)] shrink-0">{storyViews > 0 ? formatMoney(storyBonus) : '-'}</div>
                   </div>
 
                   {/* Bonus */}
                   <div className="flex justify-between items-center px-6 py-5 rounded-2xl bg-emerald-950/20 border border-emerald-900/30 mt-4 relative overflow-hidden">
                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-500 rounded-l-2xl"></div>
-                    <div className="font-black text-white flex items-center gap-3 whitespace-nowrap pl-2">
+                    <div className="font-black text-white flex items-center gap-3 pl-2">
                       <ChartLineUp size={20} className="text-emerald-500 shrink-0 drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]" /> 
                       <span className="text-base">เงินเพิ่ม / โบนัสพิเศษ</span> 
                       <span className="text-emerald-500/60 font-bold ml-1 text-xs uppercase tracking-wider">(Allowance/Bonus)</span>
@@ -255,7 +248,7 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
                   {/* Deductions */}
                   <div className="flex justify-between items-center px-6 py-5 rounded-2xl bg-red-950/20 border border-red-900/30 mt-2 relative overflow-hidden">
                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500 rounded-l-2xl shadow-[0_0_10px_rgba(239,68,68,1)]"></div>
-                    <div className="font-black text-red-400 flex items-center gap-3 whitespace-nowrap pl-2 drop-shadow-[0_0_5px_rgba(239,68,68,0.3)]">
+                    <div className="font-black text-red-400 flex items-center gap-3 pl-2 drop-shadow-[0_0_5px_rgba(239,68,68,0.3)]">
                       <WarningCircle size={20} className="shrink-0" /> 
                       <span className="text-base">รายการหักเงิน</span> 
                       <span className="text-red-500/60 font-bold ml-1 text-xs uppercase tracking-wider">(Deductions)</span>
@@ -269,7 +262,7 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
 
               {/* Net Pay */}
               <div className="flex justify-end pt-4">
-                <div className="bg-gradient-to-br from-blue-900/80 via-slate-900 to-[#020617] border-2 border-blue-500/40 rounded-[2rem] p-8 w-[480px] shadow-[0_0_50px_rgba(59,130,246,0.15)] relative overflow-hidden backdrop-blur-xl group">
+                <div style={{ width: '480px' }} className="bg-gradient-to-br from-blue-900/80 via-slate-900 to-[#020617] border-2 border-blue-500/40 rounded-[2rem] p-8 shrink-0 shadow-[0_0_50px_rgba(59,130,246,0.15)] relative overflow-hidden backdrop-blur-xl group">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full blur-[60px] -mr-32 -mt-32 transition-all duration-700 group-hover:bg-blue-500/30 group-hover:scale-150"></div>
                   <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50"></div>
                   
