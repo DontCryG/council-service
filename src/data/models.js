@@ -42,7 +42,6 @@ export const transactions = [
     { id: 3, name: `ถอนรายชื่อสมาชิก - ถอนลอย (${PRICING.ORG_REMOVE_MEMBER_FLOATING.toLocaleString()} /คน)`, type: 'per_head', price: PRICING.ORG_REMOVE_MEMBER_FLOATING },
     { id: 4, name: `ถอนรายชื่อสมาชิก - ยืนยันตนเอง (${PRICING.ORG_REMOVE_MEMBER_SELF.toLocaleString()} /ครั้ง)`, type: 'flat', price: PRICING.ORG_REMOVE_MEMBER_SELF },
     { id: 5, name: `ยุบแก๊ง/ครอบครัว (${PRICING.ORG_DISBAND.toLocaleString()})`, type: 'flat', price: PRICING.ORG_DISBAND },
-    { id: 6, name: `บริการเพิ่ม SLOT แก๊งเป็น 25 คน (${PRICING.ORG_ADD_SLOT.toLocaleString()})`, type: 'flat', price: PRICING.ORG_ADD_SLOT },
     { id: 7, name: 'แก้ไขตำแหน่ง (FREE)', type: 'flat', price: PRICING.ORG_EDIT_POSITION }
 ];
 

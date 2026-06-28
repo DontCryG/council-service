@@ -177,7 +177,7 @@ export default function GeneralService() {
                 <option value="" disabled>-- กรุณาเลือกรายการ --</option>
                 {transactions.map(t => (
                   <option key={t.id} value={t.id} className="font-medium bg-slate-900">
-                    {t.name} - ${t.price.toLocaleString()} {t.type === 'per_head' ? '(ต่อหัว)' : '(เหมา)'}
+                    {t.name}
                   </option>
                 ))}
               </select>
