@@ -136,6 +136,7 @@ export default function Welfare() {
                 <span className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30">1</span> ชื่อ GANG / FAMILY <span className="text-amber-500">*</span>
               </label>
               <GroupSelect 
+                label={null}
                 orgType={formData.orgType}
                 value={formData.orgName}
                 onChange={val => setFormData({...formData, orgName: val})}
