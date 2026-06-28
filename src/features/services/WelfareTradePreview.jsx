@@ -3,8 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { db } from '../../core/firebase';
 import { doc, collection, onSnapshot } from 'firebase/firestore';
-import { saveTransactionLog, saveTransactionImage, ensureCitizenExists } from '../../core/api';
-import { buildWelfareTradeWebhook } from '../../services/discordFormatters';
+import { submitWelfareTrade } from '../../services/welfareTradeService';
 import { toJpeg } from 'html-to-image';
 
 import Button from '../../components/ui/Button';
@@ -68,31 +67,8 @@ export default function WelfareTradePreview() {
       });
       if (!dataUrl) throw new Error("Failed to generate image");
       
-      const councilName = councilMembers.find(c => c.id === formData.councilStaffId)?.name;
-      const payload = buildWelfareTradeWebhook(formData, items, getTotalPrice(), councilName, refNumber);
-
-      payload.embeds[0].image = { url: "attachment://receipt.jpg" };
-
-      // Auto-save citizen if they don't exist
-      await Promise.all([
-        ensureCitizenExists(formData.requester)
-      ]);
-
-      const logId = await saveTransactionLog('welfare_trade', {
-        refNumber: refNumber,
-        orgName: formData.orgName,
-        orgType: formData.orgType,
-        tradeType: formData.tradeType,
-        oldOwner: formData.oldOwner,
-        newOwner: formData.newOwner,
-        items: items,
-        totalPrice: getTotalPrice(),
-        councilStaffId: formData.councilStaffId,
-        councilStaffName: councilName || '-',
-        webhookPayload: payload
-      }, user);
-      
-      await saveTransactionImage(logId, dataUrl);
+      // Delegate business logic to welfareTradeService
+      await submitWelfareTrade(dataUrl, formData, items, councilMembers, refNumber, user);
       showAlert('success', 'ส่งข้อมูลแลกเปลี่ยนสวัสดิการเรียบร้อยแล้ว!');
       setShowConfirm(false);
       navigate('/home');
