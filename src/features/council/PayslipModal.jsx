@@ -165,7 +165,7 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
                   </div>
                 </div>
                 <div className="text-right flex flex-col items-end">
-                  <h2 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-300 to-slate-500 tracking-tighter uppercase mb-4 drop-shadow-2xl">
+                  <h2 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-300 to-slate-500 tracking-tighter uppercase mb-4 drop-shadow-2xl pr-2 pb-1">
                     PAYSLIP
                   </h2>
                   <div className="flex items-center gap-3">
@@ -184,9 +184,9 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
                   <div className="flex items-center gap-3 text-slate-400 font-black text-xs uppercase tracking-widest mb-4">
                     <UserCircle size={20} className="text-blue-400 drop-shadow-[0_0_5px_rgba(96,165,250,0.8)]" /> ข้อมูลพนักงาน
                   </div>
-                  <div className="grid grid-cols-[100px_1fr] gap-y-4 text-sm relative z-10">
+                  <div className="grid grid-cols-[100px_minmax(0,1fr)] gap-y-4 text-sm relative z-10">
                     <div className="text-slate-500 font-bold uppercase tracking-wider text-[10px]">รหัสประจำตัว</div>
-                    <div className="font-black text-white font-mono text-base bg-slate-950/50 px-2 py-0.5 rounded w-fit">{member.username || 'UNKNOWN'}</div>
+                    <div className="font-black text-white font-mono text-base bg-slate-950/50 px-2 py-0.5 rounded w-full truncate" title={member.username || 'UNKNOWN'}>{member.username || 'UNKNOWN'}</div>
                     <div className="text-slate-500 font-bold uppercase tracking-wider text-[10px]">ชื่อ-สกุล</div>
                     <div className="font-black text-white text-lg">{member.name}</div>
                     <div className="text-slate-500 font-bold uppercase tracking-wider text-[10px]">ตำแหน่ง</div>
