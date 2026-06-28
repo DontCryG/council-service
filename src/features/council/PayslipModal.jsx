@@ -139,7 +139,7 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
         <div className="flex-1 overflow-x-auto rounded-2xl custom-scrollbar relative border border-slate-700/50 bg-slate-950/80 shadow-[inset_0_0_50px_rgba(0,0,0,0.8)] backdrop-blur-xl">
           
           {/* THE BILL: 850px fixed width for perfect capture */}
-          <div ref={printRef} className="w-[850px] shrink-0 bg-[#020617] p-12 relative overflow-hidden text-slate-300 mx-auto border-4 border-[#020617]">
+          <div ref={printRef} className="w-[850px] min-w-[850px] max-w-[850px] shrink-0 bg-[#020617] p-12 relative overflow-hidden text-slate-300 mx-auto border-4 border-[#020617]">
             {/* Ambient Backgrounds & Watermark */}
             <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-[#020617] to-[#020617] pointer-events-none"></div>
             <div className="absolute -top-40 -right-40 w-96 h-96 bg-amber-500/10 rounded-full blur-[100px] pointer-events-none"></div>
