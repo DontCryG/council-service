@@ -204,9 +204,9 @@ export default function GeneralService() {
               </button>
             </div>
             
-            <div className="space-y-4 relative z-10">
-              {members.map(item => (
-                <div key={item.id} className="flex gap-3 group">
+            <div className="space-y-4 relative z-20">
+              {members.map((item, index) => (
+                <div key={item.id} className="flex gap-3 group relative" style={{ zIndex: 50 - index }}>
                   <div className="flex-1 relative">
                     <AutocompleteInput 
                       placeholder="ระบุชื่อสมาชิก..." 
