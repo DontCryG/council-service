@@ -10,34 +10,16 @@ import { CheckCircle, XCircle, Info, X, BellRinging, Desktop } from '@phosphor-i
 // Layouts
 import MainLayout from './components/layout/MainLayout';
 
-// Lazy load pages for ultimate performance
+// Routes
+import { ServiceRoutes } from './routes/ServiceRoutes';
+import { CouncilRoutes } from './routes/CouncilRoutes';
+import { AdminRoutes } from './routes/AdminRoutes';
+
+// Lazy load public pages
 const Portal = lazy(() => import('./features/home/Portal'));
 const Home = lazy(() => import('./features/home/Home'));
 const Login = lazy(() => import('./features/auth/Login'));
 const NotFound = lazy(() => import('./features/error/NotFound'));
-const CouncilManage = lazy(() => import('./features/council/CouncilManage'));
-const GeneralService = lazy(() => import('./features/services/GeneralService'));
-const GeneralServicePreview = lazy(() => import('./features/services/GeneralServicePreview'));
-const Welfare = lazy(() => import('./features/services/Welfare'));
-const WelfarePreview = lazy(() => import('./features/services/WelfarePreview'));
-const WelfareTrade = lazy(() => import('./features/services/WelfareTrade'));
-const WelfareTradePreview = lazy(() => import('./features/services/WelfareTradePreview'));
-const RegisterOrg = lazy(() => import('./features/services/RegisterOrg'));
-const RegisterOrgPreview = lazy(() => import('./features/services/RegisterOrgPreview'));
-const EditOrg = lazy(() => import('./features/services/EditOrg'));
-const EditOrgPreview = lazy(() => import('./features/services/EditOrgPreview'));
-const GroupManager = lazy(() => import('./features/council/GroupManager'));
-const TicketManager = lazy(() => import('./features/tickets/TicketManager'));
-const TicketStore = lazy(() => import('./features/tickets/TicketStore'));
-const StoryCalendar = lazy(() => import('./features/services/StoryCalendar'));
-const DutySystem = lazy(() => import('./features/council/DutySystem'));
-const AdminDutyHistory = lazy(() => import('./features/council/AdminDutyHistory'));
-const TransactionHistory = lazy(() => import('./features/admin/TransactionHistory'));
-const CouncilLoanHub = lazy(() => import('./features/council/CouncilLoanHub'));
-const CouncilLoanView = lazy(() => import('./features/council/CouncilLoanView'));
-const CouncilLoanCreate = lazy(() => import('./features/council/CouncilLoanCreate'));
-const CouncilLoanEdit = lazy(() => import('./features/council/CouncilLoanEdit'));
-const CouncilReceiptView = lazy(() => import('./features/council/CouncilReceiptView'));
 const LoanPublic = lazy(() => import('./features/services/LoanPublic'));
 
 function GlobalAlert() {
@@ -127,25 +109,6 @@ function LiveNotifications() {
   return null;
 }
 
-function ProtectedRoute({ children }) {
-  const { user } = useAppStore();
-  if (!user) return <Navigate to="/login" replace />;
-  return children;
-}
-
-function AdminRoute({ children }) {
-  const { user, showAlert } = useAppStore();
-  
-  useEffect(() => {
-    if (user && user.role !== 'admin') {
-      showAlert('error', 'ไม่มีสิทธิ์เข้าถึง: เฉพาะระดับ Admin เท่านั้น');
-    }
-  }, [user, showAlert]);
-
-  if (!user) return <Navigate to="/login" replace />;
-  if (user.role !== 'admin') return <Navigate to="/" replace />;
-  return children;
-}
 
 import LoadingScreen from './components/ui/LoadingScreen';
 
@@ -254,33 +217,10 @@ function App() {
             <Route path="loan_public" element={<LoanPublic />} />
             <Route path="home" element={<Home />} />
             
-            {/* Service Forms & Previews (Public) */}
-            <Route path="register_org" element={<RegisterOrg />} />
-            <Route path="register_org_preview" element={<RegisterOrgPreview />} />
-            <Route path="ps1" element={<GeneralService />} />
-            <Route path="general_service_preview" element={<GeneralServicePreview />} />
-            <Route path="edit_org" element={<EditOrg />} />
-            <Route path="edit_org_preview" element={<EditOrgPreview />} />
-            <Route path="welfare" element={<Welfare />} />
-            <Route path="welfare_preview" element={<WelfarePreview />} />
-            <Route path="welfare_trade" element={<WelfareTrade />} />
-            <Route path="welfare_trade_preview" element={<WelfareTradePreview />} />
-            <Route path="ps5" element={<TicketStore />} />
-            <Route path="cs5" element={<StoryCalendar />} />
-
-            {/* Admin/Council Only Routes */}
-            <Route path="/council_manage" element={<AdminRoute><CouncilManage /></AdminRoute>} />
-            <Route path="/admin/duty_history" element={<AdminRoute><AdminDutyHistory /></AdminRoute>} />
-            <Route path="transactions" element={<ProtectedRoute><TransactionHistory /></ProtectedRoute>} />
-            <Route path="cs4" element={<ProtectedRoute><GroupManager /></ProtectedRoute>} />
-            <Route path="cs3" element={<ProtectedRoute><TicketManager /></ProtectedRoute>} />
-            <Route path="cs6" element={<ProtectedRoute><DutySystem /></ProtectedRoute>} />
-            
-            <Route path="council_loan" element={<ProtectedRoute><CouncilLoanHub /></ProtectedRoute>} />
-            <Route path="council_loan/view/:id" element={<ProtectedRoute><CouncilLoanView /></ProtectedRoute>} />
-            <Route path="council_loan/create" element={<ProtectedRoute><CouncilLoanCreate /></ProtectedRoute>} />
-            <Route path="council_loan/edit/:id" element={<ProtectedRoute><CouncilLoanEdit /></ProtectedRoute>} />
-            <Route path="council_loan/receipt/:txId" element={<ProtectedRoute><CouncilReceiptView /></ProtectedRoute>} />
+            {/* Modular Split Routes */}
+            {ServiceRoutes}
+            {CouncilRoutes}
+            {AdminRoutes}
           </Route>
           
           <Route path="*" element={<NotFound />} />
