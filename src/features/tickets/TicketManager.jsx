@@ -247,66 +247,67 @@ export default function TicketManager() {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500 max-w-7xl mx-auto pb-20">
-      {/* Premium Header */}
-      <div className="relative overflow-hidden bg-slate-900/50 backdrop-blur-xl border border-slate-800/60 rounded-3xl p-6 sm:p-8 shadow-2xl">
-        {/* Glow Effects */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-[80px] pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/10 rounded-full blur-[80px] pointer-events-none translate-y-1/2 -translate-x-1/3"></div>
-        
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/20">
-              <Ticket size={28} className="text-white drop-shadow-md" weight="fill" />
-            </div>
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 flex items-center gap-2">
-                ระบบจัดการ Ticket
-                <button 
-                  onClick={playTestSound}
-                  className="ml-2 p-1.5 rounded-full bg-slate-800/50 text-slate-400 hover:text-amber-400 hover:bg-slate-700 transition-all group relative border border-slate-700/50 hover:border-amber-500/50 hover:shadow-[0_0_10px_rgba(245,158,11,0.2)]"
-                  title="ทดสอบเสียงแจ้งเตือน (คลิกเพื่อปลดล็อคเสียงให้เบราว์เซอร์)"
-                >
-                  <SpeakerHigh size={20} />
-                  <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-800 text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none transition-opacity font-medium">
-                    ทดสอบ / เปิดเสียง
-                  </span>
-                </button>
-              </h1>
-              <p className="text-sm font-medium text-slate-400 mt-1 flex items-center gap-2">
-                <ShieldChevron size={14} className="text-slate-500" />
-                ศูนย์กลางการจัดการคำขอซื้อทิคเก็ต โควต้า และเรทราคาสภา
-              </p>
-            </div>
+    <div className="space-y-8 animate-in fade-in zoom-in-95 duration-700 max-w-7xl mx-auto pb-20 relative z-10">
+      
+      {/* Ambient Glows */}
+      <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none -z-10">
+        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-amber-600/10 rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px]"></div>
+      </div>
+
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 bg-slate-900/40 border border-slate-700/50 backdrop-blur-md rounded-3xl p-6 shadow-2xl">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-900/40 border border-amber-500/30 text-amber-400 flex items-center justify-center shadow-inner relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none"></div>
+            <Ticket size={32} weight="duotone" className="drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]" />
+            {ticketsData.orders.length > 0 && (
+              <span className="absolute top-1 right-1 w-3 h-3 bg-red-500 rounded-full animate-ping"></span>
+            )}
+            {ticketsData.orders.length > 0 && (
+              <span className="absolute top-1 right-1 w-3 h-3 bg-red-500 rounded-full shadow-[0_0_8px_rgba(239,68,68,0.8)]"></span>
+            )}
           </div>
+          <div>
+            <h1 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 tracking-tight">
+              ระบบจัดการคำร้อง (ตั๋ว)
+            </h1>
+            <p className="text-slate-400 text-sm font-medium mt-1">จัดการอนุมัติคำขอซื้อตั๋ว และตรวจสอบประวัติ</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <button onClick={playTestSound} className="p-3 text-slate-400 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all border border-slate-800 shadow-inner group">
+            <SpeakerHigh size={20} className="group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" />
+          </button>
         </div>
       </div>
 
-      {/* Modern Tabs */}
-      <div className="flex gap-2 p-1.5 bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-2xl overflow-x-auto custom-scrollbar shadow-inner relative z-20">
+      <div className="flex overflow-x-auto gap-3 pb-2 scrollbar-hide">
         {[
-          { id: 'orders', label: 'คำขอรออนุมัติ', icon: Clock, count: ticketsData.orders.length },
-          { id: 'history', label: 'ประวัติการทำรายการ', icon: FileText },
-          { id: 'salesHistory', label: 'ประวัติยอดขาย', icon: ChartBar },
-          { id: 'quota', label: 'โควต้าแก๊ง/แฟม', icon: Ticket },
+          { id: 'orders', label: 'คำขอใหม่', icon: Clock, count: ticketsData.orders.length },
+          { id: 'history', label: 'ประวัติคำขอ', icon: Clock },
+          { id: 'quota', label: 'ยอดโควต้า', icon: ChartBar },
+          { id: 'sales', label: 'สรุปยอดขาย', icon: CurrencyDollar },
           { id: 'settings', label: 'ตั้งค่าระบบ', icon: Gear }
         ].map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`relative flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 whitespace-nowrap overflow-hidden group flex-1 justify-center ${
+            className={`flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-2xl font-bold text-sm whitespace-nowrap transition-all duration-300 border relative overflow-hidden group flex-1 ${
               activeTab === tab.id 
-                ? 'text-amber-400 shadow-lg' 
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+              ? 'bg-amber-500/10 text-amber-400 border-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.15)]' 
+              : 'bg-slate-900/40 text-slate-400 border-slate-700/50 hover:bg-slate-800/80 hover:text-slate-200 shadow-inner'
             }`}
           >
-            {activeTab === tab.id && (
-              <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 rounded-xl" />
-            )}
-            <tab.icon size={18} className={`relative z-10 ${activeTab === tab.id ? 'drop-shadow-md' : 'group-hover:scale-110 transition-transform'}`} weight={activeTab === tab.id ? "fill" : "regular"} /> 
+            {activeTab === tab.id && <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>}
+            
+            <tab.icon size={18} weight={activeTab === tab.id ? "fill" : "regular"} className={activeTab === tab.id ? "drop-shadow-[0_0_8px_rgba(245,158,11,0.5)] relative z-10" : "relative z-10 group-hover:scale-110 transition-transform"} />
             <span className="relative z-10">{tab.label}</span>
             {tab.id === 'orders' && tab.count > 0 && (
-              <span className="relative z-10 bg-gradient-to-r from-red-500 to-rose-600 text-white text-[10px] px-2 py-0.5 rounded-full ml-1.5 shadow-md shadow-red-500/30 animate-pulse">
+              <span className={`ml-1 px-2.5 py-0.5 rounded-full text-xs relative z-10 ${
+                activeTab === tab.id 
+                ? 'bg-amber-500 text-white shadow-[0_0_10px_rgba(245,158,11,0.6)] animate-pulse' 
+                : 'bg-red-500/80 text-white border border-red-500/30'
+              }`}>
                 {tab.count}
               </span>
             )}
@@ -321,10 +322,11 @@ export default function TicketManager() {
           {/* ORDERS TAB */}
           {activeTab === 'orders' && (
             <div className="space-y-4">
-              <div className="relative">
-                <MagnifyingGlass size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
-                <Input 
-                  className="pl-10 bg-slate-900/80" 
+              <div className="relative group/search">
+                <div className="absolute inset-0 bg-blue-500/20 blur-md opacity-0 group-focus-within/search:opacity-100 rounded-xl transition-opacity pointer-events-none"></div>
+                <MagnifyingGlass size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within/search:text-amber-500 transition-colors z-10" />
+                <input 
+                  className="w-full relative bg-slate-950/80 border border-slate-700/80 rounded-xl pl-12 pr-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500/80 focus:ring-2 focus:ring-amber-500/20 font-bold text-sm transition-all shadow-inner" 
                   placeholder="ค้นหาชื่อแก๊ง หรือ ชื่อผู้ติดต่อ..." 
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -332,58 +334,71 @@ export default function TicketManager() {
               </div>
 
               {filteredOrders.length === 0 ? (
-                <Card className="py-20 text-center text-slate-500 border-dashed border-slate-700">ไม่มีคำขอรออนุมัติ</Card>
+                <div className="py-20 text-center text-slate-500 bg-slate-900/40 border-2 border-dashed border-slate-700/50 rounded-3xl backdrop-blur-sm flex flex-col items-center justify-center">
+                  <CheckCircle size={48} className="text-slate-600 mb-3" />
+                  <p className="font-medium text-lg">ไม่มีคำขอที่รออนุมัติ</p>
+                </div>
               ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {filteredOrders.map(order => (
-                    <Card key={order.id} className="p-0 overflow-hidden border-slate-700/50 hover:border-amber-500/50 hover:shadow-[0_0_15px_rgba(245,158,11,0.15)] transition-all duration-300 group">
-                      <div className="bg-slate-900/80 backdrop-blur-sm p-5 border-b border-slate-800/80 flex justify-between items-start relative">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl group-hover:bg-amber-500/10 transition-colors pointer-events-none"></div>
-                        <div className="relative z-10">
-                          <div className="text-[10px] font-bold text-amber-500 mb-1 tracking-wider uppercase flex items-center gap-1">
-                            <Clock size={12} weight="bold" /> {new Date(order.timestamp).toLocaleString('th-TH')}
+                    <div key={order.id} className="group relative bg-slate-900/50 border border-slate-700/50 rounded-3xl overflow-hidden shadow-xl hover:shadow-[0_0_30px_rgba(245,158,11,0.15)] transition-all duration-300 hover:-translate-y-1 backdrop-blur-md">
+                      
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl group-hover:bg-amber-500/10 transition-colors pointer-events-none"></div>
+                      <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 to-amber-500/0 group-hover:to-amber-500/5 transition-all duration-500 pointer-events-none"></div>
+                      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                      <div className="p-6 border-b border-slate-800/80 flex justify-between items-start relative z-10">
+                        <div>
+                          <div className="text-[10px] font-black text-amber-500 mb-1.5 tracking-wider uppercase flex items-center gap-1.5">
+                            <Clock size={12} weight="bold" className="animate-pulse" /> {new Date(order.timestamp).toLocaleString('th-TH')}
                           </div>
-                          <h3 className="text-xl font-black text-white">{order.groupName}</h3>
-                          <p className="text-xs text-slate-400 mt-1 flex items-center gap-1"><UserCircle size={14}/> ติดต่อ: {order.requester}</p>
+                          <h3 className="text-2xl font-black text-white drop-shadow-sm">{order.groupName}</h3>
+                          <p className="text-xs text-slate-400 mt-1 font-medium flex items-center gap-1.5 bg-slate-950/50 px-2.5 py-1 rounded-md w-fit border border-slate-800/50"><UserCircle size={14} className="text-slate-500"/> ติดต่อ: {order.requester}</p>
                         </div>
-                        <div className="text-right relative z-10">
-                          <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1">สภาที่รับเรื่อง</div>
-                          <div className="text-sm font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">{order.councilStaffName || order.council}</div>
+                        <div className="text-right">
+                          <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">สภาที่รับเรื่อง</div>
+                          <div className="text-sm font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/20 drop-shadow-sm">{order.councilStaffName || order.council}</div>
                         </div>
                       </div>
                       
-                      <div className="p-5 grid grid-cols-2 gap-4 bg-slate-950/50">
+                      <div className="p-6 grid grid-cols-2 gap-4 bg-slate-950/40 relative z-10 shadow-inner">
                         <div>
-                          <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1 font-bold">Ticket Amount</div>
-                          <div className="text-2xl font-black text-amber-400 flex items-center gap-1.5 drop-shadow-md">
+                          <div className="text-[11px] text-slate-500 uppercase tracking-widest mb-1.5 font-black">Ticket Amount</div>
+                          <div className="text-3xl font-black text-amber-400 flex items-center gap-2 drop-shadow-md">
                             <Ticket size={24} weight="fill" /> {parseInt(order.amount).toLocaleString()}
                           </div>
                         </div>
-                        <div className="text-right">
-                          <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1 font-bold">Total (Red Money)</div>
-                          <div className="text-2xl font-black text-red-500 drop-shadow-md">
+                        <div className="text-right border-l border-slate-800/80 pl-4">
+                          <div className="text-[11px] text-slate-500 uppercase tracking-widest mb-1.5 font-black">Total (Red Money)</div>
+                          <div className="text-3xl font-black text-red-500 drop-shadow-md">
                             ${parseInt(order.totalPrice).toLocaleString()}
                           </div>
                         </div>
                       </div>
 
-                      <div className="p-4 border-t border-slate-800/80 flex gap-3 bg-slate-900/30">
-                        <Button 
+                      <div className="p-5 border-t border-slate-800/80 flex gap-4 bg-slate-900/30 relative z-10">
+                        <button 
                           type="button"
-                          className="flex-1 bg-gradient-to-t from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white border-none py-3 rounded-xl font-bold text-sm shadow-lg shadow-emerald-900/50 hover:shadow-emerald-500/30 transition-all hover:-translate-y-0.5" 
+                          className="flex-1 relative overflow-hidden group/btn bg-emerald-500/10 text-emerald-400 hover:text-white border border-emerald-500/30 py-3.5 rounded-xl font-black text-sm transition-all shadow-inner hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:-translate-y-0.5" 
                           onClick={() => handleProcessOrder(order.id, 'APPROVED')}
                         >
-                          <CheckCircle size={20} weight="fill" /> อนุมัติ
-                        </Button>
-                        <Button 
+                          <div className="absolute inset-0 bg-emerald-500 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                          <div className="relative z-10 flex items-center justify-center gap-2">
+                            <CheckCircle size={20} weight="bold" /> อนุมัติ
+                          </div>
+                        </button>
+                        <button 
                           type="button"
-                          className="flex-1 bg-transparent hover:bg-red-500/10 text-red-500 hover:text-red-400 border border-red-500/30 hover:border-red-500/50 py-3 rounded-xl font-bold text-sm transition-all"
+                          className="flex-1 relative overflow-hidden group/btn bg-red-500/10 text-red-400 hover:text-white border border-red-500/30 py-3.5 rounded-xl font-black text-sm transition-all shadow-inner hover:shadow-[0_0_20px_rgba(239,68,68,0.3)] hover:-translate-y-0.5"
                           onClick={() => handleProcessOrder(order.id, 'REJECTED')}
                         >
-                          <XCircle size={20} /> ปฏิเสธ
-                        </Button>
+                          <div className="absolute inset-0 bg-red-500 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                          <div className="relative z-10 flex items-center justify-center gap-2">
+                            <XCircle size={20} weight="bold" /> ปฏิเสธ
+                          </div>
+                        </button>
                       </div>
-                    </Card>
+                    </div>
                   ))}
                 </div>
               )}
@@ -394,68 +409,80 @@ export default function TicketManager() {
           {activeTab === 'history' && (
             <div className="space-y-4">
               <div className="flex flex-col sm:flex-row gap-4">
-                <div className="relative flex-1">
-                  <MagnifyingGlass size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
-                  <Input 
-                    className="pl-10" 
+                <div className="relative group/search flex-1">
+                  <div className="absolute inset-0 bg-blue-500/20 blur-md opacity-0 group-focus-within/search:opacity-100 rounded-xl transition-opacity pointer-events-none"></div>
+                  <MagnifyingGlass size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within/search:text-amber-500 transition-colors z-10" />
+                  <input 
+                    className="w-full relative bg-slate-950/80 border border-slate-700/80 rounded-xl pl-12 pr-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500/80 focus:ring-2 focus:ring-amber-500/20 font-bold text-sm transition-all shadow-inner" 
                     placeholder="ค้นหาชื่อแก๊ง หรือ ชื่อผู้ติดต่อ..." 
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
-                <div className="flex gap-2">
-                  <select 
-                    className="bg-slate-900 border border-slate-700 rounded-lg px-4 text-white text-sm"
-                    value={filterType}
-                    onChange={e => setFilterType(e.target.value)}
+                <div className="flex gap-3">
+                  <div className="relative group/select w-40">
+                    <select 
+                      className="w-full relative bg-slate-950/80 border border-slate-700/80 rounded-xl px-4 py-3.5 text-slate-300 focus:outline-none focus:border-amber-500/80 focus:ring-2 focus:ring-amber-500/20 font-bold text-sm appearance-none cursor-pointer transition-all shadow-inner"
+                      value={filterType}
+                      onChange={e => setFilterType(e.target.value)}
+                    >
+                      <option value="ALL">ทุกสถานะ</option>
+                      <option value="APPROVED">อนุมัติแล้ว</option>
+                      <option value="REJECTED">ถูกปฏิเสธ</option>
+                    </select>
+                  </div>
+                  <button 
+                    onClick={handleExportCsv}
+                    className="flex items-center gap-2 px-5 bg-gradient-to-t from-slate-800 to-slate-700 hover:from-amber-600 hover:to-amber-500 text-white rounded-xl font-bold text-sm transition-all shadow-md hover:shadow-[0_0_15px_rgba(245,158,11,0.4)] border border-slate-600 hover:border-amber-500 whitespace-nowrap"
                   >
-                    <option value="ALL">ทุกสถานะ</option>
-                    <option value="APPROVED">อนุมัติแล้ว</option>
-                    <option value="REJECTED">ถูกปฏิเสธ</option>
-                  </select>
-                  <Button variant="outline" onClick={handleExportCsv}>
-                    <Download size={16} /> Export
-                  </Button>
+                    <Download size={18} weight="bold" /> Export
+                  </button>
                 </div>
               </div>
 
               <div className="space-y-4">
                 {filteredHistory.length === 0 ? (
-                  <Card className="py-20 text-center text-slate-500 border-dashed border-slate-700">ไม่มีประวัติ</Card>
+                  <div className="py-20 text-center text-slate-500 bg-slate-900/40 border-2 border-dashed border-slate-700/50 rounded-3xl backdrop-blur-sm flex flex-col items-center justify-center">
+                    <FileText size={48} className="text-slate-600 mb-3" />
+                    <p className="font-medium text-lg">ไม่มีประวัติการทำรายการ</p>
+                  </div>
                 ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredHistory.map(h => (
-                      <div key={h.id} className="relative bg-slate-900/60 backdrop-blur-md border border-slate-700/50 rounded-2xl p-5 hover:border-slate-500/50 hover:shadow-lg transition-all duration-300 group overflow-hidden">
-                        <div className="absolute top-0 right-0 w-24 h-24 bg-slate-800/50 rounded-full blur-xl group-hover:bg-slate-700/50 transition-colors pointer-events-none -mr-10 -mt-10"></div>
-                        <div className="relative z-10 flex justify-between items-start mb-4">
+                      <div key={h.id} className="group relative bg-slate-900/50 border border-slate-700/50 rounded-3xl p-6 hover:shadow-[0_0_25px_rgba(245,158,11,0.1)] transition-all duration-300 overflow-hidden backdrop-blur-md">
+                        
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl group-hover:bg-amber-500/10 transition-colors pointer-events-none -mr-10 -mt-10"></div>
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/0 to-white/0 group-hover:to-white/5 transition-all duration-500 pointer-events-none"></div>
+
+                        <div className="relative z-10 flex justify-between items-start mb-5">
                           <div>
-                            <div className="font-black text-white text-lg">{h.groupName}</div>
-                            <div className="text-xs text-slate-400 mt-1 flex items-center gap-1"><UserCircle size={14}/> ติดต่อ: {h.requester}</div>
+                            <div className="font-black text-white text-xl drop-shadow-sm">{h.groupName}</div>
+                            <div className="text-xs text-slate-400 mt-1.5 flex items-center gap-1.5 font-medium bg-slate-950/50 px-2 py-1 rounded w-fit border border-slate-800/50"><UserCircle size={14}/> ติดต่อ: {h.requester}</div>
                           </div>
                           {h.status === 'APPROVED' ? (
-                            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-emerald-400 bg-emerald-400/10 px-2.5 py-1 rounded-full border border-emerald-500/30 shadow-[0_0_10px_rgba(52,211,153,0.1)]">
-                              <CheckCircle size={14} weight="fill" /> APPROVED
+                            <span className="inline-flex items-center gap-1.5 text-[10px] font-black text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-500/30 shadow-[0_0_15px_rgba(52,211,153,0.15)]">
+                              <CheckCircle size={14} weight="bold" /> APPROVED
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-red-400 bg-red-400/10 px-2.5 py-1 rounded-full border border-red-500/30 shadow-[0_0_10px_rgba(248,113,113,0.1)]">
-                              <XCircle size={14} weight="fill" /> REJECTED
+                            <span className="inline-flex items-center gap-1.5 text-[10px] font-black text-red-400 bg-red-500/10 px-3 py-1.5 rounded-full border border-red-500/30 shadow-[0_0_15px_rgba(248,113,113,0.15)]">
+                              <XCircle size={14} weight="bold" /> REJECTED
                             </span>
                           )}
                         </div>
                         
-                        <div className="relative z-10 bg-slate-950/80 rounded-xl p-3 grid grid-cols-2 gap-3 border border-slate-800/80 mb-4 shadow-inner">
+                        <div className="relative z-10 bg-slate-950/60 rounded-2xl p-4 grid grid-cols-2 gap-4 border border-slate-800/80 mb-5 shadow-inner">
                           <div>
-                            <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1 font-bold">Ticket</div>
-                            <div className="font-mono text-amber-400 font-bold text-lg flex items-center gap-1"><Ticket size={14} weight="fill"/> {parseInt(h.amount).toLocaleString()}</div>
+                            <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1.5 font-black">Ticket Amount</div>
+                            <div className="font-mono text-amber-400 font-bold text-xl flex items-center gap-1.5 drop-shadow-md"><Ticket size={18} weight="fill"/> {parseInt(h.amount).toLocaleString()}</div>
                           </div>
-                          <div className="text-right border-l border-slate-800/80 pl-2">
-                            <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1 font-bold">Red Money</div>
-                            <div className="font-mono text-red-400 font-bold text-lg">${parseInt(h.totalPrice).toLocaleString()}</div>
+                          <div className="text-right border-l border-slate-800/80 pl-4">
+                            <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1.5 font-black">Red Money</div>
+                            <div className="font-mono text-red-400 font-bold text-xl drop-shadow-md">${parseInt(h.totalPrice).toLocaleString()}</div>
                           </div>
                         </div>
 
-                        <div className="relative z-10 text-[10px] font-medium text-slate-500 text-right flex items-center justify-end gap-1">
-                          <Clock size={12} /> {new Date(h.processedAt || h.timestamp).toLocaleString('th-TH')}
+                        <div className="relative z-10 text-[10px] font-bold text-slate-500 text-right flex items-center justify-end gap-1.5">
+                          <Clock size={12} weight="bold" /> {new Date(h.processedAt || h.timestamp).toLocaleString('th-TH')}
                         </div>
                       </div>
                     ))}
@@ -538,10 +565,11 @@ export default function TicketManager() {
           {/* QUOTA TAB */}
           {activeTab === 'quota' && (
             <div className="space-y-4">
-              <div className="relative">
-                <MagnifyingGlass size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
-                <Input 
-                  className="pl-10 bg-slate-900/80" 
+              <div className="relative group/search">
+                <div className="absolute inset-0 bg-blue-500/20 blur-md opacity-0 group-focus-within/search:opacity-100 rounded-xl transition-opacity pointer-events-none"></div>
+                <MagnifyingGlass size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within/search:text-amber-500 transition-colors z-10" />
+                <input 
+                  className="w-full relative bg-slate-950/80 border border-slate-700/80 rounded-xl pl-12 pr-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500/80 focus:ring-2 focus:ring-amber-500/20 font-bold text-sm transition-all shadow-inner" 
                   placeholder="ค้นหาชื่อองค์กร หรือ ประเภท..." 
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -550,7 +578,10 @@ export default function TicketManager() {
 
               <div className="space-y-4">
                 {filteredGroups.length === 0 ? (
-                  <Card className="py-20 text-center text-slate-500 border-dashed border-slate-700">ไม่มีข้อมูลองค์กรที่ค้นหา</Card>
+                  <div className="py-20 text-center text-slate-500 bg-slate-900/40 border-2 border-dashed border-slate-700/50 rounded-3xl backdrop-blur-sm flex flex-col items-center justify-center">
+                    <ChartBar size={48} className="text-slate-600 mb-3" />
+                    <p className="font-medium text-lg">ไม่มีข้อมูลองค์กรที่ค้นหา</p>
+                  </div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                     {filteredGroups.map(g => {
@@ -725,97 +756,114 @@ export default function TicketManager() {
                   </div>
                 </>
               ) : (
-                <Card className="p-8 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-64 h-64 bg-slate-800/30 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
+                <div className="bg-slate-900/60 backdrop-blur-md border border-slate-700/50 rounded-3xl p-8 relative overflow-hidden shadow-2xl">
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-[80px] -mr-20 -mt-20 pointer-events-none transition-all"></div>
                   
                   <div className="space-y-8 relative z-10">
                     {/* Gang Settings */}
-                    <div>
-                      <div className="flex items-center gap-2 text-white font-black mb-4">
-                        <ShieldChevron size={20} className="text-red-500" /> แก๊ง (Gang)
+                    <div className="bg-slate-950/40 p-6 rounded-2xl border border-slate-800/80 shadow-inner">
+                      <div className="flex items-center gap-2 text-rose-400 font-black mb-6 uppercase tracking-wider text-sm bg-rose-500/10 w-fit px-3 py-1.5 rounded-lg border border-rose-500/20">
+                        <ShieldChevron size={20} weight="fill" /> แก๊ง (Gang)
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <Input 
-                          label="เรทแลกเปลี่ยน (1 TICKET = ? CASH)"
-                          type="number"
-                          min="1"
-                          value={tempSettings.rateGang}
-                          onChange={e => handleUpdateSettings('rateGang', parseInt(e.target.value) || 1)}
-                        />
-                        <Input 
-                          label="โควต้าสูงสุดเริ่มต้น"
-                          type="number"
-                          min="0"
-                          step="100000"
-                          value={tempSettings.quotaGang}
-                          onChange={e => handleUpdateSettings('quotaGang', parseInt(e.target.value) || 0)}
-                        />
+                        <div className="group/input">
+                          <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2 group-focus-within/input:text-amber-400 transition-colors">เรทแลกเปลี่ยน (1 TICKET = ? CASH)</label>
+                          <input 
+                            type="number"
+                            min="1"
+                            className="w-full bg-slate-900/80 border border-slate-700/80 rounded-xl px-4 py-3 text-white font-bold focus:outline-none focus:border-amber-500/80 focus:ring-2 focus:ring-amber-500/20 transition-all shadow-inner"
+                            value={tempSettings.rateGang}
+                            onChange={e => handleUpdateSettings('rateGang', parseInt(e.target.value) || 1)}
+                          />
+                        </div>
+                        <div className="group/input">
+                          <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2 group-focus-within/input:text-amber-400 transition-colors">โควต้าสูงสุดเริ่มต้น</label>
+                          <input 
+                            type="number"
+                            min="0"
+                            step="100000"
+                            className="w-full bg-slate-900/80 border border-slate-700/80 rounded-xl px-4 py-3 text-white font-bold focus:outline-none focus:border-amber-500/80 focus:ring-2 focus:ring-amber-500/20 transition-all shadow-inner"
+                            value={tempSettings.quotaGang}
+                            onChange={e => handleUpdateSettings('quotaGang', parseInt(e.target.value) || 0)}
+                          />
+                        </div>
                       </div>
                     </div>
 
                     {/* Family Settings */}
-                    <div>
-                      <div className="flex items-center gap-2 text-white font-black mb-4">
-                        <House size={20} className="text-blue-500" /> ครอบครัว (Family)
+                    <div className="bg-slate-950/40 p-6 rounded-2xl border border-slate-800/80 shadow-inner">
+                      <div className="flex items-center gap-2 text-blue-400 font-black mb-6 uppercase tracking-wider text-sm bg-blue-500/10 w-fit px-3 py-1.5 rounded-lg border border-blue-500/20">
+                        <House size={20} weight="fill" /> ครอบครัว (Family)
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <Input 
-                          label="เรทแลกเปลี่ยน (1 TICKET = ? CASH)"
-                          type="number"
-                          min="1"
-                          value={tempSettings.rateFamily}
-                          onChange={e => handleUpdateSettings('rateFamily', parseInt(e.target.value) || 1)}
-                        />
-                        <Input 
-                          label="โควต้าสูงสุดเริ่มต้น"
-                          type="number"
-                          min="0"
-                          step="100000"
-                          value={tempSettings.quotaFamily}
-                          onChange={e => handleUpdateSettings('quotaFamily', parseInt(e.target.value) || 0)}
-                        />
+                        <div className="group/input">
+                          <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2 group-focus-within/input:text-amber-400 transition-colors">เรทแลกเปลี่ยน (1 TICKET = ? CASH)</label>
+                          <input 
+                            type="number"
+                            min="1"
+                            className="w-full bg-slate-900/80 border border-slate-700/80 rounded-xl px-4 py-3 text-white font-bold focus:outline-none focus:border-amber-500/80 focus:ring-2 focus:ring-amber-500/20 transition-all shadow-inner"
+                            value={tempSettings.rateFamily}
+                            onChange={e => handleUpdateSettings('rateFamily', parseInt(e.target.value) || 1)}
+                          />
+                        </div>
+                        <div className="group/input">
+                          <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2 group-focus-within/input:text-amber-400 transition-colors">โควต้าสูงสุดเริ่มต้น</label>
+                          <input 
+                            type="number"
+                            min="0"
+                            step="100000"
+                            className="w-full bg-slate-900/80 border border-slate-700/80 rounded-xl px-4 py-3 text-white font-bold focus:outline-none focus:border-amber-500/80 focus:ring-2 focus:ring-amber-500/20 transition-all shadow-inner"
+                            value={tempSettings.quotaFamily}
+                            onChange={e => handleUpdateSettings('quotaFamily', parseInt(e.target.value) || 0)}
+                          />
+                        </div>
                       </div>
                     </div>
 
                     {/* Date Settings */}
-                    <div className="pt-6 border-t border-slate-800">
-                      <div className="flex items-center gap-2 text-white font-bold mb-4">
-                        <CalendarBlank size={20} className="text-amber-500" /> กำหนดรอบเวลาโควต้า
+                    <div className="bg-slate-950/40 p-6 rounded-2xl border border-slate-800/80 shadow-inner">
+                      <div className="flex items-center gap-2 text-amber-400 font-black mb-6 uppercase tracking-wider text-sm bg-amber-500/10 w-fit px-3 py-1.5 rounded-lg border border-amber-500/20">
+                        <CalendarBlank size={20} weight="bold" /> กำหนดรอบเวลาโควต้า
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <Input 
-                          label="วันที่เริ่มต้นรอบการขาย"
-                          type="date"
-                          value={tempSettings.roundStartDate || ''}
-                          onChange={e => handleUpdateSettings('roundStartDate', e.target.value)}
-                        />
-                        <Input 
-                          label="วันที่สิ้นสุดรอบการขาย"
-                          type="date"
-                          value={tempSettings.roundEndDate || ''}
-                          onChange={e => handleUpdateSettings('roundEndDate', e.target.value)}
-                        />
+                        <div className="group/input">
+                          <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2 group-focus-within/input:text-amber-400 transition-colors">วันที่เริ่มต้นรอบการขาย</label>
+                          <input 
+                            type="date"
+                            className="w-full bg-slate-900/80 border border-slate-700/80 rounded-xl px-4 py-3 text-white font-bold focus:outline-none focus:border-amber-500/80 focus:ring-2 focus:ring-amber-500/20 transition-all shadow-inner"
+                            value={tempSettings.roundStartDate || ''}
+                            onChange={e => handleUpdateSettings('roundStartDate', e.target.value)}
+                          />
+                        </div>
+                        <div className="group/input">
+                          <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2 group-focus-within/input:text-amber-400 transition-colors">วันที่สิ้นสุดรอบการขาย</label>
+                          <input 
+                            type="date"
+                            className="w-full bg-slate-900/80 border border-slate-700/80 rounded-xl px-4 py-3 text-white font-bold focus:outline-none focus:border-amber-500/80 focus:ring-2 focus:ring-amber-500/20 transition-all shadow-inner"
+                            value={tempSettings.roundEndDate || ''}
+                            onChange={e => handleUpdateSettings('roundEndDate', e.target.value)}
+                          />
+                        </div>
                       </div>
                     </div>
 
                     {/* Actions */}
-                    <div className="pt-8 border-t border-slate-800 flex items-center gap-4">
-                      <Button 
-                        className="bg-[#D4A336] hover:bg-[#c2932f] text-slate-900 px-8 py-2.5 h-auto font-bold text-base"
+                    <div className="pt-4 flex items-center gap-4">
+                      <button 
+                        className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white px-8 py-4 rounded-xl font-black text-sm transition-all shadow-lg hover:shadow-[0_0_20px_rgba(245,158,11,0.4)] flex items-center justify-center gap-2 hover:-translate-y-0.5"
                         onClick={handleSaveSettings}
                       >
                         <FloppyDisk size={20} weight="fill" /> บันทึกการตั้งค่า
-                      </Button>
-                      <Button 
-                        variant="outline"
-                        className="px-8 py-2.5 h-auto text-base border-slate-700 hover:bg-slate-800 text-white"
+                      </button>
+                      <button 
+                        className="flex-1 bg-transparent hover:bg-slate-800/80 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-500 px-8 py-4 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2"
                         onClick={() => setIsEditingSettings(false)}
                       >
                         ยกเลิก
-                      </Button>
+                      </button>
                     </div>
                   </div>
-                </Card>
+                </div>
               )}
             </div>
           )}
