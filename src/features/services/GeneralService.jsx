@@ -153,17 +153,12 @@ export default function GeneralService() {
               <label className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
                 <span className="w-6 h-6 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center border border-blue-500/30">2</span> ผู้ทำรายการ (REQUESTER) <span className="text-amber-500">*</span>
               </label>
-              <div className="relative">
-                <UserCircle size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 z-10" />
-                <div className="[&>div]:relative [&>div>div]:pl-12">
-                  <AutocompleteInput 
-                    placeholder="ชื่อ-นามสกุล (IC)"
-                    type="text"
-                    value={formData.requester}
-                    onChange={val => setFormData({...formData, requester: val})}
-                  />
-                </div>
-              </div>
+              <AutocompleteInput 
+                placeholder="ชื่อ-นามสกุล (IC)"
+                type="text"
+                value={formData.requester}
+                onChange={val => setFormData({...formData, requester: val})}
+              />
             </div>
           </div>
 
