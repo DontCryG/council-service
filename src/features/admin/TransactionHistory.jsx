@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { listenTransactionLogs, deleteTransactionLog, updateTransactionLogStatus, sendWebhook, getTransactionImage, deleteTransactionImage } from '../../core/api';
+import { deleteTransactionLog, updateTransactionLogStatus, sendWebhook, getTransactionImage, deleteTransactionImage } from '../../core/api';
+import { useTransactionLogs } from '../../hooks/useTransactionLogs';
 import { useAppStore } from '../../store';
 import { 
   FileText, PencilSimple, Buildings, Handshake, Gift,
@@ -11,8 +12,7 @@ import ConfirmationModal from '../../components/ui/ConfirmationModal';
 
 export default function TransactionHistory() {
   const { user, showAlert } = useAppStore();
-  const [logs, setLogs] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { logs, loading, refreshLogs } = useTransactionLogs();
   
   // Navigation State
   const [activeCategory, setActiveCategory] = useState('general_service');
@@ -33,21 +33,8 @@ export default function TransactionHistory() {
     isLoading: false
   });
 
-  useEffect(() => {
-    setLoading(true);
-    const unsubscribe = listenTransactionLogs((data) => {
-      setLogs(data);
-      setLoading(false);
-    });
-    
-    return () => unsubscribe();
-  }, []);
-
   const handleRefresh = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
+    refreshLogs();
   };
 
   const handleApprove = (logId) => {

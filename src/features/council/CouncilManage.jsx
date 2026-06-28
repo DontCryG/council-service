@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAppStore } from '../../store';
-import { db } from '../../core/firebase';
-import { doc, onSnapshot, setDoc } from 'firebase/firestore';
+import { useCouncilMembers } from '../../hooks/useCouncilMembers';
 import { Plus, PencilSimple, Trash, Eye, EyeClosed, ShieldStar, Users } from '@phosphor-icons/react';
 
 import Button from '../../components/ui/Button';
@@ -21,8 +20,7 @@ const RANKS = [
 
 export default function CouncilManage() {
   const { user, showAlert } = useAppStore();
-  const [members, setMembers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { members, loading, saveMembers } = useCouncilMembers();
   
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,32 +31,7 @@ export default function CouncilManage() {
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [memberToDelete, setMemberToDelete] = useState(null);
 
-  useEffect(() => {
-    const unsub = onSnapshot(doc(db, 'app_state', 'council_members'), (docSnap) => {
-      if (docSnap.exists()) {
-        setMembers(docSnap.data().members || []);
-      } else {
-        setMembers([]);
-      }
-      setLoading(false);
-    }, (err) => {
-      console.error(err);
-      setLoading(false);
-    });
-    return () => unsub();
-  }, []);
-
-  const handleSaveToDb = async (newMembers) => {
-    try {
-      await setDoc(doc(db, 'app_state', 'council_members'), {
-        members: newMembers,
-        updated_at: new Date().getTime()
-      });
-    } catch (e) {
-      console.error(e);
-      showAlert('error', 'เกิดข้อผิดพลาดในการบันทึกข้อมูล');
-    }
-  };
+  // Database logic is now handled by useCouncilMembers hook
 
   const handleOpenModal = (member = null) => {
     if (member) {
@@ -82,7 +55,7 @@ export default function CouncilManage() {
       updatedMembers.push({ ...formData, id: 'cm_' + Date.now() });
     }
     
-    handleSaveToDb(updatedMembers);
+    saveMembers(updatedMembers);
     setIsModalOpen(false);
   };
 
@@ -94,9 +67,12 @@ export default function CouncilManage() {
   const confirmDelete = () => {
     if (memberToDelete) {
       const updatedMembers = members.filter(m => m.id !== memberToDelete);
-      handleSaveToDb(updatedMembers);
-      setShowConfirmDelete(false);
-      showAlert('success', 'ลบข้อมูลสมาชิกเรียบร้อยแล้ว');
+      saveMembers(updatedMembers).then((success) => {
+        if (success) {
+          setShowConfirmDelete(false);
+          showAlert('success', 'ลบข้อมูลสมาชิกเรียบร้อยแล้ว');
+        }
+      });
     }
   };
 
