@@ -136,10 +136,10 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
         </div>
 
         {/* Payslip Preview */}
-        <div className="flex-1 overflow-x-auto rounded-2xl custom-scrollbar relative border border-slate-700/50 bg-slate-950/80 shadow-[inset_0_0_50px_rgba(0,0,0,0.8)] backdrop-blur-xl">
+        <div className="flex-1 overflow-x-auto overflow-y-hidden rounded-2xl custom-scrollbar relative border border-slate-700/50 bg-slate-950/80 shadow-[inset_0_0_50px_rgba(0,0,0,0.8)] backdrop-blur-xl">
           
           {/* THE BILL: 850px fixed width for perfect capture */}
-          <div ref={printRef} className="w-[850px] min-w-[850px] max-w-[850px] shrink-0 bg-[#020617] p-12 relative overflow-hidden text-slate-300 mx-auto border-4 border-[#020617]">
+          <div ref={printRef} style={{ width: '850px', minWidth: '850px', maxWidth: '850px' }} className="shrink-0 bg-[#020617] p-12 relative overflow-hidden text-slate-300 mx-auto border-4 border-[#020617]">
             {/* Ambient Backgrounds & Watermark */}
             <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-[#020617] to-[#020617] pointer-events-none"></div>
             <div className="absolute -top-40 -right-40 w-96 h-96 bg-amber-500/10 rounded-full blur-[100px] pointer-events-none"></div>
@@ -159,13 +159,13 @@ export default function PayslipModal({ isOpen, onClose, member, period, icRate }
                     <ShieldCheck size={48} weight="fill" className="text-slate-900 drop-shadow-md" />
                   </div>
                   <div>
-                    <h1 className="text-3xl font-black text-white tracking-tight drop-shadow-lg">สำนักงานสภาเมือง</h1>
-                    <p className="text-sm text-amber-500 font-black tracking-[0.3em] uppercase mt-1 drop-shadow-[0_0_5px_rgba(245,158,11,0.8)]">The Council Office</p>
+                    <h1 className="text-3xl font-black text-white tracking-tight drop-shadow-lg whitespace-nowrap">สำนักงานสภาเมือง</h1>
+                    <p className="text-sm text-amber-500 font-black tracking-[0.3em] uppercase mt-1 drop-shadow-[0_0_5px_rgba(245,158,11,0.8)] whitespace-nowrap">The Council Office</p>
                     <p className="text-xs text-slate-500 mt-2 font-mono">ID: {Math.random().toString(36).substr(2, 9).toUpperCase()}-{Date.now().toString().slice(-4)}</p>
                   </div>
                 </div>
                 <div className="text-right flex flex-col items-end">
-                  <h2 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-300 to-slate-500 tracking-tighter uppercase mb-4 drop-shadow-2xl pr-2 pb-1">
+                  <h2 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-300 to-slate-500 tracking-normal uppercase mb-4 drop-shadow-2xl pr-1">
                     PAYSLIP
                   </h2>
                   <div className="flex items-center gap-3">
